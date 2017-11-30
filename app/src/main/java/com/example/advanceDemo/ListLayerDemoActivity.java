@@ -17,7 +17,7 @@ public class ListLayerDemoActivity extends Activity implements OnClickListener{
 		
 		setContentView(R.layout.list_layers_demo_layout);
 		
-		 videoPath = getIntent().getStringExtra("videopath");
+		videoPath = getIntent().getStringExtra("videopath");
 		 
 		findViewById(R.id.id_layer_layermothed1).setOnClickListener(this);
 		findViewById(R.id.id_layer_layermothed2).setOnClickListener(this);
