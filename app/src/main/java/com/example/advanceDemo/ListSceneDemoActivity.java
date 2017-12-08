@@ -8,7 +8,6 @@ import com.example.advanceDemo.scene.OutBodyDemoActivity;
 import com.example.advanceDemo.scene.PictureSetRealTimeActivity;
 import com.example.advanceDemo.scene.Video2LayoutActivity;
 import com.example.advanceDemo.scene.VideoLayerTransformActivity;
-import com.example.advanceDemo.scene.VideoSpeedDemoActivity;
 import com.lansoeditor.demo.R;
 
 import android.app.Activity;

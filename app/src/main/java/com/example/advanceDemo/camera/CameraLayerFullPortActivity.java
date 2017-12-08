@@ -26,7 +26,7 @@ import com.lansosdk.box.Layer;
 import com.lansosdk.box.MVLayer;
 import com.lansosdk.box.MVLayerENDMode;
 import com.lansosdk.box.AudioPad;
-import com.lansosdk.box.SampleSave;
+import com.lansosdk.box.MicLine;
 import com.lansosdk.box.SubLayer;
 import com.lansosdk.box.ViewLayer;
 import com.lansosdk.box.ViewLayerRelativeLayout;
@@ -332,7 +332,6 @@ public class CameraLayerFullPortActivity extends Activity implements OnClickList
 					mplayer2.setSurface(new Surface(mCamLayer.getVideoTexture2()));
 					mplayer2.start();
 					
-					
 					/**
 					 * 把视频的滤镜 设置到摄像头图层中. 
 					 * 当然您也可以用switchFilterList来增加多个滤镜对象.比如先美颜, 最后增加效果视频.
@@ -340,7 +339,6 @@ public class CameraLayerFullPortActivity extends Activity implements OnClickList
 					mCamLayer.switchFilterTo(mCamLayer.getEffectFilter());
 					
 			  }  catch (IOException e) {
-				// TODO Auto-generated catch block
 				  e.printStackTrace();
 			 }
    }
@@ -373,7 +371,6 @@ public class CameraLayerFullPortActivity extends Activity implements OnClickList
    }
 	@Override
 	public void onClick(View v) {
-		// TODO Auto-generated method stub
 		switch (v.getId()) {
 			case R.id.id_fullrecord_cancel:
 				

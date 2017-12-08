@@ -11,6 +11,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 
 import jp.co.cyberagent.lansongsdk.gpuimage.GPUImageFilter;
+import jp.co.cyberagent.lansongsdk.gpuimage.GPUImageSepiaFilter;
 
 import com.example.advanceDemo.view.ImageTouchView;
 import com.example.advanceDemo.view.PaintConstants;
@@ -33,6 +34,7 @@ import com.lansosdk.videoeditor.MediaInfo;
 import com.lansosdk.videoeditor.SDKDir;
 import com.lansosdk.videoeditor.SDKFileUtils;
 import com.lansosdk.videoeditor.VideoEditor;
+import com.plattysoft.leonids.ParticleSystem;
 
 import android.app.ActionBar.LayoutParams;
 import android.app.Activity;
@@ -75,10 +77,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 
-/**
- *  演示: 视频涂鸦
- *  
- */
 public class ViewLayerDemoActivity extends Activity implements OnClickListener{
     private static final String TAG = "ViewLayerDemoActivity";
 
@@ -180,6 +178,7 @@ public class ViewLayerDemoActivity extends Activity implements OnClickListener{
 				
 				@Override
 				public void onProgress(DrawPad v, long currentTimeUs) {
+					
 					if(currentTimeUs>10*1000*1000)  //在第7秒的时候, 不再显示.
 		  			{
 		  				hideWord();
@@ -256,6 +255,10 @@ public class ViewLayerDemoActivity extends Activity implements OnClickListener{
             ViewGroup.LayoutParams  params=viewLayerRelativeLayout.getLayoutParams();
             params.height=mViewLayer.getPadHeight();  //因为布局时, 宽度一致, 这里调整高度,让他们一致.
             viewLayerRelativeLayout.setLayoutParams(params);
+            
+            
+//          mViewLayer.switchFilterTo(new GPUImageSepiaFilter());
+            
             
             //UI图层的移动缩放旋转.
 //            mViewLayer.setScale(0.5f);
@@ -355,7 +358,6 @@ public class ViewLayerDemoActivity extends Activity implements OnClickListener{
 								if(viewLayerRelativeLayout!=null){
 									viewLayerRelativeLayout.unBindViewLayer();
 								}
-								
 						 }else{
 							 	mplayer.start();
 								drawPadView.resumeDrawPad();

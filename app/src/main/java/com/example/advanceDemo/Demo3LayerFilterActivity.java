@@ -150,6 +150,10 @@ public class Demo3LayerFilterActivity extends Activity {
 			mplayer.release();
 			mplayer=null;
 		}
+    	if(videoOneDo!=null){
+    		videoOneDo.release();
+    		videoOneDo=null;
+    	}
     }
     private FilterAdjuster mFilterAdjuster;
     private void startPlayVideo()
@@ -475,6 +479,7 @@ public class Demo3LayerFilterActivity extends Activity {
     }
 	 //-------------------------------------------------后台执行.
     private ProgressDialog mProgressDialog;
+    private VideoOneDo videoOneDo;
     private void filterExecute()
     {
     	 mProgressDialog = new ProgressDialog(Demo3LayerFilterActivity.this);
@@ -482,12 +487,11 @@ public class Demo3LayerFilterActivity extends Activity {
          mProgressDialog.setMessage("正在后台处理:");
          mProgressDialog.setCancelable(false);
          
-         
-    	VideoOneDo oneDo=new VideoOneDo(getApplicationContext(), mVideoPath);
+         videoOneDo=new VideoOneDo(getApplicationContext(), mVideoPath);
     	
     	GPUImageFilter filter=FilterLibrary.getFilterList().getFilter(getApplicationContext(), currrentFilterName);
-    	oneDo.setFilter(filter);
-    	oneDo.setOnVideoOneDoProgressListener(new onVideoOneDoProgressListener() {
+    	videoOneDo.setFilter(filter);
+    	videoOneDo.setOnVideoOneDoProgressListener(new onVideoOneDoProgressListener() {
 			
 			@Override
 			public void onProgress(VideoOneDo v, float percent) {
@@ -497,7 +501,7 @@ public class Demo3LayerFilterActivity extends Activity {
 				}
 			}
 		});
-    	oneDo.setOnVideoOneDoCompletedListener(new onVideoOneDoCompletedListener() {
+    	videoOneDo.setOnVideoOneDoCompletedListener(new onVideoOneDoCompletedListener() {
 			
 			@Override
 			public void onCompleted(VideoOneDo v, String dstVideo) {
@@ -508,9 +512,11 @@ public class Demo3LayerFilterActivity extends Activity {
 				}
 				dstPath=dstVideo;
 				findViewById(R.id.id_filterdemo_saveplay).setVisibility(View.VISIBLE);
+				videoOneDo.release();
+				videoOneDo=null;
 			}
 		});
-    	if(oneDo.start()){
+    	if(videoOneDo.start()){
     		mProgressDialog.show();
     	}else{
     		Toast.makeText(getApplicationContext(), "后台运行失败,请查看打印信息", Toast.LENGTH_SHORT).show();

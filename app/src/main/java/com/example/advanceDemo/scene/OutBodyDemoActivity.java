@@ -30,7 +30,7 @@ import android.widget.Toast;
 public class OutBodyDemoActivity extends Activity {
     private static final String TAG = "OutBodyDemoActivity";
 
-    private String mVideoPath;
+    private String srcVideoPath;
 
     private DrawPadView mDrawPadView;
     
@@ -52,8 +52,8 @@ public class OutBodyDemoActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.outbody_demo_layout);
         
-        mVideoPath = getIntent().getStringExtra("videopath");
-        mInfo=new MediaInfo(mVideoPath,false);
+        srcVideoPath = getIntent().getStringExtra("videopath");
+        mInfo=new MediaInfo(srcVideoPath,false);
     	if(mInfo.prepare()==false){
     		 Toast.makeText(this, "传递过来的视频文件错误", Toast.LENGTH_SHORT).show();
     		 this.finish();
@@ -65,7 +65,6 @@ public class OutBodyDemoActivity extends Activity {
 			
 			@Override
 			public void onClick(View v) {
-				// TODO Auto-generated method stub
 				if(mainVideoLayer!=null){
 					mainVideoLayer.setSubImageEnable(false);
 				}
@@ -95,7 +94,6 @@ public class OutBodyDemoActivity extends Activity {
 			
 			@Override
 			public void run() {
-				// TODO Auto-generated method stub
 				//showHintDialog();
 				startPlayVideo();
 			}
@@ -110,17 +108,16 @@ public class OutBodyDemoActivity extends Activity {
      */
     private void startPlayVideo()
     {
-    	 if (mVideoPath != null){
+    	 if (srcVideoPath != null){
     		 
     		 		mplayer=new VPlayer(OutBodyDemoActivity.this);
 						
-    		 		mplayer.setVideoPath(mVideoPath);
+    		 		mplayer.setVideoPath(srcVideoPath);
     		 		
     		 		mplayer.setOnPreparedListener(new OnPlayerPreparedListener() {
 						
 						@Override
 						public void onPrepared(VideoPlayer mp) {
-							// TODO Auto-generated method stub
 							initDrawPad();
 						}
 					});
@@ -128,7 +125,6 @@ public class OutBodyDemoActivity extends Activity {
 						
 						@Override
 						public void onCompletion(VideoPlayer mp) {
-							// TODO Auto-generated method stub
 							stopDrawPad();
 						}
 					});
@@ -191,7 +187,7 @@ public class OutBodyDemoActivity extends Activity {
 			Toast.makeText(getApplicationContext(), "录制已停止!!", Toast.LENGTH_SHORT).show();
 			
 			if(SDKFileUtils.fileExist(editTmpPath)){
-				boolean ret=VideoEditor.encoderAddAudio(mVideoPath,editTmpPath,SDKDir.TMP_DIR,dstPath);
+				boolean ret=VideoEditor.encoderAddAudio(srcVideoPath,editTmpPath,SDKDir.TMP_DIR,dstPath);
 				if(!ret){
 					dstPath=editTmpPath;
 				}else{

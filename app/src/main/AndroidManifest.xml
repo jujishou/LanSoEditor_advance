@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.lansoeditor.demo"
-    android:versionCode="2708"
-    android:versionName="2.7.8" >
+    android:versionCode="27011"
+    android:versionName="2.7.11" >
 
     <!-- 这里的意思是：我们的sdk最低是Android4.3， 最高支持Andriod7.0 23   -->
     <uses-sdk
@@ -48,6 +48,7 @@
     
     <!-- android:largeHeap="true"让他内存显示最大到512M -->
     <application
+       	android:name="com.example.advanceDemo.DemoApplication"
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:largeHeap="true"
@@ -56,17 +57,19 @@
         
         <activity android:name="com.example.advanceDemo.StartActivity"
             android:theme="@style/AppTheme2">
-            <intent-filter>
+            
+             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+            
          </activity>
          
         <activity
             android:name="com.example.advanceDemo.ListMainActivity"
             android:screenOrientation="portrait">
-
+             
         </activity>
         
         <!-- 列表 -->
@@ -79,7 +82,8 @@
         <activity android:name="com.example.advanceDemo.ListCameraRecordActivity"
             android:screenOrientation="portrait"></activity>
         
-
+        <activity android:name="com.example.advanceDemo.camera.CameraLayerEXTPcmActivity"></activity>
+              
           <activity android:name="com.example.advanceDemo.camera.CameraLayerRectActivity"
             android:screenOrientation="portrait"></activity>
         <activity android:name="com.example.advanceDemo.camera.CameraLayerFullPortActivity"
@@ -88,6 +92,7 @@
            >
        </activity>
        
+        
         <activity android:name="com.example.advanceDemo.camera.CameraLayerFullPortWithMp3Activity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
@@ -115,9 +120,16 @@
        
         <activity   android:name="com.example.advanceDemo.camera.CameraLayerFullLandscapeActivity"
             android:screenOrientation="landscape"
-           	 android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
+              	 android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
            >
        </activity>
+       
+        <activity   android:name="com.example.advanceDemo.camera.CameraLayerKTVDemoActivity"
+            android:screenOrientation="landscape"
+              	 android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
+           >
+       </activity>
+        
        
        <!-- 基本图层类 --> 
         
@@ -125,10 +137,9 @@
             android:screenOrientation="portrait"></activity>
         <activity android:name="com.example.advanceDemo.Demo2LayerMothedActivity"></activity>
         <activity android:name="com.example.advanceDemo.Demo3LayerFilterActivity"></activity>
-        <activity android:name="com.example.advanceDemo.Demo4SubLayerMothedActivity"></activity>
-       
+
         
-        <activity android:name="com.example.advanceDemo.scene.VideoSpeedDemoActivity"></activity>
+        <activity android:name="com.example.advanceDemo.VideoSpeedDemoActivity"></activity>
         
         <activity android:name="com.example.advanceDemo.VideoOneProcessActivity"></activity>
         
@@ -141,11 +152,12 @@
          <activity android:name="com.example.advanceDemo.TwoVideoLayerActivity"></activity>
           
          <activity android:name="com.example.advanceDemo.ExecuteTwoVideoLayerDemoActivity"></activity>
-            
+               <activity android:name="com.example.advanceDemo.ExecuteSeekVideoDemoActivity"></activity>
             
 
+        <activity android:name="com.example.advanceDemo.TextureLayerDemoActivity"></activity>
         
-          <activity android:name="com.example.advanceDemo.BitmapAudio.BitmapLayerFilterDemoActivity"></activity>
+          <activity android:name="com.example.advanceDemo.BitmapLayerFilterDemoActivity"></activity>
           
 
           <!-- 场景举例 -->
@@ -174,17 +186,17 @@
         <activity android:name="com.example.advanceDemo.ExecuteVideoLayerActivity"></activity>
         <activity android:name="com.example.advanceDemo.ExecuteFilterDemoActivity"></activity>
         
-        <activity android:name="com.example.advanceDemo.BitmapAudio.ExtractVideoFrameDemoActivity"></activity>
+        <activity android:name="com.example.advanceDemo.ExtractVideoFrameDemoActivity"></activity>
         
         
-        <activity android:name="com.example.advanceDemo.BitmapAudio.DisplayFramesActivity"></activity>
+        <activity android:name="com.example.advanceDemo.DisplayFramesActivity"></activity>
         <activity android:name="com.example.advanceDemo.ListBitmapAudioActivity"></activity>
         
          
         <activity android:name="com.example.advanceDemo.ExecuteBitmapPadActivity"></activity>
         <activity android:name="com.example.advanceDemo.CanvasLayerDemoActivity"></activity>
         
-      	<activity android:name="com.example.advanceDemo.BitmapAudio.BitmapEditDemoActivity"></activity>
+      	<activity android:name="com.example.advanceDemo.BitmapEditDemoActivity"></activity>
         
        
          

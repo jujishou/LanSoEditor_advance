@@ -21,6 +21,7 @@ import com.lansosdk.box.FileParameter;
 import com.lansosdk.box.Layer;
 import com.lansosdk.box.onDrawPadCompletedListener;
 import com.lansosdk.box.onDrawPadProgressListener;
+import com.lansosdk.box.onDrawPadThreadProgressListener;
 
 import jp.co.cyberagent.lansongsdk.gpuimage.GPUImageFilter;
 
@@ -42,7 +43,9 @@ import jp.co.cyberagent.lansongsdk.gpuimage.GPUImageFilter;
 			videoOneDo.setCropRect(startX, startY, cropW, cropH);  //裁剪
 			videoOneDo.setLogo(bmp, VideoOneDo.LOGO_POSITION_RIGHT_TOP); //加logo
 		videoOneDo.start(); //开启另一个线程成功返回true, 失败返回false
-		场景2: 增加背景音乐, 剪切时长+logo+文字等
+		
+		场景2: 
+		增加背景音乐, 剪切时长+logo+文字等
 		   则:
 		     创建对象 ===>各种set===> 开始执行
 		     
@@ -55,43 +58,50 @@ public class VideoOneDo {
     public final static int LOGO_POSITION_RIGHT_TOP=2;
     public final static int LOGO_POSITION_RIGHT_BOTTOM=3;
 
-    private String videoPath=null;
-    private MediaInfo   srcInfo;
-    private String srcAudioPath; //从源视频中分离出的音频临时文件.
-    private float tmpvDuration=0.0f;//drawpad处理后的视频时长.
+    protected String videoPath=null;
+    protected MediaInfo   srcInfo;
+    protected String srcAudioPath; //从源视频中分离出的音频临时文件.
+    protected float tmpvDuration=0.0f;//drawpad处理后的视频时长.
 
-    private String editTmpPath=null;
+    protected String editTmpPath=null;
 
-    private DrawPadVideoExecute mDrawPad=null;
-    private boolean isExecuting=false;
+    protected DrawPadVideoExecute drawPad=null;
+    protected boolean isExecuting=false;
 
-    private Layer mainVideoLayer=null;
-    private BitmapLayer  logoBmpLayer=null;
-    private CanvasLayer  canvasLayer=null;
+    protected Layer videoLayer=null;
+    protected BitmapLayer  logoBmpLayer=null;
+    protected CanvasLayer  canvasLayer=null;
     
-    private  Context context;
+    protected  Context context;
     
     //-------------------------------------------------
-    private long startTimeUs=0;
-    private long cutDurationUs=0;
-    private FileParameter fileParamter=null;
-    private int startX,startY,cropWidth,cropHeight;
-    private GPUImageFilter  videoFilter=null;
+    protected long startTimeUs=0;
+    protected long cutDurationUs=0;
+    protected FileParameter fileParamter=null;
+    protected int startX,startY,cropWidth,cropHeight;
+    protected GPUImageFilter  videoFilter=null;
     
-    private Bitmap logoBitmap=null;
-    private int logoPosition=LOGO_POSITION_RIGHT_TOP;
-    private int scaleWidth,scaleHeight;
-    private float  compressFactor=1.0f;
+    protected Bitmap logoBitmap=null;
+    protected int logoPosition=LOGO_POSITION_RIGHT_TOP;
+    protected int scaleWidth,scaleHeight;
+    protected float  compressFactor=1.0f;
 
-    private String textAdd=null;
+    protected String textAdd=null;
 
 
-    private String musicAACPath=null;
-    private String musicMp3Path=null;
-    private MediaInfo  musicInfo;
-    private boolean isMixBgMusic; //是否要混合背景音乐.
-    private float mixBgMusicVolume=0.8f;  //默认减少一点.
-    private String dstAACPath=null; 
+    protected String musicAACPath=null;
+    protected String musicMp3Path=null;
+    protected MediaInfo  musicInfo;
+    protected boolean isMixBgMusic; //是否要混合背景音乐.
+    
+    protected float bgMusicStartTime=0.0f;
+    protected float bgMusicEndTime=0.0f;
+    
+    protected float bgMusicVolume=0.8f;  //默认减少一点.
+    protected float mainMusicVolume=1.0f;  //默认减少一点.
+    protected String dstAACPath=null; 
+    //在release的时候, 删除临时文件.
+    protected ArrayList<String> deletedFileList=new ArrayList<String>();
     
     public  VideoOneDo(Context ctx, String videoPath)
     {
@@ -106,7 +116,7 @@ public class VideoOneDo {
      * 如果背景音乐时间 比视频长,则会从开始截取.
      * @param path
      */
-    public void setBackGrondMusic(String path)
+    public void setBackGroundMusic(String path)
     {
     	musicInfo=new MediaInfo(path,false);
     	if(musicInfo.prepare() && musicInfo.isHaveAudio()){
@@ -133,13 +143,13 @@ public class VideoOneDo {
      * @param isMix   是否增加,
      * @param volume 如增加,则背景音乐的音量调节 =1.0f为不变, 小于1.0降低; 大于1.0提高; 最大2.0;
      */
-    public void setBackGrondMusic(String path, boolean isMix,float volume)
+    public void setBackGroundMusic(String path, boolean isMix,float volume)
     {
     	musicInfo=new MediaInfo(path,false);
     	if(musicInfo.prepare() && musicInfo.isHaveAudio())
     	{
     		isMixBgMusic=isMix;
-        	mixBgMusicVolume=volume;
+        	bgMusicVolume=volume;
         	
     		if(musicInfo.aCodecName.equalsIgnoreCase("mp3")){
     			musicMp3Path=path;
@@ -156,6 +166,36 @@ public class VideoOneDo {
     		musicMp3Path=null;
     		musicAACPath=null;
     		musicInfo=null;
+    	}
+    }
+    /**
+     * 增加背景音乐, 背景音乐是否和原声音混合, 混合时各自的音量.
+     * @param path
+     * @param isMix  是否混合
+     * @param mainVolume   原音频的音量, 1.0f为原音量; 小于则降低, 大于则放大, 
+     * @param bgVolume
+     */
+    public void setBackGroundMusic(String path, boolean isMix,float mainVolume,float bgVolume)
+    {
+    	setBackGroundMusic(path, isMix, bgVolume);
+    	mainMusicVolume=mainVolume;
+    }
+    /**
+     * 增加背景音乐,并裁剪背景音乐,  背景音乐是否和原声音混合, 混合时各自的音量.
+     * @param path 背景音乐路径
+     * @param startTime 背景音乐的开始时间, 单位秒, 如2.5f,则表示从2.5秒处裁剪
+     * @param endTime  背景音乐的结束时间, 单位秒, 如10.0f,则表示裁剪到10.0f为止;
+     * @param isMix  是否混合元声音, 即保留原声音
+     * @param mainVolume 原声音的音量,1.0f为原音量; 小于则降低, 大于则放大, 
+     * @param bgVolume 背景音乐的音量
+     */
+    public void setBackGroundMusic(String path, float startTime,float endTime, boolean isMix,float mainVolume,float bgVolume)
+    {
+    	setBackGroundMusic(path, isMix, bgVolume);
+    	mainMusicVolume=mainVolume;
+    	if(musicInfo!=null && startTime>0.0f && startTime<endTime && endTime<=musicInfo.aDuration){
+    		bgMusicStartTime=startTime;
+    		bgMusicEndTime=endTime;
     	}
     }
     /**
@@ -190,7 +230,17 @@ public class VideoOneDo {
     public  void setStartPostion(long timeUs){
         startTimeUs=timeUs;
     }
-
+    /**
+     * 设置结束时间
+     *  支持精确截取.
+     * @param timeUs
+     */
+    public  void setEndPostion(long timeUs)
+    {
+    	if(timeUs>0 && timeUs>startTimeUs){
+    		cutDurationUs=timeUs-startTimeUs;
+    	}
+    }
     /**
      *设置截取视频中的多长时间.
      * 单位微秒,
@@ -205,7 +255,9 @@ public class VideoOneDo {
     }
     /**
      * 设置裁剪画面的一部分用来处理,
-     *
+     *  依靠视频呈现出怎样的区域来裁剪.
+     *  比如视频显示720x1280,则您可以认为视频画面的宽度就是720,高度就是1280;不做其他角度的判断.
+     *  
      *  裁剪后, 如果设置了缩放,则会把cropW和cropH缩放到指定的缩放宽度.
      * @param startX  画面的开始横向坐标,
      * @param startY  画面的结束纵向坐标
@@ -266,6 +318,25 @@ public class VideoOneDo {
     private onVideoOneDoCompletedListener monVideoOneDOCompletedListener=null;
     public void setOnVideoOneDoCompletedListener(onVideoOneDoCompletedListener li){
     	monVideoOneDOCompletedListener=li;
+    }
+    /**
+     * 进度回调
+     * @param v
+     * @param currentTimeUs
+     */
+    public void progressCallback(DrawPad v, long currentTimeUs)
+    {
+    	/**
+    	 * 您可以继承我们这个类, 然后在这里随着进度来增加您自己的其他代码.
+    	 * (此代码工作在UI线程)
+    	 */
+    }
+    public void progressThreadCallback(DrawPad v, long currentTimeUs)
+    {
+    	/**
+    	 * 您可以继承我们这个类, 然后在这里随着进度来增加您自己的其他代码.
+    	 * (此代码工作在DrawPad线程,可以增加一些更精确的操作,或纹理操作等. 但不能增加UI操作.)
+    	 */
     }
     /**
      * 开始执行, 内部会开启一个线程去执行.
@@ -339,20 +410,8 @@ public class VideoOneDo {
             fileParamter=new FileParameter();
             fileParamter.setDataSoure(videoPath);
             	
-            //如果裁剪的视频, 旋转了90度,则宽度高度对调.
-        	if(srcInfo.vRotateAngle==90 || srcInfo.vRotateAngle==270){
-        		int tmpx=startX;
-        		startX=startY;
-        		startY=srcInfo.vWidth-cropWidth;
-        		
-        		tmpx=cropWidth;
-        		cropWidth=cropHeight;
-        		cropHeight=tmpx;
-            }
         	/**
         	 * 设置当前需要显示的区域 ,以左上角为0,0坐标. 
-        	 * 
-        	 * 这里暂时不做判断是否超出宽度或高度, 在videoLayer内部判断,因为有些宽高要调换.
         	 * 
         	 * @param startX  开始的X坐标, 即从宽度的什么位置开始
         	 * @param startY  开始的Y坐标, 即从高度的什么位置开始
@@ -368,35 +427,34 @@ public class VideoOneDo {
                 padWidth=scaleWidth;
                 padHeight=scaleHeight;
             }
+            
             float f= (float)(padHeight*padWidth) /(float)(fileParamter.info.vWidth * fileParamter.info.vHeight);
             float bitrate= f *fileParamter.info.vBitRate *compressFactor*2.0f;
-            mDrawPad = new DrawPadVideoExecute(context, fileParamter, padWidth, padHeight,(int)bitrate, videoFilter, editTmpPath);
+            drawPad = new DrawPadVideoExecute(context, fileParamter, padWidth, padHeight,(int)bitrate, videoFilter, editTmpPath);
         }else{ //没有裁剪
         	
-            int padWidth=srcInfo.vWidth;
-            int padHeight=srcInfo.vHeight;
-            if(srcInfo.vRotateAngle==90 || srcInfo.vRotateAngle==270){
-                padWidth=srcInfo.vHeight;
-                padHeight=srcInfo.vWidth;
-            }
-            float bitrate= srcInfo.vBitRate*compressFactor*2.0f;
+            int padWidth=srcInfo.getWidth();
+            int padHeight=srcInfo.getHeight();
             
+            float bitrate= (float)srcInfo.vBitRate*compressFactor*1.5f;
             if(scaleHeight>0 && scaleWidth>0) {
                 padWidth=scaleWidth;
                 padHeight=scaleHeight;
                 float f= (float)(padHeight*padWidth) /(float)(srcInfo.vWidth * srcInfo.vHeight);
                 bitrate *=f;
             }
-            mDrawPad=new DrawPadVideoExecute(context,videoPath,startTimeUs/1000,padWidth,padHeight,(int)bitrate,videoFilter,editTmpPath);
+            drawPad=new DrawPadVideoExecute(context,videoPath,startTimeUs/1000,padWidth,padHeight,(int)bitrate,videoFilter,editTmpPath);
         }
-        mDrawPad.setUseMainVideoPts(true);
+        
+        drawPad.setUseMainVideoPts(true);
         /**
          * 设置DrawPad处理的进度监听, 回传的currentTimeUs单位是微秒.
          */
-        mDrawPad.setDrawPadProgressListener(new onDrawPadProgressListener() {
+        drawPad.setDrawPadProgressListener(new onDrawPadProgressListener() {
             @Override
             public void onProgress(DrawPad v, long currentTimeUs) {
 
+            	progressCallback(v, currentTimeUs);
             	if(monVideoOneDoProgressListener!=null){
             		float time=(float)currentTimeUs/1000000f;
             		
@@ -408,14 +466,23 @@ public class VideoOneDo {
             		}
             	}
                 if(cutDurationUs>0 && currentTimeUs>cutDurationUs){  //设置了结束时间, 如果当前时间戳大于结束时间,则停止容器.
-                	mDrawPad.stopDrawPad();
+                	drawPad.stopDrawPad();
                 }
             }
         });
+        //容器内部的进度回调.
+        drawPad.setDrawPadThreadProgressListener(new onDrawPadThreadProgressListener() {
+			
+			@Override
+			public void onThreadProgress(DrawPad v, long currentTimeUs) {
+				progressThreadCallback(v,currentTimeUs);
+			}
+		});
+        
         /**
          * 设置DrawPad处理完成后的监听.
          */
-        mDrawPad.setDrawPadCompletedListener(new onDrawPadCompletedListener() {
+        drawPad.setDrawPadCompletedListener(new onDrawPadCompletedListener() {
 
             @Override
             public void onCompleted(DrawPad v) {
@@ -423,17 +490,16 @@ public class VideoOneDo {
             }
         });
 
-        mDrawPad.pauseRecord();
-        Log.d(TAG,"开始执行....startDrawPad");
-        if(mDrawPad.startDrawPad())
+        drawPad.pauseRecord();
+        if(drawPad.startDrawPad())
         {
-            mainVideoLayer=mDrawPad.getMainVideoLayer();
+            videoLayer=drawPad.getMainVideoLayer();
+            videoLayer.setScaledValue(videoLayer.getPadWidth(), videoLayer.getPadHeight());
             
             addBitmapLayer(); //增加图片图层
             
             addCanvasLayer(); //增加文字图层.
-            mDrawPad.resumeRecord();  //开始恢复处理.
-            
+            drawPad.resumeRecord();  //开始恢复处理.
             return true;
         }else{
         	return false;
@@ -444,7 +510,6 @@ public class VideoOneDo {
      */
     private void completeDrawPad()
     {
-    	 Log.d(TAG,"开始执行....drawPadCompleted");
     	joinAudioThread();
     	
     	if(isExecuting==false){
@@ -455,9 +520,13 @@ public class VideoOneDo {
     	if(dstAACPath!=null && isExecuting)  //增加背景音乐.
     	{
     		videoMergeAudio(editTmpPath, dstAACPath,dstPath);
+    		deletedFileList.add(editTmpPath);
     	}else if(srcAudioPath!=null && isExecuting){  //增加原音.
     		videoMergeAudio(editTmpPath, srcAudioPath,dstPath); 
+    		deletedFileList.add(editTmpPath);
+    		deletedFileList.add(srcAudioPath);
     	}else{
+    		deletedFileList.add(dstPath);
     		dstPath=editTmpPath;
     	}
     	
@@ -465,7 +534,8 @@ public class VideoOneDo {
     		monVideoOneDOCompletedListener.onCompleted(VideoOneDo.this,dstPath);
     	}
     	isExecuting=false;
-    	Log.i(TAG,"最后的视频文件是:"+MediaInfo.checkFile(dstPath));
+    	
+//    	Log.d(TAG,"最后的视频文件是:"+MediaInfo.checkFile(dstPath));
     }
     public void stop()
     {
@@ -474,13 +544,13 @@ public class VideoOneDo {
     		  
     		monVideoOneDOCompletedListener=null;
     		monVideoOneDoProgressListener=null;
-    		if(mDrawPad!=null){
-    			mDrawPad.stopDrawPad();
+    		if(drawPad!=null){
+    			drawPad.stopDrawPad();
     		}
     		joinAudioThread();
     		videoPath=null;
     		srcInfo=null;
-    		mDrawPad=null;
+    		drawPad=null;
     	  
     	    logoBitmap=null;
     	    textAdd=null;
@@ -491,6 +561,9 @@ public class VideoOneDo {
     }
     public void release()
     {
+    	for(String path: deletedFileList){
+    		SDKFileUtils.deleteFile(path);
+    	}
     	stop();
     }
     /**
@@ -500,7 +573,7 @@ public class VideoOneDo {
     {
     	 //如果需要增加图片.
         if(logoBitmap!=null){
-        	logoBmpLayer=mDrawPad.addBitmapLayer(logoBitmap);
+        	logoBmpLayer=drawPad.addBitmapLayer(logoBitmap);
         	if(logoBmpLayer!=null)
         	{
         		int w=logoBmpLayer.getLayerWidth();
@@ -530,7 +603,7 @@ public class VideoOneDo {
     private void addCanvasLayer()
     {
     	if(textAdd!=null){
-        	canvasLayer=mDrawPad.addCanvasLayer();
+        	canvasLayer=drawPad.addCanvasLayer();
         	
         	canvasLayer.addCanvasRunnable(new CanvasRunnable() {
 				
@@ -556,6 +629,23 @@ public class VideoOneDo {
     		audioThread=new Thread(new Runnable() {
     			@Override
     			public void run() {
+    				
+    				if(bgMusicEndTime>bgMusicStartTime){//需要裁剪,则先裁剪, 然后做处理.
+    						String audio;
+    						 if(musicMp3Path!=null){
+    					    	 audio=SDKFileUtils.createMP3FileInBox();
+    					    	 executeAudioCutOut(musicMp3Path, audio, bgMusicStartTime, bgMusicEndTime);
+    					    	 //不删除原声音;
+    					    	 musicMp3Path=audio;
+    					     }else{
+    					    	 audio=SDKFileUtils.createAACFileInBox();
+    					    	 executeAudioCutOut(musicAACPath, audio, bgMusicStartTime, bgMusicEndTime);
+    					    	 musicAACPath=audio;
+    					     }
+    						 deletedFileList.add(audio);
+    				}
+    				
+    				
     				/**
     				 * 1, 如果mp3,  看是否要mix, 如果要,则长度拼接够, 然后mix;如果不mix,则先转码,再拼接.
     				 * 2, 如果是aac, 是否要mix, 要则拼接 再mix,; 不需要则直接拼接.
@@ -565,24 +655,29 @@ public class VideoOneDo {
     						  dstAACPath=SDKFileUtils.createAACFileInBox();
     						  
     						  String startMp3=getEnoughAudio(musicMp3Path, true);
-    						  VideoEditor  editor=new VideoEditor();
     						  
-    						  editor.executeAudioVolumeMix(srcAudioPath, startMp3, 1.0f, mixBgMusicVolume,tmpvDuration, dstAACPath);
+    						  VideoEditor  editor=new VideoEditor();
+    						  editor.executeAudioVolumeMix(srcAudioPath, startMp3,mainMusicVolume, bgMusicVolume,tmpvDuration, dstAACPath);
+    						  
+    						  deletedFileList.add(dstAACPath);
     					  }else{//直接增加背景.
     						  
     						    VideoEditor editor=new VideoEditor();
     		    				float duration=(float)cutDurationUs/1000000f;
     		    				String tmpAAC=SDKFileUtils.createAACFileInBox();
     		    				editor.executeConvertMp3ToAAC(musicMp3Path, 0,duration, tmpAAC);
-    		    				
     		    				dstAACPath=getEnoughAudio(tmpAAC, false);
+    		    				
+    		    				deletedFileList.add(tmpAAC);
     					  }
     				}else if(musicAACPath!=null){
     					 if(isMixBgMusic){  //混合.
     						 dstAACPath=SDKFileUtils.createAACFileInBox();
 	   						  String startAAC=getEnoughAudio(musicAACPath, false);
 	   						  VideoEditor  editor=new VideoEditor();
-	   						  editor.executeAudioVolumeMix(srcAudioPath, startAAC, 1.0f, mixBgMusicVolume,tmpvDuration, dstAACPath);
+	   						  editor.executeAudioVolumeMix(srcAudioPath, startAAC, 1.0f, bgMusicVolume,tmpvDuration, dstAACPath);
+	   						  
+	   						deletedFileList.add(dstAACPath);
     					 }else{
     						 dstAACPath=getEnoughAudio(musicAACPath, false);
     					 }
@@ -629,7 +724,10 @@ public class VideoOneDo {
 		     }else{
 		    	 audio=SDKFileUtils.createAACFileInBox();	 
 		     }
+		     deletedFileList.add(audio);
+		     
 			 concatAudio(array,audio);  //拼接好.
+			 
 		}
 		return audio;
     }
@@ -670,6 +768,31 @@ public class VideoOneDo {
 			  return -1;
 		  }
 	   }
+    public int executeAudioCutOut(String srcFile,String dstFile,float startS,float durationS)
+	  {
+    			VideoEditor editor=new VideoEditor();
+				List<String> cmdList=new ArrayList<String>();
+				
+				cmdList.add("-ss");
+				cmdList.add(String.valueOf(startS));
+				
+		    	cmdList.add("-i");
+				cmdList.add(srcFile);
+
+				cmdList.add("-t");
+				cmdList.add(String.valueOf(durationS));
+				
+				cmdList.add("-acodec");
+				cmdList.add("copy");
+				cmdList.add("-y");
+				cmdList.add(dstFile);
+				String[] command=new String[cmdList.size()];  
+			     for(int i=0;i<cmdList.size();i++){  
+			    	 command[i]=(String)cmdList.get(i);  
+			     }
+			    return  editor.executeVideoEditor(command);
+			  
+	  }
     /**
      * 之所有从VideoEditor.java中拿过来另外写, 是为了省去两次MediaInfo的时间;
      */
@@ -684,6 +807,11 @@ public class VideoOneDo {
 				cmdList.add("-i");
 				cmdList.add(audioFile);
 
+				if(tmpvDuration>0.0f){
+					cmdList.add("-t");
+					cmdList.add(String.valueOf(tmpvDuration));
+				}
+				
 				cmdList.add("-vcodec");
 				cmdList.add("copy");
 				cmdList.add("-acodec");

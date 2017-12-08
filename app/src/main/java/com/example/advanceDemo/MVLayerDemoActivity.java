@@ -122,15 +122,11 @@ public class MVLayerDemoActivity extends Activity {
     }
    @Override
 	protected void onDestroy() {
-		// TODO Auto-generated method stub
 		super.onDestroy();
 		
-	    if(SDKFileUtils.fileExist(dstPath)){
-	    	SDKFileUtils.deleteFile(dstPath);
-	    }
-	    if(SDKFileUtils.fileExist(editTmpPath)){
-	    	SDKFileUtils.deleteFile(editTmpPath);
-	    } 
+	    	
+		SDKFileUtils.deleteFile(dstPath);
+		SDKFileUtils.deleteFile(editTmpPath);
    }
     /**
      * VideoLayer是外部提供画面来源, 您可以用你们自己的播放器作为画面输入源,也可以用原生的MediaPlayer,只需要视频播放器可以设置surface即可.
@@ -144,14 +140,12 @@ public class MVLayerDemoActivity extends Activity {
 				mplayer.setDataSource(mVideoPath);
 				
 			}  catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
         	  mplayer.setOnPreparedListener(new OnPreparedListener() {
 				
 				@Override
 				public void onPrepared(MediaPlayer mp) {
-					// TODO Auto-generated method stub
 					initDrawPad();
 				}
 			});
@@ -159,7 +153,6 @@ public class MVLayerDemoActivity extends Activity {
 				
 				@Override
 				public void onCompletion(MediaPlayer mp) {
-					// TODO Auto-generated method stub
 					stopDrawPad();
 				}
 			});
@@ -200,7 +193,6 @@ public class MVLayerDemoActivity extends Activity {
 					
 					@Override
 					public void viewAvailable(DrawPadView v) {
-						// TODO Auto-generated method stub
 						startPlayVideo();
 					}
 				});
@@ -234,13 +226,14 @@ public class MVLayerDemoActivity extends Activity {
         String colorMVPath=CopyDefaultVideoAsyncTask.copyFile(MVLayerDemoActivity.this,"mei.mp4");
         String maskMVPath=CopyDefaultVideoAsyncTask.copyFile(MVLayerDemoActivity.this,"mei_b.mp4");
         
-		mvLayer=mDrawPadView.addMVLayer(colorMVPath, maskMVPath);  //<-----增加MVLayer
+		mvLayer=mDrawPadView.addMVLayer(colorMVPath, maskMVPath,false);  //<-----增加MVLayer
 		if(mvLayer!=null){
 		//设置它为满屏.
 			mvLayer.setOnLayerAvailableListener(new onLayerAvailableListener() {
 				
 				@Override
 				public void onAvailable(Layer layer) {
+					mvLayer.setPlayEnable();
 				}
 			});
 			

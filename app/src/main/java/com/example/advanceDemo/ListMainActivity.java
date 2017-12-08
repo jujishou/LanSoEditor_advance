@@ -15,8 +15,14 @@ import com.example.advanceDemo.scene.LayerLayoutDemoActivity;
 import com.example.advanceDemo.scene.Video2LayoutActivity;
 import com.example.commonDemo.CommonDemoActivity;
 import com.lansoeditor.demo.R;
+import com.lansosdk.box.AudioSource;
+import com.lansosdk.box.AudioPad;
 import com.lansosdk.box.FrameInfo;
 import com.lansosdk.box.LanSoEditorBox;
+import com.lansosdk.box.MicRecorder;
+import com.lansosdk.box.onAudioPadCompletedListener;
+import com.lansosdk.box.onAudioPadProgressListener;
+import com.lansosdk.box.onAudioPadThreadProgressListener;
 import com.lansosdk.box.onCompressCompletedListener;
 import com.lansosdk.box.onCompressProgressListener;
 import com.lansosdk.box.onDrawPadOutFrameListener;
@@ -43,6 +49,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -71,7 +78,7 @@ public class ListMainActivity extends Activity implements OnClickListener{
         /**
          * 初始化SDK
          */
-    	LanSoEditor.initSDK(getApplicationContext(), null);
+    	LanSoEditor.initSDK(getApplicationContext(),null);
         
     	/**
     	 * 检查权限
@@ -96,6 +103,7 @@ public class ListMainActivity extends Activity implements OnClickListener{
 				return;
 			switch (v.getId()) {
 				case R.id.id_mainlist_camerarecord:
+//					startDemoActivity(ExecuteSeekVideoDemoActivity.class);
 					startDemoActivity(ListCameraRecordActivity.class);
 					break;
 				case R.id.id_mainlist_somelayer:
@@ -187,6 +195,7 @@ public class ListMainActivity extends Activity implements OnClickListener{
    		String timeHint=getResources().getString(R.string.sdk_limit);
    		String version=VideoEditor.getSDKVersion()+ ";\n BOX:"+LanSoEditorBox.VERSION_BOX;
    		
+   		version+=",CPU type:"+LanSoEditor.getCPULevel();
    		timeHint=String.format(timeHint,version, lyear,lmonth);
    		
    		new AlertDialog.Builder(this)
@@ -292,7 +301,12 @@ public class ListMainActivity extends Activity implements OnClickListener{
 		        return result;
 		 }
 	   //--------------------------------
+	   
 	    private void testFile()
 	    {
+	    	
+	    	
+	    	
+	    	
 		}
 }

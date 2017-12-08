@@ -38,6 +38,7 @@ import java.util.Map;
 
 import jp.co.cyberagent.lansongsdk.gpuimage.GPUImageFilter;
 
+import com.lansosdk.box.AudioLine;
 import com.lansosdk.box.AudioInsertManager;
 import com.lansosdk.box.BitmapLayer;
 import com.lansosdk.box.CameraLayer;
@@ -51,6 +52,7 @@ import com.lansosdk.box.MVLayer;
 import com.lansosdk.box.Layer;
 import com.lansosdk.box.DrawPadUpdateMode;
 import com.lansosdk.box.DrawPadViewRender;
+import com.lansosdk.box.MicLine;
 import com.lansosdk.box.TwoVideoLayer;
 import com.lansosdk.box.VideoLayer;
 import com.lansosdk.box.ViewLayer;
@@ -321,7 +323,6 @@ public class DrawPadCameraView extends FrameLayout {
 			initFilter=filter;
 			maybeBeauful=beauful;
 		}
-		
 		/**
 		 * 调整在录制时的速度, 比如你想预览的时候是正常的, 录制好后, 一部分要快进或慢放,则可以在这里设置
 		 * 支持在任意时刻来变速; 甚至你可以设置一个按钮, 长按下的时候, 加快或放慢, 松开时正常.
@@ -686,7 +687,7 @@ public class DrawPadCameraView extends FrameLayout {
 	 				}else if(isRecordExtPcm){
 	 					renderer.setRecordExtraPcm(isRecordExtPcm, pcmChannels,pcmSampleRate,pcmBitRate);
 	 				}else if(recordExtMp3!=null){
-	 					if(renderer.setRecordExtraMp3(recordExtMp3)==false){
+	 					if(renderer.setRecordExtraMp3(recordExtMp3)==null){
 	 						Log.e(TAG,"设置外部mp3音频错误, 请检查下您的音频文件是否正常.");
 	 					}
 	 				}
@@ -859,43 +860,27 @@ public class DrawPadCameraView extends FrameLayout {
 	 private String recordExtMp3=null;
 
 	/**
-	 * 是否在CameraLayer录制的同时, 录制mic的声音.  在drawpad开始前调用. 
+	 * 是否在CameraLayer录制的同时, 录制mic的声音. 
+	 * 在容器建立后, 在startRecord前调用.
 	 * 
 	 * 此方法仅仅使用在录像的时候, 同时录制Mic的场合.录制的采样默认是44100, 码率64000, 编码为aac格式.
 	 * 录制的同时, 编码以音频的时间戳为参考.
 	 * 
 	 * 录制好后, 声音文件默认已经在您设置的编码录制中了.
-	 * @param record
+	 * @param record  如果要设置mic录制,请务必设置为true;只是为了兼容老版本才保留这个boolean
 	 */
-	public void setRecordMic(boolean record)
+	public MicLine setRecordMic(boolean record)
 	{
-		if(renderer!=null && renderer.isRecording()){
-			Log.e(TAG,"DrawPad is running. set Mic Error!");
-		}else{
-			isRecordMic=record;
+		if(renderer!=null){
+			if(renderer.isRecording())
+				Log.e(TAG,"DrawPad is running. set Mic Error!");
+			else
+				return renderer.setRecordMic(record);
 		}
+		isRecordMic=record;
+		return null;
 	}
-	/**
-	 * 是否在录制画面的同时,录制外面的push进去的音频数据 .
-	 * 
-	 * 适用在需要实时录制的, 如果您仅仅是对增加背景音乐等, 可以使用 {@link VideoEditor#executeVideoMergeAudio(String, String, String)}
-	 * 来做处理.
-	 * 
-	 * 注意:当设置了录制外部的pcm数据后, 当前容器上录制的帧,就以音频的帧率为参考时间戳,从而保证音同步进行. 
-	 * 故您在投递音频的时候, 需要严格按照音频播放的速度投递. 
-	 * 
-	 * 如采用外面的pcm数据,则在录制过程中,会参考音频时间戳,来计算得出的时间戳,
-	 * 如外界音频播放完毕,无数据push,应及时stopDrawPad2
-	 * 
-	 * 可以通过 AudioLine 的getFrameSize()方法获取到每次应该投递多少个字节,此大小为固定大小, 每次投递必须push这么大小字节的数据,
-	 * 
-	 * 可通过 {@link #stopDrawPad2()}停止,停止后返回mic录制的音频文件 m4a格式的文件,
-	 * 
-	 * @param isrecord  是否录制
-	 * @param channels  声音通道个数, 如是mp3或aac文件,可根据MediaInfo获得
-	 * @param samplerate 采样率 如是mp3或aac文件,可根据MediaInfo获得
-	 * @param bitrate  码率 如是mp3或aac文件,可根据MediaInfo获得
-	 */
+	@Deprecated
 	public void setRecordExtraPcm(boolean isrecord,int channels,int samplerate,int bitrate)
 	{
 		if(renderer!=null){
@@ -909,7 +894,8 @@ public class DrawPadCameraView extends FrameLayout {
 	}
 	/**
 	 *  使用外部的mp3文件, 作为录制视频的音频部分.
-	 *  此方法,在startDrawPad开启前调用
+	 *  容器建立后, 在startRecord前调用.
+	 *  
 	 *  此方法增加后, 会一边播放音频, 一边录制. 
 	 *  我们会内部经过处理, 从而使录制的音频和视频画面 同步.
 	 *  适合用在 舞蹈等随着音乐节拍而舞动的画面.
@@ -919,14 +905,36 @@ public class DrawPadCameraView extends FrameLayout {
 	 * @param mp3Path  mp3文件, 当前仅支持44100的采样率,2通道
 	 * @param endloop  当播放到文件结束后, 是否要重新循环播放, 当前暂时不支持循环, 这里仅预留.
 	 */
-	public void setRecordExtraMp3(String mp3Path,boolean endloop)
+	public AudioLine setRecordExtraMp3(String mp3Path,boolean endloop)
 	{
 		if(renderer!=null){
-			if(renderer.setRecordExtraMp3(mp3Path)==false){
-				Log.e(TAG,"设置外部mp3音频错误, 请检查下您的音频文件是否正常.");
+			if(renderer.isRecording()){
+				Log.e(TAG,"DrawPad is running. set mp3 Error!");
+			}else {
+				AudioLine line=renderer.setRecordExtraMp3(mp3Path);
+				if(line==null){
+					Log.e(TAG,"设置外部mp3音频错误, 请检查下您的音频文件是否正常.");
+				}
+				return line;
 			}
+		}
+		recordExtMp3=mp3Path;
+		return null;
+	}
+	public MicLine getMicLine()
+	{
+		if(renderer!=null){
+			return renderer.getMicLine();
 		}else{
-			recordExtMp3=mp3Path;
+			return null;
+		}
+	}
+	public AudioLine getAudioLine()
+	{
+		if(renderer!=null){
+			return renderer.getAudioLine();
+		}else{
+			return null;
 		}
 	}
 	/**
@@ -986,17 +994,7 @@ public class DrawPadCameraView extends FrameLayout {
 	        }
 			isCameraOpened=false;
 	}
-	/**
-	 * 停止DrawPad的渲染线程 
-	 * 
-	 * 此方法仅仅在录制了外部pcm声音数据的时候使用, 其他时候,不可使用.
-	 * 
-	 * [此方法在2.6.0的时候不再使用.]
-	 * 
-	 * 如果设置了在录制的时候,设置了录制extPcm, 则返回录制音频的文件路径. 
-	 * 此方法执行后, DrawPad会释放内部所有Layer对象,您外界拿到的各种图层对象将无法再使用.
-	 * @return
-	 */
+	@Deprecated
 	public String stopDrawPad2()
 	{	
 			String ret=null;
@@ -1401,6 +1399,7 @@ public class DrawPadCameraView extends FrameLayout {
 			   public interface doFousEventListener {
 			        void onFocus(int x,int y);
 			   }
+			   
 			   /**
 			    * 当用户按下Drawpad画面后, 会去聚焦,这里返回一个监听,显示一个聚焦的动画.
 			    * @param mCameraFocusListener

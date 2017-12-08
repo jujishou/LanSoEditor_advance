@@ -139,6 +139,7 @@ public class VPlayer {
             mCurrentBufferPercentage = 0;
             mMediaPlayer.setDataSource(mAppContext, mUri);
 
+            mMediaPlayer.setLooping(isSetLoop);
             mMediaPlayer.setScreenOnWhilePlaying(true);
             mMediaPlayer.prepareAsync();
             mCurrentState = STATE_PREPARING;
@@ -245,14 +246,7 @@ public class VPlayer {
         mOnCompletionListener = l;
     }
 
-    /**
-     * Register a callback to be invoked when an error occurs
-     * during playback or setup.  If no listener is specified,
-     * or if the listener returned false, VideoView will inform
-     * the user of any errors.
-     *
-     * @param l The callback that will be run
-     */
+  
     public void setOnErrorListener(VideoPlayer.OnPlayerErrorListener l) {
         mOnErrorListener = l;
     }
@@ -314,9 +308,13 @@ public class VPlayer {
     public boolean isPlaying() {
         return isInPlaybackState() && mMediaPlayer.isPlaying();
     }
+    private boolean isSetLoop=false;
     public void setLooping(boolean looping){
     	if(mMediaPlayer!=null)
     		mMediaPlayer.setLooping(looping);
+    	else{
+    		isSetLoop=looping;
+    	}
     }
     
     public   boolean isLooping(){

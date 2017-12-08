@@ -1,8 +1,5 @@
 package com.example.advanceDemo;
 
-import com.example.advanceDemo.BitmapAudio.BitmapEditDemoActivity;
-import com.example.advanceDemo.BitmapAudio.DisplayFramesActivity;
-import com.example.advanceDemo.BitmapAudio.ExtractVideoFrameDemoActivity;
 import com.lansoeditor.demo.R;
 
 import android.app.Activity;

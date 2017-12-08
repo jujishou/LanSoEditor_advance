@@ -117,7 +117,7 @@ public class ViewLayerOnlyActivity extends Activity implements IEndListener{
 			public void run() {
 				initDrawPad();
 			}
-		}, 500);
+		}, 200);
     }
     /**
      * Step1: 初始化 DrawPad 容器
@@ -153,7 +153,6 @@ public class ViewLayerOnlyActivity extends Activity implements IEndListener{
     		playAudio();
     		addViewLayer();
         	playGaoBai();
-        	
     	}
     }
     //增加一个ViewLayer到容器上.
@@ -197,7 +196,6 @@ public class ViewLayerOnlyActivity extends Activity implements IEndListener{
     
     @Override
     protected void onDestroy() {
-    	// TODO Auto-generated method stub
     	super.onDestroy();
     	isDestorying=true;
     	if(drawPadView!=null){
@@ -227,7 +225,6 @@ public class ViewLayerOnlyActivity extends Activity implements IEndListener{
     			e.printStackTrace();
     		}
     	}
-    	
     }
 //  /-----------------------------
     private int gaoBaiChapter=0;

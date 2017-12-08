@@ -122,9 +122,8 @@ public class VideoPlayerActivity extends Activity {
 			public void onSurfaceTextureAvailable(SurfaceTexture surface, int width,
 					int height) {
 				if(isSupport){
-				//	Log.i(TAG,"开始播放.....");
-					play(new Surface(surface));
-//					startVPlayer(new Surface(surface));
+					play(new Surface(surface));  //采用系统本身的MediaPlayer播放
+//					startVPlayer(new Surface(surface));  //我们SDK提供的播放器.
 				}
 			}
 		});
@@ -138,7 +137,6 @@ public class VideoPlayerActivity extends Activity {
 			
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
-				// TODO Auto-generated method stub
 			}
 		})
         .show();
@@ -186,7 +184,6 @@ public class VideoPlayerActivity extends Activity {
 		        textureView.requestLayout();
 		        mediaPlayer.start();  
 		}  catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
     }  
@@ -201,6 +198,7 @@ public class VideoPlayerActivity extends Activity {
     			@Override
     			public void onPrepared(VideoPlayer mp) {
     						vplayer.setSurface(surface);
+    						vplayer.setLooping(true);
     					      
     						  //因为是竖屏.宽度小于高度.
     					        if(screenWidth>mInfo.vWidth){
@@ -215,18 +213,19 @@ public class VideoPlayerActivity extends Activity {
     					        textureView.setVideoSize(mp.getVideoWidth(), mp.getVideoHeight());
     					        textureView.requestLayout();
     					        vplayer.start();
+    					        vplayer.setLooping(true);
     					}
     			});
     	vplayer.setOnCompletionListener(new OnPlayerCompletionListener() {
 			
 			@Override
 			public void onCompletion(VideoPlayer mp) {
-				// TODO Auto-generated method stub
 				 Toast.makeText(VideoPlayerActivity.this,"视频播放完成", Toast.LENGTH_SHORT).show();
 			}
 		});
     	
     	vplayer.prepareAsync();
+    	
     }
     
     @Override  

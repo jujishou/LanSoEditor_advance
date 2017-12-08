@@ -269,7 +269,6 @@ public class ExecuteVideoLayerActivity extends Activity{
 	}
    @Override
     protected void onDestroy() {
-    	// TODO Auto-generated method stub
     	super.onDestroy();
     	
     	 removeGif();

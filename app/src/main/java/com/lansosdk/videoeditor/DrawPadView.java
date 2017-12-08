@@ -37,6 +37,7 @@ import java.util.Map;
 import jp.co.cyberagent.lansongsdk.gpuimage.GPUImageFilter;
 import jp.co.cyberagent.lansongsdk.gpuimage.GPUImageSepiaFilter;
 
+import com.lansosdk.box.AudioLine;
 import com.lansosdk.box.AudioInsertManager;
 import com.lansosdk.box.BitmapLayer;
 import com.lansosdk.box.CameraLayer;
@@ -49,6 +50,7 @@ import com.lansosdk.box.MVLayer;
 import com.lansosdk.box.Layer;
 import com.lansosdk.box.DrawPadUpdateMode;
 import com.lansosdk.box.DrawPadViewRender;
+import com.lansosdk.box.TextureLayer;
 import com.lansosdk.box.TwoVideoLayer;
 import com.lansosdk.box.VideoLayer;
 import com.lansosdk.box.VideoLayer2;
@@ -456,6 +458,7 @@ public class DrawPadView extends FrameLayout {
 	 * 故不能在回调 内增加各种UI相关的代码.
 	 */
 	private onDrawPadThreadProgressListener drawPadThreadProgressListener=null;
+	private boolean isThreadProgressInRecording=false;
 	/**
 	 * 方法与   onDrawPadProgressListener不同的地方在于:
 	 * 此回调是在DrawPad渲染完一帧后,立即执行这个回调中的代码,不通过Handler传递出去,你可以精确的执行一些下一帧的如何操作.
@@ -472,6 +475,12 @@ public class DrawPadView extends FrameLayout {
 			renderer.setDrawPadThreadProgressListener(listener);
 		}
 		drawPadThreadProgressListener=listener;
+	}
+	public void setThreadProgressInRecording(boolean  is){
+		if(renderer!=null){
+			renderer.setThreadProgressInRecording(is);
+		}
+		isThreadProgressInRecording=is;
 	}
 	
 	private onDrawPadSnapShotListener drawpadSnapShotListener=null;
@@ -652,6 +661,7 @@ public class DrawPadView extends FrameLayout {
 	 				
 	 				renderer.setDrawPadProgressListener(drawpadProgressListener);
 	 				renderer.setDrawPadCompletedListener(drawpadCompletedListener);
+	 				renderer.setThreadProgressInRecording(isThreadProgressInRecording);
 	 				renderer.setDrawPadThreadProgressListener(drawPadThreadProgressListener);
 	 				renderer.setDrawPadErrorListener(drawPadErrorListener);
 	 				renderer.setDrawPadRunTimeListener(drawpadRunTimeListener);
@@ -845,6 +855,19 @@ public class DrawPadView extends FrameLayout {
 			pcmSampleRate=samplerate;
 			pcmBitRate=bitrate;
 			pcmChannels=channels;
+		}
+	}
+	/**
+	 * 获取一个音频输入对象, 向内部投递数据, 
+	 * 只有当开启容器录制,并设置了录制外面数据的情况下,才有效.
+	 * @return
+	 */
+	public AudioLine getAudioLine()
+	{
+		if(renderer!=null){
+			return renderer.getAudioLine();
+		}else{
+			return null;
 		}
 	}
 	/**
@@ -1218,6 +1241,29 @@ public class DrawPadView extends FrameLayout {
 			}
 		}else{
 			Log.e(TAG,"addBitmapLayer error, bitmap is null");
+			return null;
+		}
+	}
+	/**
+	 * 增加纹理图层.
+	 * @param texid 纹理ID, 这个纹理务必要在我们的ThreadProgress中创建.
+	 * @param width 纹理的宽度
+	 * @param height 纹理的高度
+	 * @param filter 初始化的滤镜.
+	 * @return
+	 */
+	public TextureLayer addTextureLayer(int texid,int width,int height,GPUImageFilter filter)
+	{
+		if(texid!=-1)
+		{
+			if(renderer!=null && renderer.isRunning())
+				return renderer.addTextureLayer(texid,width,height,filter);
+			else{
+				Log.e(TAG,"addTextureLayer error render is not avalid");
+				return null;
+			}
+		}else{
+			Log.e(TAG,"addTextureLayer error, texid is error");
 			return null;
 		}
 	}

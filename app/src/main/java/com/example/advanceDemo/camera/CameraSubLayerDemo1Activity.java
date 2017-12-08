@@ -33,7 +33,6 @@ import com.lansosdk.box.Layer;
 import com.lansosdk.box.MVLayer;
 import com.lansosdk.box.MVLayerENDMode;
 import com.lansosdk.box.AudioPad;
-import com.lansosdk.box.SampleSave;
 import com.lansosdk.box.SubLayer;
 import com.lansosdk.box.ViewLayer;
 import com.lansosdk.box.ViewLayerRelativeLayout;

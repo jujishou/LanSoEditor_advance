@@ -110,7 +110,6 @@ public class CameraLayerFullLandscapeActivity extends Activity implements OnClic
     }
     @Override
     protected void onResume() {
-    	// TODO Auto-generated method stub
     	super.onResume();
     	if (mWakeLock == null) {
 			PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
@@ -144,7 +143,7 @@ public class CameraLayerFullLandscapeActivity extends Activity implements OnClic
     	
     	mDrawPadCamera.setRecordMic(true);
     	
-    	mDrawPadCamera.setCameraParam(false, null,true);  //设置是否前置.
+    	mDrawPadCamera.setCameraParam(true, null,true);  //设置是否前置.
     	/**
     	 * 设置当聚焦时的UI动画.
     	 */
@@ -152,7 +151,6 @@ public class CameraLayerFullLandscapeActivity extends Activity implements OnClic
 			
 			@Override
 			public void onFocus(int x, int y) {
-				// TODO Auto-generated method stub
 				focusView.startFocus(x, y);
 			}
 		});
@@ -160,7 +158,6 @@ public class CameraLayerFullLandscapeActivity extends Activity implements OnClic
 			
 			@Override
 			public void viewAvailable(DrawPadCameraView v) {
-				// TODO Auto-generated method stub
 					startDrawPad();
 			}
 		});
@@ -170,7 +167,6 @@ public class CameraLayerFullLandscapeActivity extends Activity implements OnClic
      */
       private void startDrawPad()
       {
-		  Log.i(TAG,"onViewAvaiable  drawPad工作	"+mDrawPadCamera.getDrawPadHeight()+mDrawPadCamera.getDrawPadWidth());
     	    if(mDrawPadCamera.setupDrawpad())
     	    {
     	    	mCameraLayer=mDrawPadCamera.getCameraLayer();
@@ -178,7 +174,6 @@ public class CameraLayerFullLandscapeActivity extends Activity implements OnClic
 //        		addViewLayer();
 //        		addBitmapLayer();
 //        		addMVLayer();
-    	    	
     	    	mDrawPadCamera.startPreview();
     	    	mDrawPadCamera.startRecord();
     	    }

@@ -6,8 +6,7 @@ import java.util.Locale;
 
 import su.levenetc.android.textsurface.animations.Alpha;
 
-import jp.co.cyberagent.lansongsdk.gpuimage.GPUImageSepiaFilter;
-import jp.co.cyberagent.lansongsdk.gpuimage.LanSongTestCentorFilter;
+
 
 import com.lansoeditor.demo.R;
 import com.lansosdk.box.AlphaAnimation;
@@ -19,6 +18,7 @@ import com.lansosdk.box.Layer;
 import com.lansosdk.box.MoveAnimation;
 import com.lansosdk.box.RotateAnimation;
 import com.lansosdk.box.SubLayer;
+import com.lansosdk.box.TextureLayer;
 import com.lansosdk.box.VideoLayer;
 import com.lansosdk.box.YUVLayer;
 import com.lansosdk.box.onDrawPadOutFrameListener;
@@ -41,6 +41,7 @@ import android.media.MediaPlayer.OnCompletionListener;
 import android.media.MediaPlayer.OnPreparedListener;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 import android.view.Surface;
 import android.view.View;
@@ -70,6 +71,8 @@ public class Demo1LayerMothedActivity extends Activity implements OnSeekBarChang
     private DrawPadView drawPadView;
     
     private MediaPlayer mplayer=null;
+    private MediaPlayer mplayer2=null;
+    
     private VideoLayer  mainVideoLayer=null;
     private BitmapLayer bitmapLayer=null;
     
@@ -78,6 +81,7 @@ public class Demo1LayerMothedActivity extends Activity implements OnSeekBarChang
     private LinearLayout  playVideo;
     private MediaInfo mInfo=null;
     
+    
     @Override
     protected void onCreate(Bundle savedInstanceState) 
     {
@@ -85,6 +89,7 @@ public class Demo1LayerMothedActivity extends Activity implements OnSeekBarChang
         setContentView(R.layout.drawpad_layout);
         
         videoPath = getIntent().getStringExtra("videopath");
+        
         mInfo=new MediaInfo(videoPath,false);
     	if(mInfo.prepare()==false){
     		 Toast.makeText(this, "传递过来的视频文件错误", Toast.LENGTH_SHORT).show();
@@ -93,20 +98,17 @@ public class Demo1LayerMothedActivity extends Activity implements OnSeekBarChang
     	
         drawPadView = (DrawPadView) findViewById(R.id.DrawPad_view);
         initView();
+        
         //在手机的默认路径下创建一个文件名,用来保存生成的视频文件,(在onDestroy中删除)
         editTmpPath=SDKFileUtils.newMp4PathInBox();
         dstPath=SDKFileUtils.newMp4PathInBox();
         
-    }
-    @Override
-    protected void onResume() {
-    	super.onResume();
-    	new Handler().postDelayed(new Runnable() {
+        new Handler().postDelayed(new Runnable() {
 			@Override
 			public void run() {
 				startPlayVideo();
 			}
-		}, 100);
+		}, 300);
     	playVideo.setVisibility(View.INVISIBLE);
     }
     private void startPlayVideo()
@@ -156,6 +158,7 @@ public class Demo1LayerMothedActivity extends Activity implements OnSeekBarChang
 					startDrawPad();
 				}
     		});
+    		
     		drawPadView.setRealEncodeEnable(padWidth,padHeight,1000000,(int)mInfo.vFrameRate,editTmpPath);
     		
         	drawPadView.setOnDrawPadProgressListener(new onDrawPadProgressListener() {
@@ -165,7 +168,9 @@ public class Demo1LayerMothedActivity extends Activity implements OnSeekBarChang
 					
 				}
 			});
+        	
     }
+    private TextureLayer  textureLayer=null;
     /**
      * Step2: 开始运行 Drawpad
      */
@@ -179,11 +184,12 @@ public class Demo1LayerMothedActivity extends Activity implements OnSeekBarChang
 			BitmapLayer layer=drawPadView.addBitmapLayer(BitmapFactory.decodeResource(getResources(), R.drawable.videobg));
 			layer.setScaledValue(layer.getPadWidth(), layer.getPadHeight());  //填充整个容器
 			
-			mainVideoLayer=drawPadView.addMainVideoLayer(mplayer.getVideoWidth(),mplayer.getVideoHeight(),null);
+			
+			mainVideoLayer=drawPadView.addVideoLayer(mplayer.getVideoWidth(),mplayer.getVideoHeight(),null);
 			if(mainVideoLayer!=null)
 			{
 				mplayer.setSurface(new Surface(mainVideoLayer.getVideoTexture()));
-			//	mainVideoLayer.setScale(0.8f);  //把视频缩小一些, 因为外面有背景.
+//				mainVideoLayer.setScale(0.8f);  //把视频缩小一些, 因为外面有背景.
 			}
 			mplayer.start();
 			addBitmapLayer();
@@ -336,6 +342,12 @@ public class Demo1LayerMothedActivity extends Activity implements OnSeekBarChang
 					bitmapLayer.setRotate(progress);
 				}
 				break;
+			case R.id.id_DrawPad_skbar_scale:
+				if(bitmapLayer!=null){
+					float scale=(float)progress/100;
+					bitmapLayer.setScale(scale);
+				}
+			break;	
 			case R.id.id_DrawPad_skbar_moveX:
 					if(bitmapLayer!=null){
 						 xpos+=10;
@@ -352,13 +364,7 @@ public class Demo1LayerMothedActivity extends Activity implements OnSeekBarChang
 					 bitmapLayer.setPosition(bitmapLayer.getPositionX(), ypos);
 				}
 			break;				
-			case R.id.id_DrawPad_skbar_scale:
-				if(bitmapLayer!=null){
-					float scale=(float)progress/100;
-					int width=(int)(bitmapLayer.getLayerWidth() * scale);
-					bitmapLayer.setScaledValue(bitmapLayer.getLayerWidth(), width);
-				}
-			break;		
+			
 			case R.id.id_DrawPad_skbar_brightness:
 					if(bitmapLayer!=null){
 						float value=(float)progress/100;

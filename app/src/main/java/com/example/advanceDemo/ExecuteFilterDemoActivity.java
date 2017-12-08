@@ -95,19 +95,15 @@ public class ExecuteFilterDemoActivity extends Activity{
 	}
    @Override
     protected void onDestroy() {
-    	// TODO Auto-generated method stub
     	super.onDestroy();
     	
     	if(mDrawPad!=null){
     		mDrawPad.release();
     		mDrawPad=null;
     	}
-    	   if(SDKFileUtils.fileExist(dstPath)){
-    		   SDKFileUtils.deleteFile(dstPath);
-           }
-           if(SDKFileUtils.fileExist(editTmpPath)){
-        	   SDKFileUtils.deleteFile(editTmpPath);
-           } 
+    		   
+    	SDKFileUtils.deleteFile(dstPath);
+    	SDKFileUtils.deleteFile(editTmpPath);
     }
 	long  beforeDraw=0;
 	private boolean isSwirlFilter=false;
@@ -152,7 +148,6 @@ public class ExecuteFilterDemoActivity extends Activity{
 			
 			@Override
 			public void onCompleted(DrawPad v) {
-				// TODO Auto-generated method stub
 				drawPadCompleted();
 			}
 		});
@@ -171,7 +166,6 @@ public class ExecuteFilterDemoActivity extends Activity{
 				
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
-					// TODO Auto-generated method stub
 				}
 			})
 	        .show();
@@ -231,7 +225,6 @@ public class ExecuteFilterDemoActivity extends Activity{
 			
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
-				// TODO Auto-generated method stub
 				startDrawPadExecute();
 			}
 		})

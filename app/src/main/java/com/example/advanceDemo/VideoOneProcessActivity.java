@@ -91,7 +91,6 @@ public class VideoOneProcessActivity extends Activity  implements OnClickListene
 		
 		videoPath = getIntent().getStringExtra("videopath");
 		
-		
 		mInfo=new MediaInfo(videoPath);
 		if(mInfo.prepare()==false){
 			Toast.makeText(mContext, "当前文件错误!", Toast.LENGTH_LONG).show();
@@ -132,11 +131,11 @@ public class VideoOneProcessActivity extends Activity  implements OnClickListene
 		
 		if(isMusicEnable){  //增加音乐
 			String music=CopyFileFromAssets.copyAssets(mContext, "summer10s.mp3");
-			videoOneDo.setBackGrondMusic(music,isMusicMix,0.8f);
+			videoOneDo.setBackGroundMusic(music,isMusicMix,0.8f);
 		}
 		
 		if(isScaleEnable){ //是否缩放.
-			videoOneDo.setScaleWidth((int)(mInfo.vWidth*scaleFactor), (int)(mInfo.vHeight*scaleFactor));
+			videoOneDo.setScaleWidth((int)(mInfo.getWidth()*scaleFactor), (int)(mInfo.getHeight()*scaleFactor));
 		}
 		
 		if(isCompressEnable){  //是否压缩
@@ -161,11 +160,11 @@ public class VideoOneProcessActivity extends Activity  implements OnClickListene
 		//横屏OK
 		if(isCropEnable){  //是否画面裁剪
 //			//这里为了代码清晰, 取视频中间的2/3画面为裁剪, 实际您可以任意裁剪.
-			int startX=mInfo.vWidth/6;  //中间2/3,则裁剪掉1/3, 则左上角是一半,为1/6;
-			int startY=mInfo.vHeight/6;
+			int startX=mInfo.getWidth()/6;  //中间2/3,则裁剪掉1/3, 则左上角是一半,为1/6;
+			int startY=mInfo.getHeight()/6;
 			
-			int cropW=mInfo.vWidth*2/3;
-			int cropH=mInfo.vHeight*2/3;
+			int cropW=mInfo.getWidth()*2/3;
+			int cropH=mInfo.getHeight()*2/3;
 			videoOneDo.setCropRect(startX, startY, cropW, cropH);
 		}
 		
@@ -196,6 +195,7 @@ public class VideoOneProcessActivity extends Activity  implements OnClickListene
 		super.onPause();
 		if(isRunning && videoOneDo!=null){
 			videoOneDo.stop();
+			videoOneDo.release();
 		}
 		cancelProgressDialog();
 	}

@@ -587,7 +587,6 @@ public class VideoPlayer  {
     public void reset() {
         stayAwake(false);
         _reset();
-        // make sure none of the listeners get called anymore
         mEventHandler.removeCallbacksAndMessages(null);
 
         mVideoWidth = 0;
@@ -624,6 +623,11 @@ public class VideoPlayer  {
     private native long  _getPropertyLong(int property, long defaultValue);
     private native void  _setPropertyLong(int property, long value);
 
+    /**
+     * LANSONGTODO 
+     * @param leftVolume
+     * @param rightVolume
+     */
     public native void setVolume(float leftVolume, float rightVolume);
 
     public native int getAudioSessionId();

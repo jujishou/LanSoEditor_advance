@@ -1,0 +1,358 @@
+[
+    {
+        "merged": "E:\\0000Coodec\\publish_sdk\\LanSoEditor_advance\\LanSoEditor_advance\\app\\build\\intermediates\\res\\merged\\debug\\layout\\onedo_crop_merge.xml",
+        "source": "E:\\0000Coodec\\publish_sdk\\LanSoEditor_advance\\LanSoEditor_advance\\app\\src\\main\\res\\layout\\onedo_crop_merge.xml"
+    },
+    {
+        "merged": "E:\\0000Coodec\\publish_sdk\\LanSoEditor_advance\\LanSoEditor_advance\\app\\build\\intermediates\\res\\merged\\debug\\layout\\videopicture_layout.xml",
+        "source": "E:\\0000Coodec\\publish_sdk\\LanSoEditor_advance\\LanSoEditor_advance\\app\\src\\main\\res\\layout\\videopicture_layout.xml"
+    },
+    {
+        "merged": "E:\\0000Coodec\\publish_sdk\\LanSoEditor_advance\\LanSoEditor_advance\\app\\build\\intermediates\\res\\merged\\debug\\layout\\twovideolayer_demo_layout.xml",
+        "source": "E:\\0000Coodec\\publish_sdk\\LanSoEditor_advance\\LanSoEditor_advance\\app\\src\\main\\res\\layout\\twovideolayer_demo_layout.xml"
+    },
+    {
+        "merged": "E:\\0000Coodec\\publish_sdk\\LanSoEditor_advance\\LanSoEditor_advance\\app\\build\\intermediates\\res\\merged\\debug\\layout\\player_layout.xml",
+        "source": "E:\\0000Coodec\\publish_sdk\\LanSoEditor_advance\\LanSoEditor_advance\\app\\src\\main\\res\\layout\\player_layout.xml"
+    },
+    {
+        "merged": "E:\\0000Coodec\\publish_sdk\\LanSoEditor_advance\\LanSoEditor_advance\\app\\build\\intermediates\\res\\merged\\debug\\layout\\test_cmd_layout.xml",
+        "source": "E:\\0000Coodec\\publish_sdk\\LanSoEditor_advance\\LanSoEditor_advance\\app\\src\\main\\res\\layout\\test_cmd_layout.xml"
+    },
+    {
+        "merged": "E:\\0000Coodec\\publish_sdk\\LanSoEditor_advance\\LanSoEditor_advance\\app\\build\\intermediates\\res\\merged\\debug\\layout\\viewpen_preview_layout2.xml",
+        "source": "E:\\0000Coodec\\publish_sdk\\LanSoEditor_advance\\LanSoEditor_advance\\app\\src\\main\\res\\layout\\viewpen_preview_layout2.xml"
+    },
+    {
+        "merged": "E:\\0000Coodec\\publish_sdk\\LanSoEditor_advance\\LanSoEditor_advance\\app\\build\\intermediates\\res\\merged\\debug\\layout\\camera_sublayerdemo_layout.xml",
+        "source": "E:\\0000Coodec\\publish_sdk\\LanSoEditor_advance\\LanSoEditor_advance\\app\\src\\main\\res\\layout\\camera_sublayerdemo_layout.xml"
+    },
+    {
+        "merged": "E:\\0000Coodec\\publish_sdk\\LanSoEditor_advance\\LanSoEditor_advance\\app\\build\\intermediates\\res\\merged\\debug\\layout\\cameralayer_demo_layout.xml",
+        "source": "E:\\0000Coodec\\publish_sdk\\LanSoEditor_advance\\LanSoEditor_advance\\app\\src\\main\\res\\layout\\cameralayer_demo_layout.xml"
+    },
+    {
+        "merged": "E:\\0000Coodec\\publish_sdk\\LanSoEditor_advance\\LanSoEditor_advance\\app\\build\\intermediates\\res\\merged\\debug\\layout\\filter_item.xml",
+        "source": "E:\\0000Coodec\\publish_sdk\\LanSoEditor_advance\\LanSoEditor_advance\\app\\src\\main\\res\\layout\\filter_item.xml"
+    },
+    {
+        "merged": "E:\\0000Coodec\\publish_sdk\\LanSoEditor_advance\\LanSoEditor_advance\\app\\build\\intermediates\\res\\merged\\debug\\layout\\canvaslayer_demo_layout.xml",
+        "source": "E:\\0000Coodec\\publish_sdk\\LanSoEditor_advance\\LanSoEditor_advance\\app\\src\\main\\res\\layout\\canvaslayer_demo_layout.xml"
+    },
+    {
+        "merged": "E:\\0000Coodec\\publish_sdk\\LanSoEditor_advance\\LanSoEditor_advance\\app\\build\\intermediates\\res\\merged\\debug\\layout\\onedo_scale_merge.xml",
+        "source": "E:\\0000Coodec\\publish_sdk\\LanSoEditor_advance\\LanSoEditor_advance\\app\\src\\main\\res\\layout\\onedo_scale_merge.xml"
+    },
+    {
+        "merged": "E:\\0000Coodec\\publish_sdk\\LanSoEditor_advance\\LanSoEditor_advance\\app\\build\\intermediates\\res\\merged\\debug\\layout\\texturelayer_demo_layout.xml",
+        "source": "E:\\0000Coodec\\publish_sdk\\LanSoEditor_advance\\LanSoEditor_advance\\app\\src\\main\\res\\layout\\texturelayer_demo_layout.xml"
+    },
+    {
+        "merged": "E:\\0000Coodec\\publish_sdk\\LanSoEditor_advance\\LanSoEditor_advance\\app\\build\\intermediates\\res\\merged\\debug\\layout\\drawpad_common_layout.xml",
+        "source": "E:\\0000Coodec\\publish_sdk\\LanSoEditor_advance\\LanSoEditor_advance\\app\\src\\main\\res\\layout\\drawpad_common_layout.xml"
+    },
+    {
+        "merged": "E:\\0000Coodec\\publish_sdk\\LanSoEditor_advance\\LanSoEditor_advance\\app\\build\\intermediates\\res\\merged\\debug\\layout\\demo_layout.xml",
+        "source": "E:\\0000Coodec\\publish_sdk\\LanSoEditor_advance\\LanSoEditor_advance\\app\\src\\main\\res\\layout\\demo_layout.xml"
+    },
+    {
+        "merged": "E:\\0000Coodec\\publish_sdk\\LanSoEditor_advance\\LanSoEditor_advance\\app\\build\\intermediates\\res\\merged\\debug\\layout\\title.xml",
+        "source": "E:\\0000Coodec\\publish_sdk\\LanSoEditor_advance\\LanSoEditor_advance\\app\\src\\main\\res\\layout\\title.xml"
+    },
+    {
+        "merged": "E:\\0000Coodec\\publish_sdk\\LanSoEditor_advance\\LanSoEditor_advance\\app\\build\\intermediates\\res\\merged\\debug\\layout\\get_frames_list_layout.xml",
+        "source": "E:\\0000Coodec\\publish_sdk\\LanSoEditor_advance\\LanSoEditor_advance\\app\\src\\main\\res\\layout\\get_frames_list_layout.xml"
+    },
+    {
+        "merged": "E:\\0000Coodec\\publish_sdk\\LanSoEditor_advance\\LanSoEditor_advance\\app\\build\\intermediates\\res\\merged\\debug\\layout\\drawpad_layout.xml",
+        "source": "E:\\0000Coodec\\publish_sdk\\LanSoEditor_advance\\LanSoEditor_advance\\app\\src\\main\\res\\layout\\drawpad_layout.xml"
+    },
+    {
+        "merged": "E:\\0000Coodec\\publish_sdk\\LanSoEditor_advance\\LanSoEditor_advance\\app\\build\\intermediates\\res\\merged\\debug\\layout\\file_explore_layout.xml",
+        "source": "E:\\0000Coodec\\publish_sdk\\LanSoEditor_advance\\LanSoEditor_advance\\app\\src\\main\\res\\layout\\file_explore_layout.xml"
+    },
+    {
+        "merged": "E:\\0000Coodec\\publish_sdk\\LanSoEditor_advance\\LanSoEditor_advance\\app\\build\\intermediates\\res\\merged\\debug\\layout\\view2.xml",
+        "source": "E:\\0000Coodec\\publish_sdk\\LanSoEditor_advance\\LanSoEditor_advance\\app\\src\\main\\res\\layout\\view2.xml"
+    },
+    {
+        "merged": "E:\\0000Coodec\\publish_sdk\\LanSoEditor_advance\\LanSoEditor_advance\\app\\build\\intermediates\\res\\merged\\debug\\layout\\filter_player_layout.xml",
+        "source": "E:\\0000Coodec\\publish_sdk\\LanSoEditor_advance\\LanSoEditor_advance\\app\\src\\main\\res\\layout\\filter_player_layout.xml"
+    },
+    {
+        "merged": "E:\\0000Coodec\\publish_sdk\\LanSoEditor_advance\\LanSoEditor_advance\\app\\build\\intermediates\\res\\merged\\debug\\layout\\camera_sublayerdemo2_layout.xml",
+        "source": "E:\\0000Coodec\\publish_sdk\\LanSoEditor_advance\\LanSoEditor_advance\\app\\src\\main\\res\\layout\\camera_sublayerdemo2_layout.xml"
+    },
+    {
+        "merged": "E:\\0000Coodec\\publish_sdk\\LanSoEditor_advance\\LanSoEditor_advance\\app\\build\\intermediates\\res\\merged\\debug\\layout\\outbody_demo_layout.xml",
+        "source": "E:\\0000Coodec\\publish_sdk\\LanSoEditor_advance\\LanSoEditor_advance\\app\\src\\main\\res\\layout\\outbody_demo_layout.xml"
+    },
+    {
+        "merged": "E:\\0000Coodec\\publish_sdk\\LanSoEditor_advance\\LanSoEditor_advance\\app\\build\\intermediates\\res\\merged\\debug\\layout\\vview_drawimage_demo_layout.xml",
+        "source": "E:\\0000Coodec\\publish_sdk\\LanSoEditor_advance\\LanSoEditor_advance\\app\\src\\main\\res\\layout\\vview_drawimage_demo_layout.xml"
+    },
+    {
+        "merged": "E:\\0000Coodec\\publish_sdk\\LanSoEditor_advance\\LanSoEditor_advance\\app\\build\\intermediates\\res\\merged\\debug\\layout\\mvlayer_demo_layout.xml",
+        "source": "E:\\0000Coodec\\publish_sdk\\LanSoEditor_advance\\LanSoEditor_advance\\app\\src\\main\\res\\layout\\mvlayer_demo_layout.xml"
+    },
+    {
+        "merged": "E:\\0000Coodec\\publish_sdk\\LanSoEditor_advance\\LanSoEditor_advance\\app\\build\\intermediates\\res\\merged\\debug\\layout\\onedo_compress_merge.xml",
+        "source": "E:\\0000Coodec\\publish_sdk\\LanSoEditor_advance\\LanSoEditor_advance\\app\\src\\main\\res\\layout\\onedo_compress_merge.xml"
+    },
+    {
+        "merged": "E:\\0000Coodec\\publish_sdk\\LanSoEditor_advance\\LanSoEditor_advance\\app\\build\\intermediates\\res\\merged\\debug\\layout\\onedo_filter_merge.xml",
+        "source": "E:\\0000Coodec\\publish_sdk\\LanSoEditor_advance\\LanSoEditor_advance\\app\\src\\main\\res\\layout\\onedo_filter_merge.xml"
+    },
+    {
+        "merged": "E:\\0000Coodec\\publish_sdk\\LanSoEditor_advance\\LanSoEditor_advance\\app\\build\\intermediates\\res\\merged\\debug\\layout\\file_explore_item.xml",
+        "source": "E:\\0000Coodec\\publish_sdk\\LanSoEditor_advance\\LanSoEditor_advance\\app\\src\\main\\res\\layout\\file_explore_item.xml"
+    },
+    {
+        "merged": "E:\\0000Coodec\\publish_sdk\\LanSoEditor_advance\\LanSoEditor_advance\\app\\build\\intermediates\\res\\merged\\debug\\layout\\frame_grid_item.xml",
+        "source": "E:\\0000Coodec\\publish_sdk\\LanSoEditor_advance\\LanSoEditor_advance\\app\\src\\main\\res\\layout\\frame_grid_item.xml"
+    },
+    {
+        "merged": "E:\\0000Coodec\\publish_sdk\\LanSoEditor_advance\\LanSoEditor_advance\\app\\build\\intermediates\\res\\merged\\debug\\layout\\cameralayer_ktv_demo_layout.xml",
+        "source": "E:\\0000Coodec\\publish_sdk\\LanSoEditor_advance\\LanSoEditor_advance\\app\\src\\main\\res\\layout\\cameralayer_ktv_demo_layout.xml"
+    },
+    {
+        "merged": "E:\\0000Coodec\\publish_sdk\\LanSoEditor_advance\\LanSoEditor_advance\\app\\build\\intermediates\\res\\merged\\debug\\layout\\filter_layer_demo_layout.xml",
+        "source": "E:\\0000Coodec\\publish_sdk\\LanSoEditor_advance\\LanSoEditor_advance\\app\\src\\main\\res\\layout\\filter_layer_demo_layout.xml"
+    },
+    {
+        "merged": "E:\\0000Coodec\\publish_sdk\\LanSoEditor_advance\\LanSoEditor_advance\\app\\build\\intermediates\\res\\merged\\debug\\layout\\show_one_bitmap_layout.xml",
+        "source": "E:\\0000Coodec\\publish_sdk\\LanSoEditor_advance\\LanSoEditor_advance\\app\\src\\main\\res\\layout\\show_one_bitmap_layout.xml"
+    },
+    {
+        "merged": "E:\\0000Coodec\\publish_sdk\\LanSoEditor_advance\\LanSoEditor_advance\\app\\build\\intermediates\\res\\merged\\debug\\layout\\extract_video_frame_layout.xml",
+        "source": "E:\\0000Coodec\\publish_sdk\\LanSoEditor_advance\\LanSoEditor_advance\\app\\src\\main\\res\\layout\\extract_video_frame_layout.xml"
+    },
+    {
+        "merged": "E:\\0000Coodec\\publish_sdk\\LanSoEditor_advance\\LanSoEditor_advance\\app\\build\\intermediates\\res\\merged\\debug\\layout\\video_one_do_process_layout.xml",
+        "source": "E:\\0000Coodec\\publish_sdk\\LanSoEditor_advance\\LanSoEditor_advance\\app\\src\\main\\res\\layout\\video_one_do_process_layout.xml"
+    },
+    {
+        "merged": "E:\\0000Coodec\\publish_sdk\\LanSoEditor_advance\\LanSoEditor_advance\\app\\build\\intermediates\\res\\merged\\debug\\layout\\camera_fullport_mp3_layout.xml",
+        "source": "E:\\0000Coodec\\publish_sdk\\LanSoEditor_advance\\LanSoEditor_advance\\app\\src\\main\\res\\layout\\camera_fullport_mp3_layout.xml"
+    },
+    {
+        "merged": "E:\\0000Coodec\\publish_sdk\\LanSoEditor_advance\\LanSoEditor_advance\\app\\build\\intermediates\\res\\merged\\debug\\layout\\view7.xml",
+        "source": "E:\\0000Coodec\\publish_sdk\\LanSoEditor_advance\\LanSoEditor_advance\\app\\src\\main\\res\\layout\\view7.xml"
+    },
+    {
+        "merged": "E:\\0000Coodec\\publish_sdk\\LanSoEditor_advance\\LanSoEditor_advance\\app\\build\\intermediates\\res\\merged\\debug\\layout\\view4.xml",
+        "source": "E:\\0000Coodec\\publish_sdk\\LanSoEditor_advance\\LanSoEditor_advance\\app\\src\\main\\res\\layout\\view4.xml"
+    },
+    {
+        "merged": "E:\\0000Coodec\\publish_sdk\\LanSoEditor_advance\\LanSoEditor_advance\\app\\build\\intermediates\\res\\merged\\debug\\layout\\onedo_cutduration_merge.xml",
+        "source": "E:\\0000Coodec\\publish_sdk\\LanSoEditor_advance\\LanSoEditor_advance\\app\\src\\main\\res\\layout\\onedo_cutduration_merge.xml"
+    },
+    {
+        "merged": "E:\\0000Coodec\\publish_sdk\\LanSoEditor_advance\\LanSoEditor_advance\\app\\build\\intermediates\\res\\merged\\debug\\layout\\viewpager.xml",
+        "source": "E:\\0000Coodec\\publish_sdk\\LanSoEditor_advance\\LanSoEditor_advance\\app\\src\\main\\res\\layout\\viewpager.xml"
+    },
+    {
+        "merged": "E:\\0000Coodec\\publish_sdk\\LanSoEditor_advance\\LanSoEditor_advance\\app\\build\\intermediates\\res\\merged\\debug\\layout\\onedo_lansongvideo_merge.xml",
+        "source": "E:\\0000Coodec\\publish_sdk\\LanSoEditor_advance\\LanSoEditor_advance\\app\\src\\main\\res\\layout\\onedo_lansongvideo_merge.xml"
+    },
+    {
+        "merged": "E:\\0000Coodec\\publish_sdk\\LanSoEditor_advance\\LanSoEditor_advance\\app\\build\\intermediates\\res\\merged\\debug\\layout\\onedo_animation_merge.xml",
+        "source": "E:\\0000Coodec\\publish_sdk\\LanSoEditor_advance\\LanSoEditor_advance\\app\\src\\main\\res\\layout\\onedo_animation_merge.xml"
+    },
+    {
+        "merged": "E:\\0000Coodec\\publish_sdk\\LanSoEditor_advance\\LanSoEditor_advance\\app\\build\\intermediates\\res\\merged\\debug\\layout\\test_cmd_item.xml",
+        "source": "E:\\0000Coodec\\publish_sdk\\LanSoEditor_advance\\LanSoEditor_advance\\app\\src\\main\\res\\layout\\test_cmd_item.xml"
+    },
+    {
+        "merged": "E:\\0000Coodec\\publish_sdk\\LanSoEditor_advance\\LanSoEditor_advance\\app\\build\\intermediates\\res\\merged\\debug\\layout\\cameralayer_fullscreen_demo_layout2.xml",
+        "source": "E:\\0000Coodec\\publish_sdk\\LanSoEditor_advance\\LanSoEditor_advance\\app\\src\\main\\res\\layout\\cameralayer_fullscreen_demo_layout2.xml"
+    },
+    {
+        "merged": "E:\\0000Coodec\\publish_sdk\\LanSoEditor_advance\\LanSoEditor_advance\\app\\build\\intermediates\\res\\merged\\debug\\layout\\cameralayer_fullsegment_old_layout.xml",
+        "source": "E:\\0000Coodec\\publish_sdk\\LanSoEditor_advance\\LanSoEditor_advance\\app\\src\\main\\res\\layout\\cameralayer_fullsegment_old_layout.xml"
+    },
+    {
+        "merged": "E:\\0000Coodec\\publish_sdk\\LanSoEditor_advance\\LanSoEditor_advance\\app\\build\\intermediates\\res\\merged\\debug\\layout\\video_record_activity.xml",
+        "source": "E:\\0000Coodec\\publish_sdk\\LanSoEditor_advance\\LanSoEditor_advance\\app\\src\\main\\res\\layout\\video_record_activity.xml"
+    },
+    {
+        "merged": "E:\\0000Coodec\\publish_sdk\\LanSoEditor_advance\\LanSoEditor_advance\\app\\build\\intermediates\\res\\merged\\debug\\layout\\cameralayer_fullscreen_demo_layout_old.xml",
+        "source": "E:\\0000Coodec\\publish_sdk\\LanSoEditor_advance\\LanSoEditor_advance\\app\\src\\main\\res\\layout\\cameralayer_fullscreen_demo_layout_old.xml"
+    },
+    {
+        "merged": "E:\\0000Coodec\\publish_sdk\\LanSoEditor_advance\\LanSoEditor_advance\\app\\build\\intermediates\\res\\merged\\debug\\layout\\onedo_addword_merge.xml",
+        "source": "E:\\0000Coodec\\publish_sdk\\LanSoEditor_advance\\LanSoEditor_advance\\app\\src\\main\\res\\layout\\onedo_addword_merge.xml"
+    },
+    {
+        "merged": "E:\\0000Coodec\\publish_sdk\\LanSoEditor_advance\\LanSoEditor_advance\\app\\build\\intermediates\\res\\merged\\debug\\layout\\bitmaplayer_filter_layout.xml",
+        "source": "E:\\0000Coodec\\publish_sdk\\LanSoEditor_advance\\LanSoEditor_advance\\app\\src\\main\\res\\layout\\bitmaplayer_filter_layout.xml"
+    },
+    {
+        "merged": "E:\\0000Coodec\\publish_sdk\\LanSoEditor_advance\\LanSoEditor_advance\\app\\build\\intermediates\\res\\merged\\debug\\layout\\view1.xml",
+        "source": "E:\\0000Coodec\\publish_sdk\\LanSoEditor_advance\\LanSoEditor_advance\\app\\src\\main\\res\\layout\\view1.xml"
+    },
+    {
+        "merged": "E:\\0000Coodec\\publish_sdk\\LanSoEditor_advance\\LanSoEditor_advance\\app\\build\\intermediates\\res\\merged\\debug\\layout\\bitmaplayer_tuao_layout.xml",
+        "source": "E:\\0000Coodec\\publish_sdk\\LanSoEditor_advance\\LanSoEditor_advance\\app\\src\\main\\res\\layout\\bitmaplayer_tuao_layout.xml"
+    },
+    {
+        "merged": "E:\\0000Coodec\\publish_sdk\\LanSoEditor_advance\\LanSoEditor_advance\\app\\build\\intermediates\\res\\merged\\debug\\layout\\bitmap2bitmap_layout.xml",
+        "source": "E:\\0000Coodec\\publish_sdk\\LanSoEditor_advance\\LanSoEditor_advance\\app\\src\\main\\res\\layout\\bitmap2bitmap_layout.xml"
+    },
+    {
+        "merged": "E:\\0000Coodec\\publish_sdk\\LanSoEditor_advance\\LanSoEditor_advance\\app\\build\\intermediates\\res\\merged\\debug\\layout\\canvaslayer_demo_layout2.xml",
+        "source": "E:\\0000Coodec\\publish_sdk\\LanSoEditor_advance\\LanSoEditor_advance\\app\\src\\main\\res\\layout\\canvaslayer_demo_layout2.xml"
+    },
+    {
+        "merged": "E:\\0000Coodec\\publish_sdk\\LanSoEditor_advance\\LanSoEditor_advance\\app\\build\\intermediates\\res\\merged\\debug\\layout\\list_layers_demo_layout.xml",
+        "source": "E:\\0000Coodec\\publish_sdk\\LanSoEditor_advance\\LanSoEditor_advance\\app\\src\\main\\res\\layout\\list_layers_demo_layout.xml"
+    },
+    {
+        "merged": "E:\\0000Coodec\\publish_sdk\\LanSoEditor_advance\\LanSoEditor_advance\\app\\build\\intermediates\\res\\merged\\debug\\layout\\list_facedetected_demo_layout.xml",
+        "source": "E:\\0000Coodec\\publish_sdk\\LanSoEditor_advance\\LanSoEditor_advance\\app\\src\\main\\res\\layout\\list_facedetected_demo_layout.xml"
+    },
+    {
+        "merged": "E:\\0000Coodec\\publish_sdk\\LanSoEditor_advance\\LanSoEditor_advance\\app\\build\\intermediates\\res\\merged\\debug\\layout\\test_widget.xml",
+        "source": "E:\\0000Coodec\\publish_sdk\\LanSoEditor_advance\\LanSoEditor_advance\\app\\src\\main\\res\\layout\\test_widget.xml"
+    },
+    {
+        "merged": "E:\\0000Coodec\\publish_sdk\\LanSoEditor_advance\\LanSoEditor_advance\\app\\build\\intermediates\\res\\merged\\debug\\layout\\camera_demo_list_layout.xml",
+        "source": "E:\\0000Coodec\\publish_sdk\\LanSoEditor_advance\\LanSoEditor_advance\\app\\src\\main\\res\\layout\\camera_demo_list_layout.xml"
+    },
+    {
+        "merged": "E:\\0000Coodec\\publish_sdk\\LanSoEditor_advance\\LanSoEditor_advance\\app\\build\\intermediates\\res\\merged\\debug\\layout\\onedo_logo_merge.xml",
+        "source": "E:\\0000Coodec\\publish_sdk\\LanSoEditor_advance\\LanSoEditor_advance\\app\\src\\main\\res\\layout\\onedo_logo_merge.xml"
+    },
+    {
+        "merged": "E:\\0000Coodec\\publish_sdk\\LanSoEditor_advance\\LanSoEditor_advance\\app\\build\\intermediates\\res\\merged\\debug\\layout\\videolayer_autoupdate_demo_layout.xml",
+        "source": "E:\\0000Coodec\\publish_sdk\\LanSoEditor_advance\\LanSoEditor_advance\\app\\src\\main\\res\\layout\\videolayer_autoupdate_demo_layout.xml"
+    },
+    {
+        "merged": "E:\\0000Coodec\\publish_sdk\\LanSoEditor_advance\\LanSoEditor_advance\\app\\build\\intermediates\\res\\merged\\debug\\layout\\view6.xml",
+        "source": "E:\\0000Coodec\\publish_sdk\\LanSoEditor_advance\\LanSoEditor_advance\\app\\src\\main\\res\\layout\\view6.xml"
+    },
+    {
+        "merged": "E:\\0000Coodec\\publish_sdk\\LanSoEditor_advance\\LanSoEditor_advance\\app\\build\\intermediates\\res\\merged\\debug\\layout\\video_scale_layout.xml",
+        "source": "E:\\0000Coodec\\publish_sdk\\LanSoEditor_advance\\LanSoEditor_advance\\app\\src\\main\\res\\layout\\video_scale_layout.xml"
+    },
+    {
+        "merged": "E:\\0000Coodec\\publish_sdk\\LanSoEditor_advance\\LanSoEditor_advance\\app\\build\\intermediates\\res\\merged\\debug\\layout\\activity_main.xml",
+        "source": "E:\\0000Coodec\\publish_sdk\\LanSoEditor_advance\\LanSoEditor_advance\\app\\src\\main\\res\\layout\\activity_main.xml"
+    },
+    {
+        "merged": "E:\\0000Coodec\\publish_sdk\\LanSoEditor_advance\\LanSoEditor_advance\\app\\build\\intermediates\\res\\merged\\debug\\layout\\viewpen_preview_layout.xml",
+        "source": "E:\\0000Coodec\\publish_sdk\\LanSoEditor_advance\\LanSoEditor_advance\\app\\src\\main\\res\\layout\\viewpen_preview_layout.xml"
+    },
+    {
+        "merged": "E:\\0000Coodec\\publish_sdk\\LanSoEditor_advance\\LanSoEditor_advance\\app\\build\\intermediates\\res\\merged\\debug\\layout\\execute_edit_demo_layout.xml",
+        "source": "E:\\0000Coodec\\publish_sdk\\LanSoEditor_advance\\LanSoEditor_advance\\app\\src\\main\\res\\layout\\execute_edit_demo_layout.xml"
+    },
+    {
+        "merged": "E:\\0000Coodec\\publish_sdk\\LanSoEditor_advance\\LanSoEditor_advance\\app\\build\\intermediates\\res\\merged\\debug\\layout\\list_scene_demo_layout.xml",
+        "source": "E:\\0000Coodec\\publish_sdk\\LanSoEditor_advance\\LanSoEditor_advance\\app\\src\\main\\res\\layout\\list_scene_demo_layout.xml"
+    },
+    {
+        "merged": "E:\\0000Coodec\\publish_sdk\\LanSoEditor_advance\\LanSoEditor_advance\\app\\build\\intermediates\\res\\merged\\debug\\layout\\particel_demo_layout.xml",
+        "source": "E:\\0000Coodec\\publish_sdk\\LanSoEditor_advance\\LanSoEditor_advance\\app\\src\\main\\res\\layout\\particel_demo_layout.xml"
+    },
+    {
+        "merged": "E:\\0000Coodec\\publish_sdk\\LanSoEditor_advance\\LanSoEditor_advance\\app\\build\\intermediates\\res\\merged\\debug\\layout\\camera_full_record_layout.xml",
+        "source": "E:\\0000Coodec\\publish_sdk\\LanSoEditor_advance\\LanSoEditor_advance\\app\\src\\main\\res\\layout\\camera_full_record_layout.xml"
+    },
+    {
+        "merged": "E:\\0000Coodec\\publish_sdk\\LanSoEditor_advance\\LanSoEditor_advance\\app\\build\\intermediates\\res\\merged\\debug\\layout\\view5.xml",
+        "source": "E:\\0000Coodec\\publish_sdk\\LanSoEditor_advance\\LanSoEditor_advance\\app\\src\\main\\res\\layout\\view5.xml"
+    },
+    {
+        "merged": "E:\\0000Coodec\\publish_sdk\\LanSoEditor_advance\\LanSoEditor_advance\\app\\build\\intermediates\\res\\merged\\debug\\layout\\segment_record_full_layout.xml",
+        "source": "E:\\0000Coodec\\publish_sdk\\LanSoEditor_advance\\LanSoEditor_advance\\app\\src\\main\\res\\layout\\segment_record_full_layout.xml"
+    },
+    {
+        "merged": "E:\\0000Coodec\\publish_sdk\\LanSoEditor_advance\\LanSoEditor_advance\\app\\build\\intermediates\\res\\merged\\debug\\layout\\video_all_frame_grid.xml",
+        "source": "E:\\0000Coodec\\publish_sdk\\LanSoEditor_advance\\LanSoEditor_advance\\app\\src\\main\\res\\layout\\video_all_frame_grid.xml"
+    },
+    {
+        "merged": "E:\\0000Coodec\\publish_sdk\\LanSoEditor_advance\\LanSoEditor_advance\\app\\build\\intermediates\\res\\merged\\debug\\layout\\videolay_transform_layout.xml",
+        "source": "E:\\0000Coodec\\publish_sdk\\LanSoEditor_advance\\LanSoEditor_advance\\app\\src\\main\\res\\layout\\videolay_transform_layout.xml"
+    },
+    {
+        "merged": "E:\\0000Coodec\\publish_sdk\\LanSoEditor_advance\\LanSoEditor_advance\\app\\build\\intermediates\\res\\merged\\debug\\layout\\camera_full_record_test_layout.xml",
+        "source": "E:\\0000Coodec\\publish_sdk\\LanSoEditor_advance\\LanSoEditor_advance\\app\\src\\main\\res\\layout\\camera_full_record_test_layout.xml"
+    },
+    {
+        "merged": "E:\\0000Coodec\\publish_sdk\\LanSoEditor_advance\\LanSoEditor_advance\\app\\build\\intermediates\\res\\merged\\debug\\layout\\cameramasklayer_demo_layout.xml",
+        "source": "E:\\0000Coodec\\publish_sdk\\LanSoEditor_advance\\LanSoEditor_advance\\app\\src\\main\\res\\layout\\cameramasklayer_demo_layout.xml"
+    },
+    {
+        "merged": "E:\\0000Coodec\\publish_sdk\\LanSoEditor_advance\\LanSoEditor_advance\\app\\build\\intermediates\\res\\merged\\debug\\layout\\view8.xml",
+        "source": "E:\\0000Coodec\\publish_sdk\\LanSoEditor_advance\\LanSoEditor_advance\\app\\src\\main\\res\\layout\\view8.xml"
+    },
+    {
+        "merged": "E:\\0000Coodec\\publish_sdk\\LanSoEditor_advance\\LanSoEditor_advance\\app\\build\\intermediates\\res\\merged\\debug\\layout\\mediainfo_layout.xml",
+        "source": "E:\\0000Coodec\\publish_sdk\\LanSoEditor_advance\\LanSoEditor_advance\\app\\src\\main\\res\\layout\\mediainfo_layout.xml"
+    },
+    {
+        "merged": "E:\\0000Coodec\\publish_sdk\\LanSoEditor_advance\\LanSoEditor_advance\\app\\build\\intermediates\\res\\merged\\debug\\layout\\demo2_layer_layout.xml",
+        "source": "E:\\0000Coodec\\publish_sdk\\LanSoEditor_advance\\LanSoEditor_advance\\app\\src\\main\\res\\layout\\demo2_layer_layout.xml"
+    },
+    {
+        "merged": "E:\\0000Coodec\\publish_sdk\\LanSoEditor_advance\\LanSoEditor_advance\\app\\build\\intermediates\\res\\merged\\debug\\layout\\cameralayer_segment_layout.xml",
+        "source": "E:\\0000Coodec\\publish_sdk\\LanSoEditor_advance\\LanSoEditor_advance\\app\\src\\main\\res\\layout\\cameralayer_segment_layout.xml"
+    },
+    {
+        "merged": "E:\\0000Coodec\\publish_sdk\\LanSoEditor_advance\\LanSoEditor_advance\\app\\build\\intermediates\\res\\merged\\debug\\layout\\onedo_add_head_end_merge.xml",
+        "source": "E:\\0000Coodec\\publish_sdk\\LanSoEditor_advance\\LanSoEditor_advance\\app\\src\\main\\res\\layout\\onedo_add_head_end_merge.xml"
+    },
+    {
+        "merged": "E:\\0000Coodec\\publish_sdk\\LanSoEditor_advance\\LanSoEditor_advance\\app\\build\\intermediates\\res\\merged\\debug\\layout\\onedo_music_merge.xml",
+        "source": "E:\\0000Coodec\\publish_sdk\\LanSoEditor_advance\\LanSoEditor_advance\\app\\src\\main\\res\\layout\\onedo_music_merge.xml"
+    },
+    {
+        "merged": "E:\\0000Coodec\\publish_sdk\\LanSoEditor_advance\\LanSoEditor_advance\\app\\build\\intermediates\\res\\merged\\debug\\layout\\test_layplayer_layout.xml",
+        "source": "E:\\0000Coodec\\publish_sdk\\LanSoEditor_advance\\LanSoEditor_advance\\app\\src\\main\\res\\layout\\test_layplayer_layout.xml"
+    },
+    {
+        "merged": "E:\\0000Coodec\\publish_sdk\\LanSoEditor_advance\\LanSoEditor_advance\\app\\build\\intermediates\\res\\merged\\debug\\layout\\picture_set_layout.xml",
+        "source": "E:\\0000Coodec\\publish_sdk\\LanSoEditor_advance\\LanSoEditor_advance\\app\\src\\main\\res\\layout\\picture_set_layout.xml"
+    },
+    {
+        "merged": "E:\\0000Coodec\\publish_sdk\\LanSoEditor_advance\\LanSoEditor_advance\\app\\build\\intermediates\\res\\merged\\debug\\layout\\test_function_layout.xml",
+        "source": "E:\\0000Coodec\\publish_sdk\\LanSoEditor_advance\\LanSoEditor_advance\\app\\src\\main\\res\\layout\\test_function_layout.xml"
+    },
+    {
+        "merged": "E:\\0000Coodec\\publish_sdk\\LanSoEditor_advance\\LanSoEditor_advance\\app\\build\\intermediates\\res\\merged\\debug\\layout\\onedo_othereffect_merge.xml",
+        "source": "E:\\0000Coodec\\publish_sdk\\LanSoEditor_advance\\LanSoEditor_advance\\app\\src\\main\\res\\layout\\onedo_othereffect_merge.xml"
+    },
+    {
+        "merged": "E:\\0000Coodec\\publish_sdk\\LanSoEditor_advance\\LanSoEditor_advance\\app\\build\\intermediates\\res\\merged\\debug\\layout\\cameralayer_fullscreen_demo_layout.xml",
+        "source": "E:\\0000Coodec\\publish_sdk\\LanSoEditor_advance\\LanSoEditor_advance\\app\\src\\main\\res\\layout\\cameralayer_fullscreen_demo_layout.xml"
+    },
+    {
+        "merged": "E:\\0000Coodec\\publish_sdk\\LanSoEditor_advance\\LanSoEditor_advance\\app\\build\\intermediates\\res\\merged\\debug\\layout\\drawpad_touch_layout.xml",
+        "source": "E:\\0000Coodec\\publish_sdk\\LanSoEditor_advance\\LanSoEditor_advance\\app\\src\\main\\res\\layout\\drawpad_touch_layout.xml"
+    },
+    {
+        "merged": "E:\\0000Coodec\\publish_sdk\\LanSoEditor_advance\\LanSoEditor_advance\\app\\build\\intermediates\\res\\merged\\debug\\layout\\view3.xml",
+        "source": "E:\\0000Coodec\\publish_sdk\\LanSoEditor_advance\\LanSoEditor_advance\\app\\src\\main\\res\\layout\\view3.xml"
+    },
+    {
+        "merged": "E:\\0000Coodec\\publish_sdk\\LanSoEditor_advance\\LanSoEditor_advance\\app\\build\\intermediates\\res\\merged\\debug\\layout\\list_cool_demo_layout.xml",
+        "source": "E:\\0000Coodec\\publish_sdk\\LanSoEditor_advance\\LanSoEditor_advance\\app\\src\\main\\res\\layout\\list_cool_demo_layout.xml"
+    },
+    {
+        "merged": "E:\\0000Coodec\\publish_sdk\\LanSoEditor_advance\\LanSoEditor_advance\\app\\build\\intermediates\\res\\merged\\debug\\layout\\vview_image3d_demo_layout.xml",
+        "source": "E:\\0000Coodec\\publish_sdk\\LanSoEditor_advance\\LanSoEditor_advance\\app\\src\\main\\res\\layout\\vview_image3d_demo_layout.xml"
+    },
+    {
+        "merged": "E:\\0000Coodec\\publish_sdk\\LanSoEditor_advance\\LanSoEditor_advance\\app\\build\\intermediates\\res\\merged\\debug\\layout\\start_activity2_layout.xml",
+        "source": "E:\\0000Coodec\\publish_sdk\\LanSoEditor_advance\\LanSoEditor_advance\\app\\src\\main\\res\\layout\\start_activity2_layout.xml"
+    },
+    {
+        "merged": "E:\\0000Coodec\\publish_sdk\\LanSoEditor_advance\\LanSoEditor_advance\\app\\build\\intermediates\\res\\merged\\debug\\layout\\activity_test.xml",
+        "source": "E:\\0000Coodec\\publish_sdk\\LanSoEditor_advance\\LanSoEditor_advance\\app\\src\\main\\res\\layout\\activity_test.xml"
+    },
+    {
+        "merged": "E:\\0000Coodec\\publish_sdk\\LanSoEditor_advance\\LanSoEditor_advance\\app\\build\\intermediates\\res\\merged\\debug\\layout\\cameralayer_fullsegment_layout.xml",
+        "source": "E:\\0000Coodec\\publish_sdk\\LanSoEditor_advance\\LanSoEditor_advance\\app\\src\\main\\res\\layout\\cameralayer_fullsegment_layout.xml"
+    }
+]

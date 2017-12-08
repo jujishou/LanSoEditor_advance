@@ -186,6 +186,43 @@ public class MediaInfo {
     		 return false;
     	 } 
      }
+     /**
+      * [新增]
+      * 获取当前视频在显示的时候, 图像的宽度;
+      * 
+      * 因为有些视频是90度或270度旋转显示的, 旋转的话, 就宽高对调了
+      * @return
+      */
+     public int getWidth()
+     {
+    	 if(getSuccess){
+    		 if(vRotateAngle==90 || vRotateAngle==270){
+    			 return vHeight;
+    		 }else{
+    			 return vWidth;
+    		 }
+    	 }
+    	 return 0;
+     }
+     /**
+      * [新增]
+      * 
+      * 获取当前视频在显示的时候, 图像的高度;
+      * 因为有些视频是90度或270度旋转显示的, 旋转的话, 就宽高对调了
+      * @return
+      */
+     public int getHeight()
+     {
+    	 if(getSuccess){
+    		 if(vRotateAngle==90 || vRotateAngle==270){
+    			 return vWidth;
+    		 }else{
+    			 return vHeight;
+    		 }
+    	 }
+    	 return 0;
+     }
+     
      public void release()
      {
     	 //TODO nothing 

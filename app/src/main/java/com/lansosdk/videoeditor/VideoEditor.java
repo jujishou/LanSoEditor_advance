@@ -1690,6 +1690,76 @@ public class VideoEditor {
 						}
 			}
 		  /**
+		   * 裁剪一个mp4分辨率，把视频画面的某一部分裁剪下来，
+		   * 此方法是在基本版本上用的; 专业版本, 建议在创建视频图层的时候, 直接设置FileParam即可.
+		   * 此方法是在基本版本上用的; 专业版本, 建议在创建视频图层的时候, 直接设置FileParam即可.
+		   * 此方法是在基本版本上用的; 专业版本, 建议在创建视频图层的时候, 直接设置FileParam即可.
+		   * 此方法是在基本版本上用的; 专业版本, 建议在创建视频图层的时候, 直接设置FileParam即可.
+		   * 
+		   * @param videoFile　需要裁剪的视频文件
+		   * @param cropWidth　裁剪的宽度
+		   * @param cropHeight 　裁剪的宽度
+		   * @param x  　视频画面开始的Ｘ坐标，　从画面的左上角开始是0.0坐标
+		   * @param y 视频画面开始的Y坐标，
+		   * @param dstFile 处理后保存的路径,后缀需要是mp4
+		   * @param codecname  使用的解码器的名字
+		   * @param bitrate  <============注意:这里的bitrate在设置的时候, 因为是设置编码器的恒定码率, 推荐设置为 预设值的1.5倍为准, 比如视频原有的码率是1M,则裁剪一半,预设值可能是500k, 
+		   * 这里推荐是为500k的1.5,因为原有的视频大部分是动态码率VBR,可以认为通过{@link MediaInfo} 得到的 {@link MediaInfo#vBitRate}是平均码率,这里要设置,推荐是1.5倍为好.
+		   * @return
+		   */
+		  public int executeVideoFrameCrop(String videoFile,int cropWidth,int cropHeight,int x,int y,String dstFile,String codecname,int bitrate)
+		  {
+			  if( fileExist(videoFile)){
+					
+					String cropcmd=String.format(Locale.getDefault(),"crop=%d:%d:%d:%d",cropWidth,cropHeight,x,y);
+//					
+					int ret=executeFrameCrop(videoFile,codecname,cropcmd,dstFile,bitrate);
+					if(ret!=0){  //执行失败
+						Log.w(TAG,"video editor execute video frmae crop  error,switch to software decoder...");
+						ret=executeFrameCrop(videoFile,"h264",cropcmd,dstFile,bitrate);  //采用软解
+					}
+					return ret;
+//					return executeFrameCrop(videoFile,"h264",cropcmd,dstFile,bitrate);  //仅仅测试
+			  }else{
+				  return VIDEO_EDITOR_EXECUTE_FAILED;
+			  }
+		  }
+		  //内部使用
+		  private int executeFrameCrop(String videoFile,String codecname,String filter,String dstFile,int bitrate)
+		  {
+			  List<String> cmdList=new ArrayList<String>();
+//				
+				cmdList.add("-vcodec");
+				cmdList.add(codecname);
+				
+				cmdList.add("-i");
+				cmdList.add(videoFile);
+
+				cmdList.add("-vf");
+				cmdList.add(filter);
+				
+				cmdList.add("-acodec");
+				cmdList.add("copy");
+				
+				cmdList.add("-vcodec");
+				cmdList.add("lansoh264_enc"); 
+				
+				cmdList.add("-b:v");
+				cmdList.add(checkBitRate(bitrate)); 
+				
+				cmdList.add("-pix_fmt");  //<========请注意, 使用lansoh264_enc编码器编码的时候,请务必指定格式,因为底层设计只支持yuv420p的输出.
+				cmdList.add("yuv420p");
+				
+				cmdList.add("-y");
+				
+				cmdList.add(dstFile);
+				String[] command=new String[cmdList.size()];  
+			     for(int i=0;i<cmdList.size();i++){  
+			    	 command[i]=(String)cmdList.get(i);  
+			     } 
+			     return  executeVideoEditor(command);
+		  }
+		  /**
 		   *此视频缩放算法，采用是软缩放来实现，速度特慢, 不建议使用.　
 		   * 视频画面缩放, 务必保持视频的缩放后的宽高比,等于原来视频的宽高比.
 		   * 
