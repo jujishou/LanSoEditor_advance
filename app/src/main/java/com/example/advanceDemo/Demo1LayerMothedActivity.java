@@ -24,6 +24,7 @@ import com.lansosdk.box.YUVLayer;
 import com.lansosdk.box.onDrawPadOutFrameListener;
 import com.lansosdk.box.onDrawPadProgressListener;
 import com.lansosdk.box.onDrawPadSizeChangedListener;
+import com.lansosdk.box.onDrawPadSnapShotListener;
 import com.lansosdk.box.onDrawPadThreadProgressListener;
 import com.lansosdk.videoeditor.DrawPadView;
 import com.lansosdk.videoeditor.DrawPadView.onViewAvailable;
@@ -132,6 +133,7 @@ public class Demo1LayerMothedActivity extends Activity implements OnSeekBarChang
 							stopDrawPad();
 						}
 					});
+				    mplayer.setLooping(true);
 			 		mplayer.prepareAsync();
 				}  catch (Exception e) {
 					e.printStackTrace();
@@ -143,7 +145,6 @@ public class Demo1LayerMothedActivity extends Activity implements OnSeekBarChang
     }
     /**
      * 第一步:  init DrawPad 初始化
-     * @param mp
      */
     private void initDrawPad()
     {
@@ -158,18 +159,34 @@ public class Demo1LayerMothedActivity extends Activity implements OnSeekBarChang
 					startDrawPad();
 				}
     		});
-    		
+	        drawPadView.setUpdateMode(DrawPadUpdateMode.AUTO_FLUSH,25);
     		drawPadView.setRealEncodeEnable(padWidth,padHeight,1000000,(int)mInfo.vFrameRate,editTmpPath);
     		
         	drawPadView.setOnDrawPadProgressListener(new onDrawPadProgressListener() {
 				
 				@Override
 				public void onProgress(DrawPad v, long currentTimeUs) {
-					
+
 				}
 			});
-        	
+	    drawPadView.setOnDrawPadSnapShotListener(new onDrawPadSnapShotListener() {
+		    @Override
+		    public void onSnapShot(DrawPad drawPad, Bitmap bitmap) {
+				Log.i("tag","正在截图....bimtp"+ bitmap.getWidth());
+		    }
+	    });
+	    loopHandle.postDelayed(mRunnable,3000);
     }
+    private Handler loopHandle=new Handler();
+	private Runnable  mRunnable=new Runnable() {
+		@Override
+		public void run() {
+			if(drawPadView!=null){
+				drawPadView.toggleSnatShot();
+			}
+			loopHandle.postDelayed(mRunnable,3000);
+		}
+	};
     private TextureLayer  textureLayer=null;
     /**
      * Step2: 开始运行 Drawpad
@@ -292,6 +309,7 @@ public class Demo1LayerMothedActivity extends Activity implements OnSeekBarChang
 		super.onDestroy();
 		SDKFileUtils.deleteFile(dstPath);
 		SDKFileUtils.deleteFile(editTmpPath);
+	   loopHandle.removeCallbacks(mRunnable);
 	}
     
     private void initView()
@@ -393,13 +411,11 @@ public class Demo1LayerMothedActivity extends Activity implements OnSeekBarChang
 	}
 	@Override
 	public void onStartTrackingTouch(SeekBar seekBar) {
-		// TODO Auto-generated method stub
 		
 	}
 	@Override
 	public void onStopTrackingTouch(SeekBar seekBar) {
-		// TODO Auto-generated method stub
-		
+
 	}
 
 	public YUVLayerDemoData readDataFromAssets(String fileName) {
