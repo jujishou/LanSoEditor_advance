@@ -159,23 +159,23 @@ public class Demo1LayerMothedActivity extends Activity implements OnSeekBarChang
 					startDrawPad();
 				}
     		});
-	        drawPadView.setUpdateMode(DrawPadUpdateMode.AUTO_FLUSH,25);
+	         drawPadView.setUpdateMode(DrawPadUpdateMode.AUTO_FLUSH,25);
     		drawPadView.setRealEncodeEnable(padWidth,padHeight,1000000,(int)mInfo.vFrameRate,editTmpPath);
     		
         	drawPadView.setOnDrawPadProgressListener(new onDrawPadProgressListener() {
 				
 				@Override
 				public void onProgress(DrawPad v, long currentTimeUs) {
-
+					
 				}
 			});
-	    drawPadView.setOnDrawPadSnapShotListener(new onDrawPadSnapShotListener() {
-		    @Override
-		    public void onSnapShot(DrawPad drawPad, Bitmap bitmap) {
-				Log.i("tag","正在截图....bimtp"+ bitmap.getWidth());
-		    }
-	    });
-	    loopHandle.postDelayed(mRunnable,3000);
+		    drawPadView.setOnDrawPadSnapShotListener(new onDrawPadSnapShotListener() {
+			    @Override
+			    public void onSnapShot(DrawPad drawPad, Bitmap bitmap) {
+					Log.i("tag","正在截图....bimtp"+ bitmap.getWidth());
+			    }
+		    });
+		    loopHandle.postDelayed(mRunnable,300);
     }
     private Handler loopHandle=new Handler();
 	private Runnable  mRunnable=new Runnable() {
@@ -184,7 +184,7 @@ public class Demo1LayerMothedActivity extends Activity implements OnSeekBarChang
 			if(drawPadView!=null){
 				drawPadView.toggleSnatShot();
 			}
-			loopHandle.postDelayed(mRunnable,3000);
+			loopHandle.postDelayed(mRunnable,300);
 		}
 	};
     private TextureLayer  textureLayer=null;
@@ -200,8 +200,6 @@ public class Demo1LayerMothedActivity extends Activity implements OnSeekBarChang
 			//给容器增加一个背景
 			BitmapLayer layer=drawPadView.addBitmapLayer(BitmapFactory.decodeResource(getResources(), R.drawable.videobg));
 			layer.setScaledValue(layer.getPadWidth(), layer.getPadHeight());  //填充整个容器
-			
-			
 			mainVideoLayer=drawPadView.addVideoLayer(mplayer.getVideoWidth(),mplayer.getVideoHeight(),null);
 			if(mainVideoLayer!=null)
 			{

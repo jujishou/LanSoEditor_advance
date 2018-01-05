@@ -225,10 +225,10 @@ public class MVLayerDemoActivity extends Activity {
          */
         String colorMVPath=CopyDefaultVideoAsyncTask.copyFile(MVLayerDemoActivity.this,"mei.mp4");
         String maskMVPath=CopyDefaultVideoAsyncTask.copyFile(MVLayerDemoActivity.this,"mei_b.mp4");
-        
+    	
 		mvLayer=mDrawPadView.addMVLayer(colorMVPath, maskMVPath,false);  //<-----增加MVLayer
 		if(mvLayer!=null){
-		//设置它为满屏.
+		
 			mvLayer.setOnLayerAvailableListener(new onLayerAvailableListener() {
 				
 				@Override
@@ -237,6 +237,7 @@ public class MVLayerDemoActivity extends Activity {
 				}
 			});
 			
+			//设置它为满屏.
     	    float scaleW=(float)mvLayer.getPadWidth()/(float)mvLayer.getLayerWidth();
     	    float scaleH=mvLayer.getPadHeight()/(float)mvLayer.getLayerHeight();
     	    mvLayer.setScale(scaleW, scaleH);

@@ -109,14 +109,16 @@ public class VPlayer {
 		   mMediaPlayer.setSpeedEnable();   
 	   }
    }
-   /**
-    * speed 最低范围是0.5, 最高是2.0; 1.0是正常速度.
-    * @param speed
-    */
    public void setSpeed(float speed)
    {
 	   if(mMediaPlayer!=null){
 		   mMediaPlayer.setSpeed(speed);   
+	   }
+   }
+   public void setExactlySeekEnable(boolean is)
+   {
+	   if(mMediaPlayer!=null){
+		   mMediaPlayer.setExactlySeekEnable(is);
 	   }
    }
     public void prepareAsync() {
@@ -139,7 +141,6 @@ public class VPlayer {
             mCurrentBufferPercentage = 0;
             mMediaPlayer.setDataSource(mAppContext, mUri);
 
-            mMediaPlayer.setLooping(isSetLoop);
             mMediaPlayer.setScreenOnWhilePlaying(true);
             mMediaPlayer.prepareAsync();
             mCurrentState = STATE_PREPARING;
@@ -246,7 +247,14 @@ public class VPlayer {
         mOnCompletionListener = l;
     }
 
-  
+    /**
+     * Register a callback to be invoked when an error occurs
+     * during playback or setup.  If no listener is specified,
+     * or if the listener returned false, VideoView will inform
+     * the user of any errors.
+     *
+     * @param l The callback that will be run
+     */
     public void setOnErrorListener(VideoPlayer.OnPlayerErrorListener l) {
         mOnErrorListener = l;
     }
@@ -308,13 +316,9 @@ public class VPlayer {
     public boolean isPlaying() {
         return isInPlaybackState() && mMediaPlayer.isPlaying();
     }
-    private boolean isSetLoop=false;
     public void setLooping(boolean looping){
     	if(mMediaPlayer!=null)
     		mMediaPlayer.setLooping(looping);
-    	else{
-    		isSetLoop=looping;
-    	}
     }
     
     public   boolean isLooping(){
@@ -326,10 +330,6 @@ public class VPlayer {
     		mMediaPlayer.setVolume(leftVolume, rightVolume);
     }
     
-    /**
-     * 获取当前视频的总时间,单位ms;
-     * @return
-     */
     public int getDuration() {
         if (isInPlaybackState()) {
             return (int) mMediaPlayer.getDuration();
@@ -337,10 +337,7 @@ public class VPlayer {
 
         return -1;
     }
-/**
- * 获取视频正在播放的时间
- * @return
- */
+
     public int getCurrentPosition() {
         if (isInPlaybackState()) {
             return (int) mMediaPlayer.getCurrentPosition();
@@ -348,9 +345,16 @@ public class VPlayer {
         return 0;
     }
 
+    public int getCurrentFramePosition() {
+        if (isInPlaybackState()) {
+            return (int) mMediaPlayer.getCurrentFramePosition();
+        }
+        return 0;
+    }
     public void seekTo(int msec) {
         if (isInPlaybackState()) {
             mMediaPlayer.seekTo(msec);
+            Log.i(TAG,"seek to  time is:"+msec);
             mSeekWhenPrepared = 0;
         } else {
             mSeekWhenPrepared = msec;
@@ -442,5 +446,18 @@ public class VPlayer {
     {
     	return mMediaPlayer;
     }
+    //----------------------------------------一下为测试:
+    //测试播放音频;
+//	vplayer=new VPlayer(getApplicationContext());
+//	vplayer.setVideoPath("/sdcard/niliuchenghe.mp3");
+//	vplayer.setOnPreparedListener(new OnPlayerPreparedListener() {
+//		
+//		@Override
+//		public void onPrepared(VideoPlayer mp) {
+//			vplayer.setSpeed(1.0f);
+//			vplayer.start();
+//		}
+//	});
+//	vplayer.prepareAsync();
 }
 

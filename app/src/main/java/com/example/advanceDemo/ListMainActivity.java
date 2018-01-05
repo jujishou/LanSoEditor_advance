@@ -1,6 +1,10 @@
 package com.example.advanceDemo;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -10,6 +14,7 @@ import java.util.Locale;
 
 import com.anthonycr.grant.PermissionsManager;
 import com.anthonycr.grant.PermissionsResultAction;
+import com.example.advanceDemo.camera.CameraLayerKTVDemoActivity;
 import com.example.advanceDemo.cool.ParticleDemoActivity;
 import com.example.advanceDemo.scene.LayerLayoutDemoActivity;
 import com.example.advanceDemo.scene.Video2LayoutActivity;
@@ -17,27 +22,38 @@ import com.example.commonDemo.CommonDemoActivity;
 import com.lansoeditor.demo.R;
 import com.lansosdk.box.AudioSource;
 import com.lansosdk.box.AudioPad;
+import com.lansosdk.box.DrawPad;
 import com.lansosdk.box.FrameInfo;
 import com.lansosdk.box.LanSoEditorBox;
 import com.lansosdk.box.MicRecorder;
+import com.lansosdk.box.ScaleExecute;
 import com.lansosdk.box.onAudioPadCompletedListener;
 import com.lansosdk.box.onAudioPadProgressListener;
 import com.lansosdk.box.onAudioPadThreadProgressListener;
 import com.lansosdk.box.onCompressCompletedListener;
 import com.lansosdk.box.onCompressProgressListener;
+import com.lansosdk.box.onDrawPadCompletedListener;
 import com.lansosdk.box.onDrawPadOutFrameListener;
+import com.lansosdk.box.onDrawPadProgressListener;
 import com.lansosdk.box.onGetFiltersOutFrameListener;
+import com.lansosdk.box.onScaleProgressListener;
 import com.lansosdk.videoeditor.AVDecoder;
 import com.lansosdk.videoeditor.AudioPadExecute;
 import com.lansosdk.videoeditor.CopyDefaultVideoAsyncTask;
 import com.lansosdk.videoeditor.CopyFileFromAssets;
-import com.lansosdk.videoeditor.FileWriteUtils;
+import com.lansosdk.videoeditor.DrawPadVideoExecute;
 import com.lansosdk.videoeditor.LanSoEditor;
-import com.lansosdk.videoeditor.LoadLanSongSdk;
 import com.lansosdk.videoeditor.MediaInfo;
 import com.lansosdk.videoeditor.SDKDir;
 import com.lansosdk.videoeditor.SDKFileUtils;
 import com.lansosdk.videoeditor.VideoEditor;
+import com.lansosdk.videoeditor.VideoOneDo;
+import com.lansosdk.videoeditor.onVideoOneDoCompletedListener;
+import com.lansosdk.videoeditor.onVideoOneDoProgressListener;
+import com.lansosdk.videoplayer.VPlayer;
+import com.lansosdk.videoplayer.VideoPlayer;
+import com.lansosdk.videoplayer.VideoPlayer.OnPlayerCompletionListener;
+import com.lansosdk.videoplayer.VideoPlayer.OnPlayerPreparedListener;
 
 
 import android.annotation.SuppressLint;
@@ -54,6 +70,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.content.PermissionChecker;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -103,8 +120,8 @@ public class ListMainActivity extends Activity implements OnClickListener{
 				return;
 			switch (v.getId()) {
 				case R.id.id_mainlist_camerarecord:
-//					startDemoActivity(ExecuteSeekVideoDemoActivity.class);
 					startDemoActivity(ListCameraRecordActivity.class);
+//					startDemoActivity(ScreenRecordDemoActivity.class);
 					break;
 				case R.id.id_mainlist_somelayer:
 					startDemoActivity(ListLayerDemoActivity.class);
@@ -191,11 +208,13 @@ public class ListMainActivity extends Activity implements OnClickListener{
    		
    		int lyear=VideoEditor.getLimitYear();
    		int lmonth=VideoEditor.getLimitMonth();
+   		
    		Log.i(TAG,"current year is:"+year+" month is:"+month +" limit year:"+lyear+" limit month:"+lmonth);
    		String timeHint=getResources().getString(R.string.sdk_limit);
    		String version=VideoEditor.getSDKVersion()+ ";\n BOX:"+LanSoEditorBox.VERSION_BOX;
    		
-   		version+=",CPU type:"+LanSoEditor.getCPULevel();
+   		version+=",CPU性能:"+LanSoEditor.getCPULevel();
+   		
    		timeHint=String.format(timeHint,version, lyear,lmonth);
    		
    		new AlertDialog.Builder(this)
@@ -222,8 +241,6 @@ public class ListMainActivity extends Activity implements OnClickListener{
    		})
            .show();
    	}
-
-    
     private boolean checkPath(){
     	if(tvVideoPath.getText()!=null && tvVideoPath.getText().toString().isEmpty()){
     		Toast.makeText(ListMainActivity.this, "请输入视频地址", Toast.LENGTH_SHORT).show();
@@ -301,12 +318,32 @@ public class ListMainActivity extends Activity implements OnClickListener{
 		        return result;
 		 }
 	   //--------------------------------
-	   
+	
 	    private void testFile()
 	    {
-	    	
-	    	
-	    	
-	    	
-		}
+	    
+	    }
+	    
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

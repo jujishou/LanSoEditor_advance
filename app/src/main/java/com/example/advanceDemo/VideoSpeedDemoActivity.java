@@ -50,7 +50,7 @@ import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.Toast;
 
 public class VideoSpeedDemoActivity extends Activity implements  OnClickListener,OnSeekBarChangeListener{
-	 private static final String TAG = "TestLayerPlayerActivity";
+	 private static final String TAG = "VideoSpeedDemoActivity";
 
 	    private String mVideoPath;
 	    private final static int GET_VIDEO_PROGRESS=101;
@@ -76,6 +76,9 @@ public class VideoSpeedDemoActivity extends Activity implements  OnClickListener
 	        findViewById(R.id.id_test_btn_pause).setOnClickListener(this);
 	        findViewById(R.id.id_test_btn_speedslow).setOnClickListener(this);
 	        findViewById(R.id.id_test_btn_speedfast).setOnClickListener(this);
+	        findViewById(R.id.id_test_btn_speednormal).setOnClickListener(this);
+	        
+	        
 	        
 	        skProgress=(SeekBar)findViewById(R.id.id_test_seekbar_play);
 	        skProgress.setOnSeekBarChangeListener(this);
@@ -87,7 +90,6 @@ public class VideoSpeedDemoActivity extends Activity implements  OnClickListener
 	        
 	        
 	        mVideoPath = getIntent().getStringExtra("videopath");
-	        
 	        mInfo=new MediaInfo(mVideoPath, false);
 	        if(mInfo.prepare()){
 	        	 new Handler().postDelayed(new Runnable() {
@@ -198,15 +200,18 @@ public class VideoSpeedDemoActivity extends Activity implements  OnClickListener
 						}
 						
 					break;
+				case R.id.id_test_btn_speednormal:
+						mplayer.setSpeedEnable();
+						mplayer.setSpeed(1.0f);
+						break;
 				case R.id.id_test_btn_speedslow:
 						mplayer.setSpeedEnable();
 						mplayer.setSpeed(0.5f);
 					break;
 				case R.id.id_test_btn_speedfast:
 						mplayer.setSpeedEnable();
-						mplayer.setSpeed(1.5f);
+						mplayer.setSpeed(2.0f);
 					break;
-
 			default:
 				break;
 			}

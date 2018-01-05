@@ -158,6 +158,7 @@ public class ExtractVideoFrameDemoActivity extends Activity{
 			}
 		});
 		
+		
 		frameCount=0;
 		/**
 		 * 开始执行.  或者你可以从指定地方开始解码.

@@ -108,13 +108,10 @@ public class VideoPlayerActivity extends Activity {
 			@Override
 			public void onSurfaceTextureSizeChanged(SurfaceTexture surface, int width,
 					int height) {
-				// TODO Auto-generated method stub
-				
 			}
 			
 			@Override
 			public boolean onSurfaceTextureDestroyed(SurfaceTexture surface) {
-				// TODO Auto-generated method stub
 				return false;
 			}
 			
@@ -167,8 +164,6 @@ public class VideoPlayerActivity extends Activity {
 				mediaPlayer.setDataSource(videoPath);
 				mediaPlayer.setSurface(surface);  
 		        mediaPlayer.prepare();  
-		        
-		        
 		      //因为是竖屏.宽度小于高度.
 		        if(screenWidth>mInfo.vWidth){
 		        	tvSizeHint.setText(R.string.origal_width);
@@ -198,8 +193,7 @@ public class VideoPlayerActivity extends Activity {
     			@Override
     			public void onPrepared(VideoPlayer mp) {
     						vplayer.setSurface(surface);
-    						vplayer.setLooping(true);
-    					      
+    						
     						  //因为是竖屏.宽度小于高度.
     					        if(screenWidth>mInfo.vWidth){
     					        	tvSizeHint.setText(R.string.origal_width);
@@ -220,10 +214,10 @@ public class VideoPlayerActivity extends Activity {
 			
 			@Override
 			public void onCompletion(VideoPlayer mp) {
+				  isPaused=true;
 				 Toast.makeText(VideoPlayerActivity.this,"视频播放完成", Toast.LENGTH_SHORT).show();
 			}
 		});
-    	
     	vplayer.prepareAsync();
     	
     }
@@ -231,7 +225,7 @@ public class VideoPlayerActivity extends Activity {
     @Override  
     protected void onPause() {  
         super.onPause();
-        
+        isPaused=true;
         if (mediaPlayer!=null) {  
         	mediaPlayer.stop();
         	mediaPlayer.release();
@@ -248,4 +242,21 @@ public class VideoPlayerActivity extends Activity {
     protected void onDestroy() {  
         super.onDestroy();  
     }  
+    //--------------------------------实时获取当前播放器的播放位置-----测试使用.
+    private boolean isPaused=false;
+    private Handler  loopHandle=new Handler();
+    private Runnable loopRunnable=new Runnable() {
+        @Override
+        public void run() {
+
+//            if(mediaPlayer!=null){
+//                Log.i(TAG,"系统原生播放器MediaPlayer 当前位置是:"+mediaPlayer.getCurrentPosition()+ " 毫秒");
+//            }else if(vplayer!=null){
+//            	Log.i(TAG,"SDK自带的VideoPlayer 当前位置是:"+vplayer.getCurrentPosition()+ " 毫秒"+ " origin:"+vplayer.getCurrentFramePosition());
+//            }
+//            if(loopHandle!=null && !isPaused){
+//                loopHandle.postDelayed(loopRunnable,100);
+//            }
+        }
+    };
 }

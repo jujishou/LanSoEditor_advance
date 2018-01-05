@@ -1,9 +1,12 @@
 package com.example.advanceDemo.camera;
 
 import java.io.IOException;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import jp.co.cyberagent.lansongsdk.gpuimage.GPUImageFilter;
 import jp.co.cyberagent.lansongsdk.gpuimage.GPUImageMultiplyBlendFilter;
+import jp.co.cyberagent.lansongsdk.gpuimage.LanSongBeautyAdvanceFilter;
 import jp.co.cyberagent.lansongsdk.gpuimage.LanSongMaskColorFilter;
 import jp.co.cyberagent.lansongsdk.gpuimage.Rotation;
 
@@ -14,14 +17,19 @@ import com.example.advanceDemo.view.FocusImageView;
 import com.lansoeditor.demo.R;
 import com.lansosdk.box.BitmapLayer;
 import com.lansosdk.box.CameraLayer;
+import com.lansosdk.box.CameraLayerFadeListener;
+import com.lansosdk.box.CanvasLayer;
+import com.lansosdk.box.CanvasRunnable;
 import com.lansosdk.box.DrawPad;
 import com.lansosdk.box.DrawPadCameraRunnable;
 import com.lansosdk.box.LanSongAlphaPixelFilter;
 import com.lansosdk.box.MVLayer;
+import com.lansosdk.box.SubLayer;
 import com.lansosdk.box.VideoLayer;
 import com.lansosdk.box.ViewLayer;
 import com.lansosdk.box.ViewLayerRelativeLayout;
 import com.lansosdk.box.onDrawPadProgressListener;
+import com.lansosdk.box.onDrawPadThreadProgressListener;
 import com.lansosdk.videoeditor.CopyDefaultVideoAsyncTask;
 import com.lansosdk.videoeditor.CopyFileFromAssets;
 import com.lansosdk.videoeditor.DrawPadCameraView;
@@ -42,6 +50,9 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.Bundle;
@@ -84,9 +95,9 @@ import android.widget.Toast;
 	    <item name="android:windowContentOverlay">@null</item>
 	</style>
  */
-public class CameraLayerKTVDemoActivity extends Activity implements OnClickListener,OnSeekBarChangeListener{
+public class CameraLayerKTVDemoActivity extends Activity implements OnClickListener,OnSeekBarChangeListener,CameraLayerFadeListener{
 //public class CameraLayerKTVDemoActivity extends AppCompatActivity implements OnClickListener,OnSeekBarChangeListener{  
-	private static final long RECORD_CAMERA_TIME=300*1000*1000; //300秒.
+	private static final long RECORD_CAMERA_TIME=60*1000*1000; //300秒.
 	private static final String TAG = "CameraLayerFullLandscapeActivity";
 
     private DrawPadCameraView drawPadCamera;
@@ -101,6 +112,8 @@ public class CameraLayerKTVDemoActivity extends Activity implements OnClickListe
     private ViewLayerRelativeLayout mLayerRelativeLayout;
     
     private LanSongAlphaPixelFilter alphaPixelFilter;
+    private LanSongBeautyAdvanceFilter beautyFilter;
+    int zoomCnt=0;
     @Override
     protected void onCreate(Bundle savedInstanceState) 
     {
@@ -120,9 +133,9 @@ public class CameraLayerKTVDemoActivity extends Activity implements OnClickListe
         
         initView();
         initDrawPad();
-        
         DemoUtil.showHintDialog(CameraLayerKTVDemoActivity.this, "此功能 需要对着绿背景拍摄,类似演员在绿幕前表演,共3个图层, 最底层是场景视频,中间层是摄像机,上层是UI");
     }
+    private boolean isZoomed=false;
     @Override
     protected void onResume() {
     	super.onResume();
@@ -155,10 +168,37 @@ public class CameraLayerKTVDemoActivity extends Activity implements OnClickListe
     	 * 设置进度回调 
     	 */
     	drawPadCamera.setOnDrawPadProgressListener(drawPadProgressListener); 
+    	drawPadCamera.setOnDrawPadThreadProgressListener(new onDrawPadThreadProgressListener() {
+			
+			@Override
+			public void onThreadProgress(DrawPad v, long currentTimeUs) {
+				
+				//如果第二个视频要切换
+				if(isChangedVideo){
+					//重新增加这个图层.
+					drawPadCamera.removeLayer(currentLayer);
+					currentLayer=null;
+					currentLayer=drawPadCamera.addVideoLayer(videoWidth, videoHeight, null);
+					drawPadCamera.changeLayerPosition(currentLayer, 0);
+					
+					if(vplayer2!=null){
+						vplayer2.setSurface(new Surface(currentLayer.getVideoTexture()));
+						vplayer2.start();
+					}else if(vplayer3!=null){
+						vplayer3.setSurface(new Surface(currentLayer.getVideoTexture()));
+						vplayer3.start();
+					}
+					
+					isChangedVideo=false;
+				}
+			}
+		});
     	
     	drawPadCamera.setRecordMic(true);
-    	
     	alphaPixelFilter=new LanSongAlphaPixelFilter();
+    	
+    	beautyFilter=new LanSongBeautyAdvanceFilter();
+//    	drawPadCamera.setCameraParam(false, beautyFilter,true);  //设置为美颜.
     	
     	drawPadCamera.setCameraParam(false, alphaPixelFilter,true);  //设置是否前置.
     	drawPadCamera.setOnViewAvailable(new onViewAvailable() {
@@ -177,11 +217,8 @@ public class CameraLayerKTVDemoActivity extends Activity implements OnClickListe
     	    if(drawPadCamera.setupDrawpad())
     	    {
     	    	cameraLayer=drawPadCamera.getCameraLayer();
-    	    	
     	    	addVideoLayer();
-    	    	
-//        		addViewLayer();
-        	
+        		addViewLayer();
     	    	drawPadCamera.startPreview();
     	    	drawPadCamera.startRecord();
     	    }
@@ -198,10 +235,20 @@ public class CameraLayerKTVDemoActivity extends Activity implements OnClickListe
 	  				toastStop();
 	  				cameraLayer=null;
 	  				
-	  				if(mplayer!=null){
-	  					mplayer.stop();
-	  					mplayer.release();
-	  					mplayer=null;
+	  				if(vplayer!=null){
+	  					vplayer.stop();
+	  					vplayer.release();
+	  					vplayer=null;
+	  				}
+	  				if(vplayer2!=null){
+	  					vplayer2.stop();
+	  					vplayer2.release();
+	  					vplayer2=null;
+	  				}
+	  				if(vplayer3!=null){
+	  					vplayer3.stop();
+	  					vplayer3.release();
+	  					vplayer3=null;
 	  				}
 	  		}
 	      	playVideo.setVisibility(View.VISIBLE);
@@ -212,11 +259,21 @@ public class CameraLayerKTVDemoActivity extends Activity implements OnClickListe
       	if(drawPadCamera!=null){
       		drawPadCamera.stopDrawPad();
       	}
-      	if(mplayer!=null){
-				mplayer.stop();
-				mplayer.release();
-				mplayer=null;
+      	if(vplayer!=null){
+				vplayer.stop();
+				vplayer.release();
+				vplayer=null;
 			}
+      	if(vplayer2!=null){
+			vplayer2.stop();
+			vplayer2.release();
+			vplayer2=null;
+		}
+      	if(vplayer3!=null){
+			vplayer3.stop();
+			vplayer3.release();
+			vplayer3=null;
+		}
       	if (mWakeLock != null) {
   			mWakeLock.release();
   			mWakeLock = null;
@@ -256,9 +313,7 @@ public class CameraLayerKTVDemoActivity extends Activity implements OnClickListe
 	   	if(drawPadCamera!=null && drawPadCamera.isRunning())
 	   	{
 	   			mViewLayer=drawPadCamera.addViewLayer();
-	           
 	   			mLayerRelativeLayout.bindViewLayer(mViewLayer);
-	   		
 	           mLayerRelativeLayout.invalidate();//刷新一下.
 	           
 	           ViewGroup.LayoutParams  params=mLayerRelativeLayout.getLayoutParams();
@@ -266,8 +321,14 @@ public class CameraLayerKTVDemoActivity extends Activity implements OnClickListe
 	           mLayerRelativeLayout.setLayoutParams(params);
 	   	}
    }
-   private VPlayer mplayer=null;
-   private VideoLayer  videoLayer=null;
+  
+   
+   private VPlayer vplayer=null;
+   private VPlayer vplayer2=null;
+   private VPlayer vplayer3=null;
+   private VideoLayer  currentLayer=null;
+   private boolean isChangedVideo=false;
+   private int videoWidth,videoHeight;
    private String srcVideoPath;
    /**
     * 增加一个视频图层.
@@ -276,27 +337,89 @@ public class CameraLayerKTVDemoActivity extends Activity implements OnClickListe
 	{
 	    	 if (srcVideoPath != null && drawPadCamera!=null && drawPadCamera.isRunning()){
 	    		 
-	    		 		mplayer=new VPlayer(CameraLayerKTVDemoActivity.this);
-	    		 		mplayer.setVideoPath(srcVideoPath);
-	    		 		mplayer.setOnPreparedListener(new OnPlayerPreparedListener() {
+	    		 		vplayer=new VPlayer(CameraLayerKTVDemoActivity.this);
+	    		 		vplayer.setVideoPath(srcVideoPath);
+	    		 		vplayer.setOnPreparedListener(new OnPlayerPreparedListener() {
 							
 							@Override
 							public void onPrepared(VideoPlayer mp) {
 								
 								if(drawPadCamera!=null && drawPadCamera.isRunning()){
 									
-									videoLayer=drawPadCamera.addVideoLayer(mplayer.getVideoWidth(), mplayer.getVideoHeight(), null);
-									mplayer.setSurface(new Surface(videoLayer.getVideoTexture()));
-									mplayer.start();
+									currentLayer=drawPadCamera.addVideoLayer(vplayer.getVideoWidth(), vplayer.getVideoHeight(), null);
+									vplayer.setSurface(new Surface(currentLayer.getVideoTexture()));
+									vplayer.start();
 								
-									drawPadCamera.changeLayerPosition(videoLayer, 0);
+									drawPadCamera.changeLayerPosition(currentLayer, 0);
 									//cameraLayer.setScale(0.5f);
 								}
 							}
 						});
-			       	  mplayer.prepareAsync();
+			       	  vplayer.prepareAsync();
+			       	  
 	         }
+	    	 
 	}
+	private void prepareVideo2()
+	{
+		if(vplayer2==null)
+		{
+			//准备第二个视频,
+			String path=CopyFileFromAssets.copyAssets(getApplicationContext(), "ping25s.mp4");
+			vplayer2=new VPlayer(CameraLayerKTVDemoActivity.this);
+			vplayer2.setVideoPath(path);
+			vplayer2.setOnPreparedListener(new OnPlayerPreparedListener() {
+				
+				@Override
+				public void onPrepared(VideoPlayer mp) {
+					
+					//第二个视频准备好后, 停止第一个视频.
+					if(vplayer!=null ){
+						vplayer.stop();
+						vplayer.release();
+						vplayer=null;
+					}
+					if(vplayer3!=null ){
+						vplayer3.stop();
+						vplayer3.release();
+						vplayer3=null;
+					}
+					isChangedVideo=true;  //标志下切换.在线程内部切换;
+					videoWidth=mp.getVideoWidth();
+					videoHeight=mp.getVideoHeight();
+				}
+			});
+			vplayer2.prepareAsync();
+		}
+	}
+	private void prepareVideo3()
+	{
+		if(vplayer3==null)
+		{
+			//准备第二个视频,
+			vplayer3=new VPlayer(CameraLayerKTVDemoActivity.this);
+			vplayer3.setVideoPath(srcVideoPath);
+			vplayer3.setOnPreparedListener(new OnPlayerPreparedListener() {
+				
+				@Override
+				public void onPrepared(VideoPlayer mp) {
+					
+					//第二个视频准备好后, 停止第一个视频.
+					if(vplayer2!=null){
+						vplayer2.stop();
+						vplayer2.release();
+						vplayer2=null;
+					}
+					
+					isChangedVideo=true;  //标志下切换.在线程内部切换;
+					videoWidth=mp.getVideoWidth();
+					videoHeight=mp.getVideoHeight();
+				}
+			});
+			vplayer3.prepareAsync();
+		}
+	}
+	
    //-------------------------------------------一下是UI界面和控制部分.---------------------------------------------------
    private LinearLayout  playVideo;
    private TextView tvTime;
@@ -393,6 +516,26 @@ public class CameraLayerKTVDemoActivity extends Activity implements OnClickListe
 	}
 	@Override
 	public void onStopTrackingTouch(SeekBar seekBar) {
+		
+	}
+	//-----------------------------------------------
+	@Override
+	public void onLayerCacheAlready(CameraLayer layer) {
+		
+		if(isZoomed){
+			cameraLayer.setZoom(0);
+		}else{
+			cameraLayer.setZoom(80);
+			isZoomed=true;
+		}
+	}
+	@Override
+	public boolean onSubLayerFading(CameraLayer layer, SubLayer sublayer) {
+		sublayer.setPosition(sublayer.getPositionX()+2, sublayer.getPositionY());
+		return false;
+	}
+	@Override
+	public void onSubLayerFadeEnd(CameraLayer layer) {
 		
 	}
 }

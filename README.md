@@ -1,9 +1,10 @@
 ## LanSoEditor_advance android  video editor  advance sdk . filter, overlay,remark,mixer and so on安卓平台视频编辑专业版本，基于【容器图层】架构， 类似UI布局中的各种控件和Layout的关系，类似Photoshop中的图层思路，搭积木一样的编辑您个性化d 视频。
-## 版本是2.7.11
-*  增加绿背景抠图, 实现场景转移功能(电影演员在绿背景前表演).
-*  实时音量调节.
-*  声音容器的实时回调,实时调节.
-*  应客户要求，增加优化的其他代码。
+## 版本是2.8.0
+*  增加分段录制时增加MP3音乐.
+*  重写音频容器AudioPad,时间单位统一为毫秒,
+*  后台处理音视频场景, 增加时间冻结, 时间拉伸, 时间重复.
+*  视频播放, 增加精确定位, 
+*  优化VideoOneDo和其他代码.
 
 [更多版本日志](https://github.com/LanSoSdk/LanSoEditor_advance/blob/master/%E7%89%88%E6%9C%AC%E8%AF%B4%E6%98%8E.md)
 

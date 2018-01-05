@@ -364,7 +364,8 @@ public class MediaInfo {
      }
      /**
       * 如果在调试中遇到问题了, 首先应该执行这里, 这样可以检查出60%以上的错误信息.
-      * 在出错代码的上一行增加：Log.i(TAG,"当前音视频文件信息是:"+MediaInfo.checkFile("你的文件路径"));
+      * 在出错代码的上一行增加：
+      * 2018年1月4日20:54:07: 新增, 在内部直接打印, 外部无效增加Log
       * @param videoPath
       * @return
       */
@@ -423,10 +424,9 @@ public class MediaInfo {
         		 }else{
         			 ret="文件存在, 但MediaInfo.prepare获取媒体信息失败,请查看下 文件是否是音频或视频, 或许演示工程APP名字不是我们demo中的名字:"+videoPath;
         		 }
-        		 
     		 }
-    			 
     	 }
+    	 Log.i(TAG,"当前文件的音视频信息是:"+ret);
     	 return ret;
      }
      /**

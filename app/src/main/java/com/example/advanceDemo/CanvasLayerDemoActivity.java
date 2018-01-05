@@ -215,12 +215,15 @@ public class CanvasLayerDemoActivity extends Activity {
     		}
     		
     		mplayer.start();
-				
+    		
+    		
     		addCanvasLayer();  //增加一个CanvasLayer
+    		
     		
     		mDrawPadView.resumeDrawPad();
     	}
     }
+  
     /**
      * Step3: 停止容器,停止后,为新的视频文件增加上音频部分.
      */

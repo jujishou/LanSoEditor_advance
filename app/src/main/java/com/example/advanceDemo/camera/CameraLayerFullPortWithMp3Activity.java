@@ -41,7 +41,6 @@ import com.lansosdk.videoeditor.DrawPadCameraView.doFousEventListener;
 import com.lansosdk.videoeditor.DrawPadCameraView.onViewAvailable;
 import com.lansosdk.videoeditor.FilterLibrary.OnGpuImageFilterChosenListener;
 import com.lansosdk.videoeditor.DrawPadView;
-import com.lansosdk.videoeditor.FileWriteUtils;
 import com.lansosdk.videoeditor.FilterLibrary;
 import com.lansosdk.videoeditor.LanSongUtil;
 import com.lansosdk.videoeditor.SDKFileUtils;
@@ -78,14 +77,12 @@ public class CameraLayerFullPortWithMp3Activity extends Activity implements OnCl
    
 	
 	private static final int RECORD_CAMERA_MIN=2*1000*1000; //定义最小2秒
-	
 	private static final String TAG = "CameraFullRecordActivity";
-
     private DrawPadCameraView drawPadCamera;
     
     
     private CameraLayer  mCamLayer=null;
-    private AudioLine  audioLineMp3;
+    private AudioLine  audioLine;
     private MicLine  micLine;
     
     private String dstPath=null;  //用于录制完成后的目标视频路径.
@@ -132,8 +129,8 @@ public class CameraLayerFullPortWithMp3Activity extends Activity implements OnCl
             			/**
             			 * 把用户选择好的歌曲,设置到drawpad容器中, 开始录制.
             			 */
-            			String music=CopyFileFromAssets.copyAssets(getApplicationContext(), "wenbie_5m_2s.mp3");
-            			audioLineMp3=drawPadCamera.setRecordExtraMp3(music, true);
+            			String music=CopyFileFromAssets.copyAssets(getApplicationContext(), "c_li_c_li_2m8s.mp3");
+            			audioLine=drawPadCamera.setRecordExtraMp3(music, true);
             			drawPadCamera.startRecord();
             		}
             	}

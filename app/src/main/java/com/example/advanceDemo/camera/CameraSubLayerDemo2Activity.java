@@ -36,7 +36,6 @@ import com.lansosdk.videoeditor.DrawPadCameraView.doFousEventListener;
 import com.lansosdk.videoeditor.DrawPadCameraView.onViewAvailable;
 import com.lansosdk.videoeditor.FilterLibrary.OnGpuImageFilterChosenListener;
 import com.lansosdk.videoeditor.DrawPadView;
-import com.lansosdk.videoeditor.FileWriteUtils;
 import com.lansosdk.videoeditor.FilterLibrary;
 import com.lansosdk.videoeditor.LanSongUtil;
 import com.lansosdk.videoeditor.SDKFileUtils;

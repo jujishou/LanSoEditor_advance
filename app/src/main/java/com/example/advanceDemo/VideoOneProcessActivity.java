@@ -132,6 +132,10 @@ public class VideoOneProcessActivity extends Activity  implements OnClickListene
 		if(isMusicEnable){  //增加音乐
 			String music=CopyFileFromAssets.copyAssets(mContext, "summer10s.mp3");
 			videoOneDo.setBackGroundMusic(music,isMusicMix,0.8f);
+			
+			//videoOneDo.setBackGroundMusic(music);
+			//videoOneDo.setBackGroundMusic(music, isMusicMix, 0.5f, 1.5f);
+//			videoOneDo.setBackGroundMusic(music, 3.0f, 8.0f, isMusicMix, 0.2f,2.0f);
 		}
 		
 		if(isScaleEnable){ //是否缩放.
@@ -165,6 +169,7 @@ public class VideoOneProcessActivity extends Activity  implements OnClickListene
 			
 			int cropW=mInfo.getWidth()*2/3;
 			int cropH=mInfo.getHeight()*2/3;
+			
 			videoOneDo.setCropRect(startX, startY, cropW, cropH);
 		}
 		

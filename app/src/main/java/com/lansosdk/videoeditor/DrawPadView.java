@@ -38,7 +38,6 @@ import jp.co.cyberagent.lansongsdk.gpuimage.GPUImageFilter;
 import jp.co.cyberagent.lansongsdk.gpuimage.GPUImageSepiaFilter;
 
 import com.lansosdk.box.AudioLine;
-import com.lansosdk.box.AudioInsertManager;
 import com.lansosdk.box.BitmapLayer;
 import com.lansosdk.box.CameraLayer;
 import com.lansosdk.box.CameraLayer;
@@ -166,7 +165,7 @@ public class DrawPadView extends FrameLayout {
         * 注意： 此
         */
     	mTextureRenderView.setDispalyRatio(AR_ASPECT_FIT_PARENT);
-        
+    	
     	View renderUIView = mTextureRenderView.getView();
         FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(
                 FrameLayout.LayoutParams.WRAP_CONTENT,
@@ -412,7 +411,10 @@ public class DrawPadView extends FrameLayout {
 	private onDrawPadRunTimeListener drawpadRunTimeListener=null;
 	/**
 	 * 当前drawpad容器运行了多长时间, 仅供参考使用. 没有特别的意义.
-	 * 内部每渲染一帧, 则会回调这里.
+	 * 
+	 * 此listener中的long类型是当前时间,单位是微秒, currentTimeUs; 此时间为即将渲染这一帧的时间, 比如你要在第3秒增加别的图层或调整指定图层的参数
+	 * 则应该判断时间是否大于或等于3*1000*1000;
+	 * 
 	 * 仅仅作为drawpad容器运行时间的参考, 
 	 * 如果你要看当前视频图层的运行时间,则应设置图层的监听,而不是容器运行时间的监听, 可以通过 {@link #resetDrawPadRunTime(long)}来复位这个时间.
 	 * 
@@ -436,9 +438,13 @@ public class DrawPadView extends FrameLayout {
 		}
 	}
 	/**
-	 * DrawPad每执行完一帧画面,会调用这个Listener,返回的timeUs是当前画面的时间戳(微妙),
-	 *  可以利用这个时间戳来做一些变化,比如在几秒处缩放, 在几秒处平移等等.从而实现一些动画效果.
+	 *  实时录制的时候的进度回调
+	 *  实时录制的时候的进度回调
+	 *  实时录制的时候的进度回调
 	 *  
+	 * 此listener中的long类型是当前时间,单位是微秒, currentTimeUs; 此时间为即将渲染这一帧的时间, 比如你要在第3秒增加别的图层或调整指定图层的参数
+	 * 则应该判断时间是否大于或等于3*1000*1000;
+	 * 
 	 *  此方法是在实时录制的时候,每次录制一帧调用这里,返回当前录制帧的时间戳.
 	 * @param currentTimeUs  当前DrawPad处理画面的时间戳.,单位微秒.
 	 */
@@ -461,7 +467,7 @@ public class DrawPadView extends FrameLayout {
 	private boolean isThreadProgressInRecording=false;
 	/**
 	 * 方法与   onDrawPadProgressListener不同的地方在于:
-	 * 此回调是在DrawPad渲染完一帧后,立即执行这个回调中的代码,不通过Handler传递出去,你可以精确的执行一些下一帧的如何操作.
+	 * 即将开始一帧渲染的时候, 直接执行这个回调中的代码,不通过Handler传递出去,你可以精确的执行一些这一帧的如何操作.
 	 * 
 	 * listener中的方法是在DrawPad线程中执行的, 请不要在此监听里放置耗时的处理, 以免造成DrawPad线程的卡顿.
 	 * 
@@ -690,7 +696,11 @@ public class DrawPadView extends FrameLayout {
 	 				}
 	 			}
          }else{
-        	 Log.e(TAG,"无法开启DrawPad, 您当前的参数有问题,您对照下参数:宽度和高度是:"+drawPadWidth+" x "+drawPadHeight+ " mSurfaceTexture:"+mSurfaceTexture);
+        	 if(mSurfaceTexture==null){
+        		 Log.e(TAG,"可能没有您的UI界面还没有完全启动,您就startDrawPad了, 建议oncreate后延迟300ms再调用");
+        	 }else{
+        		 Log.e(TAG,"无法开启DrawPad, 您当前的参数有问题,您对照下参数:宽度和高度是:"+drawPadWidth+" x "+drawPadHeight+ " mSurfaceTexture:"+mSurfaceTexture);	 
+        	 }
          }
 		 return ret;
 	}

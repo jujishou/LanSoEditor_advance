@@ -132,7 +132,6 @@ public class LanSongUtil {
 					  bmp.compress(Bitmap.CompressFormat.PNG, 90, bos);
 					  bos.close();
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 		 }

@@ -137,7 +137,6 @@ public class ExecuteFilterDemoActivity extends Activity{
 			
 			@Override
 			public void onProgress(DrawPad v, long currentTimeUs) {
-				// TODO Auto-generated method stub
 				drawPadProgress(v, currentTimeUs);
 			}
 		});

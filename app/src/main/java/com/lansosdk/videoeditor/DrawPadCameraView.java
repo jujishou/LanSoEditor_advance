@@ -35,11 +35,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import jp.co.cyberagent.lansongsdk.gpuimage.GPUImageFilter;
 
 import com.lansosdk.box.AudioLine;
-import com.lansosdk.box.AudioInsertManager;
 import com.lansosdk.box.BitmapLayer;
 import com.lansosdk.box.CameraLayer;
 import com.lansosdk.box.CameraLayer;
@@ -339,22 +339,14 @@ public class DrawPadCameraView extends FrameLayout {
 			}
 			encodeSpeed=speed;
 		}
-		
 		/**
-		 * 
-		 *  如果实时保存的宽高和原的宽高不成比例,则会先等比例缩放原,然后在多出的部分出增加黑边的形式呈现,比如原是16:9,设置的宽高是480x480,则会先把原按照宽度进行16:9的比例缩放.
-		 *  在缩放后,在的上下增加黑边的形式来实现480x480, 从而不会让变形.
-		 *  
-		 *  如果在拍摄时有角度, 比如手机相机拍照,会有90度或270, 则会自动的识别拍摄的角度,并在缩放时,自动判断应该左右加黑边还是上下加黑边.
-		 *  
-		 *  因有缩放的特性, 您可以直接向DrawPad中投入一个,然后把宽高比设置一致,这样可实现一个压缩的功能;您也可以把宽高比设置一下,这样可实现加黑边的压缩功能.
-		 *  或者您完全不进行缩放, 仅仅想把码率减低一下, 也可以把其他参数设置为和源一致, 仅仅调试encBr这个参数,来实现压缩的功能.
-		 *  
+		 * 设置录制视频的宽高, 建议和预览的宽高成比例, 比如预览的全屏是16:9则设置的编码宽度和高度也要16:9; 如果是18:9,则这里的encW:encH也要18:9;
+		 * 从而保证录制后的视频不变形;
 		 * @param encW  录制宽度
 		 * @param encH  录制高度
 		 * @param encBr 录制bitrate,
 		 * @param encFr 录制帧率
-		 * @param outPath  录制 的保存路径. 注意:这个路径在分段录制功能时,无效.即调用 {@link #segmentStart(String)}时.
+		 * @param outPath  录制 的保存路径. 注意:这个路径在分段录制功能时无效.即调用 {@link #segmentStart()}时无效
 		 */
 		public void setRealEncodeEnable(int encW,int encH,int encBr,int encFr,String outPath)
 	    {
@@ -465,7 +457,7 @@ public class DrawPadCameraView extends FrameLayout {
 	/**
 	 * 
 	 * 方法与   onDrawPadProgressListener不同的地方在于:
-	 * 此回调是在DrawPad渲染完一帧后,立即执行这个回调中的代码,不通过Handler传递出去,你可以精确的执行一些下一帧的如何操作.
+	 * 即将开始一帧渲染的时候, 直接执行这个回调中的代码,不通过Handler传递出去,你可以精确的执行一些这一帧的如何操作.
 	 * 故不能在回调 内增加各种UI相关的代码
 	 * 不要在代码中增加过多的耗时的代码, 以造成内部处理线程的阻塞.
 	 * 
@@ -909,7 +901,7 @@ public class DrawPadCameraView extends FrameLayout {
 	{
 		if(renderer!=null){
 			if(renderer.isRecording()){
-				Log.e(TAG,"DrawPad is running. set mp3 Error!");
+				Log.e(TAG,"DrawPad is recording. set mp3 Error!");
 			}else {
 				AudioLine line=renderer.setRecordExtraMp3(mp3Path);
 				if(line==null){
@@ -938,6 +930,19 @@ public class DrawPadCameraView extends FrameLayout {
 		}
 	}
 	/**
+	 * 当是录制外部音乐, 分段录制的时候, 因为要保证音频的完整性, 这里单独拿过来.
+	 * 如果您是正常录制, 则可以使用, 如果是调速使用了,则建议用原音和分段合成后的声音合并(用VideoOneDo即可).
+	 * @return
+	 */
+	public String getRecordMusicPath()
+	{
+		if(renderer!=null){
+			return renderer.getMusicRecordPath();
+		}else{
+			return null;
+		}
+	}
+	/**
 	 * 此代码只是用在分段录制的Camera的过程中, 其他地方不建议使用.
 	 */
 	public void segmentStart()
@@ -956,6 +961,21 @@ public class DrawPadCameraView extends FrameLayout {
 	{
 		if(renderer!=null){
 			return renderer.segmentStop();
+		}else{
+			return null;	
+		}
+	}
+	/**
+	 * 当采样外部音乐分段录制的时候, 是否在一段结束后, mp3只是暂停, 而不是结束.
+	 * 当下一段视频开始时, MP3继续播放.
+	 * 
+	 * @param pauseMp3  是否mp3只是暂停;
+	 * @return
+	 */
+	public String segmentStop(boolean pauseMp3)
+	{
+		if(renderer!=null){
+			return renderer.segmentStop(pauseMp3);
 		}else{
 			return null;	
 		}
@@ -982,17 +1002,27 @@ public class DrawPadCameraView extends FrameLayout {
 		else
 			return false;
 	}
+	private AtomicBoolean isStoping= new AtomicBoolean(false);  
 	/**
 	 * 停止DrawPad的渲染线程.
 	 * 此方法执行后, DrawPad会释放内部所有Layer对象,您外界拿到的各种图层对象将无法再使用.
 	 */
 	public void stopDrawPad()
 	{	
+		if(isStoping.get()==false)
+		{
+			isStoping.set(true);
+			
 			if (renderer != null){
 	        	renderer.release();
 	        	renderer=null;
 	        }
+			
+			
+			isStoping.set(false);
+			
 			isCameraOpened=false;
+		}
 	}
 	@Deprecated
 	public String stopDrawPad2()
@@ -1000,7 +1030,7 @@ public class DrawPadCameraView extends FrameLayout {
 			String ret=null;
 			if (renderer != null){
 	        	renderer.release();
-	        	ret=renderer.getAudioRecordPath();
+	        	ret=renderer.getMusicRecordPath();
 	        	renderer=null;
 	        }
 			isCameraOpened=false;

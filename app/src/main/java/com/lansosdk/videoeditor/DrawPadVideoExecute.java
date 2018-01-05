@@ -1,11 +1,13 @@
 package com.lansosdk.videoeditor;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import jp.co.cyberagent.lansongsdk.gpuimage.GPUImageFilter;
 import android.content.Context;
 import android.graphics.Bitmap;
 
+import com.lansosdk.box.AudioSource;
 import com.lansosdk.box.BitmapLayer;
 import com.lansosdk.box.CanvasLayer;
 import com.lansosdk.box.DataLayer;
@@ -15,6 +17,7 @@ import com.lansosdk.box.FileParameter;
 import com.lansosdk.box.GifLayer;
 import com.lansosdk.box.Layer;
 import com.lansosdk.box.MVLayer;
+import com.lansosdk.box.TimeRange;
 import com.lansosdk.box.VideoLayer;
 import com.lansosdk.box.onDrawPadCompletedListener;
 import com.lansosdk.box.onDrawPadErrorListener;
@@ -77,17 +80,17 @@ public class DrawPadVideoExecute {
     *  因视频编码原理, 会定位到 [指定时间]前面最近的一个IDR刷新帧, 然后解码到[指定时间],容器才开始渲染视频,中间或许有一些延迟.
     * @param ctx
     * @param srcPath  主视频的完整路径.
-    * @param startTimeMs  开始时间. 单位毫秒
+    * @param startTimeUs  开始时间. 单位为微秒 1s=1000*1000微秒;  注意!!!
     * @param padwidth  容器宽度.
     * @param padheight 容器高度.
     * @param bitrate 容器编码的码率
     * @param filter  为这视频设置一个滤镜, 如果您要增加多个滤镜,则用{@link #switchFilterList(Layer, ArrayList)}
     * @param dstPath  处理后保存的目标文件.
     */
-   public DrawPadVideoExecute(Context ctx,String srcPath,long startTimeMs,int padwidth,int padheight,int bitrate,GPUImageFilter filter,String dstPath) 
+   public DrawPadVideoExecute(Context ctx,String srcPath,long startTimeUs,int padwidth,int padheight,int bitrate,GPUImageFilter filter,String dstPath) 
    {
 	   if(renderer==null){
-		   renderer=new DrawPadVideoRunnable(ctx, srcPath,startTimeMs, padwidth, padheight, bitrate, filter, dstPath);
+		   renderer=new DrawPadVideoRunnable(ctx, srcPath,startTimeUs, padwidth, padheight, bitrate, filter, dstPath);
 	   }
 	   this.padWidth=padwidth;
 	   this.padHeight=padheight;
@@ -96,16 +99,16 @@ public class DrawPadVideoExecute {
     * 相对于上面,只是少了码率.
     * @param ctx
     * @param srcPath
-    * @param startTimeMs
+    * @param startTimeUs  单位为微秒 1s=1000*1000微秒;  注意!!!
     * @param padwidth
     * @param padheight
     * @param filter
     * @param dstPath
     */
-   public DrawPadVideoExecute(Context ctx,String srcPath,long startTimeMs,int padwidth,int padheight,GPUImageFilter filter,String dstPath) 
+   public DrawPadVideoExecute(Context ctx,String srcPath,long startTimeUs,int padwidth,int padheight,GPUImageFilter filter,String dstPath) 
    {
 	   if(renderer==null){
-		   renderer=new DrawPadVideoRunnable(ctx, srcPath,startTimeMs, padwidth, padheight,0, filter, dstPath);
+		   renderer=new DrawPadVideoRunnable(ctx, srcPath,startTimeUs, padwidth, padheight,0, filter, dstPath);
 	   }
 	   this.padWidth=padwidth;
 	   this.padHeight=padheight;
@@ -127,7 +130,6 @@ public class DrawPadVideoExecute {
 			param.setStartTimeUs(5*1000*1000); //从5秒处开始处理, 当前仅在后台处理时有效.
 			videoMainLayer=mDrawPadView.addMainVideoLayer(param,new GPUImageSepiaFilter());
 		}
-		
     * @param ctx
     * @param filebox
     * @param padwidth
@@ -175,27 +177,9 @@ public class DrawPadVideoExecute {
 	   }
    }
    /**
-	 * 调节视频的速度
-	 * 支持在任意时刻来变速; 你可以前3秒用一个速度, 中间3秒正常, 最后几秒用一个速度.
-	 * 
-	 *  当前暂时不支持音频, 只是视频的加减速, 请注意!!!
-	 *  
-	 *  建议5个等级: 0.25f,0.5f,1.0f,1.5f,2.0f; 
-	 *  其中 0.25是放慢4倍;  0.5是放慢2倍; 1.0是采用和预览同样的速度; 1.5是加快一半, 2.0是加快2倍.
-	 * @param speed  速度系数,
-	 * 
-	 * 
-	 * 测试代码是:
-	 * 	if(currentTimeUs> 15*1000000){
-					mDrawPad.adjustEncodeSpeed(1.0f);
-				}else if(currentTimeUs>6000000 && bitmapLayer!=null){
-					mDrawPad.adjustEncodeSpeed(0.25f);
-					v.removeLayer(bitmapLayer);
-				}else if(currentTimeUs>3000000 && bitmapLayer!=null)  {
-					bitmapLayer.setScale(2.0f);
-					mDrawPad.adjustEncodeSpeed(2.0f);
-				}
+	 *代码不再使用, 请用 {@link #addTimeStretch(float, long, long)}
 	 */
+   @Deprecated
    public void adjustEncodeSpeed(float speed)
 	{
 		if(renderer!=null){
@@ -260,7 +244,7 @@ public class DrawPadVideoExecute {
 	}
 	/**
 	 * 方法与   onDrawPadProgressListener不同的地方在于:
-	 * 此回调是在DrawPad渲染完一帧后,立即执行这个回调中的代码,不通过Handler传递出去,你可以精确的执行一些下一帧的如何操作.
+	 * 即将开始一帧渲染的时候, 直接执行这个回调中的代码,不通过Handler传递出去,你可以精确的执行一些这一帧的如何操作.
 	 * 故不能在回调 内增加各种UI相关的代码.
 	 */
 	public void setDrawPadThreadProgressListener(onDrawPadThreadProgressListener listener)
@@ -388,43 +372,179 @@ public class DrawPadVideoExecute {
 		   return null;
 	   }
    }
-   /**
-    * 在处理中插入一段其他音频,比如笑声,雷声, 各种搞怪声音等. 
-    * 注意,这里插入的声音是和视频原有的声音混合后, 形成新的音频,而不是替换原来的声音, 如果您要替换原理的声音,则建议用{@link VideoEditor}中的相关方法来做.
-    * 如果原视频没有音频部分,则默认创建一段无声的音频和别的音频混合.
-    * 
-    * 如果增加了其他声音, 则会在内部合成声音, 合成后, 您设置的目标文件中自然就有了声音, 外界无需另外addAudio的操作, 这是和别的Drawpad操作不同之处.
-    * 
-    * 成功增加后, 会在DrawPad开始运行时,开启一个线程去编解码音频文件, 如果您音频过大,则可能需要一定的时间来处理完成, 处理完毕后.
-    * 此方法在DrawPad开始前调用.
-    * 
-    * 此方法可以被多次调用, 从而增加多段其他的音频.
-    * 
-    * @param srcPath  音频的完整路径,当前支持mp3格式和aac格式.
-    * 
-    * @param startTimeMs 设置从主音频的哪个时间点开始插入.单位毫秒.
-    * @param durationMs   把这段声音多长插入进去.
-    * 
-    * @param volume  插入时,当前音频音量多大  默认是1.0f, 大于1,0则是放大, 小于则是降低
-    * @return  插入成功, 返回true, 失败返回false
-    */
-   	 public boolean addSubAudio(String srcPath,long startTimeMs,long durationMs,float volume) 
+   public AudioSource getMainAudioSource()
+   {
+	   if(renderer!=null){
+		   return renderer.getMainAudioSource();
+	   }else{
+		   return null;
+	   }
+   }
+   	@Deprecated
+   	 public boolean addSubAudio(String srcPath,long startFromPadTimeUs,long durationUs,float volume) 
 	 {
 		 if(renderer!=null && renderer.isRunning()==false){
-			return renderer.addSubAudio(srcPath, startTimeMs, durationMs,volume);
+			AudioSource audio= renderer.addSubAudio(srcPath, startFromPadTimeUs,0, durationUs);
+			if(audio!=null){
+				audio.setVolume(volume);
+			}
+			return audio!=null;
 		 }else{
 			 return false;
 		 }
 	 }
-   	@Deprecated
- 	 public boolean addSubAudio(String srcPath,long startTimeMs,long durationMs,float mainvolume,float volume) 
- 	 {
- 		 if(renderer!=null && renderer.isRunning()==false){
- 			return renderer.addSubAudio(srcPath, startTimeMs, durationMs,volume);
+    /**
+  	  * 不再使用.
+  	  * @return
+  	  */
+  	@Deprecated
+	 public boolean addSubAudio(String srcPath,long startTimeMs,long durationMs,float mainvolume,float volume) 
+	 {
+		 if(renderer!=null && renderer.isRunning()==false){
+			AudioSource audio=renderer.addSubAudio(srcPath, startTimeMs, durationMs);
+			if(audio!=null){
+				audio.setVolume(volume);
+			}
+			return audio!=null;
+		 }else{
+			 return false;
+		 }
+	 }
+    public AudioSource addSubAudio(String srcPath)
+    {
+ 	   if(renderer!=null && renderer.isRunning()==false){
+ 			return renderer.addSubAudio(srcPath);
  		 }else{
- 			 return false;
+ 			 return null;
  		 }
- 	 }
+    }
+   	/**
+   	 * 增加其他声音;
+   	 * @param srcPath
+   	 * @param startFromPadTime 从主音频的什么时间开始增加
+   	 * @return
+   	 */
+   	public AudioSource addSubAudio(String srcPath,long startFromPadTime) 
+   	{
+   		if(renderer!=null && renderer.isRunning()==false){
+   			return renderer.addSubAudio(srcPath, startFromPadTime, -1);
+		 }else{
+			 return null;
+		 }
+   	}
+   	 /**
+   	  * 增加其他声音;
+   	  * 
+   	  * @param srcPath  路径, 可以是mp3或m4a或 带有音频的MP4文件;
+   	  * @param startFromPadUs  从主音频的什么时间开始增加
+   	  * @param durationUs   把这段声音多长插入进去.
+   	  * @return 返回一个AudioSource对象;
+   	  */
+   	public AudioSource addSubAudio(String srcPath,long startFromPadUs,long durationUs) 
+   	{
+   		if(renderer!=null && renderer.isRunning()==false){
+			return renderer.addSubAudio(srcPath, startFromPadUs, durationUs);
+		 }else{
+			 return null;
+		 }
+   	}
+   	/**
+   	 * 
+   	 * 如果要调节音量, 则增加拿到对象后, 开始调节.
+   	 * 
+   	 * @param srcPath
+   	 * @param startFromPadUs  从容器的什么位置开始增加
+   	 * @param startAudioTimeUs  把当前声音的开始时间增加进去.
+   	 * @param durationUs  增加多少, 时长.
+   	 * @param isLoop 是否循环.
+   	 * @return
+   	 */
+   	public AudioSource addSubAudio(String srcPath,long startFromPadUs,long startAudioTimeUs,long durationUs) 
+   	{
+   		if(renderer!=null && renderer.isRunning()==false){
+   			return renderer.addSubAudio(srcPath,startFromPadUs,startAudioTimeUs,durationUs);
+		 }else{
+			 return null;
+		 }
+   	}
+   	/**
+   	 * 增加时间冻结,即在视频的什么时间段开始冻结, 静止的结束时间;
+   	 * 为了统一: 这里用结束时间;
+   	 * 比如你要从原视频的5秒地方开始静止, 静止3秒钟, 则这里是3*1000*1000 , 8*1000*1000
+   	 * (画面停止的过程中, 可以做一些缩放,移动等特写等)
+   	 * @param startTimeUs 从输入的视频/音频的哪个时间点开始冻结,
+   	 * @param endTimeUs  (这里理解为:冻结的时长+开始时间);
+   	 */
+   	public void addTimeFreeze(long startTimeUs,long endTimeUs)
+   	{
+   		if(renderer!=null){
+   			renderer.addTimeFreeze(startTimeUs, endTimeUs);
+   		}
+   	}
+   	
+   	/**
+   	 * 给这个主视频的音频部分和视频部分,分别做时间拉伸(某一段的速度调节)
+   	 * 
+   	 * 这个设置等于分别给当前视频的 VideoLayer和AudioSource分别设置 时间拉伸;
+   	 * 
+   	 * 可以被多次调用.
+   	 * 
+   	 * 建议在调用startDrawPad前调用.
+   	 * 
+   	 * @param rate  拉伸的速度, 范围0.5--2.0; 0.5是放慢1倍, 2.0是加快一倍; 1.0f是默认, 没有设置的时间段,默认是1.0f; 
+   	 *
+   	 * @param startTimeUs
+   	 * @param endTimeUs
+   	 */
+    public void addTimeStretch(float rate,long startTimeUs,long endTimeUs)
+    {
+    	if(renderer!=null){
+			renderer.addTimeStretch(rate, startTimeUs, endTimeUs);
+		 }
+    }
+    /**
+     * 增加时间重复;
+     * 类似综艺节目中, 当意外发生的时候, 多次重复的效果.
+     * @param startUs  相对原视频/原音频的开始时间;
+     * @param endUs  相对原视频/原音频的结束时间;
+     * @param loopcnt  重复的次数;
+     */
+    public void addTimeRepeat(long startUs,long endUs,int loopcnt)
+    {
+    	if(renderer!=null){
+    		renderer.addTimeRepeat(startUs, endUs, loopcnt);
+    	}
+    }
+    /**
+     * 增加时间拉伸
+     * @param list
+     */
+    public void addTimeStretch(List<TimeRange> list)
+	 {
+    	if(renderer!=null){
+			renderer.addTimeStretch(list);
+		 }
+	 }
+    /**
+     * 时间冻结
+     * @param list
+     */
+	 public void addTimeFreeze(List<TimeRange> list)
+	 {
+		 if(renderer!=null){
+			 renderer.addTimeFreeze(list);
+		 }
+	 }
+	 /**
+	  * 时间重复.
+	  * @param list
+	  */
+	 public void addTimeRepeat(List<TimeRange> list)
+	 {
+		 if(renderer!=null){
+			 renderer.addTimeRepeat(list);
+		 }
+	 }
 	 /**
 	  * 增加图片图层.
 	  * @param bmp

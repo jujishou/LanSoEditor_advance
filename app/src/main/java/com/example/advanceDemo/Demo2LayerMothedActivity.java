@@ -143,8 +143,7 @@ public class Demo2LayerMothedActivity extends Activity implements OnSeekBarChang
 				}
 			});
         	  mplayer.prepareAsync();
-          }
-          else {
+          }else {
               finish();
               return;
           }

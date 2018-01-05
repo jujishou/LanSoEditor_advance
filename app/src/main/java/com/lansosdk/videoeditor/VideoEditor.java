@@ -22,12 +22,13 @@ import android.util.Log;
 
 
 /**
- * 此代码是基本版本里的功能, 不属于专业版本,因专业版本包含基本版本, 故放进来而已.
- * 此代码是基本版本里的功能, 不属于专业版本,因专业版本包含基本版本, 故放进来而已.
- * 此代码是基本版本里的功能, 不属于专业版本,因专业版本包含基本版本, 故放进来而已.
- * 此代码是基本版本里的功能, 不属于专业版本,因专业版本包含基本版本, 故放进来而已.
- * 此代码是基本版本里的功能, 不属于专业版本,因专业版本包含基本版本, 故放进来而已.
- * 此代码是基本版本里的功能, 不属于专业版本,因专业版本包含基本版本, 故放进来而已.
+ * 此代码是基本版本里的功能, 因专业版本包含基本版本, 故放进来而已.
+ * 此代码是基本版本里的功能, 因专业版本包含基本版本, 故放进来而已.
+ * 此代码是基本版本里的功能, 因专业版本包含基本版本, 故放进来而已.
+ * 此代码是基本版本里的功能, 因专业版本包含基本版本, 故放进来而已.
+ * 此代码是基本版本里的功能, 因专业版本包含基本版本, 故放进来而已.
+ * 此代码是基本版本里的功能, 因专业版本包含基本版本, 故放进来而已.
+ * 此代码是基本版本里的功能, 因专业版本包含基本版本, 故放进来而已.
  * 
  * 
  * 如果您想扩展ffmpeg的命令, 可以继承这个类,然后在其中想我们的各种executeXXX的举例一样来使用,不要直接修改我们的这个文件, 以方便以后的sdk更新升级.
@@ -86,7 +87,6 @@ public class VideoEditor {
 	   */
 	  
 		public VideoEditor() {
-		// TODO Auto-generated constructor stub
 			Looper looper;
 	        if ((looper = Looper.myLooper()) != null) {
 	            mEventHandler = new EventHandler(this, looper);
@@ -870,8 +870,9 @@ public class VideoEditor {
 		  }
 		  /**
 		   * 音频和视频合成为多媒体文件，等于给视频增加一个音频。
-		   * 
-		   * 2017年4月5日 增加: 默认以视频的时长为最终目标视频的长度.
+		   * 注意:新增的音频, 建议用AAC的压缩算法的音频,比如后缀是aac或m4a.
+		   * 注意:新增的音频, 建议用AAC的压缩算法的音频,比如后缀是aac或m4a.
+		   *  
 		   * @param videoFile 输入的视频文件,需视频文件中不存储音频部分. 如有音频部分, 建议用 {@link #executeDeleteAudio(String, String)}把音频删除后的目标文件作为当前的输入.
 		   * @param audioFile 输入的音频文件
 		   * @param dstFile  合成后的输出，文件名的后缀是.mp4
@@ -924,6 +925,8 @@ public class VideoEditor {
 		  }
 		  /**
 		   * 音频和视频合成为多媒体文件，等于给视频增加一个音频。
+		   * 注意:新增的音频, 建议用AAC的压缩算法的音频,比如后缀是aac或m4a.
+		   * 注意:新增的音频, 建议用AAC的压缩算法的音频,比如后缀是aac或m4a.
 		   * 
 		   * 2017年4月5日 增加: 默认以视频的时长为最终目标视频的长度.
 		   * @param videoFile 输入的视频文件,需视频文件中不存储音频部分. 如有音频部分, 建议用 {@link #executeDeleteAudio(String, String)}把音频删除后的目标文件作为当前的输入.
@@ -975,6 +978,8 @@ public class VideoEditor {
 		   * 
 		   * 给视频MP4增加上音频，audiostartS表示从从音频的哪个时间点开始增加，单位是秒
 		   * 注意:原视频文件里必须是没有音频部分.
+		   * 注意:新增的音频, 建议用AAC的压缩算法的音频,比如后缀是aac或m4a.
+		   * 注意:新增的音频, 建议用AAC的压缩算法的音频,比如后缀是aac或m4a.
 		   * 
 		   * @param videoFile  原视频文件,只有视频部分的多媒体文件.
 		   * @param audioFile  需要增加的音频文件
@@ -1021,6 +1026,8 @@ public class VideoEditor {
 		  }
 		  /**
 		   * 给视频文件增加一个音频, 注意,这里是因音频的时长为目标视频文件的时长.
+		   * 注意:新增的音频, 建议用AAC的压缩算法的音频,比如后缀是aac或m4a.
+		   * 注意:新增的音频, 建议用AAC的压缩算法的音频,比如后缀是aac或m4a.
 		   * 输出文件后缀是.mp4格式.
 		   * @param videoFile
 		   * @param audioFile
@@ -1146,7 +1153,6 @@ public class VideoEditor {
 				    	 command[i]=(String)cmdList.get(i);  
 				     }  
 				    return  executeVideoEditor(command);
-				  
 			  }else{
 				  return VIDEO_EDITOR_EXECUTE_FAILED;
 			  }
@@ -1455,7 +1461,7 @@ public class VideoEditor {
 					cmdList.add(mp3Path);
 
 					cmdList.add("-acodec");
-					cmdList.add("libfaac");
+					cmdList.add("libfaac"); 
 					
 					cmdList.add("-y");
 					cmdList.add(dstAacPath);

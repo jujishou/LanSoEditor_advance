@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.lansoeditor.demo"
-    android:versionCode="27011"
-    android:versionName="2.7.11" >
+    android:versionCode="27016"
+    android:versionName="2.7.16" >
 
-    <!-- 这里的意思是：我们的sdk最低是Android4.3， 最高支持Andriod7.0 23   -->
     <uses-sdk
         android:minSdkVersion="18"
         android:targetSdkVersion="23" />
@@ -13,6 +12,7 @@
     <uses-feature android:name="android.hardware.camera" />
     <uses-feature android:name="android.hardware.autofocus" />
 
+    
     
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.FLASHLIGHT" />
@@ -28,7 +28,6 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
     <uses-permission android:name="android.permission.GET_TASKS"/>
-    <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.MANAGE_ACCOUNTS"/>
     <uses-permission android:name="android.permission.GET_ACCOUNTS"/>
     <uses-permission android:name="android.permission.FLASHLIGHT"/>
@@ -58,20 +57,20 @@
         <activity android:name="com.example.advanceDemo.StartActivity"
             android:theme="@style/AppTheme2">
             
-             <intent-filter>
+              <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
             
+              
          </activity>
          
         <activity
             android:name="com.example.advanceDemo.ListMainActivity"
             android:screenOrientation="portrait">
-             
+            
         </activity>
-        
         <!-- 列表 -->
              <activity android:name="com.example.advanceDemo.ListLayerDemoActivity"></activity>
              <activity android:name="com.example.advanceDemo.ListSceneDemoActivity"></activity>
@@ -120,24 +119,30 @@
        
         <activity   android:name="com.example.advanceDemo.camera.CameraLayerFullLandscapeActivity"
             android:screenOrientation="landscape"
-              	 android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
+            android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
            >
        </activity>
        
         <activity   android:name="com.example.advanceDemo.camera.CameraLayerKTVDemoActivity"
             android:screenOrientation="landscape"
-              	 android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
+            android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
            >
        </activity>
         
        
        <!-- 基本图层类 --> 
-        
+              <activity android:name="com.example.advanceDemo.ScreenRecordDemoActivity"
+                       android:screenOrientation="landscape"
+            android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
+            	></activity>
+            
+            
         <activity android:name="com.example.advanceDemo.Demo1LayerMothedActivity"
             android:screenOrientation="portrait"></activity>
         <activity android:name="com.example.advanceDemo.Demo2LayerMothedActivity"></activity>
         <activity android:name="com.example.advanceDemo.Demo3LayerFilterActivity"></activity>
-
+        <activity android:name="com.example.advanceDemo.Demo4SubLayerMothedActivity"></activity>
+       
         
         <activity android:name="com.example.advanceDemo.VideoSpeedDemoActivity"></activity>
         
@@ -152,8 +157,7 @@
          <activity android:name="com.example.advanceDemo.TwoVideoLayerActivity"></activity>
           
          <activity android:name="com.example.advanceDemo.ExecuteTwoVideoLayerDemoActivity"></activity>
-               <activity android:name="com.example.advanceDemo.ExecuteSeekVideoDemoActivity"></activity>
-            
+
 
         <activity android:name="com.example.advanceDemo.TextureLayerDemoActivity"></activity>
         
@@ -197,11 +201,9 @@
         <activity android:name="com.example.advanceDemo.CanvasLayerDemoActivity"></activity>
         
       	<activity android:name="com.example.advanceDemo.BitmapEditDemoActivity"></activity>
-        
-       
-         
-         
-       <!-- 播放和其他类 -->
+
+
+        <!-- 播放和其他类 -->
 
      	  <activity android:name="com.example.advanceDemo.VideoPlayerActivity"></activity>
         <activity android:name="com.example.advanceDemo.FilterExecuteActivity"></activity>

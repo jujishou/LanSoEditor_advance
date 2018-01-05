@@ -16,6 +16,7 @@ import com.example.advanceDemo.VideoPlayerActivity;
 import com.example.advanceDemo.view.VideoFocusView;
 import com.example.advanceDemo.view.VideoProgressView;
 import com.lansoeditor.demo.R;
+import com.lansosdk.box.AudioLine;
 import com.lansosdk.box.BitmapLayer;
 import com.lansosdk.box.CameraLayer;
 import com.lansosdk.box.DrawPadUpdateMode;
@@ -34,6 +35,7 @@ import com.lansosdk.videoeditor.DrawPadCameraView;
 import com.lansosdk.videoeditor.DrawPadView;
 import com.lansosdk.videoeditor.FilterLibrary;
 import com.lansosdk.videoeditor.LanSongUtil;
+import com.lansosdk.videoeditor.MediaInfo;
 import com.lansosdk.videoeditor.SDKDir;
 import com.lansosdk.videoeditor.SDKFileUtils;
 import com.lansosdk.videoeditor.VideoEditor;
@@ -72,7 +74,7 @@ public class CameraLayerFullSegmentActivity extends Activity implements OnClickL
 	
 	private static final String TAG = "CameraLayerFullSegmentActivity";
 
-    private DrawPadCameraView mDrawPadCamera;
+    private DrawPadCameraView drawPadCamera;
     
     private CameraLayer  mCameraLayer=null;
     
@@ -89,6 +91,11 @@ public class CameraLayerFullSegmentActivity extends Activity implements OnClickL
 	private long currentSegDuration;   //当前正在录制段的时间. 单位US
 	private long beforeSegDuration;   //正在录制的这一段前的总时间. 单位US
     private ArrayList<String>  segmentArray=new ArrayList<String>();
+    /**
+     *录制音乐,和录制MIC的外音不同;
+     *录制音乐,则为了保持音乐的完整性, 先单独编码, 然后等视频拼接好后, 再把音频和拼接后的视频合并在一起, 内部已经做了音视频的同步处理;
+     */
+    private boolean isRecordMp3=true;  //是否分段录制的是mp3;
     
     @Override
     protected void onCreate(Bundle savedInstanceState) 
@@ -104,15 +111,13 @@ public class CameraLayerFullSegmentActivity extends Activity implements OnClickL
       	   finish();
          }
         
-        mDrawPadCamera = (DrawPadCameraView) findViewById(R.id.id_fullscreen_padview);
+        drawPadCamera = (DrawPadCameraView) findViewById(R.id.id_fullscreen_padview);
         initView();
 		
 		recorderVideoBtn.setOnTouchListener(new OnTouchListener() {
 			
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
-				// TODO Auto-generated method stub
-				
 				switch (event.getAction()) {
 					case MotionEvent.ACTION_DOWN:  
 						segmentStart();
@@ -131,7 +136,6 @@ public class CameraLayerFullSegmentActivity extends Activity implements OnClickL
     
     @Override
     protected void onResume() {
-    	// TODO Auto-generated method stub
     	super.onResume();
     	if (mWakeLock == null) {
 			PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
@@ -147,10 +151,9 @@ public class CameraLayerFullSegmentActivity extends Activity implements OnClickL
     }
     @Override
     protected void onPause() {
-    	// TODO Auto-generated method stub
     	super.onPause();
-    	if(mDrawPadCamera!=null){
-    		mDrawPadCamera.stopDrawPad();
+    	if(drawPadCamera!=null){
+    		drawPadCamera.stopDrawPad();
     	}
     	if (mWakeLock != null) {
 			mWakeLock.release();
@@ -159,7 +162,6 @@ public class CameraLayerFullSegmentActivity extends Activity implements OnClickL
     }
    @Override
 	protected void onDestroy() {
-		// TODO Auto-generated method stub
 			super.onDestroy();
 		    if(SDKFileUtils.fileExist(dstPath)){
 		    	SDKFileUtils.deleteFile(dstPath);
@@ -176,25 +178,25 @@ public class CameraLayerFullSegmentActivity extends Activity implements OnClickL
     	 DisplayMetrics dm = new DisplayMetrics();
     	 dm = getResources().getDisplayMetrics();
     	 
-    	 /**
-    	  * 因手机屏幕是16:9;全屏模式,建议分辨率设置为960x544;
-    	  */
+    	 
     	 int padWidth=544;  
     	 int padHeight=960;
-    		
-    	 mDrawPadCamera.setRecordMic(true);
-    	mDrawPadCamera.setRealEncodeEnable(padWidth,padHeight,3000000,(int)25,SDKFileUtils.newMp4PathInBox());
-    	
-    	mDrawPadCamera.setCameraParam(false,null , false);
+
+    	 if(!isRecordMp3){
+    		 drawPadCamera.setRecordMic(true);  //如果不是录制音乐,则认为是录制外音.
+    	 }
+    	 
+    	//设置录制
+    	drawPadCamera.setRealEncodeEnable(padWidth,padHeight,3000000,(int)25,SDKFileUtils.newMp4PathInBox());
+    	drawPadCamera.setCameraParam(false,null , false);
     	
     	//设置处理进度监听.
-    	mDrawPadCamera.setOnDrawPadProgressListener(drawPadProgressListener);
+    	drawPadCamera.setOnDrawPadProgressListener(drawPadProgressListener);
 
-    	mDrawPadCamera.setOnViewAvailable(new onViewAvailable() {
+    	drawPadCamera.setOnViewAvailable(new onViewAvailable() {
 			
 			@Override
 			public void viewAvailable(DrawPadCameraView v) {
-				// TODO Auto-generated method stub
 				startDrawPad();
 			}
 		});
@@ -204,37 +206,42 @@ public class CameraLayerFullSegmentActivity extends Activity implements OnClickL
      */
       private void startDrawPad()
       {
-    	    if(mDrawPadCamera.setupDrawpad())
+    	    if(drawPadCamera.setupDrawpad())
     	    {
-    	    	mCameraLayer=mDrawPadCamera.getCameraLayer();
-    	    	
-    	    	mDrawPadCamera.startPreview();
+    	    	mCameraLayer=drawPadCamera.getCameraLayer();
+    	    	drawPadCamera.startPreview();
     	    }
       }
       /**
-       * 录制录制, 并开始另一个Activity 去预览录制好的画面.
+       * 结束录制, 并开始另一个Activity 去预览录制好的画面.
        */
       private void stopDrawPad()
       {
-    	  	if(mDrawPadCamera!=null && mDrawPadCamera.isRunning())
+    	  	if(drawPadCamera!=null && drawPadCamera.isRunning())
 	      	{		
 	    	  		/**
 	    	  		 * 如果正在录制,则把最后一段增加进来.
 	    	  		 */
-	    		  	if(mDrawPadCamera.isRecording())
+	    		  	if(drawPadCamera.isRecording())
 					{
-						String segmentPath=mDrawPadCamera.segmentStop();
+						String segmentPath=drawPadCamera.segmentStop();
 						segmentArray.add(segmentPath); 
 					}
+	    		  	String musicPath=null;
+	    		  	if(isRecordMp3){
+	    		  		musicPath=drawPadCamera.getRecordMusicPath();	
+	    		  	}
+	    		  	
 	    		  	/**
 	    		  	 * 停止 容器.
 	    		  	 */
-	  				mDrawPadCamera.stopDrawPad();
+	  				drawPadCamera.stopDrawPad();
 	  				mCameraLayer=null;
-	  				
-	  				 /**
-	  				  * 停止后, 得到多段视频, 开始拼接视频.
-	  				  */
+	  				mAudioLine=null;
+	  				 
+	  				/**
+	  				 * 开始拼接
+	  				 */
 	  				if(segmentArray.size()>0)
 	  				{
 	  					VideoEditor editor=new VideoEditor();
@@ -242,7 +249,14 @@ public class CameraLayerFullSegmentActivity extends Activity implements OnClickL
 	  				     for(int i=0;i<segmentArray.size();i++){  
 	  				    	 segments[i]=(String)segmentArray.get(i);  
 	  				     }  
-	  					editor.executeConcatMP4(segments, dstPath);
+	  				    if(musicPath!=null){  //录制的是MP3;
+	  				    	String tmpVideo=SDKFileUtils.createMp4FileInBox();
+	  				    	editor.executeConcatMP4(segments, tmpVideo);
+		  					editor.executeVideoMergeAudio(tmpVideo, musicPath, dstPath);
+		  					SDKFileUtils.deleteFile(tmpVideo);
+	  				    }else{
+	  				    	editor.executeConcatMP4(segments, dstPath);
+	  				    }
 	  				}
 	  				/**
 	  				 * 开始播放.
@@ -263,8 +277,6 @@ public class CameraLayerFullSegmentActivity extends Activity implements OnClickL
 		
 		@Override
 		public void onProgress(DrawPad v, long currentTimeUs) {
-			// TODO Auto-generated method stub
-			
 			currentSegDuration=currentTimeUs;
 			
 			long totalTime=beforeSegDuration+ currentTimeUs;
@@ -288,19 +300,24 @@ public class CameraLayerFullSegmentActivity extends Activity implements OnClickL
 	 */
     private void segmentStart()
     {
-    	if(mDrawPadCamera.isRecording()==false){
-			mDrawPadCamera.segmentStart();	
+    	if(drawPadCamera.isRecording()==false){
+    		if(mAudioLine==null && isRecordMp3){  //只在第一次
+    			String music=CopyFileFromAssets.copyAssets(getApplicationContext(), "c_li_c_li_2m8s.mp3");
+    			mAudioLine=drawPadCamera.setRecordExtraMp3(music, true);
+    		}
+			drawPadCamera.segmentStart();	
 			progressView.setCurrentState(VideoProgressView.State.START);
 		}
     }
+    private AudioLine mAudioLine=null;
     /**
      * 停止一段的录制
      */
     private void segmentStop()
     {
-    	if(mDrawPadCamera.isRecording())
+    	if(drawPadCamera.isRecording())
 		{
-			String segmentPath=mDrawPadCamera.segmentStop();
+			String segmentPath=drawPadCamera.segmentStop(true);
 			progressView.setCurrentState(VideoProgressView.State.PAUSE);
 		
 			int timeMS=(int)(currentSegDuration/1000);  //转换为毫秒.
@@ -335,7 +352,6 @@ public class CameraLayerFullSegmentActivity extends Activity implements OnClickL
 	private volatile boolean isDeleteState = false;
 	@Override
 	public void onClick(View v) {
-		// TODO Auto-generated method stub
 		switch (v.getId()) {
 		case R.id.id_fullsegment_cancel:
 			
@@ -364,12 +380,12 @@ public class CameraLayerFullSegmentActivity extends Activity implements OnClickL
 			break;
 			case R.id.id_fullscreen_frontcamera:
 				if(mCameraLayer!=null){
-					if(mDrawPadCamera.isRunning() && CameraLayer.isSupportFrontCamera())  
+					if(drawPadCamera.isRunning() && CameraLayer.isSupportFrontCamera())  
 					{
 						//先把DrawPad暂停运行.
-						mDrawPadCamera.pausePreview();
+						drawPadCamera.pausePreview();
 						mCameraLayer.changeCamera();	
-						mDrawPadCamera.resumePreview(); //再次开启.
+						drawPadCamera.resumePreview(); //再次开启.
 					}
 				}
 				break;
@@ -409,7 +425,7 @@ public class CameraLayerFullSegmentActivity extends Activity implements OnClickL
      */
     private void selectFilter()
     {
-    	if(mDrawPadCamera!=null && mDrawPadCamera.isRunning()){
+    	if(drawPadCamera!=null && drawPadCamera.isRunning()){
     		FilterLibrary.showDialog(this, new OnGpuImageFilterChosenListener() {
 
                 @Override

@@ -1,10 +1,16 @@
 package com.example.advanceDemo.scene;
 
 
+import com.example.advanceDemo.MVLayerDemoActivity;
 import com.example.advanceDemo.VideoPlayerActivity;
 import com.lansoeditor.demo.R;
+import com.lansosdk.box.Layer;
+import com.lansosdk.box.MVLayer;
+import com.lansosdk.box.MVLayerENDMode;
 import com.lansosdk.box.VideoLayer;
 import com.lansosdk.box.onDrawPadSizeChangedListener;
+import com.lansosdk.box.onLayerAvailableListener;
+import com.lansosdk.videoeditor.CopyDefaultVideoAsyncTask;
 import com.lansosdk.videoeditor.DrawPadView;
 import com.lansosdk.videoeditor.MediaInfo;
 import com.lansosdk.videoeditor.SDKDir;
@@ -217,4 +223,5 @@ public class OutBodyDemoActivity extends Activity {
 	    	SDKFileUtils.deleteFile(dstPath);
 	    	SDKFileUtils.deleteFile(editTmpPath);
 	}
+ 
 }

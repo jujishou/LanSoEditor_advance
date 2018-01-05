@@ -142,7 +142,6 @@ public class VideoProgressView extends SurfaceView implements SurfaceHolder.Call
 	 * @param timeMs
 	 */
 	public void putTimeList(int timeMs) {
-		Log.i("T","timeList  sput time list "+ timeMs);
 		timeList.add(timeMs);
 	}
 	/**

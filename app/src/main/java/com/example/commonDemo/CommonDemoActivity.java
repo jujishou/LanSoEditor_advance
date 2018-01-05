@@ -11,7 +11,6 @@ import com.anthonycr.grant.PermissionsManager;
 import com.anthonycr.grant.PermissionsResultAction;
 import com.lansoeditor.demo.R;
 import com.lansosdk.videoeditor.LanSoEditor;
-import com.lansosdk.videoeditor.LoadLanSongSdk;
 import com.lansosdk.videoeditor.MediaInfo;
 import com.lansosdk.videoeditor.SDKDir;
 import com.lansosdk.videoeditor.SDKFileUtils;

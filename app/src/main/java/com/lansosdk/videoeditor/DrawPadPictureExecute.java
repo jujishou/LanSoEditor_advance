@@ -231,7 +231,8 @@ public class DrawPadPictureExecute {
 	}
 	/**
 	 * 方法与   onDrawPadProgressListener不同的地方在于:
-	 * 此回调是在DrawPad渲染完一帧后,立即执行这个回调中的代码,不通过Handler传递出去,你可以精确的执行一些下一帧的如何操作.
+	 *即将开始一帧渲染的时候, 直接执行这个回调中的代码,不通过Handler传递出去,你可以精确的执行一些这一帧的如何操作.
+	 *
 	 * 故不能在回调 内增加各种UI相关的代码.
 	 */
 	public void setDrawPadThreadProgressListener(onDrawPadThreadProgressListener listener)

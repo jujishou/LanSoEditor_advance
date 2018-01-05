@@ -17,15 +17,9 @@
         <!-- All customizations that are NOT specific to a particular API-level can go here. -->
     </style>
 
-    <!-- 
-    <style name="Theme.AppCompat.Light.NoActionBar.FullScreen" parent="@style/Theme.AppCompat.Light">
-	    <item name="windowNoTitle">true</item>
-	    <item name="windowActionBar">false</item>
-	    <item name="android:windowFullscreen">true</item>
-	    <item name="android:windowContentOverlay">@null</item>
-	</style>
-     -->
-     
+    
+   
+    
         <style name="AppTheme2" parent="AppBaseTheme">
              <item name="android:windowNoTitle">true</item>
         <!-- All customizations that are NOT specific to a particular API-level can go here. -->
@@ -94,5 +88,6 @@
         <item name="progress_reached_bar_height">6dp</item>
         <item name="progress_unreached_bar_height">3dp</item>
     </style>
-			            
+			
+    
 </resources>
