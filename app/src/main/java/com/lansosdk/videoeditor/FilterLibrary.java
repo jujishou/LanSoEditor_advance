@@ -402,7 +402,7 @@ public class FilterLibrary {
     }
 
     public interface OnGpuImageFilterChosenListener {
-        void onGpuImageFilterChosenListener(GPUImageFilter filter,String name);
+        void onGpuImageFilterChosenListener(GPUImageFilter filter, String name);
     }
 
     public enum FilterType {

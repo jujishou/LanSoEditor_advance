@@ -11,6 +11,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.Build;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Surface;
 import android.view.View;
@@ -54,6 +55,24 @@ public class LanSongUtil {
                             | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY | View.SYSTEM_UI_FLAG_FULLSCREEN;
             decorView.setSystemUiVisibility(uiOptions);
         }
+    }
+    public static boolean isFullScreenRatio(Context ctx)
+    {
+	 	DisplayMetrics dm = new DisplayMetrics();
+   	 	dm = ctx.getResources().getDisplayMetrics();
+//   	 	Log.i("TT", "dm wxh is:"+dm.widthPixels+ " x "+dm.heightPixels);
+   	 	int width=dm.widthPixels;
+   	 	int height=dm.heightPixels;
+   	 	
+	   	 if(width * height >1080*1920 ){ //全面屏.
+			 return true;
+		 }else if(width>height){  //其他则是屏幕比大于16:9的屏幕
+			 float ratio=(float)width/(float)height;
+			 return ratio>16f/9f;  
+		 }else{
+			 float ratio=(float)height/(float)width;
+			 return ratio>16f/9f; 
+		 }
     }
     /**
 	 * 当数据不是16的倍数的时候, 把他调整成16的倍数,

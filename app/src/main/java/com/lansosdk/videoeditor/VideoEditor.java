@@ -12,6 +12,8 @@ import java.util.Locale;
 
 
 import android.graphics.Bitmap;
+import android.media.MediaCodecInfo;
+import android.media.MediaCodecList;
 import android.media.MediaMetadataRetriever;
 import android.os.Handler;
 import android.os.Looper;
@@ -1158,6 +1160,64 @@ public class VideoEditor {
 			  }
 		  }
 		  /**
+		   * 
+		   * 对视频时长进行 精确裁剪， 并在对视频精确编码的同时,对音频进行编码.
+		   * 
+		   * 把mp4文件中的一段剪切成独立的一个视频文件, 比如把一个30分钟的视频,裁剪其中的10秒钟等.
+		   * 
+		   * @param videoFile 原视频
+		   * @param dstFile  裁剪后目标文件路径，
+		   * @param startS    开始裁剪位置，单位是秒，
+		   * @param durationS 需要裁剪的时长，单位秒，比如您可以从原视频的8.9秒出开始裁剪，裁剪2分钟，则这里的参数是120
+		   * @param bitrate  因为需要编码， 设置编码的码率。 建议用MediaInfo中的vbitrate*1.2f
+		   * @param encodeAudio 是否对音频进行编码.
+		   * @return
+		   */
+		  public int executeVideoExactCut(String videoFile,String dstFile,float startS,float durationS,int bitrate,boolean encodeAudio)
+		  {
+			  if(fileExist(videoFile)){
+				
+					List<String> cmdList=new ArrayList<String>();
+					
+			    	cmdList.add("-i");
+					cmdList.add(videoFile);
+
+					cmdList.add("-ss");
+					cmdList.add(String.valueOf(startS));
+					
+					cmdList.add("-t");
+					cmdList.add(String.valueOf(durationS));
+					
+					cmdList.add("-vcodec");
+					cmdList.add("lansoh264_enc"); 
+					
+					cmdList.add("-b:v");
+					cmdList.add(checkBitRate(bitrate)); 
+					
+					cmdList.add("-pix_fmt");  
+					cmdList.add(getColorFormat());
+					
+					cmdList.add("-acodec");
+					if(encodeAudio){
+						cmdList.add("libfaac");
+					}else{
+						cmdList.add("copy");
+					}
+					
+					cmdList.add("-y");
+					cmdList.add(dstFile);
+					
+					String[] command=new String[cmdList.size()];  
+				     for(int i=0;i<cmdList.size();i++){  
+				    	 command[i]=(String)cmdList.get(i);  
+				     }  
+				    return  executeVideoEditor(command);
+				  
+			  }else{
+				  return VIDEO_EDITOR_EXECUTE_FAILED;
+			  }
+		  }
+		  /**
 		   * 获取视频的所有帧图片,并保存到指定路径.
 		   * 所有的帧会按照后缀名字加上_001.jpeg prefix_002.jpeg的顺序依次生成, 如果发现之前已经有同样格式的文件,则在原来数字后缀的基础上增加, 比如原来有prefix_516.jpeg;则这个方法执行从
 		   * prefix_517.jpeg开始生成视频帧.
@@ -2196,7 +2256,7 @@ public class VideoEditor {
 				cmdList.add(checkBitRate(bitrate)); 
 				
 				cmdList.add("-pix_fmt");   //<========请注意, 使用lansoh264_enc编码器编码的时候,请务必指定格式,因为底层设计只支持yuv420p的输出.
-				cmdList.add("yuv420p");
+				cmdList.add(getColorFormat());
 				
 				cmdList.add("-y");
 				cmdList.add(dstFile);
@@ -3884,5 +3944,57 @@ public class VideoEditor {
 				int sugg=getSuggestBitRate(wxh);
 				return bitrate < sugg ?  sugg: bitrate;   //如果设置过来的码率小于建议码率,则返回建议码率,不然返回设置码率
 			}
-		 
+			//--------------------------------------------------------------------
+			private static final String MIME_TYPE_AVC = "video/avc";
+
+			/**
+			 * 增加获取手机SoC硬件支持的YUV格式, 有些手机不支持YUV420,但支持NV21.
+			 * 2018年1月10日14:52:27增加
+			 * @return
+			 */
+			public static String getColorFormat()
+			{
+				MediaCodecInfo codecInfo = selectCodec(MIME_TYPE_AVC);
+				if (codecInfo == null)
+				{
+					Log.e(TAG, "Unable to find an appropriate codec for " + MIME_TYPE_AVC);
+					return "yuv420p";
+				}
+				return selectColorFormat(codecInfo, MIME_TYPE_AVC);
+			}
+			private static MediaCodecInfo selectCodec(String mimeType) {
+				int numCodecs = MediaCodecList.getCodecCount();
+				for (int i = 0; i < numCodecs; i++) {
+					MediaCodecInfo codecInfo = MediaCodecList.getCodecInfoAt(i);
+
+					if (!codecInfo.isEncoder()) {
+						continue;
+					}
+					String[] types = codecInfo.getSupportedTypes();
+					for (int j = 0; j < types.length; j++) {
+						if (types[j].equalsIgnoreCase(mimeType)) {
+							return codecInfo;
+						}
+					}
+				}
+				return null;
+			}
+			private static String selectColorFormat(MediaCodecInfo codecInfo, String mimeType) {
+				MediaCodecInfo.CodecCapabilities capabilities = codecInfo.getCapabilitiesForType(mimeType);
+
+				for (int i = 0; i < capabilities.colorFormats.length; i++) {
+					int colorFormat = capabilities.colorFormats[i];
+
+					if (MediaCodecInfo.CodecCapabilities.COLOR_FormatYUV420SemiPlanar==colorFormat)  //NV12
+					{
+						return "nv21";
+					}
+					if (MediaCodecInfo.CodecCapabilities.COLOR_FormatYUV420Planar==colorFormat)  //yuv420
+					{
+						return "yuv420p";
+					}
+				}
+				Log.w(TAG,"not find nv21 or yuv420p. default return yuv420p");
+				return "yuv420p";
+			}
 }

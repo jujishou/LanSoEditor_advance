@@ -38,8 +38,9 @@ import jp.co.cyberagent.lansongsdk.gpuimage.GPUImageFilter;
  * 这里仅仅是演示 视频图层+图片图层+Canvas图层的组合.
  * 您可以参考我们其他的各种例子,来实现您的具体需求.
  * 
- *
- * 说明2: 如果列举的功能,可以满足您的需求,则调用形式是这样的:
+ * 说明2: 如果你有除了我们列举的功能外, 还有做别的, 可以直接拷贝这个类, 然后删除没用的, 增加上你的图层, 来完成您的需求.
+ * 
+ * 说明3: 如果列举的功能,可以满足您的需求,则调用形式是这样的:
  *      场景1: 只裁剪+logo:
  *      则:
  *      videoOneDo=new VideoOneDo(getApplicationContext(), videoPath);
@@ -649,7 +650,9 @@ public class VideoOneDo {
     			monVideoOneDoErrorListener.oError(this, VIDEOONEDO_ERROR_DSTERROR);
     		}
     	}
+    	
     	isExecuting=false;
+    	
     	//Log.d(TAG,"最后的视频文件是:"+MediaInfo.checkFile(dstPath));
     }
     

@@ -10,5 +10,5 @@ public interface onVideoOneDoProgressListener {
 	 * @param v
 	 * @param percent
 	 */
-	 void onProgress(VideoOneDo v,float percent);
+	 void onProgress(VideoOneDo v, float percent);
 }

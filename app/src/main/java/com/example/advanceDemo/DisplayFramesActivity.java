@@ -61,7 +61,6 @@ public class DisplayFramesActivity extends Activity{
 //		TextView  tvHint;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		 
 		 videoPath=getIntent().getStringExtra("videopath");
@@ -80,7 +79,6 @@ public class DisplayFramesActivity extends Activity{
 	}
 	@Override
 	protected void onResume() {
-		// TODO Auto-generated method stub
 		super.onResume();
 		startGetFrames();
 	}

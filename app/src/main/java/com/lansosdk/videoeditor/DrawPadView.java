@@ -167,9 +167,9 @@ public class DrawPadView extends FrameLayout {
     	mTextureRenderView.setDispalyRatio(AR_ASPECT_FIT_PARENT);
     	
     	View renderUIView = mTextureRenderView.getView();
-        FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(
-                FrameLayout.LayoutParams.WRAP_CONTENT,
-                FrameLayout.LayoutParams.WRAP_CONTENT,
+        LayoutParams lp = new LayoutParams(
+                LayoutParams.WRAP_CONTENT,
+                LayoutParams.WRAP_CONTENT,
                 Gravity.CENTER);
         renderUIView.setLayoutParams(lp);
         addView(renderUIView);
@@ -267,13 +267,12 @@ public class DrawPadView extends FrameLayout {
 				
     	        @Override
     	        public void onSurfaceTextureAvailable(SurfaceTexture surface, int width, int height) {
-
     	            mSurfaceTexture = surface;
     	            drawPadHeight=height;
     	            drawPadWidth=width;
     	            if(mViewAvailable!=null){
     	            	mViewAvailable.viewAvailable(null);
-    	            }	
+    	            }
     	        }
     	        
     	        /**

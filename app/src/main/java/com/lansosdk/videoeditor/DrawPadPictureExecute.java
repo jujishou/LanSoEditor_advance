@@ -8,15 +8,12 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.util.Log;
 
-import com.example.advanceDemo.DemoUtil;
 import com.lansosdk.box.BitmapLayer;
 import com.lansosdk.box.CanvasLayer;
 import com.lansosdk.box.DataLayer;
 import com.lansosdk.box.DrawPadBitmapRunnable;
-import com.lansosdk.box.DrawPadUpdateMode;
 import com.lansosdk.box.GifLayer;
 import com.lansosdk.box.Layer;
-import com.lansosdk.box.LayerShader;
 import com.lansosdk.box.MVLayer;
 import com.lansosdk.box.onDrawPadCompletedListener;
 import com.lansosdk.box.onDrawPadErrorListener;

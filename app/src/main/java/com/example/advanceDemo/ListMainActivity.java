@@ -104,7 +104,6 @@ public class ListMainActivity extends Activity implements OnClickListener{
     	
         initView();
         showHintDialog();
-        testFile();
     }
     @Override
     protected void onDestroy() {
@@ -121,7 +120,6 @@ public class ListMainActivity extends Activity implements OnClickListener{
 			switch (v.getId()) {
 				case R.id.id_mainlist_camerarecord:
 					startDemoActivity(ListCameraRecordActivity.class);
-//					startDemoActivity(ScreenRecordDemoActivity.class);
 					break;
 				case R.id.id_mainlist_somelayer:
 					startDemoActivity(ListLayerDemoActivity.class);

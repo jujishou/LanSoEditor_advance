@@ -10,7 +10,7 @@
      <string name="lansong_hint">杭州蓝松科技有限公司\n   专业的视频处理SDK开发团队.</string>
     <string name="sdk_limit">SDK版本号是:%1$s\nSDK底层做了授权限制,【仅可在此demo中运行】,并有效时间到 \"%2$d\"年 \"%3$d\"月之前,请注意.</string>
     	
-    <string name="adv_hint5">"此高级版本SDK为商业收费授权合作的形式,价格可联系我们.  联系方式:\n QQ:1852600324\n 公司电话:0571-89052701\n email:support@lansongtech.com."</string>
+    <string name="adv_hint5">"此专业版本SDK为商业收费授权合作的形式,价格可联系我们.  www.lansongtech.com"</string>
   	
   	<string name="select_video">请选择视频</string>
 		

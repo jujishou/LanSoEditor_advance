@@ -171,9 +171,9 @@ public class DrawPadCameraView extends FrameLayout {
     	mTextureRenderView.setDispalyRatio(AR_ASPECT_FIT_PARENT);
         
     	View renderUIView = mTextureRenderView.getView();
-        FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(
-                FrameLayout.LayoutParams.WRAP_CONTENT,
-                FrameLayout.LayoutParams.WRAP_CONTENT,
+        LayoutParams lp = new LayoutParams(
+                LayoutParams.WRAP_CONTENT,
+                LayoutParams.WRAP_CONTENT,
                 Gravity.CENTER);
         renderUIView.setLayoutParams(lp);
         addView(renderUIView);
@@ -328,8 +328,14 @@ public class DrawPadCameraView extends FrameLayout {
 		 * 支持在任意时刻来变速; 甚至你可以设置一个按钮, 长按下的时候, 加快或放慢, 松开时正常.
 		 *  当前暂时不支持音频, 只是视频的加减速, 请注意!!!
 		 *  
+		 *  1,如果不录制外部音频(麦克风), 则速度建议;
 		 *  建议5个等级: 0.25f,0.5f,1.0f,1.5f,2.0f; 
-		 *  其中 0.25是放慢2倍;  0.5是放慢一倍; 1.0是采用和预览同样的速度; 1.5是加快一半, 2.0是加快2倍.
+		 *  其中 0.25是放慢2倍;  0.5是放慢一倍; 1.0是采用和预览同样的速度; 2.0是加快1倍.
+		 *  
+		 *  2,如果录制外部音频(麦克风),则速度范围是0.5--2.0; 
+		 *  0.5是放慢一倍, 1.0是原速; 2.0是放大一倍;
+		 *  
+		 *  3,如果录制mp3,则只是调整视频画面的速度, mp3在录制完成后生成的文件速度不变.
 		 * @param speed  速度系数,
 		 */
 		public void adjustEncodeSpeed(float speed)
@@ -679,7 +685,7 @@ public class DrawPadCameraView extends FrameLayout {
 	 				}else if(isRecordExtPcm){
 	 					renderer.setRecordExtraPcm(isRecordExtPcm, pcmChannels,pcmSampleRate,pcmBitRate);
 	 				}else if(recordExtMp3!=null){
-	 					if(renderer.setRecordExtraMp3(recordExtMp3)==null){
+	 					if(renderer.setRecordExtraMp3(recordExtMp3,recordOffsetUs)==null){
 	 						Log.e(TAG,"设置外部mp3音频错误, 请检查下您的音频文件是否正常.");
 	 					}
 	 				}
@@ -850,6 +856,7 @@ public class DrawPadCameraView extends FrameLayout {
 	 private int pcmChannels=2; //音频格式. 音频默认是双通道.
 	 
 	 private String recordExtMp3=null;
+	 private long recordOffsetUs=0;
 
 	/**
 	 * 是否在CameraLayer录制的同时, 录制mic的声音. 
@@ -903,11 +910,44 @@ public class DrawPadCameraView extends FrameLayout {
 			if(renderer.isRecording()){
 				Log.e(TAG,"DrawPad is recording. set mp3 Error!");
 			}else {
-				AudioLine line=renderer.setRecordExtraMp3(mp3Path);
+				AudioLine line=renderer.setRecordExtraMp3(mp3Path,0);
 				if(line==null){
 					Log.e(TAG,"设置外部mp3音频错误, 请检查下您的音频文件是否正常.");
 				}
 				return line;
+			}
+		}
+		recordExtMp3=mp3Path;
+		recordOffsetUs=0;
+		return null;
+	}
+	/**
+	 *  使用外部的mp3文件, 作为录制视频的音频部分.
+	 *  容器建立后, 在startRecord前调用.
+	 *  
+	 *  有些场景,比如:对口型之类,或模仿人说话等场合, 人的实际说话, 会比mp3慢一点, 这里在录制的时候, 设置一个偏移量, 让他对准;
+	 *  encodeOffsetUs 是指: 在编码的时候, 是否把当前画面提前一些, 或滞后一些; 比如提前100ms, 则这里是 设置为 -100*1000(负数)
+	 *  如果要滞后1秒,则是设置为1000*1000(正数);
+	 *  
+	 * @param mp3Path
+	 * @param endloop
+	 * @param encodeOffsetUs
+	 * @return
+	 */
+	public AudioLine setRecordExtraMp3(String mp3Path,boolean endloop,long encodeOffsetUs)
+	{
+		if(renderer!=null){
+			if(renderer.isRecording()){
+				Log.e(TAG,"DrawPad is recording. set mp3 Error!");
+			}else {
+				AudioLine line=renderer.setRecordExtraMp3(mp3Path,encodeOffsetUs);
+				if(line==null){
+					Log.e(TAG,"设置外部mp3音频错误, 请检查下您的音频文件是否正常.");
+					return null;
+				}else{
+					recordOffsetUs=encodeOffsetUs;
+					return line;	
+				}
 			}
 		}
 		recordExtMp3=mp3Path;
@@ -1427,7 +1467,7 @@ public class DrawPadCameraView extends FrameLayout {
 			 private doFousEventListener mDoFocusListener;
 
 			   public interface doFousEventListener {
-			        void onFocus(int x,int y);
+			        void onFocus(int x, int y);
 			   }
 			   
 			   /**
