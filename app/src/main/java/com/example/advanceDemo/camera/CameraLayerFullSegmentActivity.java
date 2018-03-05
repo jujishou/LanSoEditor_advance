@@ -29,6 +29,7 @@ import com.lansosdk.box.ViewLayer;
 import com.lansosdk.box.ViewLayerRelativeLayout;
 import com.lansosdk.box.onDrawPadProgressListener;
 import com.lansosdk.box.onDrawPadSizeChangedListener;
+import com.lansosdk.videoeditor.BeautyManager;
 import com.lansosdk.videoeditor.CopyDefaultVideoAsyncTask;
 import com.lansosdk.videoeditor.CopyFileFromAssets;
 import com.lansosdk.videoeditor.DrawPadCameraView;
@@ -348,7 +349,38 @@ public class CameraLayerFullSegmentActivity extends Activity implements OnClickL
 		
 		cancelBtn.setOnClickListener(this);
 		okBtn.setOnClickListener(this);
+		initBeautyView();
    }
+	private BeautyManager mBeautyMng;
+	private void initBeautyView()
+	{
+		mBeautyMng=new BeautyManager(getApplicationContext());
+		findViewById(R.id.id_camerabeauty_btn).setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				if(mBeautyMng.isBeauting()){
+					mBeautyMng.deleteBeauty(drawPadCamera.getCameraLayer());
+				}else{
+					mBeautyMng.addBeauty(drawPadCamera.getCameraLayer());
+				}
+			}
+		});
+		findViewById(R.id.id_camerabeauty_brightadd_btn).setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				mBeautyMng.increaseBrightness(drawPadCamera.getCameraLayer());
+			}
+		});
+		findViewById(R.id.id_camerabeaty_brightsub_btn).setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				mBeautyMng.discreaseBrightness(drawPadCamera.getCameraLayer());
+			}
+		});
+	}
 	private volatile boolean isDeleteState = false;
 	@Override
 	public void onClick(View v) {

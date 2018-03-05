@@ -141,4 +141,6 @@
 		            android:id="@+id/id_camerea_face_view"
 		            android:layout_width="match_parent"
 		            android:layout_height="match_parent" />
+	<include
+	layout="@layout/merge_cameabeauty_control"/>
 </RelativeLayout>

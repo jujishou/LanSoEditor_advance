@@ -104,4 +104,6 @@
             app:isLongScale="true"
             app:innerRadio="3dp"/>
     	</RelativeLayout>
+    <include
+        layout="@layout/merge_cameabeauty_control"/>
 </RelativeLayout>

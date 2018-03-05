@@ -36,6 +36,7 @@ import com.lansosdk.box.onDrawPadProgressListener;
 import com.lansosdk.box.onDrawPadSnapShotListener;
 import com.lansosdk.box.onDrawPadThreadProgressListener;
 import com.lansosdk.videoeditor.AVDecoder;
+import com.lansosdk.videoeditor.BeautyManager;
 import com.lansosdk.videoeditor.CopyDefaultVideoAsyncTask;
 import com.lansosdk.videoeditor.CopyFileFromAssets;
 import com.lansosdk.videoeditor.DrawPadCameraView;
@@ -208,6 +209,9 @@ public class CameraLayerFullPortActivity extends Activity implements OnClickList
      */
       private void startDrawPad()
       {
+		  if(LanSongUtil.isFullScreenRatio(mDrawPadCamera.getViewWidth(), mDrawPadCamera.getViewHeight())){
+			  mDrawPadCamera.setRealEncodeEnable(1088,544,3500*1024,(int)25,dstPath);
+		  }
     	  if(mDrawPadCamera.setupDrawpad())  //建立图层.
     	  {
     		  mCamLayer=mDrawPadCamera.getCameraLayer();  //临时
@@ -236,8 +240,7 @@ public class CameraLayerFullPortActivity extends Activity implements OnClickList
 			if(currentTimeUs>=RECORD_CAMERA_MIN && btnOk!=null){
 				btnOk.setVisibility(View.VISIBLE);
 			}
-			
-			if(currentTimeUs>=RECORD_CAMERA_MAX){  
+			if(currentTimeUs>=RECORD_CAMERA_MAX){
 				stopDrawPad();
 				playVideo();
 			}
@@ -357,7 +360,38 @@ public class CameraLayerFullPortActivity extends Activity implements OnClickList
 			findViewById(R.id.id_fullrecord_frontcamera).setOnClickListener(this);
 			findViewById(R.id.id_fullrecord_filter).setOnClickListener(this);
 			mProgressBar=(CameraProgressBar)findViewById(R.id.id_fullrecord_progress);
+			initBeautyView();
    }
+	private BeautyManager mBeautyMng;
+	private void initBeautyView()
+	{
+		mBeautyMng=new BeautyManager(getApplicationContext());
+		findViewById(R.id.id_camerabeauty_btn).setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				if(mBeautyMng.isBeauting()){
+					mBeautyMng.deleteBeauty(mDrawPadCamera.getCameraLayer());
+				}else{
+					mBeautyMng.addBeauty(mDrawPadCamera.getCameraLayer());
+				}
+			}
+		});
+		findViewById(R.id.id_camerabeauty_brightadd_btn).setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				mBeautyMng.increaseBrightness(mDrawPadCamera.getCameraLayer());
+			}
+		});
+		findViewById(R.id.id_camerabeaty_brightsub_btn).setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				mBeautyMng.discreaseBrightness(mDrawPadCamera.getCameraLayer());
+			}
+		});
+	}
    private void playVideo()
    {
 	   if(SDKFileUtils.fileExist(dstPath)){

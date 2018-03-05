@@ -56,25 +56,24 @@ public class LanSongUtil {
             decorView.setSystemUiVisibility(uiOptions);
         }
     }
-    public static boolean isFullScreenRatio(Context ctx)
-    {
-	 	DisplayMetrics dm = new DisplayMetrics();
-   	 	dm = ctx.getResources().getDisplayMetrics();
-//   	 	Log.i("TT", "dm wxh is:"+dm.widthPixels+ " x "+dm.heightPixels);
-   	 	int width=dm.widthPixels;
-   	 	int height=dm.heightPixels;
-   	 	
-	   	 if(width * height >1080*1920 ){ //全面屏.
-			 return true;
-		 }else if(width>height){  //其他则是屏幕比大于16:9的屏幕
-			 float ratio=(float)width/(float)height;
-			 return ratio>16f/9f;  
-		 }else{
-			 float ratio=(float)height/(float)width;
-			 return ratio>16f/9f; 
-		 }
-    }
-    /**
+	/**
+	 * 是否是全面屏的屏幕; 如果屏幕大于16:9则认为是全面屏
+	 *
+	 * @param padWidth
+	 * @param padHeight
+	 * @return
+	 */
+	public static boolean isFullScreenRatio(int padWidth, int padHeight) {
+		if (padWidth > padHeight) { // 其他则是屏幕比大于16:9的屏幕
+			float ratio = (float) padWidth / (float) padHeight;
+			return ratio > 16f / 9f;
+		} else {
+			float ratio = (float) padHeight / (float) padWidth;
+			return ratio > 16f / 9f;
+		}
+	}
+
+	/**
 	 * 当数据不是16的倍数的时候, 把他调整成16的倍数,
 	 *  
 	 * 如果是18,19这样接近16,则等于16, 等于缩小了原有的画面, 
