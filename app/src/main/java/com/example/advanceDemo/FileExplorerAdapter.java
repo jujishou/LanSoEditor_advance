@@ -15,56 +15,53 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 public class FileExplorerAdapter extends BaseAdapter {
-	
-	private File[] 							mFiles;
-	private LayoutInflater 					mInflater;
-	private Context 						mContext;
-	private boolean							isTop;
 
-	public FileExplorerAdapter(Context context, File[] files, boolean root) {
-		mFiles = files;
+    private File[] mFiles;
+    private LayoutInflater mInflater;
+    private Context mContext;
+    private boolean isTop;
+
+    public FileExplorerAdapter(Context context, File[] files, boolean root) {
+        mFiles = files;
         mInflater = LayoutInflater.from(context);
         mContext = context;
         isTop = root;
-	}
-	
-	public int getCount() {
-		return mFiles.length;
-	}
+    }
 
-	public Object getItem(int position) {
-		return mFiles[position];
-	}
+    public int getCount() {
+        return mFiles.length;
+    }
 
-	public long getItemId(int position) {
-		return position;
-	}
-	
-	private void setRow(ViewHolder holder, int position) {
-		File file = mFiles[position];
-		holder.text.setText(file.getName());
-		if(position == 0 && !isTop) {
-			holder.icon.setImageDrawable(mContext.getResources().getDrawable(R.drawable.ic_menu_back));
-			
-		} 
-		else if (file.isDirectory()) {
-			holder.icon.setImageDrawable(mContext.getResources().getDrawable(R.drawable.ic_menu_archive));
-		} 
-		else {
-			Drawable d = null;
-			if(FileExplorerActivity.checkExtension(file)) {
-				d = mContext.getResources().getDrawable(R.drawable.ic_menu_gallery);
-			}
-			else {
-				d = mContext.getResources().getDrawable(R.drawable.ic_menu_block);
-			}
-			holder.icon.setImageDrawable(d);
-		}
-	}
+    public Object getItem(int position) {
+        return mFiles[position];
+    }
 
-	public View getView(int position, View convertView, ViewGroup parent) {
+    public long getItemId(int position) {
+        return position;
+    }
+
+    private void setRow(ViewHolder holder, int position) {
+        File file = mFiles[position];
+        holder.text.setText(file.getName());
+        if (position == 0 && !isTop) {
+            holder.icon.setImageDrawable(mContext.getResources().getDrawable(R.drawable.ic_menu_back));
+
+        } else if (file.isDirectory()) {
+            holder.icon.setImageDrawable(mContext.getResources().getDrawable(R.drawable.ic_menu_archive));
+        } else {
+            Drawable d = null;
+            if (FileExplorerActivity.checkExtension(file)) {
+                d = mContext.getResources().getDrawable(R.drawable.ic_menu_gallery);
+            } else {
+                d = mContext.getResources().getDrawable(R.drawable.ic_menu_block);
+            }
+            holder.icon.setImageDrawable(d);
+        }
+    }
+
+    public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder holder;
-       
+
         if (convertView == null) {
             convertView = mInflater.inflate(R.layout.file_explore_item, null);
 
@@ -76,12 +73,12 @@ public class FileExplorerAdapter extends BaseAdapter {
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
-		setRow(holder, position);		
+        setRow(holder, position);
         return convertView;
-	}
-	
-	private static class ViewHolder {
-	    TextView text;
-	    ImageView icon;
-	}
+    }
+
+    private static class ViewHolder {
+        TextView text;
+        ImageView icon;
+    }
 }

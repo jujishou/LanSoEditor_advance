@@ -8,7 +8,6 @@ import android.view.View;
 import java.lang.ref.WeakReference;
 
 
-
 public final class MeasureHelper {
     private WeakReference<View> mWeakView;
 
@@ -29,7 +28,7 @@ public final class MeasureHelper {
     static final int AR_16_9_FIT_PARENT = 4;
     static final int AR_4_3_FIT_PARENT = 5;
 
-    
+
     private int mCurrentAspectRatio = AR_ASPECT_FIT_PARENT;
 
     public MeasureHelper(View view) {
@@ -67,7 +66,7 @@ public final class MeasureHelper {
         //        + MeasureSpec.toString(heightMeasureSpec) + ")");
         if (mVideoRotationDegree == 90 || mVideoRotationDegree == 270) {
             int tempSpec = widthMeasureSpec;
-            widthMeasureSpec  = heightMeasureSpec;
+            widthMeasureSpec = heightMeasureSpec;
             heightMeasureSpec = tempSpec;
         }
 

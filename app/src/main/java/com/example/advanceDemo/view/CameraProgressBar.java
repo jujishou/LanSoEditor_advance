@@ -21,7 +21,7 @@ import android.view.ViewConfiguration;
 
 /**
  * 此代码来源于网络, 不属于SDK的一部分. 我们只是用来作为UI部分,演示录制功能.
- * 
+ * <p>
  * Created by you on 2016/10/23.
  */
 
@@ -215,7 +215,7 @@ public class CameraProgressBar extends View {
             return super.onTouchEvent(event);
         }
         this.mDetector.onTouchEvent(event);
-        switch(MotionEventCompat.getActionMasked(event)) {
+        switch (MotionEventCompat.getActionMasked(event)) {
             case MotionEvent.ACTION_DOWN:
                 isLongClick = false;
                 isBeingDrag = false;
@@ -277,6 +277,7 @@ public class CameraProgressBar extends View {
 
     /**
      * 设置进度
+     *
      * @param progress
      */
     public void setProgress(int progress) {
@@ -305,7 +306,7 @@ public class CameraProgressBar extends View {
     public void setLongScale(boolean longScale) {
         isLongScale = longScale;
     }
-    
+
     public void setMaxProgress(int maxProgress) {
         this.maxProgress = maxProgress;
     }
@@ -322,6 +323,7 @@ public class CameraProgressBar extends View {
     public interface OnProgressTouchListener {
         /**
          * 单击
+         *
          * @param progressBar
          */
         void onClick(CameraProgressBar progressBar);

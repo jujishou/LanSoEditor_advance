@@ -83,7 +83,7 @@ public class RectUtil {
      * @param addRect
      * @param padding
      */
-    public static void rectAddV(final Rect srcRect, final Rect addRect, int padding , int charMinHeight) {
+    public static void rectAddV(final Rect srcRect, final Rect addRect, int padding, int charMinHeight) {
         if (srcRect == null || addRect == null)
             return;
 

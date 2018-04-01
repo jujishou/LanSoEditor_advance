@@ -64,7 +64,7 @@ public class StickerView extends View {
         if (currentItem != null) {
             currentItem.isDrawHelpTool = false;
         }
-        currentItem=item;
+        currentItem = item;
         bank.put(++imageCount, item);
         this.invalidate();// 重绘视图
     }
@@ -174,21 +174,22 @@ public class StickerView extends View {
         return ret;
     }
 
-    
+
     public LinkedHashMap<Integer, StickerItem> getBank() {
         return bank;
     }
+
     /**
      * 消除左上角的删除按钮, 右下角的拖动图标, 和黑色的边框.
      */
-    public void disappearIconBorder()
-    {
-    	if(currentItem!=null){
-    		currentItem.isDrawHelpTool = false;	
-    	}
-         currentItem = null;
-         invalidate();
+    public void disappearIconBorder() {
+        if (currentItem != null) {
+            currentItem.isDrawHelpTool = false;
+        }
+        currentItem = null;
+        invalidate();
     }
+
     /**
      * 清除所有的贴纸
      */

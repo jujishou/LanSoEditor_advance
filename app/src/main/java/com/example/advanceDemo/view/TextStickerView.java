@@ -41,8 +41,8 @@ public class TextStickerView extends View {
 
     //private String mText;
     private TextPaint mPaint = new TextPaint();
-    
-    
+
+
     private Paint debugPaint = new Paint();
     private Paint mHelpPaint = new Paint();
 
@@ -100,7 +100,9 @@ public class TextStickerView extends View {
     public void setEditText(EditText textView) {
         this.mEditText = textView;
     }
+
     public static final int STICKER_BTN_HALF_SIZE = 30;
+
     private void initView(Context context) {
         debugPaint.setColor(Color.parseColor("#66ff0000"));
 
@@ -201,12 +203,14 @@ public class TextStickerView extends View {
     private void drawText(Canvas canvas) {
         drawText(canvas, layout_x, layout_y, mScale, mRotateAngle);
     }
+
     public static boolean isEmpty(List list) {
         if (list == null)
             return true;
 
         return list.size() == 0;
     }
+
     public void drawText(Canvas canvas, int _x, int _y, float scale, float rotate) {
         if (isEmpty(mTextContents))
             return;
@@ -337,11 +341,11 @@ public class TextStickerView extends View {
     /**
      * 消除左上角的删除按钮, 右下角的拖动图标, 和黑色的边框.
      */
-    public void disappearIconBorder()
-    {
-    	  isShowHelpBox = false;
-          invalidate();
+    public void disappearIconBorder() {
+        isShowHelpBox = false;
+        invalidate();
     }
+
     /**
      * 旋转 缩放 更新
      *

@@ -35,14 +35,14 @@ import java.util.Map;
 
 
 /**
- * 
+ *
  */
-public class VideoPlayer  {
+public class VideoPlayer {
     private final static String TAG = "VideoPlayer";
 
     int MEDIA_INFO_UNKNOWN = 1;
     static int MEDIA_INFO_STARTED_AS_NEXT = 2;
-    static  int MEDIA_INFO_VIDEO_RENDERING_START = 3;
+    static int MEDIA_INFO_VIDEO_RENDERING_START = 3;
     static int MEDIA_INFO_VIDEO_TRACK_LAGGING = 700;
     static int MEDIA_INFO_BUFFERING_START = 701;
     static int MEDIA_INFO_BUFFERING_END = 702;
@@ -58,7 +58,7 @@ public class VideoPlayer  {
     static int MEDIA_INFO_AUDIO_RENDERING_START = 10002;
 
     static int MEDIA_INFO_MEDIA_ACCURATE_SEEK_COMPLETE = 10100;
-    		
+
     static int MEDIA_ERROR_UNKNOWN = 1;
     static int MEDIA_ERROR_SERVER_DIED = 100;
     static int MEDIA_ERROR_NOT_VALID_FOR_PROGRESSIVE_PLAYBACK = 200;
@@ -66,7 +66,7 @@ public class VideoPlayer  {
     static int MEDIA_ERROR_MALFORMED = -1007;
     static int MEDIA_ERROR_UNSUPPORTED = -1010;
     static int MEDIA_ERROR_TIMED_OUT = -110;
-    
+
     private static final int MEDIA_NOP = 0; // interface test message
     private static final int MEDIA_PREPARED = 1;
     /**
@@ -79,9 +79,9 @@ public class VideoPlayer  {
     private static final int MEDIA_TIMED_TEXT = 99;
     private static final int MEDIA_ERROR = 100;
     private static final int MEDIA_INFO = 200;
-    
-    private static final int VIDEOEDIT_EVENT_COMPLETE=8001;
-    
+
+    private static final int VIDEOEDIT_EVENT_COMPLETE = 8001;
+
     protected static final int MEDIA_SET_VIDEO_SAR = 10001;
 
     //----------------------------------------
@@ -97,10 +97,10 @@ public class VideoPlayer  {
     public static final int LOG_FATAL = 7;
     public static final int LOG_SILENT = 8;
 
-    public static final int OPT_CATEGORY_FORMAT     = 1;
-    public static final int OPT_CATEGORY_CODEC      = 2;
-    public static final int OPT_CATEGORY_SWS        = 3;
-    public static final int OPT_CATEGORY_PLAYER     = 4;
+    public static final int OPT_CATEGORY_FORMAT = 1;
+    public static final int OPT_CATEGORY_CODEC = 2;
+    public static final int OPT_CATEGORY_SWS = 3;
+    public static final int OPT_CATEGORY_PLAYER = 4;
 
     public static final int SDL_FCC_YV12 = 0x32315659; // YV12
     public static final int SDL_FCC_RV16 = 0x36315652; // RGB565
@@ -111,10 +111,10 @@ public class VideoPlayer  {
     // properties
     public static final int PROP_FLOAT_VIDEO_DECODE_FRAMES_PER_SECOND = 10001;
     public static final int PROP_FLOAT_VIDEO_OUTPUT_FRAMES_PER_SECOND = 10002;
-    public static final int FFP_PROP_FLOAT_PLAYBACK_RATE              = 10003;
+    public static final int FFP_PROP_FLOAT_PLAYBACK_RATE = 10003;
 
-    public static final int FFP_PROP_INT64_SELECTED_VIDEO_STREAM      = 20001;
-    public static final int FFP_PROP_INT64_SELECTED_AUDIO_STREAM      = 20002;
+    public static final int FFP_PROP_INT64_SELECTED_VIDEO_STREAM = 20001;
+    public static final int FFP_PROP_INT64_SELECTED_AUDIO_STREAM = 20002;
     //----------------------------------------
 
     private long mNativeMediaPlayer;
@@ -137,8 +137,9 @@ public class VideoPlayer  {
 
     private String mDataSource;
 
-   
+
     private static volatile boolean mIsNativeInitialized = false;
+
     private static void initNativeOnce() {
         synchronized (VideoPlayer.class) {
             if (!mIsNativeInitialized) {
@@ -160,13 +161,15 @@ public class VideoPlayer  {
         void onBufferingUpdate(VideoPlayer mp, int percent);
     }
 
-    public  interface OnPlayerSeekCompleteListener {
+    public interface OnPlayerSeekCompleteListener {
         void onSeekComplete(VideoPlayer mp);
     }
-    public  interface OnPlayerExactlySeekCompleteListener {
+
+    public interface OnPlayerExactlySeekCompleteListener {
         void onExactlySeekComplete(VideoPlayer mp);
     }
-    public  interface OnPlayerVideoSizeChangedListener {
+
+    public interface OnPlayerVideoSizeChangedListener {
         void onVideoSizeChanged(VideoPlayer mp, int width, int height,
                                 int sar_num, int sar_den);
     }
@@ -175,18 +178,18 @@ public class VideoPlayer  {
         boolean onError(VideoPlayer mp, int what, int extra);
     }
 
-    public  interface OnPlayerInfoListener {
+    public interface OnPlayerInfoListener {
         boolean onInfo(VideoPlayer mp, int what, int extra);
     }
-    
+
     private OnPlayerPreparedListener mOnPreparedListener;
     private OnPlayerCompletionListener mOnCompletionListener;
     private OnPlayerBufferingUpdateListener mOnBufferingUpdateListener;
     private OnPlayerSeekCompleteListener mOnSeekCompleteListener;
-    
-    
+
+
     private OnPlayerExactlySeekCompleteListener mOnExactlySeekCompleteListener;
-    
+
     private OnPlayerVideoSizeChangedListener mOnVideoSizeChangedListener;
     private OnPlayerErrorListener mOnErrorListener;
     private OnPlayerInfoListener mOnInfoListener;
@@ -207,11 +210,11 @@ public class VideoPlayer  {
     public final void setOnSeekCompleteListener(OnPlayerSeekCompleteListener listener) {
         mOnSeekCompleteListener = listener;
     }
-    
+
     public final void setOnExactlySeekCompleteListener(OnPlayerExactlySeekCompleteListener listener) {
-    	mOnExactlySeekCompleteListener = listener;
+        mOnExactlySeekCompleteListener = listener;
     }
-    
+
 
     public final void setOnVideoSizeChangedListener(
             OnPlayerVideoSizeChangedListener listener) {
@@ -246,7 +249,7 @@ public class VideoPlayer  {
         if (mOnSeekCompleteListener != null)
             mOnSeekCompleteListener.onSeekComplete(this);
     }
-    
+
     protected final void notifyOnExactlySeekComplete() {
         if (mOnExactlySeekCompleteListener != null)
             mOnExactlySeekCompleteListener.onExactlySeekComplete(this);
@@ -277,10 +280,10 @@ public class VideoPlayer  {
      * </p>
      */
     public VideoPlayer() {
-    	initPlayer();
+        initPlayer();
     }
 
-    
+
     private void initPlayer() {
         initNativeOnce();
 
@@ -297,7 +300,7 @@ public class VideoPlayer  {
 
     private native void _setVideoSurface(Surface surface);
 
-    
+
     public void setDisplay(SurfaceHolder sh) {
         mSurfaceHolder = sh;
         Surface surface;
@@ -309,6 +312,7 @@ public class VideoPlayer  {
         _setVideoSurface(surface);
         updateSurfaceScreenOn();
     }
+
     public void setSurface(Surface surface) {
         if (mScreenOnWhilePlaying && surface != null) {
             Log.w(TAG,
@@ -318,6 +322,7 @@ public class VideoPlayer  {
         _setVideoSurface(surface);
         updateSurfaceScreenOn();
     }
+
     public void setDataSource(Context context, Uri uri)
             throws IOException, IllegalArgumentException, SecurityException, IllegalStateException {
         setDataSource(context, uri, null);
@@ -369,11 +374,10 @@ public class VideoPlayer  {
     }
 
     public void setDataSource(String path, Map<String, String> headers)
-            throws IOException, IllegalArgumentException, SecurityException, IllegalStateException
-    {
+            throws IOException, IllegalArgumentException, SecurityException, IllegalStateException {
         if (headers != null && !headers.isEmpty()) {
             StringBuilder sb = new StringBuilder();
-            for(Map.Entry<String, String> entry: headers.entrySet()) {
+            for (Map.Entry<String, String> entry : headers.entrySet()) {
                 sb.append(entry.getKey());
                 sb.append(":");
                 String value = entry.getValue();
@@ -411,7 +415,7 @@ public class VideoPlayer  {
         }
     }
 
-  
+
     private void setDataSource(FileDescriptor fd, long offset, long length)
             throws IOException, IllegalArgumentException, IllegalStateException {
         setDataSource(fd);
@@ -441,7 +445,7 @@ public class VideoPlayer  {
 
     public native void _prepareAsync() throws IllegalStateException;
 
-    
+
     public void start() throws IllegalStateException {
         stayAwake(true);
         _start();
@@ -462,75 +466,82 @@ public class VideoPlayer  {
     }
 
     private native void _pause() throws IllegalStateException;
-    
+
     /**
      * 设置是否精确seek;
+     *
      * @param is
      */
-    public void setExactlySeekEnable(boolean is)
-    {
-    	int en=is?1:0;
-    	_setAccurateSeekEnable(en, 5000);
+    public void setExactlySeekEnable(boolean is) {
+        int en = is ? 1 : 0;
+        _setAccurateSeekEnable(en, 5000);
     }
+
     /**
      * [新增]
      */
-    public void setSpeedEnable()
-    {
-    	_setSpeedEnable();
+    public void setSpeedEnable() {
+        _setSpeedEnable();
     }
-    
-    public void setSpeedPitchEnable()
-    {
-    	_setSpeedPitchEnable();
+
+    public void setSpeedPitchEnable() {
+        _setSpeedPitchEnable();
     }
-    public void setSpeed(float rate)
-    {
-    	_setSpeed(rate);
+
+    public void setSpeed(float rate) {
+        _setSpeed(rate);
     }
+
     /**
      * 获取当前正在显示这一帧画面的时间戳.
      * 此时间戳为视频本身这一帧的原始时间戳, 不随播放快慢影响;
-     * @return  时间戳, 单位毫秒 1s=1000ms
+     *
+     * @return 时间戳, 单位毫秒 1s=1000ms
      */
-    public long getCurrentFramePosition()
-    {
-    	return getCurrentVideoFramePts();
+    public long getCurrentFramePosition() {
+        return getCurrentVideoFramePts();
     }
+
     /**
      * 获取当前正在显示这一帧画面的时间戳.
-     * 
+     * <p>
      * 此时间戳为视频本身这一帧的原始时间戳, 不随播放快慢影响;
-     * @return  时间戳, 单位毫秒 1s=1000ms
+     *
+     * @return 时间戳, 单位毫秒 1s=1000ms
      */
     private native long getCurrentVideoFramePts();
+
     /**
-     * 是否加速seek, 
-     * @param selected 0不加速, 1加速;
-     * @param seektimeOut  加速seek的超时时间;默认最大5000ms;
+     * 是否加速seek,
+     *
+     * @param selected    0不加速, 1加速;
+     * @param seektimeOut 加速seek的超时时间;默认最大5000ms;
      */
-    private native void _setAccurateSeekEnable(int selected,int seektimeOut);
+    private native void _setAccurateSeekEnable(int selected, int seektimeOut);
+
     /**
-     * 是否使能 播放速度, 
-     * 
+     * 是否使能 播放速度,
      */
     private native void _setSpeedEnable();
+
     /**
      * 是否在 播放速度 ,加减速的时候, 变调.
      */
     private native void _setSpeedPitchEnable();
+
     /**
      * 范围是0.5---2.0;
      * 0.5是最慢
      * 2.0是最快.
+     *
      * @param rate
      */
     private native void _setSpeed(float rate);
-    
+
     private native void _seekback100() throws IllegalStateException;
+
     private native void _seekfront100() throws IllegalStateException;
-    
-    
+
 
     @SuppressLint("Wakelock")
     public void setWakeMode(Context context, int mode) {
@@ -556,7 +567,7 @@ public class VideoPlayer  {
     public void setScreenOnWhilePlaying(boolean screenOn) {
         if (mScreenOnWhilePlaying != screenOn) {
             if (screenOn && mSurfaceHolder == null) {
-                Log.w(TAG,"setScreenOnWhilePlaying(true) is ineffective without a SurfaceHolder");
+                Log.w(TAG, "setScreenOnWhilePlaying(true) is ineffective without a SurfaceHolder");
             }
             mScreenOnWhilePlaying = screenOn;
             updateSurfaceScreenOn();
@@ -617,13 +628,15 @@ public class VideoPlayer  {
      * 此时间进度, 会随着设置加减速而变化.
      * 如果您想获取到视频本身的原始时间戳, 则通过 {@link #getCurrentFramePosition()}来得到;
      * 比如:视频本身20s, 加速一倍播放, 则最终播放的时间点是10s左右;
+     *
      * @return
      */
     public native long getCurrentPosition();
 
-    
+
     /**
      * 视频的总长度, 单位毫秒.
+     *
      * @return
      */
     public native long getDuration();
@@ -673,9 +686,12 @@ public class VideoPlayer  {
     }
 
     private native float _getPropertyFloat(int property, float defaultValue);
-    private native void  _setPropertyFloat(int property, float value);
-    private native long  _getPropertyLong(int property, long defaultValue);
-    private native void  _setPropertyLong(int property, long value);
+
+    private native void _setPropertyFloat(int property, float value);
+
+    private native long _getPropertyLong(int property, long defaultValue);
+
+    private native void _setPropertyLong(int property, long value);
 
     public native void setVolume(float leftVolume, float rightVolume);
 
@@ -684,35 +700,38 @@ public class VideoPlayer  {
     public void setLogEnabled(boolean enable) {
         // do nothing
     }
+
     public boolean isPlayable() {
         return true;
     }
 
     private native String _getVideoCodecInfo();
+
     private native String _getAudioCodecInfo();
 
-    public void setOption(int category, String name, String value)
-    {
+    public void setOption(int category, String name, String value) {
         _setOption(category, name, value);
     }
 
-    public void setOption(int category, String name, long value)
-    {
+    public void setOption(int category, String name, long value) {
         _setOption(category, name, value);
     }
 
     /**
      * 类似ffplay后面的各种参数一样, 是通过这里传递过去的.  TODO 没有完全测试.在ff_ffplay_options.h中的ffp_context_options中,暂时不支持af和vf
+     *
      * @param category
      * @param name
      * @param value
      */
     private native void _setOption(int category, String name, String value);
+
     private native void _setOption(int category, String name, long value);
 
     public Bundle getMediaMeta() {
         return _getMediaMeta();
     }
+
     private native Bundle _getMediaMeta();
 
     public static String getColorFormatName(int mediaCodecColorFormat) {
@@ -753,76 +772,76 @@ public class VideoPlayer  {
             }
 
             switch (msg.what) {
-            case MEDIA_PREPARED:
-                player.notifyOnPrepared();
-                return;
+                case MEDIA_PREPARED:
+                    player.notifyOnPrepared();
+                    return;
 
-            case MEDIA_PLAYBACK_COMPLETE:
-                player.notifyOnCompletion();
-                player.stayAwake(false);
-                return;
-            case VIDEOEDIT_EVENT_COMPLETE:
-            	return ;
-            case MEDIA_BUFFERING_UPDATE:
-                long bufferPosition = msg.arg1;
-                if (bufferPosition < 0) {
-                    bufferPosition = 0;
-                }
-
-                long percent = 0;
-                long duration = player.getDuration();
-                if (duration > 0) {
-                    percent = bufferPosition * 100 / duration;
-                }
-                if (percent >= 100) {
-                    percent = 100;
-                }
-                player.notifyOnBufferingUpdate((int)percent);
-                return;
-
-            case MEDIA_SEEK_COMPLETE:
-                player.notifyOnSeekComplete();
-                return;
-
-            case MEDIA_SET_VIDEO_SIZE:
-                player.mVideoWidth = msg.arg1;
-                player.mVideoHeight = msg.arg2;
-                player.notifyOnVideoSizeChanged(player.mVideoWidth, player.mVideoHeight,
-                        player.mVideoSarNum, player.mVideoSarDen);
-                return;
-
-            case MEDIA_ERROR:
-                Log.e(TAG, "Error (" + msg.arg1 + "," + msg.arg2 + ")");
-                if (!player.notifyOnError(msg.arg1, msg.arg2)) {
+                case MEDIA_PLAYBACK_COMPLETE:
                     player.notifyOnCompletion();
-                }
-                player.stayAwake(false);
-                return;
+                    player.stayAwake(false);
+                    return;
+                case VIDEOEDIT_EVENT_COMPLETE:
+                    return;
+                case MEDIA_BUFFERING_UPDATE:
+                    long bufferPosition = msg.arg1;
+                    if (bufferPosition < 0) {
+                        bufferPosition = 0;
+                    }
 
-            case MEDIA_INFO:
-            	Log.i(TAG,"mediaInfo msg.arg1:"+msg.arg1);
-            	if(msg.arg1==MEDIA_INFO_MEDIA_ACCURATE_SEEK_COMPLETE){
-            		  player.notifyOnExactlySeekComplete();
-            	}else{
-                    player.notifyOnInfo(msg.arg1, msg.arg2);
-            	}
-                return;
-            case MEDIA_TIMED_TEXT:
-                // do nothing
-                break;
+                    long percent = 0;
+                    long duration = player.getDuration();
+                    if (duration > 0) {
+                        percent = bufferPosition * 100 / duration;
+                    }
+                    if (percent >= 100) {
+                        percent = 100;
+                    }
+                    player.notifyOnBufferingUpdate((int) percent);
+                    return;
 
-            case MEDIA_NOP: // interface test message - ignore
-                break;
+                case MEDIA_SEEK_COMPLETE:
+                    player.notifyOnSeekComplete();
+                    return;
 
-            case MEDIA_SET_VIDEO_SAR:
-                player.mVideoSarNum = msg.arg1;
-                player.mVideoSarDen = msg.arg2;
-                player.notifyOnVideoSizeChanged(player.mVideoWidth, player.mVideoHeight,
-                        player.mVideoSarNum, player.mVideoSarDen);
-                break;
+                case MEDIA_SET_VIDEO_SIZE:
+                    player.mVideoWidth = msg.arg1;
+                    player.mVideoHeight = msg.arg2;
+                    player.notifyOnVideoSizeChanged(player.mVideoWidth, player.mVideoHeight,
+                            player.mVideoSarNum, player.mVideoSarDen);
+                    return;
 
-            default:
-                Log.e(TAG, "Unknown message type " + msg.what);
+                case MEDIA_ERROR:
+                    Log.e(TAG, "Error (" + msg.arg1 + "," + msg.arg2 + ")");
+                    if (!player.notifyOnError(msg.arg1, msg.arg2)) {
+                        player.notifyOnCompletion();
+                    }
+                    player.stayAwake(false);
+                    return;
+
+                case MEDIA_INFO:
+                    Log.i(TAG, "mediaInfo msg.arg1:" + msg.arg1);
+                    if (msg.arg1 == MEDIA_INFO_MEDIA_ACCURATE_SEEK_COMPLETE) {
+                        player.notifyOnExactlySeekComplete();
+                    } else {
+                        player.notifyOnInfo(msg.arg1, msg.arg2);
+                    }
+                    return;
+                case MEDIA_TIMED_TEXT:
+                    // do nothing
+                    break;
+
+                case MEDIA_NOP: // interface test message - ignore
+                    break;
+
+                case MEDIA_SET_VIDEO_SAR:
+                    player.mVideoSarNum = msg.arg1;
+                    player.mVideoSarDen = msg.arg2;
+                    player.notifyOnVideoSizeChanged(player.mVideoWidth, player.mVideoHeight,
+                            player.mVideoSarNum, player.mVideoSarDen);
+                    break;
+
+                default:
+                    Log.e(TAG, "Unknown message type " + msg.what);
             }
         }
     }
@@ -835,7 +854,7 @@ public class VideoPlayer  {
      * it. (This is the cookie passed to native_setup().)
      */
     private static void postEventFromNative(Object weakThiz, int what,
-            int arg1, int arg2, Object obj) {
+                                            int arg1, int arg2, Object obj) {
         if (weakThiz == null)
             return;
 
@@ -861,6 +880,7 @@ public class VideoPlayer  {
      */
 
     private OnControlMessageListener mOnControlMessageListener;
+
     public void setOnControlMessageListener(OnControlMessageListener listener) {
         mOnControlMessageListener = listener;
     }
@@ -874,6 +894,7 @@ public class VideoPlayer  {
      */
 
     private OnNativeInvokeListener mOnNativeInvokeListener;
+
     public void setOnNativeInvokeListener(OnNativeInvokeListener listener) {
         mOnNativeInvokeListener = listener;
     }
@@ -891,16 +912,18 @@ public class VideoPlayer  {
 
         boolean onNativeInvoke(int what, Bundle args);
     }
-/**
- * 底层调用.
- * @param weakThiz
- * @param what
- * @param args
- * @return
- */
+
+    /**
+     * 底层调用.
+     *
+     * @param weakThiz
+     * @param what
+     * @param args
+     * @return
+     */
     private static boolean onNativeInvoke(Object weakThiz, int what, Bundle args) {
 //        Log.ifmt(TAG, "onNativeInvoke %d", what);
-        
+
         if (weakThiz == null || !(weakThiz instanceof WeakReference<?>))
             throw new IllegalStateException("<null weakThiz>.onNativeInvoke()");
 
@@ -940,24 +963,28 @@ public class VideoPlayer  {
     public interface OnMediaCodecSelectListener {
         String onMediaCodecSelect(VideoPlayer mp, String mimeType, int profile, int level);
     }
+
     private OnMediaCodecSelectListener mOnMediaCodecSelectListener;
+
     public void setOnMediaCodecSelectListener(OnMediaCodecSelectListener listener) {
         mOnMediaCodecSelectListener = listener;
     }
 
     public void resetListeners() {
-    	 mOnPreparedListener = null;
-         mOnBufferingUpdateListener = null;
-         mOnCompletionListener = null;
-         mOnSeekCompleteListener = null;
-         mOnVideoSizeChangedListener = null;
-         mOnErrorListener = null;
-         mOnInfoListener = null;
+        mOnPreparedListener = null;
+        mOnBufferingUpdateListener = null;
+        mOnCompletionListener = null;
+        mOnSeekCompleteListener = null;
+        mOnVideoSizeChangedListener = null;
+        mOnErrorListener = null;
+        mOnInfoListener = null;
         mOnMediaCodecSelectListener = null;
     }
 
     public static native void native_profileBegin(String libName);
+
     public static native void native_profileEnd();
+
     public static native void native_setLogLevel(int level);
 
 }

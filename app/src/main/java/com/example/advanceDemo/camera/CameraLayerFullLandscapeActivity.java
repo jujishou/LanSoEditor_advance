@@ -168,8 +168,8 @@ public class CameraLayerFullLandscapeActivity extends Activity implements OnClic
      * Step2: 开始运行 Drawpad线程.
      */
     private void startDrawPad() {
-        if(LanSongUtil.isFullScreenRatio(mDrawPadCamera.getViewWidth(), mDrawPadCamera.getViewHeight())){
-            mDrawPadCamera.setRealEncodeEnable(1088,544,3500*1024,(int)25,dstPath);
+        if (LanSongUtil.isFullScreenRatio(mDrawPadCamera.getViewWidth(), mDrawPadCamera.getViewHeight())) {
+            mDrawPadCamera.setRealEncodeEnable(1088, 544, 3500 * 1024, (int) 25, dstPath);
         }
         if (mDrawPadCamera.setupDrawpad()) {
             mCameraLayer = mDrawPadCamera.getCameraLayer();

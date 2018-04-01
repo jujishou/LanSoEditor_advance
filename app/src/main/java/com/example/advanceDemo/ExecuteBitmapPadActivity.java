@@ -8,6 +8,7 @@ import jp.co.cyberagent.lansongsdk.gpuimage.GPUImageFilter;
 import jp.co.cyberagent.lansongsdk.gpuimage.GPUImageSepiaFilter;
 import jp.co.cyberagent.lansongsdk.gpuimage.GPUImageSwirlFilter;
 import jp.co.cyberagent.lansongsdk.gpuimage.LanSongScreenBlendFilter;
+
 import junit.framework.Test;
 
 import android.app.Activity;
@@ -48,60 +49,60 @@ import com.lansosdk.videoeditor.SDKFileUtils;
 import com.lansosdk.videoeditor.VideoEditor;
 
 /**
- * 
+ *
  */
-public class ExecuteBitmapPadActivity extends Activity{
+public class ExecuteBitmapPadActivity extends Activity {
 
-	private static final String TAG="ExecuteBitmapPadActivity";
-		int videoDuration;
-		boolean isRuned=false;
-		TextView tvProgressHint;
-		TextView tvHint;
-	 
-	    private String dstPath=null;
-		BitmapLayer bitmapLayer=null;
-		
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
-		
-		super.onCreate(savedInstanceState);
-		 
-		 
-		 setContentView(R.layout.execute_edit_demo_layout);
-		 tvHint=(TextView)findViewById(R.id.id_video_editor_hint);
-		 
-		 tvHint.setText(R.string.pictureset_execute_demo_hint);
-   
-		 tvProgressHint=(TextView)findViewById(R.id.id_video_edit_progress_hint);
-		 
-	       findViewById(R.id.id_video_edit_btn).setOnClickListener(new OnClickListener() {
-				
-				@Override
-				public void onClick(View v) {
-						final Bitmap bmp1=BitmapFactory.decodeFile("/sdcard/t14.jpg");
-						final Bitmap bmp2=BitmapFactory.decodeFile("/sdcard/b2.jpg");
-						testDrawPadExecute(bmp1,bmp2);
-				}
-			});
-    	}
-   @Override
-    protected void onDestroy() {
-    	super.onDestroy();
-    	 if(SDKFileUtils.fileExist(dstPath)){
-    		 SDKFileUtils.deleteFile(dstPath);
-         }
+    private static final String TAG = "ExecuteBitmapPadActivity";
+    int videoDuration;
+    boolean isRuned = false;
+    TextView tvProgressHint;
+    TextView tvHint;
+
+    private String dstPath = null;
+    BitmapLayer bitmapLayer = null;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        // TODO Auto-generated method stub
+
+        super.onCreate(savedInstanceState);
+
+
+        setContentView(R.layout.execute_edit_demo_layout);
+        tvHint = (TextView) findViewById(R.id.id_video_editor_hint);
+
+        tvHint.setText(R.string.pictureset_execute_demo_hint);
+
+        tvProgressHint = (TextView) findViewById(R.id.id_video_edit_progress_hint);
+
+        findViewById(R.id.id_video_edit_btn).setOnClickListener(new OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                final Bitmap bmp1 = BitmapFactory.decodeFile("/sdcard/t14.jpg");
+                final Bitmap bmp2 = BitmapFactory.decodeFile("/sdcard/b2.jpg");
+                testDrawPadExecute(bmp1, bmp2);
+            }
+        });
     }
-	private void testDrawPadExecute(Bitmap bmp1,Bitmap bmp2)
-	{
-		BitmapPadExecute  bendBmp;
-		bendBmp=new BitmapPadExecute(getApplicationContext());
-		
-		if(bendBmp.init(bmp1.getWidth(),bmp1.getHeight()))
-		{
-			Bitmap bmp=bendBmp.getBlendBitmap(bmp1, bmp2);
-			
-		}
-		bendBmp.release();
-	}
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (SDKFileUtils.fileExist(dstPath)) {
+            SDKFileUtils.deleteFile(dstPath);
+        }
+    }
+
+    private void testDrawPadExecute(Bitmap bmp1, Bitmap bmp2) {
+        BitmapPadExecute bendBmp;
+        bendBmp = new BitmapPadExecute(getApplicationContext());
+
+        if (bendBmp.init(bmp1.getWidth(), bmp1.getHeight())) {
+            Bitmap bmp = bendBmp.getBlendBitmap(bmp1, bmp2);
+
+        }
+        bendBmp.release();
+    }
 }	

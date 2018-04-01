@@ -15,8 +15,9 @@ public class BitmapLruCache {
 
     private final LruCache<String, Bitmap> mMemCache;
 
-    private int writeIndex=0;
-    private static final int MAX_NUMBER=8;
+    private int writeIndex = 0;
+    private static final int MAX_NUMBER = 8;
+
     public BitmapLruCache() {
 
         // Use 20% of the available memory for this memory cache.
@@ -30,32 +31,33 @@ public class BitmapLruCache {
             }
         };
     }
-    public static long getMaxCacheSize()
-    {
-    	return  Runtime.getRuntime().maxMemory() / MAX_NUMBER;
+
+    public static long getMaxCacheSize() {
+        return Runtime.getRuntime().maxMemory() / MAX_NUMBER;
     }
+
     public synchronized Bitmap getBitmap(int index) {
-    	
-    	String key="index:" + index;
+
+        String key = "index:" + index;
         final Bitmap b = mMemCache.get(key);
 
-        if (b == null){
-        	Log.w(TAG,"getNextBitmap  is null. remove from cache");
+        if (b == null) {
+            Log.w(TAG, "getNextBitmap  is null. remove from cache");
             mMemCache.remove(key);
             return null;
         }
         return b;
     }
- 
+
     public synchronized void pushBitmap(Bitmap bitmap) {
-    	String key="index:" + writeIndex;
-    	writeIndex++;    
+        String key = "index:" + writeIndex;
+        writeIndex++;
         if (key != null && bitmap != null) {
             mMemCache.put(key, bitmap);
         }
     }
 
-    
+
 //    public synchronized Bitmap getBitmap(String key) {
 //    	
 //        final Bitmap b = mMemCache.get(key);
@@ -66,7 +68,7 @@ public class BitmapLruCache {
 //        }
 //        return b;
 //    }
-    
+
 //    public synchronized Bitmap getBitmap(long ptsUs) {
 //    	
 //    	String key="pts:" + ptsUs;
@@ -86,12 +88,12 @@ public class BitmapLruCache {
 //    }
 
     public synchronized void clear() {
-    	Log.i(TAG,"============mMemCache.evictAll()");
+        Log.i(TAG, "============mMemCache.evictAll()");
         mMemCache.evictAll();
     }
-    public synchronized int count()
-    {
-    	return mMemCache.putCount();
+
+    public synchronized int count() {
+        return mMemCache.putCount();
     }
 
 //    private Bitmap getBitmapFromMemCache(long ptsUs) {

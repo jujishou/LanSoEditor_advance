@@ -185,6 +185,7 @@ public class StereoView extends ViewGroup {
 
     /**
      * mState = State.ToPre 时进行的动作
+     *
      * @param yVelocity 竖直方向的速度
      */
     private void toPreAction(float yVelocity) {
@@ -205,8 +206,10 @@ public class StereoView extends ViewGroup {
         mScroller.startScroll(0, startY, 0, delta, duration);
         addCount--;
     }
+
     /**
      * mState = State.ToNext 时进行的动作
+     *
      * @param yVelocity 竖直方向的速度
      */
     private void toNextAction(float yVelocity) {
@@ -395,6 +398,7 @@ public class StereoView extends ViewGroup {
 
     /**
      * 设置滚动时两个item的夹角度数
+     *
      * @param mAngle [0f,180f]
      * @return
      */
@@ -405,6 +409,7 @@ public class StereoView extends ViewGroup {
 
     /**
      * 是否开启3D效果
+     *
      * @param can3D
      * @return
      */
@@ -443,6 +448,7 @@ public class StereoView extends ViewGroup {
 
     /**
      * 上一页
+     *
      * @return
      */
     public StereoView toPre() {
@@ -456,6 +462,7 @@ public class StereoView extends ViewGroup {
 
     /**
      * 下一页
+     *
      * @return
      */
     public StereoView toNext() {
@@ -471,6 +478,7 @@ public class StereoView extends ViewGroup {
     public interface IStereoListener {
         //上滑一页时回调
         void toPre(int curScreen);
+
         //下滑一页时回调
         void toNext(int curScreen);
     }

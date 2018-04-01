@@ -24,7 +24,7 @@ import android.text.format.DateFormat;
 import android.util.Log;
 
 /**
- * 我们提供的用来 当app异常抛出时， 用来获取当前异常的打印信息， 并保存到代码中设置的位置。 
+ * 我们提供的用来 当app异常抛出时， 用来获取当前异常的打印信息， 并保存到代码中设置的位置。
  * 使用方法， 可以参考我们的调用。
  */
 public class LanSoSdkCrashHandler implements UncaughtExceptionHandler {
@@ -45,16 +45,16 @@ public class LanSoSdkCrashHandler implements UncaughtExceptionHandler {
 
         // Inject some info about android version and the device, since google can't provide them in the developer console
         StackTraceElement[] trace = ex.getStackTrace();
-        StackTraceElement[] trace2 = new StackTraceElement[trace.length+5];
+        StackTraceElement[] trace2 = new StackTraceElement[trace.length + 5];
         System.arraycopy(trace, 0, trace2, 0, trace.length);
-        trace2[trace.length+0] = new StackTraceElement("Android", "LanSongMODEL", android.os.Build.MODEL, -1);
-        trace2[trace.length+1] = new StackTraceElement("Android", "LanSongVERSION", android.os.Build.VERSION.RELEASE, -1);
-        trace2[trace.length+2] = new StackTraceElement("Android", "LanSongFINGERPRINT", android.os.Build.FINGERPRINT, -1);
-        
-        trace2[trace.length+3] = new StackTraceElement("Android", "LanSong box version:", LanSoEditorBox.VERSION_BOX, -1);
-        trace2[trace.length+4] = new StackTraceElement("Android", "LanSong editor version:", VideoEditor.getSDKVersion(), -1);
-        
-        
+        trace2[trace.length + 0] = new StackTraceElement("Android", "LanSongMODEL", android.os.Build.MODEL, -1);
+        trace2[trace.length + 1] = new StackTraceElement("Android", "LanSongVERSION", android.os.Build.VERSION.RELEASE, -1);
+        trace2[trace.length + 2] = new StackTraceElement("Android", "LanSongFINGERPRINT", android.os.Build.FINGERPRINT, -1);
+
+        trace2[trace.length + 3] = new StackTraceElement("Android", "LanSong box version:", LanSoEditorBox.VERSION_BOX, -1);
+        trace2[trace.length + 4] = new StackTraceElement("Android", "LanSong editor version:", VideoEditor.getSDKVersion(), -1);
+
+
         ex.setStackTrace(trace2);
 
         ex.printStackTrace(printWriter);
@@ -95,7 +95,7 @@ public class LanSoSdkCrashHandler implements UncaughtExceptionHandler {
             bw.newLine();
         } catch (IOException e) {
             e.printStackTrace();
-        }finally {
+        } finally {
             close(bw);
             close(output);
         }
@@ -110,7 +110,8 @@ public class LanSoSdkCrashHandler implements UncaughtExceptionHandler {
             Log.e(TAG, "Cannot write logcat to disk");
         }
     }
-    private  boolean close(Closeable closeable) {
+
+    private boolean close(Closeable closeable) {
         if (closeable != null) {
             try {
                 closeable.close();
@@ -119,11 +120,12 @@ public class LanSoSdkCrashHandler implements UncaughtExceptionHandler {
                 return false;
             }
         } else {
-                return false;
+            return false;
         }
     }
+
     public void writeLogcat2(String filename) throws IOException {
-        String[] args = { "logcat", "-v", "time", "-d" };
+        String[] args = {"logcat", "-v", "time", "-d"};
 
         Process process = Runtime.getRuntime().exec(args);
 
@@ -132,7 +134,7 @@ public class LanSoSdkCrashHandler implements UncaughtExceptionHandler {
         FileOutputStream fileStream;
         try {
             fileStream = new FileOutputStream(filename);
-        } catch( FileNotFoundException e) {
+        } catch (FileNotFoundException e) {
             return;
         }
 
@@ -146,8 +148,8 @@ public class LanSoSdkCrashHandler implements UncaughtExceptionHandler {
                 bw.write(line);
                 bw.newLine();
             }
-        }catch(Exception e) {}
-        finally {
+        } catch (Exception e) {
+        } finally {
             close(bw);
             close(output);
             close(br);

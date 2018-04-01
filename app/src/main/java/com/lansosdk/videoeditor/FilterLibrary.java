@@ -36,89 +36,89 @@ import com.lansosdk.box.BitmapLoader;
 
 
 public class FilterLibrary {
-	
-	private static FilterList filterList=null;
-	public static FilterList getFilterList()
-	{
-		if(filterList==null){
-			showAllFilter();
-		}
-		return filterList;
-	}
-	public static void showAllFilter()
-	{
-		filterList = new FilterList();
+
+    private static FilterList filterList = null;
+
+    public static FilterList getFilterList() {
+        if (filterList == null) {
+            showAllFilter();
+        }
+        return filterList;
+    }
+
+    public static void showAllFilter() {
+        filterList = new FilterList();
         //2017年11月10日09:38:40 83
         filterList.addFilter("无", FilterType.NONE);
-        filterList.addFilter("美颜", FilterType.BEAUTIFUL);  
-        
-        filterList.addFilter("1AMARO", FilterType.AMARO);   
-        filterList.addFilter("2RISE", FilterType.RISE);   
-        filterList.addFilter("3HUDSON", FilterType.HUDSON);   
-        filterList.addFilter("4XPROII", FilterType.XPROII);   
-        filterList.addFilter("5SIERRA", FilterType.SIERRA);   
-        filterList.addFilter("6LOMOFI", FilterType.LOMOFI);   
-        filterList.addFilter("7EARLYBIRD", FilterType.EARLYBIRD);   
-        filterList.addFilter("8SUTRO", FilterType.SUTRO);   
-        filterList.addFilter("9TOASTER", FilterType.TOASTER);   
-        filterList.addFilter("10BRANNAN", FilterType.BRANNAN);   
-        filterList.addFilter("11INKWELL", FilterType.INKWELL);   
-        filterList.addFilter("12WALDEN", FilterType.WALDEN);   
-        filterList.addFilter("13HEFE", FilterType.HEFE);   
-        filterList.addFilter("14VALENCIA", FilterType.VALENCIA);   
-        filterList.addFilter("15NASHVILLE", FilterType.NASHVILLE);   
-        filterList.addFilter("16if1977", FilterType.IF1977);     
-        filterList.addFilter("17LORDKELVIN", FilterType.LORDKELVIN);  	
-        
+        filterList.addFilter("美颜", FilterType.BEAUTIFUL);
 
-        filterList.addFilter("黑色抠图", FilterType.LanSongBLACKMASK);  
-        filterList.addFilter("区域透明", FilterType.LanSongMASK);  
-        
-        filterList.addFilter("Invert负片", FilterType.INVERT);  
-        filterList.addFilter("Pixelation像素方块", FilterType.PIXELATION); 
+        filterList.addFilter("1AMARO", FilterType.AMARO);
+        filterList.addFilter("2RISE", FilterType.RISE);
+        filterList.addFilter("3HUDSON", FilterType.HUDSON);
+        filterList.addFilter("4XPROII", FilterType.XPROII);
+        filterList.addFilter("5SIERRA", FilterType.SIERRA);
+        filterList.addFilter("6LOMOFI", FilterType.LOMOFI);
+        filterList.addFilter("7EARLYBIRD", FilterType.EARLYBIRD);
+        filterList.addFilter("8SUTRO", FilterType.SUTRO);
+        filterList.addFilter("9TOASTER", FilterType.TOASTER);
+        filterList.addFilter("10BRANNAN", FilterType.BRANNAN);
+        filterList.addFilter("11INKWELL", FilterType.INKWELL);
+        filterList.addFilter("12WALDEN", FilterType.WALDEN);
+        filterList.addFilter("13HEFE", FilterType.HEFE);
+        filterList.addFilter("14VALENCIA", FilterType.VALENCIA);
+        filterList.addFilter("15NASHVILLE", FilterType.NASHVILLE);
+        filterList.addFilter("16if1977", FilterType.IF1977);
+        filterList.addFilter("17LORDKELVIN", FilterType.LORDKELVIN);
 
-        filterList.addFilter("Vignette加轮廓", FilterType.VIGNETTE);  
-        filterList.addFilter("Haze加减雾", FilterType.HAZE);  
+
+        filterList.addFilter("黑色抠图", FilterType.LanSongBLACKMASK);
+        filterList.addFilter("区域透明", FilterType.LanSongMASK);
+
+        filterList.addFilter("Invert负片", FilterType.INVERT);
+        filterList.addFilter("Pixelation像素方块", FilterType.PIXELATION);
+
+        filterList.addFilter("Vignette加轮廓", FilterType.VIGNETTE);
+        filterList.addFilter("Haze加减雾", FilterType.HAZE);
         filterList.addFilter("Glass Sphere玻璃球效果", FilterType.GLASS_SPHERE);
-        filterList.addFilter("Sphere Refraction球面折射", FilterType.SPHERE_REFRACTION); 
+        filterList.addFilter("Sphere Refraction球面折射", FilterType.SPHERE_REFRACTION);
 
         //新增
-        filterList.addFilter("PINCH_DISTORTION", FilterType.PINCH_DISTORTION);  
-        filterList.addFilter("STRETCH_DISTORTION", FilterType.STRETCH_DISTORTION);  
-        filterList.addFilter("Bulge Distortion凸凹调节", FilterType.BULGE_DISTORTION);  
-        
-        filterList.addFilter("Brightness图像亮度", FilterType.BRIGHTNESS); 
-      
-        filterList.addFilter("高斯模糊", FilterType.LanSongBLUR);
-        
-        filterList.addFilter("Swirl旋涡", FilterType.SWIRL);
-        filterList.addFilter("Posterize色调分离", FilterType.POSTERIZE);  
-        filterList.addFilter("Sepia复古", FilterType.SEPIA); 
-        
-        filterList.addFilter("Highlight Shadow阴影高亮", FilterType.HIGHLIGHT_SHADOW);  
-        filterList.addFilter("Monochrome单色", FilterType.MONOCHROME); 
-        filterList.addFilter("White Balance白平衡", FilterType.WHITE_BALANCE);  
-        filterList.addFilter("Exposure曝光度", FilterType.EXPOSURE);  
-        filterList.addFilter("Hue色调", FilterType.HUE);  
-        filterList.addFilter("Gamma伽玛", FilterType.GAMMA);  
-        
-        filterList.addFilter("False Color", FilterType.FALSE_COLOR);  
-        filterList.addFilter("Color Balance颜色平衡", FilterType.COLOR_BALANCE);  
-        filterList.addFilter("Levels Min (Mid Adjust)暗色调节", FilterType.LEVELS_FILTER_MIN);  
-        filterList.addFilter("Lookup (Amatorka)查找表", FilterType.LOOKUP_AMATORKA); 
-        filterList.addFilter("Crosshatch交叉阴影网格", FilterType.CROSSHATCH);  
+        filterList.addFilter("PINCH_DISTORTION", FilterType.PINCH_DISTORTION);
+        filterList.addFilter("STRETCH_DISTORTION", FilterType.STRETCH_DISTORTION);
+        filterList.addFilter("Bulge Distortion凸凹调节", FilterType.BULGE_DISTORTION);
 
-        
-        filterList.addFilter("CGA Color Space", FilterType.CGA_COLORSPACE);  
-        filterList.addFilter("Kuwahara", FilterType.KUWAHARA);  
+        filterList.addFilter("Brightness图像亮度", FilterType.BRIGHTNESS);
+
+        filterList.addFilter("高斯模糊", FilterType.LanSongBLUR);
+
+        filterList.addFilter("Swirl旋涡", FilterType.SWIRL);
+        filterList.addFilter("Posterize色调分离", FilterType.POSTERIZE);
+        filterList.addFilter("Sepia复古", FilterType.SEPIA);
+
+        filterList.addFilter("Highlight Shadow阴影高亮", FilterType.HIGHLIGHT_SHADOW);
+        filterList.addFilter("Monochrome单色", FilterType.MONOCHROME);
+        filterList.addFilter("White Balance白平衡", FilterType.WHITE_BALANCE);
+        filterList.addFilter("Exposure曝光度", FilterType.EXPOSURE);
+        filterList.addFilter("Hue色调", FilterType.HUE);
+        filterList.addFilter("Gamma伽玛", FilterType.GAMMA);
+
+        filterList.addFilter("False Color", FilterType.FALSE_COLOR);
+        filterList.addFilter("Color Balance颜色平衡", FilterType.COLOR_BALANCE);
+        filterList.addFilter("Levels Min (Mid Adjust)暗色调节", FilterType.LEVELS_FILTER_MIN);
+        filterList.addFilter("Lookup (Amatorka)查找表", FilterType.LOOKUP_AMATORKA);
+        filterList.addFilter("Crosshatch交叉阴影网格", FilterType.CROSSHATCH);
+
+
+        filterList.addFilter("CGA Color Space", FilterType.CGA_COLORSPACE);
+        filterList.addFilter("Kuwahara", FilterType.KUWAHARA);
         filterList.addFilter("Halftone棉麻", FilterType.HALFTONE);
 
-        filterList.addFilter("Opacity透明度", FilterType.OPACITY);     
-        filterList.addFilter("RGB颜色调整", FilterType.RGB);  
+        filterList.addFilter("Opacity透明度", FilterType.OPACITY);
+        filterList.addFilter("RGB颜色调整", FilterType.RGB);
 
-        filterList.addFilter("Grayscale灰度", FilterType.GRAYSCALE);  
-        filterList.addFilter("Contrast对比度", FilterType.CONTRAST);  
-        filterList.addFilter("Saturation饱和度", FilterType.SATURATION); 
+        filterList.addFilter("Grayscale灰度", FilterType.GRAYSCALE);
+        filterList.addFilter("Contrast对比度", FilterType.CONTRAST);
+        filterList.addFilter("Saturation饱和度", FilterType.SATURATION);
 
         filterList.addFilter("Blend (Difference)", FilterType.BLEND_DIFFERENCE);
         filterList.addFilter("Blend (Source Over)", FilterType.BLEND_SOURCE_OVER);
@@ -144,28 +144,27 @@ public class FilterLibrary {
         filterList.addFilter("Blend (Subtract)", FilterType.BLEND_SUBTRACT);
         filterList.addFilter("Blend (Chroma Key)", FilterType.BLEND_CHROMA_KEY);
         filterList.addFilter("Blend (Normal)", FilterType.BLEND_NORMAL);
-        
+
         filterList.addFilter("EMBOSS粗麻", FilterType.EMBOSS);
         filterList.addFilter("3x3转换", FilterType.THREE_X_THREE_CONVOLUTION);
         filterList.addFilter("Laplacian浮雕", FilterType.LAPLACIAN);
         filterList.addFilter("Toon", FilterType.TOON);
-	}
+    }
+
     public static void showDialog(final Context context,
-            final OnGpuImageFilterChosenListener listener) 
-    {
-    	if(filterList==null){
-    		showAllFilter();
-    	}
-        
+                                  final OnGpuImageFilterChosenListener listener) {
+        if (filterList == null) {
+            showAllFilter();
+        }
+
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        builder.setTitle("Choose a filter(total:"+filterList.names.size()+" )");
+        builder.setTitle("Choose a filter(total:" + filterList.names.size() + " )");
         builder.setItems(filterList.names.toArray(new String[filterList.names.size()]),
                 new DialogInterface.OnClickListener() {
                     @Override
-                    public void onClick(final DialogInterface dialog, final int item) 
-                    {
+                    public void onClick(final DialogInterface dialog, final int item) {
                         listener.onGpuImageFilterChosenListener(
-                                getFilterObject(context, filterList.filters.get(item)),filterList.names.get(item));
+                                getFilterObject(context, filterList.filters.get(item)), filterList.names.get(item));
                     }
                 });
         builder.create().show();
@@ -173,14 +172,14 @@ public class FilterLibrary {
 
     public static GPUImageFilter getFilterObject(final Context context, final FilterType type) {
         switch (type) {
-        	case NONE:
-        		return null;
-        	/**
-        	 * 注意: 以下五种美颜级别,仅仅是列举,详情可看@BeautylLevel	; 实际您可以任意组合.
-        	 * LanSongBeautyLevel1--5是不存在的滤镜, 仅仅是为了兼容其他滤镜而做的参考.
-        	 */
-        	case BEAUTIFUL:
-        		return  new LanSongBeautyAdvanceFilter();  //美颜默认全开.
+            case NONE:
+                return null;
+            /**
+             * 注意: 以下五种美颜级别,仅仅是列举,详情可看@BeautylLevel	; 实际您可以任意组合.
+             * LanSongBeautyLevel1--5是不存在的滤镜, 仅仅是为了兼容其他滤镜而做的参考.
+             */
+            case BEAUTIFUL:
+                return new LanSongBeautyAdvanceFilter();  //美颜默认全开.
 //          	case BEAUTIFUL2:  //白皙美颜默认不再使用.
 //        		return  new LanSongBeautyWhiteFilter();	
             case CONTRAST:
@@ -206,9 +205,9 @@ public class FilterLibrary {
             case EXPOSURE:
                 return new GPUImageExposureFilter(0.0f);
             case HIGHLIGHT_SHADOW:
-            	return new GPUImageHighlightShadowFilter(0.0f, 1.0f);
+                return new GPUImageHighlightShadowFilter(0.0f, 1.0f);
             case MONOCHROME:
-            	return new GPUImageMonochromeFilter(1.0f, new float[]{0.6f, 0.45f, 0.3f, 1.0f});
+                return new GPUImageMonochromeFilter(1.0f, new float[]{0.6f, 0.45f, 0.3f, 1.0f});
             case OPACITY:
                 return new GPUImageOpacityFilter(1.0f);
             case RGB:
@@ -216,31 +215,31 @@ public class FilterLibrary {
             case WHITE_BALANCE:
                 return new GPUImageWhiteBalanceFilter(5000.0f, 0.0f);
             case LanSongBLUR:
-            	return new LanSongBlurFilter();
+                return new LanSongBlurFilter();
             case VIGNETTE:
                 PointF centerPoint = new PointF();
                 centerPoint.x = 0.5f;
                 centerPoint.y = 0.5f;
-                return new GPUImageVignetteFilter(centerPoint, new float[] {0.0f, 0.0f, 0.0f}, 0.3f, 0.75f);
+                return new GPUImageVignetteFilter(centerPoint, new float[]{0.0f, 0.0f, 0.0f}, 0.3f, 0.75f);
             case LanSongBLACKMASK:
-					/**
-					 * 这个滤镜的效果是: 把输入源的某区域 处理成透明(如果bitmap有灰色的毛刺,则可能扣除的不规则,一般使用在用代码生成的bitmap图片中,
-					 * 不适用用photoshop等做成的图片).
-					 * 
-					 * 这个滤镜的效果是: 把传递进来的bitmap图片, 从中心叠加到输入源上, 并判断Bitmap中黑色像素RGB中R的值，
-					 *如果等于0, 则设置输入源对应的像素为透明，
-					 *如果不等于0，则把R替换输入源像素中的RGBA中A，从而实现半透明等效果。
-					 */
-            	  return createBlendFilter(context, LanSongBlackMaskBlendFilter.class);
+                /**
+                 * 这个滤镜的效果是: 把输入源的某区域 处理成透明(如果bitmap有灰色的毛刺,则可能扣除的不规则,一般使用在用代码生成的bitmap图片中,
+                 * 不适用用photoshop等做成的图片).
+                 *
+                 * 这个滤镜的效果是: 把传递进来的bitmap图片, 从中心叠加到输入源上, 并判断Bitmap中黑色像素RGB中R的值，
+                 *如果等于0, 则设置输入源对应的像素为透明，
+                 *如果不等于0，则把R替换输入源像素中的RGBA中A，从而实现半透明等效果。
+                 */
+                return createBlendFilter(context, LanSongBlackMaskBlendFilter.class);
             case LanSongMASK:
-				/**
-				 * 这个滤镜的效果是: 把输入源的某区域 处理成透明.
-				 * 
-				 * 详情是: 把一张有透明区域的图片, 叠加到 输入源的中心位置上, 图片中有透明的地方,则把输入源的对应的地方,透明处理. 等于是把输入源中的一部分抠去.
-				 */
-        	  return createBlendFilter(context, LanSongMaskBlendFilter.class);
-        	  
-     
+                /**
+                 * 这个滤镜的效果是: 把输入源的某区域 处理成透明.
+                 *
+                 * 详情是: 把一张有透明区域的图片, 叠加到 输入源的中心位置上, 图片中有透明的地方,则把输入源的对应的地方,透明处理. 等于是把输入源中的一部分抠去.
+                 */
+                return createBlendFilter(context, LanSongMaskBlendFilter.class);
+
+
             case BLEND_DIFFERENCE:
                 return createBlendFilter(context, GPUImageDifferenceBlendFilter.class);
             case BLEND_SOURCE_OVER:
@@ -301,21 +300,21 @@ public class FilterLibrary {
                 return new GPUImageCGAColorspaceFilter();
             case KUWAHARA:
                 return new GPUImageKuwaharaFilter();
-                
+
             case BULGE_DISTORTION:
-            	/**
-            	 * 凸凹
-            	 * 可以设置凸凹的地方, 凸凹的范围, 凸起还是凹下.
-            	 */
+                /**
+                 * 凸凹
+                 * 可以设置凸凹的地方, 凸凹的范围, 凸起还是凹下.
+                 */
                 return new LanSongBulgeDistortionFilter();
-                
-                //新增
+
+            //新增
             case PINCH_DISTORTION:
                 return new LanSongDistortionPinchFilter();
             case STRETCH_DISTORTION:
                 return new LanSongDistortionStretchFilter();
-                
-                
+
+
             case GLASS_SPHERE:
                 return new GPUImageGlassSphereFilter();
             case HAZE:
@@ -335,53 +334,53 @@ public class FilterLibrary {
             case HALFTONE:
                 return new GPUImageHalftoneFilter();
             case AMARO:
-            	 return new IFAmaroFilter(context);
+                return new IFAmaroFilter(context);
             case RISE:
-            	 return new IFRiseFilter(context);
+                return new IFRiseFilter(context);
             case HUDSON:
-            		return new IFHudsonFilter(context);
-           	case	XPROII:
-           			return new IFXproIIFilter(context);
-           	case	SIERRA:
-           			return new IFSierraFilter(context);
-           	case	LOMOFI:
-           			return new IFLomofiFilter(context);
-           	case 	EARLYBIRD:
-           			return new IFEarlybirdFilter(context);
-           	case 	SUTRO:
-           			return new IFSutroFilter(context);
-           	case  TOASTER:
-           			return new IFToasterFilter(context);
-           	case    BRANNAN:
-           			return new IFBrannanFilter(context);
-           	case     INKWELL:
-           			return new IFInkwellFilter(context);
-           	case      WALDEN:
-           			return new IFWaldenFilter(context);
-           	case	HEFE:
-           			return new IFHefeFilter(context);
-           	case	VALENCIA:
-        	   		return new IFValenciaFilter(context);
-           	case		NASHVILLE:
-           			return new IFNashvilleFilter(context);
-           	case		LORDKELVIN:
-           			return new IFLordKelvinFilter(context);
-           	case  IF1977:
-           		return new IF1977Filter(context);
-           	
+                return new IFHudsonFilter(context);
+            case XPROII:
+                return new IFXproIIFilter(context);
+            case SIERRA:
+                return new IFSierraFilter(context);
+            case LOMOFI:
+                return new IFLomofiFilter(context);
+            case EARLYBIRD:
+                return new IFEarlybirdFilter(context);
+            case SUTRO:
+                return new IFSutroFilter(context);
+            case TOASTER:
+                return new IFToasterFilter(context);
+            case BRANNAN:
+                return new IFBrannanFilter(context);
+            case INKWELL:
+                return new IFInkwellFilter(context);
+            case WALDEN:
+                return new IFWaldenFilter(context);
+            case HEFE:
+                return new IFHefeFilter(context);
+            case VALENCIA:
+                return new IFValenciaFilter(context);
+            case NASHVILLE:
+                return new IFNashvilleFilter(context);
+            case LORDKELVIN:
+                return new IFLordKelvinFilter(context);
+            case IF1977:
+                return new IF1977Filter(context);
+
            		/*2017年8月5日18:11:17新增*/
             case EMBOSS:
                 return new GPUImageEmbossFilter();
             case THREE_X_THREE_CONVOLUTION:
                 GPUImage3x3ConvolutionFilter convolution = new GPUImage3x3ConvolutionFilter();
-                convolution.setConvolutionKernel(new float[] {
+                convolution.setConvolutionKernel(new float[]{
                         -1.0f, 0.0f, 1.0f,
                         -2.0f, 0.0f, 2.0f,
                         -1.0f, 0.0f, 1.0f
                 });
                 return convolution;
             case LAPLACIAN:
-                return new GPUImageLaplacianFilter();   
+                return new GPUImageLaplacianFilter();
             case TOON:
                 return new GPUImageToonFilter();
             default:
@@ -406,25 +405,26 @@ public class FilterLibrary {
     }
 
     public enum FilterType {
-        NONE,BEAUTIFUL,BEAUTIFUL2,LanSongBLACKMASK,LanSongMASK,LanSongBLUR,CONTRAST, GRAYSCALE,  SEPIA,  POSTERIZE, GAMMA, BRIGHTNESS, INVERT, HUE, PIXELATION,
-        SATURATION, EXPOSURE, HIGHLIGHT_SHADOW, MONOCHROME, OPACITY, RGB, WHITE_BALANCE, VIGNETTE,  BLEND_COLOR_BURN, BLEND_COLOR_DODGE, BLEND_DARKEN, BLEND_DIFFERENCE,
+        NONE, BEAUTIFUL, BEAUTIFUL2, LanSongBLACKMASK, LanSongMASK, LanSongBLUR, CONTRAST, GRAYSCALE, SEPIA, POSTERIZE, GAMMA, BRIGHTNESS, INVERT, HUE, PIXELATION,
+        SATURATION, EXPOSURE, HIGHLIGHT_SHADOW, MONOCHROME, OPACITY, RGB, WHITE_BALANCE, VIGNETTE, BLEND_COLOR_BURN, BLEND_COLOR_DODGE, BLEND_DARKEN, BLEND_DIFFERENCE,
         BLEND_DISSOLVE, BLEND_EXCLUSION, BLEND_SOURCE_OVER, BLEND_HARD_LIGHT, BLEND_LIGHTEN, BLEND_ADD, BLEND_DIVIDE, BLEND_MULTIPLY, BLEND_OVERLAY, BLEND_SCREEN, BLEND_ALPHA,
         BLEND_COLOR, BLEND_HUE, BLEND_SATURATION, BLEND_LUMINOSITY, BLEND_LINEAR_BURN, BLEND_SOFT_LIGHT, BLEND_SUBTRACT, BLEND_CHROMA_KEY, BLEND_NORMAL, LOOKUP_AMATORKA,
-        CROSSHATCH, CGA_COLORSPACE, KUWAHARA,  BULGE_DISTORTION,PINCH_DISTORTION,STRETCH_DISTORTION, GLASS_SPHERE, HAZE, SPHERE_REFRACTION, SWIRL, FALSE_COLOR,
+        CROSSHATCH, CGA_COLORSPACE, KUWAHARA, BULGE_DISTORTION, PINCH_DISTORTION, STRETCH_DISTORTION, GLASS_SPHERE, HAZE, SPHERE_REFRACTION, SWIRL, FALSE_COLOR,
         COLOR_BALANCE, LEVELS_FILTER_MIN, HALFTONE,
-        
+
         /*新增*/
-        EMBOSS,THREE_X_THREE_CONVOLUTION,LAPLACIAN,TOON,
-        
-        AMARO,RISE,HUDSON,XPROII,SIERRA,LOMOFI,EARLYBIRD,SUTRO,TOASTER,BRANNAN,INKWELL,WALDEN,HEFE,VALENCIA,NASHVILLE,IF1977,LORDKELVIN}
+        EMBOSS, THREE_X_THREE_CONVOLUTION, LAPLACIAN, TOON,
+
+        AMARO, RISE, HUDSON, XPROII, SIERRA, LOMOFI, EARLYBIRD, SUTRO, TOASTER, BRANNAN, INKWELL, WALDEN, HEFE, VALENCIA, NASHVILLE, IF1977, LORDKELVIN
+    }
 
     public static class FilterAdjuster {
         private final Adjuster<? extends GPUImageFilter> adjuster;
 
         public FilterAdjuster(final GPUImageFilter filter) {
-        	if(filter instanceof LanSongBeautyAdvanceFilter){
-        		adjuster=new BeautyAdvanceAdjuster().filter(filter);
-        	}else if (filter instanceof GPUImageSepiaFilter) {
+            if (filter instanceof LanSongBeautyAdvanceFilter) {
+                adjuster = new BeautyAdvanceAdjuster().filter(filter);
+            } else if (filter instanceof GPUImageSepiaFilter) {
                 adjuster = new SepiaAdjuster().filter(filter);
             } else if (filter instanceof GPUImageContrastFilter) {
                 adjuster = new ContrastAdjuster().filter(filter);
@@ -450,13 +450,13 @@ public class FilterLibrary {
                 adjuster = new OpacityAdjuster().filter(filter);
             } else if (filter instanceof GPUImageRGBFilter) {
                 adjuster = new RGBAdjuster().filter(filter);
-                
+
             } else if (filter instanceof GPUImageWhiteBalanceFilter) {
                 adjuster = new WhiteBalanceAdjuster().filter(filter);
-                
+
             } else if (filter instanceof LanSongBlurFilter) {
                 adjuster = new LanSongBlurFilterAdjuster().filter(filter);
-                
+
             } else if (filter instanceof GPUImageVignetteFilter) {
                 adjuster = new VignetteAdjuster().filter(filter);
             } else if (filter instanceof GPUImageDissolveBlendFilter) {
@@ -483,9 +483,7 @@ public class FilterLibrary {
                 adjuster = new EmbossAdjuster().filter(filter);
             } else if (filter instanceof GPUImage3x3TextureSamplingFilter) {
                 adjuster = new GPU3x3TextureAdjuster().filter(filter);
-            }
-            
-            else {
+            } else {
 
                 adjuster = null;
             }
@@ -524,25 +522,26 @@ public class FilterLibrary {
                 return (end - start) * percentage / 100 + start;
             }
         }
+
         private class BeautyAdvanceAdjuster extends Adjuster<LanSongBeautyAdvanceFilter> {
             @Override
             public void adjust(final int percentage) {
                 getFilter().setBeautyLevel(range(percentage, 0.0f, 1.0f));
             }
-          }
-        
+        }
+
         private class PixelationAdjuster extends Adjuster<GPUImagePixelationFilter> {
-          @Override
-          public void adjust(final int percentage) {
-              getFilter().setPixel(range(percentage, 1.0f, 100.0f));
-          }
+            @Override
+            public void adjust(final int percentage) {
+                getFilter().setPixel(range(percentage, 1.0f, 100.0f));
+            }
         }
 
         private class HueAdjuster extends Adjuster<GPUImageHueFilter> {
-          @Override
-          public void adjust(final int percentage) {
-            getFilter().setHue(range(percentage, 0.0f, 360.0f));
-          }
+            @Override
+            public void adjust(final int percentage) {
+                getFilter().setHue(range(percentage, 0.0f, 360.0f));
+            }
         }
 
         private class ContrastAdjuster extends Adjuster<GPUImageContrastFilter> {
@@ -573,7 +572,6 @@ public class FilterLibrary {
             }
         }
 
-    
 
         private class PosterizeAdjuster extends Adjuster<GPUImagePosterizeFilter> {
             @Override
@@ -583,7 +581,7 @@ public class FilterLibrary {
             }
         }
 
-       
+
         private class SaturationAdjuster extends Adjuster<GPUImageSaturationFilter> {
             @Override
             public void adjust(final int percentage) {
@@ -637,7 +635,7 @@ public class FilterLibrary {
                 //getFilter().setTint(range(percentage, -100.0f, 100.0f));
             }
         }
-        
+
         private class LanSongBlurFilterAdjuster extends Adjuster<LanSongBlurFilter> {
             @Override
             public void adjust(final int percentage) {
@@ -722,6 +720,7 @@ public class FilterLibrary {
                 getFilter().setMin(0.0f, range(percentage, 0.0f, 1.0f), 1.0f);
             }
         }
+
         //---------------2017年8月5日18:06:01新增的滤镜
         private class EmbossAdjuster extends Adjuster<GPUImageEmbossFilter> {
             @Override
@@ -729,6 +728,7 @@ public class FilterLibrary {
                 getFilter().setIntensity(range(percentage, 0.0f, 4.0f));
             }
         }
+
         private class GPU3x3TextureAdjuster extends Adjuster<GPUImage3x3TextureSamplingFilter> {
             @Override
             public void adjust(final int percentage) {

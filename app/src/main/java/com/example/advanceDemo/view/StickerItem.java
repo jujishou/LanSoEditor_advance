@@ -17,7 +17,6 @@ import android.graphics.RectF;
 import android.view.View;
 
 
-
 /**
  * @author panyi
  */
@@ -25,7 +24,7 @@ public class StickerItem {
     private static final float MIN_SCALE = 0.15f;
     private static final int HELP_BOX_PAD = 25;
 
-    private static final int BUTTON_WIDTH =30;
+    private static final int BUTTON_WIDTH = 30;
 
     public Bitmap bitmap;
     public Rect srcRect;// 原始图片坐标

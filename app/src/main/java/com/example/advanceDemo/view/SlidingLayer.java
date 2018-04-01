@@ -90,11 +90,10 @@ import android.widget.FrameLayout;
 import android.widget.Scroller;
 
 /**
- * 一定要注意, 在xml中slidingLayer中一定要有Linearlayout或RelativeLayout.设置背景要在Linearlayout或RelativeLayout中设置, 
+ * 一定要注意, 在xml中slidingLayer中一定要有Linearlayout或RelativeLayout.设置背景要在Linearlayout或RelativeLayout中设置,
  * 不要在SlidingLayer中
- * 
- * @author lenovo
  *
+ * @author lenovo
  */
 public class SlidingLayer extends FrameLayout {
 
@@ -218,13 +217,14 @@ public class SlidingLayer extends FrameLayout {
      * Constructor for the sliding layer.<br>
      * By default this panel will
      * <ol>
-     *     <li>{@link #setStickTo(int)} with param {@link #STICK_TO_AUTO}</li>
-     * 	<li>Use no shadow drawable. (i.e. with width of 0)</li>
-     * 	<li>Close when the panel is tapped</li>
-     * 	<li>Open when the offset is tapped, but will have an offset of 0</li>
+     * <li>{@link #setStickTo(int)} with param {@link #STICK_TO_AUTO}</li>
+     * <li>Use no shadow drawable. (i.e. with width of 0)</li>
+     * <li>Close when the panel is tapped</li>
+     * <li>Open when the offset is tapped, but will have an offset of 0</li>
      * </ol>
-     * @param context a reference to an existing context
-     * @param attrs attribute set constructed from attributes set in android .xml file
+     *
+     * @param context  a reference to an existing context
+     * @param attrs    attribute set constructed from attributes set in android .xml file
      * @param defStyle style res id
      */
     public SlidingLayer(Context context, AttributeSet attrs, int defStyle) {
@@ -277,6 +277,7 @@ public class SlidingLayer extends FrameLayout {
 
     /**
      * Returns whether the panel is open or not.
+     *
      * @return returns true if the panel is open, false otherwise. Please note that if
      * the panel was opened with smooth animation this method is not guaranteed to return
      * true. This method will only return true after the panel has completely opened.
@@ -349,8 +350,7 @@ public class SlidingLayer extends FrameLayout {
      * Sets the listener to be invoked after a switch change
      * {@link OnInteractListener}.
      *
-     * @param listener
-     *            Listener to set
+     * @param listener Listener to set
      */
     public void setOnInteractListener(OnInteractListener listener) {
         mOnInteractListener = listener;
@@ -360,8 +360,7 @@ public class SlidingLayer extends FrameLayout {
      * Sets the shadow of the width which will be included within the view by
      * using padding since it's on the left of the view in this case
      *
-     * @param shadowWidth
-     *            Desired width of the shadow
+     * @param shadowWidth Desired width of the shadow
      * @see #getShadowWidth()
      * @see #setShadowDrawable(Drawable)
      * @see #setShadowDrawable(int)
@@ -374,8 +373,7 @@ public class SlidingLayer extends FrameLayout {
     /**
      * Sets the shadow width by the value of a resource.
      *
-     * @param resId
-     *            The dimension resource id to be set as the shadow width.
+     * @param resId The dimension resource id to be set as the shadow width.
      */
     public void setShadowWidthRes(int resId) {
         setShadowWidth((int) getResources().getDimension(resId));
@@ -393,8 +391,7 @@ public class SlidingLayer extends FrameLayout {
     /**
      * Sets a drawable that will be used to create the shadow for the layer.
      *
-     * @param d
-     *            Drawable append as a shadow
+     * @param d Drawable append as a shadow
      */
     public void setShadowDrawable(final Drawable d) {
         mShadowDrawable = d;
@@ -407,8 +404,7 @@ public class SlidingLayer extends FrameLayout {
      * Sets a drawable resource that will be used to create the shadow for the
      * layer.
      *
-     * @param resId
-     *            Resource ID of a drawable
+     * @param resId Resource ID of a drawable
      */
     public void setShadowDrawable(int resId) {
         setShadowDrawable(getContext().getResources().getDrawable(resId));
@@ -417,8 +413,7 @@ public class SlidingLayer extends FrameLayout {
     /**
      * Sets the offset width of the panel. How much sticks out when off screen.
      *
-     * @param offsetWidth
-     *            Width of the offset in pixels
+     * @param offsetWidth Width of the offset in pixels
      * @see #getOffsetWidth()
      */
     public void setOffsetWidth(int offsetWidth) {
@@ -427,7 +422,6 @@ public class SlidingLayer extends FrameLayout {
     }
 
     /**
-     *
      * @return returns the number of pixels that are visible when the panel is closed
      */
     public int getOffsetWidth() {
@@ -491,7 +485,7 @@ public class SlidingLayer extends FrameLayout {
         }
     }
 
-    
+
     @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {
         if (!mEnabled) {
@@ -520,59 +514,59 @@ public class SlidingLayer extends FrameLayout {
         }
 
         switch (action) {
-        case MotionEvent.ACTION_MOVE:
-            final int activePointerId = mActivePointerId;
-            if (activePointerId == INVALID_POINTER) {
+            case MotionEvent.ACTION_MOVE:
+                final int activePointerId = mActivePointerId;
+                if (activePointerId == INVALID_POINTER) {
+                    break;
+                }
+
+                final int pointerIndex = MotionEventCompat.findPointerIndex(ev, activePointerId);
+                if (pointerIndex == -1) {
+                    mActivePointerId = INVALID_POINTER;
+                    break;
+                }
+
+                final float x = MotionEventCompat.getX(ev, pointerIndex);
+                final float dx = x - mLastX;
+                final float xDiff = Math.abs(dx);
+                final float y = MotionEventCompat.getY(ev, pointerIndex);
+                final float dy = y - mLastY;
+                final float yDiff = Math.abs(y - mLastY);
+
+                if (xDiff > mTouchSlop && xDiff > yDiff && allowDragingX(dx, mInitialX)) {
+                    mIsDragging = true;
+                    mLastX = x;
+                    setDrawingCacheEnabled(true);
+                } else if (yDiff > mTouchSlop && yDiff > xDiff && allowDragingY(dy, mInitialY)) {
+                    mIsDragging = true;
+                    mLastY = y;
+                    setDrawingCacheEnabled(true);
+                }
                 break;
-            }
 
-            final int pointerIndex = MotionEventCompat.findPointerIndex(ev, activePointerId);
-            if (pointerIndex == -1) {
-                mActivePointerId = INVALID_POINTER;
+            case MotionEvent.ACTION_DOWN:
+                mActivePointerId = ev.getAction()
+                        & (Build.VERSION.SDK_INT >= 8 ? MotionEvent.ACTION_POINTER_INDEX_MASK
+                        : MotionEventCompat.ACTION_POINTER_INDEX_MASK);
+                mLastX = mInitialX = MotionEventCompat.getX(ev, mActivePointerId);
+                mLastY = mInitialY = MotionEventCompat.getY(ev, mActivePointerId);
+                if (allowSlidingFromHereX(ev, mInitialX)) {
+                    mIsDragging = false;
+                    mIsUnableToDrag = false;
+                    // If nobody else got the focus we use it to close the layer
+                    return super.onInterceptTouchEvent(ev);
+                } else if (allowSlidingFromHereY(ev, mInitialY)) {
+                    mIsDragging = false;
+                    mIsUnableToDrag = false;
+                    // If nobody else got the focus we use it to close the layer
+                    return super.onInterceptTouchEvent(ev);
+                } else {
+                    mIsUnableToDrag = true;
+                }
                 break;
-            }
-
-            final float x = MotionEventCompat.getX(ev, pointerIndex);
-            final float dx = x - mLastX;
-            final float xDiff = Math.abs(dx);
-            final float y = MotionEventCompat.getY(ev, pointerIndex);
-            final float dy = y - mLastY;
-            final float yDiff = Math.abs(y - mLastY);
-
-            if (xDiff > mTouchSlop && xDiff > yDiff && allowDragingX(dx, mInitialX)) {
-                mIsDragging = true;
-                mLastX = x;
-                setDrawingCacheEnabled(true);
-            } else if (yDiff > mTouchSlop && yDiff > xDiff && allowDragingY(dy, mInitialY)) {
-                mIsDragging = true;
-                mLastY = y;
-                setDrawingCacheEnabled(true);
-            }
-            break;
-
-        case MotionEvent.ACTION_DOWN:
-            mActivePointerId = ev.getAction()
-                    & (Build.VERSION.SDK_INT >= 8 ? MotionEvent.ACTION_POINTER_INDEX_MASK
-                    : MotionEventCompat.ACTION_POINTER_INDEX_MASK);
-            mLastX = mInitialX = MotionEventCompat.getX(ev, mActivePointerId);
-            mLastY = mInitialY = MotionEventCompat.getY(ev, mActivePointerId);
-            if (allowSlidingFromHereX(ev, mInitialX)) {
-                mIsDragging = false;
-                mIsUnableToDrag = false;
-                // If nobody else got the focus we use it to close the layer
-                return super.onInterceptTouchEvent(ev);
-            } else if (allowSlidingFromHereY(ev, mInitialY)) {
-                mIsDragging = false;
-                mIsUnableToDrag = false;
-                // If nobody else got the focus we use it to close the layer
-                return super.onInterceptTouchEvent(ev);
-            } else {
-                mIsUnableToDrag = true;
-            }
-            break;
-        case MotionEventCompat.ACTION_POINTER_UP:
-            onSecondaryPointerUp(ev);
-            break;
+            case MotionEventCompat.ACTION_POINTER_UP:
+                onSecondaryPointerUp(ev);
+                break;
         }
 
         if (!mIsDragging) {
@@ -607,25 +601,25 @@ public class SlidingLayer extends FrameLayout {
         mVelocityTracker.addMovement(ev);
 
         switch (action & MotionEventCompat.ACTION_MASK) {
-        case MotionEvent.ACTION_DOWN:
-            completeScroll();
+            case MotionEvent.ACTION_DOWN:
+                completeScroll();
 
-            // Remember where the motion event started
-            mLastX = mInitialX = ev.getX();
-            mLastY = mInitialY = ev.getY();
-            mActivePointerId = MotionEventCompat.getPointerId(ev, 0);
-            break;
-        case MotionEvent.ACTION_MOVE:
-            if (!mIsDragging) {
-                final int pointerIndex = MotionEventCompat.findPointerIndex(ev, mActivePointerId);
-                if (pointerIndex == -1) {
-                    mActivePointerId = INVALID_POINTER;
-                    break;
-                }
-                final float x = MotionEventCompat.getX(ev, pointerIndex);
-                final float xDiff = Math.abs(x - mLastX);
-                final float y = MotionEventCompat.getY(ev, pointerIndex);
-                final float yDiff = Math.abs(y - mLastY);
+                // Remember where the motion event started
+                mLastX = mInitialX = ev.getX();
+                mLastY = mInitialY = ev.getY();
+                mActivePointerId = MotionEventCompat.getPointerId(ev, 0);
+                break;
+            case MotionEvent.ACTION_MOVE:
+                if (!mIsDragging) {
+                    final int pointerIndex = MotionEventCompat.findPointerIndex(ev, mActivePointerId);
+                    if (pointerIndex == -1) {
+                        mActivePointerId = INVALID_POINTER;
+                        break;
+                    }
+                    final float x = MotionEventCompat.getX(ev, pointerIndex);
+                    final float xDiff = Math.abs(x - mLastX);
+                    final float y = MotionEventCompat.getY(ev, pointerIndex);
+                    final float yDiff = Math.abs(y - mLastY);
 //                if (xDiff > mTouchSlop && xDiff > yDiff) {
 //                    mIsDragging = true;
 //                    mLastX = x;
@@ -635,119 +629,119 @@ public class SlidingLayer extends FrameLayout {
 //                    mLastY = y;
 //                    setDrawingCacheEnabled(true);
 //                }
-            }
-            if (mIsDragging) {
-                // Scroll to follow the motion event
-                final int activePointerIndex = MotionEventCompat.findPointerIndex(ev, mActivePointerId);
-                if (activePointerIndex == -1) {
+                }
+                if (mIsDragging) {
+                    // Scroll to follow the motion event
+                    final int activePointerIndex = MotionEventCompat.findPointerIndex(ev, mActivePointerId);
+                    if (activePointerIndex == -1) {
+                        mActivePointerId = INVALID_POINTER;
+                        break;
+                    }
+                    final float x = MotionEventCompat.getX(ev, activePointerIndex);
+                    final float y = MotionEventCompat.getY(ev, activePointerIndex);
+                    final float deltaX = mLastX - x;
+                    final float deltaY = mLastY - y;
+                    mLastX = x;
+                    mLastY = y;
+                    final float oldScrollX = getScrollX();
+                    final float oldScrollY = getScrollY();
+                    float scrollX = oldScrollX + deltaX;
+                    float scrollY = oldScrollY + deltaY;
+
+                    // Log.d("Layer", String.format("Layer scrollX[%f],scrollY[%f]", scrollX, scrollY));
+                    final float leftBound, rightBound;
+                    final float bottomBound, topBound;
+                    switch (mScreenSide) {
+                        case STICK_TO_LEFT:
+                            topBound = bottomBound = rightBound = 0;
+                            leftBound = getWidth(); // How far left we can scroll
+                            break;
+                        case STICK_TO_MIDDLE:
+                            topBound = getHeight();
+                            bottomBound = -getHeight();
+                            leftBound = getWidth();
+                            rightBound = -getWidth();
+                            break;
+                        case STICK_TO_RIGHT:
+                            rightBound = -getWidth();
+                            topBound = bottomBound = leftBound = 0;
+                            break;
+                        case STICK_TO_TOP:
+                            topBound = getHeight();
+                            bottomBound = rightBound = leftBound = 0;
+                            break;
+                        case STICK_TO_BOTTOM:
+                            topBound = rightBound = leftBound = 0;
+                            bottomBound = -getHeight();
+                            break;
+                        default:
+                            topBound = bottomBound = rightBound = leftBound = 0;
+                            break;
+                    }
+                    if (scrollX > leftBound) {
+                        scrollX = leftBound;
+                    } else if (scrollX < rightBound) {
+                        scrollX = rightBound;
+                    }
+                    if (scrollY > topBound) {
+                        scrollY = topBound;
+                    } else if (scrollY < bottomBound) {
+                        scrollY = bottomBound;
+                    }
+
+                    // Keep the precision
+                    mLastX += scrollX - (int) scrollX;
+                    mLastY += scrollY - (int) scrollY;
+                    scrollTo((int) scrollX, (int) scrollY);
+                }
+                break;
+            case MotionEvent.ACTION_UP:
+                if (mIsDragging) {
+                    final VelocityTracker velocityTracker = mVelocityTracker;
+                    velocityTracker.computeCurrentVelocity(1000, mMaximumVelocity);
+                    final int initialVelocityX = (int) VelocityTrackerCompat.getXVelocity(velocityTracker,
+                            mActivePointerId);
+                    final int initialVelocityY = (int) VelocityTrackerCompat.getYVelocity(velocityTracker,
+                            mActivePointerId);
+                    final int scrollX = getScrollX();
+                    final int scrollY = getScrollY();
+                    final int activePointerIndex = MotionEventCompat.findPointerIndex(ev, mActivePointerId);
+                    final float x = MotionEventCompat.getX(ev, activePointerIndex);
+                    final float y = MotionEventCompat.getY(ev, activePointerIndex);
+                    final int totalDeltaX = (int) (x - mInitialX);
+                    final int totalDeltaY = (int) (y - mInitialY);
+
+                    boolean nextStateOpened = determineNextStateOpened(mIsOpen, scrollX, scrollY, initialVelocityX,
+                            initialVelocityY, totalDeltaX, totalDeltaY);
+                    switchLayer(nextStateOpened, true, true, initialVelocityX, initialVelocityY);
+
                     mActivePointerId = INVALID_POINTER;
-                    break;
+                    endDrag();
+                } else if (mIsOpen && closeOnTapEnabled) {
+                    closeLayer(true);
+                } else if (!mIsOpen && openOnTapEnabled) {
+                    openLayer(true);
                 }
-                final float x = MotionEventCompat.getX(ev, activePointerIndex);
-                final float y = MotionEventCompat.getY(ev, activePointerIndex);
-                final float deltaX = mLastX - x;
-                final float deltaY = mLastY - y;
-                mLastX = x;
-                mLastY = y;
-                final float oldScrollX = getScrollX();
-                final float oldScrollY = getScrollY();
-                float scrollX = oldScrollX + deltaX;
-                float scrollY = oldScrollY + deltaY;
-
-                // Log.d("Layer", String.format("Layer scrollX[%f],scrollY[%f]", scrollX, scrollY));
-                final float leftBound, rightBound;
-                final float bottomBound, topBound;
-                switch (mScreenSide) {
-                case STICK_TO_LEFT:
-                    topBound = bottomBound = rightBound = 0;
-                    leftBound = getWidth(); // How far left we can scroll
-                    break;
-                case STICK_TO_MIDDLE:
-                    topBound = getHeight();
-                    bottomBound = -getHeight();
-                    leftBound = getWidth();
-                    rightBound = -getWidth();
-                    break;
-                case STICK_TO_RIGHT:
-                    rightBound = -getWidth();
-                    topBound = bottomBound = leftBound = 0;
-                    break;
-                case STICK_TO_TOP:
-                    topBound = getHeight();
-                    bottomBound = rightBound = leftBound = 0;
-                    break;
-                case STICK_TO_BOTTOM:
-                    topBound = rightBound = leftBound = 0;
-                    bottomBound = -getHeight();
-                    break;
-                default:
-                    topBound = bottomBound = rightBound = leftBound = 0;
-                    break;
+                break;
+            case MotionEvent.ACTION_CANCEL:
+                if (mIsDragging) {
+                    switchLayer(mIsOpen, true, true);
+                    mActivePointerId = INVALID_POINTER;
+                    endDrag();
                 }
-                if (scrollX > leftBound) {
-                    scrollX = leftBound;
-                } else if (scrollX < rightBound) {
-                    scrollX = rightBound;
-                }
-                if (scrollY > topBound) {
-                    scrollY = topBound;
-                } else if (scrollY < bottomBound) {
-                    scrollY = bottomBound;
-                }
-
-                // Keep the precision
-                mLastX += scrollX - (int) scrollX;
-                mLastY += scrollY - (int) scrollY;
-                scrollTo((int) scrollX, (int) scrollY);
+                break;
+            case MotionEventCompat.ACTION_POINTER_DOWN: {
+                final int index = MotionEventCompat.getActionIndex(ev);
+                mLastX = MotionEventCompat.getX(ev, index);
+                mLastY = MotionEventCompat.getY(ev, index);
+                mActivePointerId = MotionEventCompat.getPointerId(ev, index);
+                break;
             }
-            break;
-        case MotionEvent.ACTION_UP:
-            if (mIsDragging) {
-                final VelocityTracker velocityTracker = mVelocityTracker;
-                velocityTracker.computeCurrentVelocity(1000, mMaximumVelocity);
-                final int initialVelocityX = (int) VelocityTrackerCompat.getXVelocity(velocityTracker,
-                        mActivePointerId);
-                final int initialVelocityY = (int) VelocityTrackerCompat.getYVelocity(velocityTracker,
-                        mActivePointerId);
-                final int scrollX = getScrollX();
-                final int scrollY = getScrollY();
-                final int activePointerIndex = MotionEventCompat.findPointerIndex(ev, mActivePointerId);
-                final float x = MotionEventCompat.getX(ev, activePointerIndex);
-                final float y = MotionEventCompat.getY(ev, activePointerIndex);
-                final int totalDeltaX = (int) (x - mInitialX);
-                final int totalDeltaY = (int) (y - mInitialY);
-
-                boolean nextStateOpened = determineNextStateOpened(mIsOpen, scrollX, scrollY, initialVelocityX,
-                        initialVelocityY, totalDeltaX, totalDeltaY);
-                switchLayer(nextStateOpened, true, true, initialVelocityX, initialVelocityY);
-
-                mActivePointerId = INVALID_POINTER;
-                endDrag();
-            } else if (mIsOpen && closeOnTapEnabled) {
-                closeLayer(true);
-            } else if (!mIsOpen && openOnTapEnabled) {
-                openLayer(true);
-            }
-            break;
-        case MotionEvent.ACTION_CANCEL:
-            if (mIsDragging) {
-                switchLayer(mIsOpen, true, true);
-                mActivePointerId = INVALID_POINTER;
-                endDrag();
-            }
-            break;
-        case MotionEventCompat.ACTION_POINTER_DOWN: {
-            final int index = MotionEventCompat.getActionIndex(ev);
-            mLastX = MotionEventCompat.getX(ev, index);
-            mLastY = MotionEventCompat.getY(ev, index);
-            mActivePointerId = MotionEventCompat.getPointerId(ev, index);
-            break;
-        }
-        case MotionEventCompat.ACTION_POINTER_UP:
-            onSecondaryPointerUp(ev);
-            mLastX = MotionEventCompat.getX(ev, MotionEventCompat.findPointerIndex(ev, mActivePointerId));
-            mLastY = MotionEventCompat.getY(ev, MotionEventCompat.findPointerIndex(ev, mActivePointerId));
-            break;
+            case MotionEventCompat.ACTION_POINTER_UP:
+                onSecondaryPointerUp(ev);
+                mLastX = MotionEventCompat.getX(ev, MotionEventCompat.findPointerIndex(ev, mActivePointerId));
+                mLastY = MotionEventCompat.getY(ev, MotionEventCompat.findPointerIndex(ev, mActivePointerId));
+                break;
         }
         if (mActivePointerId == INVALID_POINTER) {
             mLastTouchAllowed = false;
@@ -757,74 +751,72 @@ public class SlidingLayer extends FrameLayout {
 
     private boolean allowSlidingFromHereX(final MotionEvent ev, final float initialX) {
         switch (mScreenSide) {
-        case STICK_TO_LEFT:
-        case STICK_TO_RIGHT:
-        case STICK_TO_MIDDLE:
-            if (mIsOpen) {
-                return true;
-            }
-            if (!mIsOpen && mOffsetWidth > 0) {
-                switch (mScreenSide) {
-                case STICK_TO_LEFT:
-                    return initialX <= mOffsetWidth;
-                case STICK_TO_RIGHT:
-                    return initialX >= getWidth() - mOffsetWidth;
+            case STICK_TO_LEFT:
+            case STICK_TO_RIGHT:
+            case STICK_TO_MIDDLE:
+                if (mIsOpen) {
+                    return true;
                 }
-            }
-        default:
-            return false;
+                if (!mIsOpen && mOffsetWidth > 0) {
+                    switch (mScreenSide) {
+                        case STICK_TO_LEFT:
+                            return initialX <= mOffsetWidth;
+                        case STICK_TO_RIGHT:
+                            return initialX >= getWidth() - mOffsetWidth;
+                    }
+                }
+            default:
+                return false;
         }
     }
 
     private boolean allowSlidingFromHereY(final MotionEvent ev, final float initialY) {
         switch (mScreenSide) {
-        case STICK_TO_TOP:
-        case STICK_TO_BOTTOM:
-        case STICK_TO_MIDDLE:
-            if (mIsOpen) {
-                return true;
-            }
-            if (!mIsOpen && mOffsetWidth > 0) {
-                switch (mScreenSide) {
-                case STICK_TO_TOP:
-                    return initialY <= mOffsetWidth;
-                case STICK_TO_BOTTOM:
-                    return initialY >= getHeight() - mOffsetWidth;
+            case STICK_TO_TOP:
+            case STICK_TO_BOTTOM:
+            case STICK_TO_MIDDLE:
+                if (mIsOpen) {
+                    return true;
                 }
-            }
-        default:
-            return false;
+                if (!mIsOpen && mOffsetWidth > 0) {
+                    switch (mScreenSide) {
+                        case STICK_TO_TOP:
+                            return initialY <= mOffsetWidth;
+                        case STICK_TO_BOTTOM:
+                            return initialY >= getHeight() - mOffsetWidth;
+                    }
+                }
+            default:
+                return false;
         }
     }
 
     /**
      * Checks if the touch event is valid for dragging the view.
      *
-     * @param dx
-     *            changed in delta from the initialX
-     * @param initialX
-     *            where the touch event started.
+     * @param dx       changed in delta from the initialX
+     * @param initialX where the touch event started.
      * @return true if you can drag this view, false otherwise
      */
     private boolean allowDragingX(final float dx, final float initialX) {
         if (mIsOpen && getLeft() <= initialX || getRight() >= initialX) {
             switch (mScreenSide) {
-            case STICK_TO_RIGHT:
-                return dx > 0;
-            case STICK_TO_LEFT:
-                return dx < 0;
-            case STICK_TO_MIDDLE:
-                return dx != 0;
+                case STICK_TO_RIGHT:
+                    return dx > 0;
+                case STICK_TO_LEFT:
+                    return dx < 0;
+                case STICK_TO_MIDDLE:
+                    return dx != 0;
             }
         }
         if (!mIsOpen && mOffsetWidth > 0 && dx > 0) {
             switch (mScreenSide) {
-            case STICK_TO_LEFT:
-                return initialX <= mOffsetWidth && dx > 0;
-            case STICK_TO_RIGHT:
-                return initialX >= getWidth() - mOffsetWidth && dx < 0;
-            case STICK_TO_MIDDLE:
-                return dx != 0;
+                case STICK_TO_LEFT:
+                    return initialX <= mOffsetWidth && dx > 0;
+                case STICK_TO_RIGHT:
+                    return initialX >= getWidth() - mOffsetWidth && dx < 0;
+                case STICK_TO_MIDDLE:
+                    return dx != 0;
             }
         }
         return false;
@@ -833,22 +825,22 @@ public class SlidingLayer extends FrameLayout {
     private boolean allowDragingY(final float dy, final float initialY) {
         if (mIsOpen && getTop() <= initialY || getBottom() >= initialY) {
             switch (mScreenSide) {
-            case STICK_TO_BOTTOM:
-                return mIsOpen && dy > 0;
-            case STICK_TO_TOP:
-                return mIsOpen && dy < 0;
-            case STICK_TO_MIDDLE:
-                return mIsOpen && dy != 0;
+                case STICK_TO_BOTTOM:
+                    return mIsOpen && dy > 0;
+                case STICK_TO_TOP:
+                    return mIsOpen && dy < 0;
+                case STICK_TO_MIDDLE:
+                    return mIsOpen && dy != 0;
             }
         }
         if (!mIsOpen && mOffsetWidth > 0 && dy > 0) {
             switch (mScreenSide) {
-            case STICK_TO_TOP:
-                return initialY <= mOffsetWidth && dy > 0;
-            case STICK_TO_BOTTOM:
-                return initialY >= getHeight() - mOffsetWidth && dy < 0;
-            case STICK_TO_MIDDLE:
-                return dy != 0;
+                case STICK_TO_TOP:
+                    return initialY <= mOffsetWidth && dy > 0;
+                case STICK_TO_BOTTOM:
+                    return initialY >= getHeight() - mOffsetWidth && dy < 0;
+                case STICK_TO_MIDDLE:
+                    return dy != 0;
             }
         }
         return false;
@@ -875,22 +867,22 @@ public class SlidingLayer extends FrameLayout {
 
         // Work out which velocity we should listen to.
         switch (mScreenSide) {
-        case STICK_TO_TOP:
-        case STICK_TO_BOTTOM:
-            calcY = true;
-            calcX = false;
-            break;
-        case STICK_TO_RIGHT:
-        case STICK_TO_LEFT:
-            calcX = true;
-            calcY = false;
-            break;
-        case STICK_TO_MIDDLE:
-            calcX = calcY = true;
-            break;
-        default:
-            calcX = calcY = false;
-            break;
+            case STICK_TO_TOP:
+            case STICK_TO_BOTTOM:
+                calcY = true;
+                calcX = false;
+                break;
+            case STICK_TO_RIGHT:
+            case STICK_TO_LEFT:
+                calcX = true;
+                calcY = false;
+                break;
+            case STICK_TO_MIDDLE:
+                calcX = calcY = true;
+                break;
+            default:
+                calcX = calcY = false;
+                break;
         }
 
         if (calcX && Math.abs(deltaX) > mFlingDistance && Math.abs(velocityX) > mMinimumVelocity) {
@@ -908,23 +900,23 @@ public class SlidingLayer extends FrameLayout {
             final int h = getHeight();
 
             switch (mScreenSide) {
-            case STICK_TO_RIGHT:
-                targetState = swipeOffsetX > -w / 2;
-                break;
-            case STICK_TO_BOTTOM:
-                targetState = swipeOffsetY > -h / 2;
-                break;
-            case STICK_TO_LEFT:
-                targetState = swipeOffsetX < w / 2;
-                break;
-            case STICK_TO_TOP:
-                targetState = swipeOffsetY < h / 2;
-                break;
-            case STICK_TO_MIDDLE:
-                targetState = Math.abs(swipeOffsetX) < w / 2 && Math.abs(swipeOffsetY) < h / 2;
-                break;
-            default:
-                targetState = true;
+                case STICK_TO_RIGHT:
+                    targetState = swipeOffsetX > -w / 2;
+                    break;
+                case STICK_TO_BOTTOM:
+                    targetState = swipeOffsetY > -h / 2;
+                    break;
+                case STICK_TO_LEFT:
+                    targetState = swipeOffsetX < w / 2;
+                    break;
+                case STICK_TO_TOP:
+                    targetState = swipeOffsetY < h / 2;
+                    break;
+                case STICK_TO_MIDDLE:
+                    targetState = Math.abs(swipeOffsetX) < w / 2 && Math.abs(swipeOffsetY) < h / 2;
+                    break;
+                default:
+                    targetState = true;
             }
         }
 
@@ -934,10 +926,8 @@ public class SlidingLayer extends FrameLayout {
     /**
      * Like {@link View#scrollBy}, but scroll smoothly instead of immediately.
      *
-     * @param x
-     *            the number of pixels to scroll by on the X axis
-     * @param y
-     *            the number of pixels to scroll by on the Y axis
+     * @param x the number of pixels to scroll by on the X axis
+     * @param y the number of pixels to scroll by on the Y axis
      */
     void smoothScrollTo(int x, int y) {
         smoothScrollTo(x, y, 0);
@@ -946,13 +936,10 @@ public class SlidingLayer extends FrameLayout {
     /**
      * Like {@link View#scrollBy}, but scroll smoothly instead of immediately.
      *
-     * @param x
-     *            the number of pixels to scroll by on the X axis
-     * @param y
-     *            the number of pixels to scroll by on the Y axis
-     * @param velocity
-     *            the velocity associated with a fling, if applicable. (0
-     *            otherwise)
+     * @param x        the number of pixels to scroll by on the X axis
+     * @param y        the number of pixels to scroll by on the Y axis
+     * @param velocity the velocity associated with a fling, if applicable. (0
+     *                 otherwise)
      */
     void smoothScrollTo(int x, int y, int velocity) {
         if (getChildCount() == 0) {
@@ -1008,7 +995,7 @@ public class SlidingLayer extends FrameLayout {
     float distanceInfluenceForSnapDuration(float f) {
         f -= 0.5f; // center the values about 0.
         f *= 0.3f * Math.PI / 2.0f;
-        return (float)Math.sin(f);
+        return (float) Math.sin(f);
     }
 
     private void endDrag() {
@@ -1082,9 +1069,10 @@ public class SlidingLayer extends FrameLayout {
 
     /**
      * Sets the default location where the SlidingLayer will appear
+     *
      * @param screenSide The location where the Sliding layer will appear. Possible values are
-     * {@link #STICK_TO_AUTO}, {@link #STICK_TO_BOTTOM}, {@link #STICK_TO_LEFT}, {@link #STICK_TO_MIDDLE}
-     * {@link #STICK_TO_RIGHT}, {@link #STICK_TO_TOP}
+     *                   {@link #STICK_TO_AUTO}, {@link #STICK_TO_BOTTOM}, {@link #STICK_TO_LEFT}, {@link #STICK_TO_MIDDLE}
+     *                   {@link #STICK_TO_RIGHT}, {@link #STICK_TO_TOP}
      */
     public void setStickTo(int screenSide) {
 
@@ -1112,6 +1100,7 @@ public class SlidingLayer extends FrameLayout {
      * Given that there is a visible offset and it is tapped, if the parameter is set
      * to true it will attempt to open the <code>SlidingLayer</code>. If parameter is false,
      * tapping a visible offset will yield no result.
+     *
      * @param _openOnTapEnabled
      */
     public void setOpenOnTapEnabled(boolean _openOnTapEnabled) {
@@ -1129,7 +1118,7 @@ public class SlidingLayer extends FrameLayout {
                     .getDefaultDisplay();
             try {
                 Class<?> cls = Display.class;
-                Class<?>[] parameterTypes = { Point.class };
+                Class<?>[] parameterTypes = {Point.class};
                 Point parameter = new Point();
                 Method method = cls.getMethod("getSize", parameterTypes);
                 method.invoke(display, parameter);
@@ -1230,7 +1219,6 @@ public class SlidingLayer extends FrameLayout {
      * @param yValue
      * @return
      * @since 1.0
-     *
      */
     private int[] getDestScrollPos(int xValue, int yValue) {
 
@@ -1241,45 +1229,45 @@ public class SlidingLayer extends FrameLayout {
         } else {
 
             switch (mScreenSide) {
-            case STICK_TO_RIGHT:
-                pos[0] = -getWidth() + mOffsetWidth;
-                break;
-            case STICK_TO_LEFT:
-                pos[0] = getWidth() - mOffsetWidth;
-                break;
-            case STICK_TO_TOP:
-                pos[1] = getHeight() - mOffsetWidth;
-                break;
-            case STICK_TO_BOTTOM:
-                pos[1] = -getHeight() + mOffsetWidth;
-                break;
-            case STICK_TO_MIDDLE:
+                case STICK_TO_RIGHT:
+                    pos[0] = -getWidth() + mOffsetWidth;
+                    break;
+                case STICK_TO_LEFT:
+                    pos[0] = getWidth() - mOffsetWidth;
+                    break;
+                case STICK_TO_TOP:
+                    pos[1] = getHeight() - mOffsetWidth;
+                    break;
+                case STICK_TO_BOTTOM:
+                    pos[1] = -getHeight() + mOffsetWidth;
+                    break;
+                case STICK_TO_MIDDLE:
 
-                // Calculate slope m to get direction of swiping and apply the same vector until the end of the
-                // animation
-                float m = 1;
+                    // Calculate slope m to get direction of swiping and apply the same vector until the end of the
+                    // animation
+                    float m = 1;
 
-                // If no veocity nor translation (difficult to get) the target is random
-                if (xValue == 0 && yValue == 0) {
-                    m = mRandom != null ? (float) Math.tan(mRandom.nextFloat() * Math.PI - Math.PI / 2) : 1;
-                } else if (xValue == 0) {
-                    // Avoid division by 0 (Get the max value of the tan which is equivalent)
-                    m = (float) Math.tan(Math.PI / 2);
-                } else {
-                    // Get slope
-                    m = yValue / (float) xValue;
-                }
+                    // If no veocity nor translation (difficult to get) the target is random
+                    if (xValue == 0 && yValue == 0) {
+                        m = mRandom != null ? (float) Math.tan(mRandom.nextFloat() * Math.PI - Math.PI / 2) : 1;
+                    } else if (xValue == 0) {
+                        // Avoid division by 0 (Get the max value of the tan which is equivalent)
+                        m = (float) Math.tan(Math.PI / 2);
+                    } else {
+                        // Get slope
+                        m = yValue / (float) xValue;
+                    }
 
-                if (Math.abs(m) >= 1) {
-                    pos[0] = Math.round(getOperationSignForDiffMeasure(xValue) * getHeight() / Math.abs(m)
-                            - (mLastX - getWidth() / 2));
-                    pos[1] = Math.round(getOperationSignForDiffMeasure(yValue) * getHeight());
-                } else {
-                    pos[0] = Math.round(getOperationSignForDiffMeasure(xValue) * getWidth());
-                    pos[1] = Math.round(getOperationSignForDiffMeasure(yValue) * getWidth() * Math.abs(m)
-                            - (mLastY - getHeight() / 2));
-                }
-                break;
+                    if (Math.abs(m) >= 1) {
+                        pos[0] = Math.round(getOperationSignForDiffMeasure(xValue) * getHeight() / Math.abs(m)
+                                - (mLastX - getWidth() / 2));
+                        pos[1] = Math.round(getOperationSignForDiffMeasure(yValue) * getHeight());
+                    } else {
+                        pos[0] = Math.round(getOperationSignForDiffMeasure(xValue) * getWidth());
+                        pos[1] = Math.round(getOperationSignForDiffMeasure(yValue) * getWidth() * Math.abs(m)
+                                - (mLastY - getHeight() / 2));
+                    }
+                    break;
 
             }
 

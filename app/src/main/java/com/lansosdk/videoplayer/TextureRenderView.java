@@ -22,14 +22,14 @@ import java.util.concurrent.ConcurrentHashMap;
 
 @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
 public class TextureRenderView extends TextureView {
-	
-	 public static final int AR_ASPECT_FIT_PARENT = 0; // without clip
-	 public static final int AR_ASPECT_FILL_PARENT = 1; // may clip
-	 public static final int AR_ASPECT_WRAP_CONTENT = 2;
-	 public static final int AR_MATCH_PARENT = 3;
-	 public static final int AR_16_9_FIT_PARENT = 4;
-	 public static final int AR_4_3_FIT_PARENT = 5;
-	    
+
+    public static final int AR_ASPECT_FIT_PARENT = 0; // without clip
+    public static final int AR_ASPECT_FILL_PARENT = 1; // may clip
+    public static final int AR_ASPECT_WRAP_CONTENT = 2;
+    public static final int AR_MATCH_PARENT = 3;
+    public static final int AR_16_9_FIT_PARENT = 4;
+    public static final int AR_4_3_FIT_PARENT = 5;
+
     private static final String TAG = "TextureRenderView";
     private MeasureHelper mMeasureHelper;
 
@@ -88,12 +88,12 @@ public class TextureRenderView extends TextureView {
 
     /**
      * 设置显示的宽高比. 类型有
-     *    static final int AR_ASPECT_FIT_PARENT = 0; // without clip
-    static final int AR_ASPECT_FILL_PARENT = 1; // may clip
-    static final int AR_ASPECT_WRAP_CONTENT = 2;
-    static final int AR_MATCH_PARENT = 3;
-    static final int AR_16_9_FIT_PARENT = 4;
-    static final int AR_4_3_FIT_PARENT = 5;
+     * static final int AR_ASPECT_FIT_PARENT = 0; // without clip
+     * static final int AR_ASPECT_FILL_PARENT = 1; // may clip
+     * static final int AR_ASPECT_WRAP_CONTENT = 2;
+     * static final int AR_MATCH_PARENT = 3;
+     * static final int AR_16_9_FIT_PARENT = 4;
+     * static final int AR_4_3_FIT_PARENT = 5;
      */
     public void setDispalyRatio(int aspectRatio) {
         mMeasureHelper.setAspectRatio(aspectRatio);
@@ -105,7 +105,7 @@ public class TextureRenderView extends TextureView {
         mMeasureHelper.doMeasure(widthMeasureSpec, heightMeasureSpec);
         setMeasuredDimension(mMeasureHelper.getMeasuredWidth(), mMeasureHelper.getMeasuredHeight());
     }
-    
+
     @Override
     public void onInitializeAccessibilityEvent(AccessibilityEvent event) {
         super.onInitializeAccessibilityEvent(event);
