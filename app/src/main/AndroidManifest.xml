@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.lansoeditor.demo"
-    android:versionCode="2801"
-    android:versionName="2.8.1" >
+    package="com.lansoeditor.advanceDemo"
+    android:versionCode="2806"
+    android:versionName="2.8.6" >
 
     <uses-sdk
         android:minSdkVersion="18"
@@ -75,8 +75,6 @@
              <activity android:name="com.example.advanceDemo.ListLayerDemoActivity"></activity>
              <activity android:name="com.example.advanceDemo.ListSceneDemoActivity"></activity>
              <activity android:name="com.example.advanceDemo.ListCoolDemoActivity"></activity>
-             <activity android:name="com.example.advanceDemo.ListFaceDetectedDemoActivity"></activity>
-                  
         <!-- 录制类  -->
         <activity android:name="com.example.advanceDemo.ListCameraRecordActivity"
             android:screenOrientation="portrait"></activity>
@@ -97,10 +95,6 @@
            >
        </activity>
         
-       <activity android:name="com.example.advanceDemo.TestFullScreen"
-           android:theme="@style/FullScreenTheme">
-
-       </activity>
          <activity android:name="com.example.advanceDemo.camera.CameraSubLayerDemo1Activity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
@@ -133,8 +127,6 @@
         
        
        <!-- 基本图层类 --> 
-
-            
         <activity android:name="com.example.advanceDemo.Demo1LayerMothedActivity"
             android:screenOrientation="portrait"></activity>
         <activity android:name="com.example.advanceDemo.Demo2LayerMothedActivity"></activity>
@@ -179,8 +171,9 @@
         <!-- 炫酷举例 -->
         <activity android:name="com.example.advanceDemo.cool.VViewImage3DDemoActivity"></activity>
         <activity android:name="com.example.advanceDemo.cool.ParticleDemoActivity"></activity>
-          
-        
+
+    <activity android:name="com.example.advanceDemo.cool.VideoEffectDemoActivity"></activity>
+
         <!-- 图片/声音 其他类. -->    
          <activity android:name="com.example.advanceDemo.ExecuteCanvasLayerActivity">
 
@@ -216,6 +209,7 @@
         <activity android:name="com.example.advanceDemo.ViewLayerOnlyActivity"></activity>
         
         <activity android:name="com.example.advanceDemo.MVLayerDemoActivity"></activity>
+
         <!--    common version -->
             <activity android:name="com.example.commonDemo.CommonDemoActivity"></activity>
          <activity android:name="com.example.commonDemo.MediaInfoActivity"></activity>

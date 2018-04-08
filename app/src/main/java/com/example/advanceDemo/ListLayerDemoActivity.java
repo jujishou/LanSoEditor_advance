@@ -1,12 +1,12 @@
 package com.example.advanceDemo;
 
-import com.lansoeditor.demo.R;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
+
+import com.lansoeditor.advanceDemo.R;
 
 public class ListLayerDemoActivity extends Activity implements OnClickListener {
 
@@ -29,8 +29,10 @@ public class ListLayerDemoActivity extends Activity implements OnClickListener {
         findViewById(R.id.id_layer_mvlayerdemo).setOnClickListener(this);
         findViewById(R.id.id_layer_viewremark).setOnClickListener(this);
         findViewById(R.id.id_layer_twovideolayer).setOnClickListener(this);
-        findViewById(R.id.id_layer_drawpadexecute_filter).setOnClickListener(this);
-        findViewById(R.id.id_layer_drawpadpictureexecute).setOnClickListener(this);
+        findViewById(R.id.id_layer_drawpadexecute_filter).setOnClickListener(
+                this);
+        findViewById(R.id.id_layer_drawpadpictureexecute).setOnClickListener(
+                this);
     }
 
     @Override
@@ -79,6 +81,5 @@ public class ListLayerDemoActivity extends Activity implements OnClickListener {
         intent.putExtra("videopath", videoPath);
         startActivity(intent);
     }
-
 
 }

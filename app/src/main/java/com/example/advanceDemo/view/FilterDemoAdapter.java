@@ -1,15 +1,7 @@
 package com.example.advanceDemo.view;
 
-import java.util.ArrayList;
-import java.util.List;
-
-
-import com.lansoeditor.demo.R;
-import com.lansosdk.videoeditor.FilterList;
-
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,14 +9,19 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.lansoeditor.advanceDemo.R;
+import com.lansosdk.videoeditor.FilterList;
+
 public class FilterDemoAdapter extends BaseAdapter {
 
     FilterList bmpList;
+    private LayoutInflater mInflater;
 
     public FilterDemoAdapter(Context con, FilterList bmpList) {
-//		mInflater=LayoutInflater.from(con);
+        // mInflater=LayoutInflater.from(con);
         this.bmpList = bmpList;
-        mInflater = (LayoutInflater) con.getSystemService(Context.LAYOUT_INFLATER_SERVICE);//LayoutInflater.from(mContext);
+        mInflater = (LayoutInflater) con
+                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);// LayoutInflater.from(mContext);
     }
 
     @Override
@@ -36,16 +33,9 @@ public class FilterDemoAdapter extends BaseAdapter {
         }
     }
 
-    private LayoutInflater mInflater;
-
     @Override
     public Object getItem(int position) {
         return position;
-    }
-
-    private static class ViewHolder {
-        private TextView tvName;
-        private ImageView ivImage;
     }
 
     @Override
@@ -59,8 +49,10 @@ public class FilterDemoAdapter extends BaseAdapter {
         if (convertView == null) {
             viewHolder = new ViewHolder();
             convertView = mInflater.inflate(R.layout.filter_item, null);
-            viewHolder.ivImage = (ImageView) convertView.findViewById(R.id.id_filter_item_iv);
-            viewHolder.tvName = (TextView) convertView.findViewById(R.id.id_filter_item_tv);
+            viewHolder.ivImage = (ImageView) convertView
+                    .findViewById(R.id.id_filter_item_iv);
+            viewHolder.tvName = (TextView) convertView
+                    .findViewById(R.id.id_filter_item_tv);
             convertView.setTag(viewHolder);
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
@@ -74,5 +66,10 @@ public class FilterDemoAdapter extends BaseAdapter {
         }
         viewHolder.tvName.setText(bmpList.getName(position));
         return convertView;
+    }
+
+    private static class ViewHolder {
+        private TextView tvName;
+        private ImageView ivImage;
     }
 }

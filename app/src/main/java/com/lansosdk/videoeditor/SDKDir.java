@@ -4,8 +4,9 @@ import java.io.File;
 
 public class SDKDir {
 
-    //Environment.getExternalStorageDirectory()
-    // FileWriter out = new FileWriter(new File(Environment.getExternalStorageDirectory(), "content.txt"));
+    // Environment.getExternalStorageDirectory()
+    // FileWriter out = new FileWriter(new
+    // File(Environment.getExternalStorageDirectory(), "content.txt"));
     public static String TMP_DIR = "/sdcard/lansongBox/";
 
     public static String getPath() {

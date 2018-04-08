@@ -1,10 +1,5 @@
 package com.example.advanceDemo;
 
-import java.io.File;
-
-import com.lansoeditor.demo.R;
-import com.lansosdk.videoeditor.MediaInfo;
-
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
@@ -13,6 +8,10 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.lansoeditor.advanceDemo.R;
+
+import java.io.File;
 
 public class FileExplorerAdapter extends BaseAdapter {
 
@@ -44,16 +43,20 @@ public class FileExplorerAdapter extends BaseAdapter {
         File file = mFiles[position];
         holder.text.setText(file.getName());
         if (position == 0 && !isTop) {
-            holder.icon.setImageDrawable(mContext.getResources().getDrawable(R.drawable.ic_menu_back));
+            holder.icon.setImageDrawable(mContext.getResources().getDrawable(
+                    R.drawable.ic_menu_back));
 
         } else if (file.isDirectory()) {
-            holder.icon.setImageDrawable(mContext.getResources().getDrawable(R.drawable.ic_menu_archive));
+            holder.icon.setImageDrawable(mContext.getResources().getDrawable(
+                    R.drawable.ic_menu_archive));
         } else {
             Drawable d = null;
             if (FileExplorerActivity.checkExtension(file)) {
-                d = mContext.getResources().getDrawable(R.drawable.ic_menu_gallery);
+                d = mContext.getResources().getDrawable(
+                        R.drawable.ic_menu_gallery);
             } else {
-                d = mContext.getResources().getDrawable(R.drawable.ic_menu_block);
+                d = mContext.getResources().getDrawable(
+                        R.drawable.ic_menu_block);
             }
             holder.icon.setImageDrawable(d);
         }
@@ -66,8 +69,10 @@ public class FileExplorerAdapter extends BaseAdapter {
             convertView = mInflater.inflate(R.layout.file_explore_item, null);
 
             holder = new ViewHolder();
-            holder.text = (TextView) convertView.findViewById(R.id.textview_rowtext);
-            holder.icon = (ImageView) convertView.findViewById(R.id.imageview_rowicon);
+            holder.text = (TextView) convertView
+                    .findViewById(R.id.textview_rowtext);
+            holder.icon = (ImageView) convertView
+                    .findViewById(R.id.imageview_rowicon);
 
             convertView.setTag(holder);
         } else {

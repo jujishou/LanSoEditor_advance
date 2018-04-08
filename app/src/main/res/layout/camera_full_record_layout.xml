@@ -47,7 +47,6 @@
                 android:textSize="20sp"
                 android:background="@null"
                 android:text="@string/filter"/>
-            
             <Button
                 android:id="@+id/id_fullrecord_flashlight"
                 android:layout_width="25dp"
@@ -104,6 +103,6 @@
             app:isLongScale="true"
             app:innerRadio="3dp"/>
     	</RelativeLayout>
-    <include
-        layout="@layout/merge_cameabeauty_control"/>
+    	    <include 
+			layout="@layout/merge_cameabeauty_control"/>
 </RelativeLayout>

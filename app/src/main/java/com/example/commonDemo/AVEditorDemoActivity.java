@@ -1,44 +1,33 @@
 package com.example.commonDemo;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
-import com.example.advanceDemo.VideoPlayerActivity;
-import com.lansoeditor.demo.R;
-import com.lansosdk.videoeditor.CopyDefaultVideoAsyncTask;
-import com.lansosdk.videoeditor.MediaInfo;
-import com.lansosdk.videoeditor.SDKDir;
-import com.lansosdk.videoeditor.SDKFileUtils;
-import com.lansosdk.videoeditor.VideoEditor;
-import com.lansosdk.videoeditor.onVideoEditorProgressListener;
-
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
-import android.media.MediaPlayer.OnPreparedListener;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.advanceDemo.VideoPlayerActivity;
+import com.lansoeditor.advanceDemo.R;
+import com.lansosdk.videoeditor.MediaInfo;
+import com.lansosdk.videoeditor.SDKFileUtils;
+import com.lansosdk.videoeditor.VideoEditor;
+import com.lansosdk.videoeditor.onVideoEditorProgressListener;
+
+import java.io.IOException;
+
 /**
  * 杭州蓝松科技, 专业的视频开发团队.
  * <p>
- * 基本版本中视频编辑演示.
- * 此代码不属于sdk的一部分， 仅作为演示使用。
+ * 基本版本中视频编辑演示. 此代码不属于sdk的一部分， 仅作为演示使用。
  */
 public class AVEditorDemoActivity extends Activity implements OnClickListener {
-
 
     private final static String TAG = "AVSplitDemoActivity";
     private final static boolean VERBOSE = false;
@@ -48,7 +37,7 @@ public class AVEditorDemoActivity extends Activity implements OnClickListener {
     VideoEditor mEditor = null;
     ;
     ProgressDialog mProgressDialog;
-
+    MediaPlayer audioPlayer = null;
     private String dstVideo = null;
     private String dstAudio = null;
     private boolean isRunning = false;
@@ -56,7 +45,6 @@ public class AVEditorDemoActivity extends Activity implements OnClickListener {
     private int textID = 0;
     private boolean isOutVideo;
     private boolean isOutAudio;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,12 +70,13 @@ public class AVEditorDemoActivity extends Activity implements OnClickListener {
         }
 
         if (isOutVideo == false) {
-            findViewById(R.id.id_test_cmdvideo_play_btn).setVisibility(View.GONE);
+            findViewById(R.id.id_test_cmdvideo_play_btn).setVisibility(
+                    View.GONE);
         }
         if (isOutAudio == false) {
-            findViewById(R.id.id_test_cmdaudio_play_btn).setVisibility(View.GONE);
+            findViewById(R.id.id_test_cmdaudio_play_btn).setVisibility(
+                    View.GONE);
         }
-
 
         /**
          * 第一步,创建VideoEditor对象, 并设置进度监听,当然您也可以不设置监听.
@@ -98,7 +87,8 @@ public class AVEditorDemoActivity extends Activity implements OnClickListener {
             @Override
             public void onProgress(VideoEditor v, int percent) {
                 if (mProgressDialog != null) {
-                    mProgressDialog.setMessage("正在处理中..." + String.valueOf(percent) + "%");
+                    mProgressDialog.setMessage("正在处理中..."
+                            + String.valueOf(percent) + "%");
                 }
             }
         });
@@ -143,7 +133,7 @@ public class AVEditorDemoActivity extends Activity implements OnClickListener {
         switch (v.getId()) {
             case R.id.id_test_cmd_btn:
                 if (isRunning == false) {
-                    new SubAsyncTask().execute();  //开始VideoEditor方法的处理==============>
+                    new SubAsyncTask().execute(); // 开始VideoEditor方法的处理==============>
                 }
                 break;
             case R.id.id_test_cmdvideo_play_btn:
@@ -157,69 +147,34 @@ public class AVEditorDemoActivity extends Activity implements OnClickListener {
         }
     }
 
-
-    /**
-     * 第二步:创建一个AsyncTask,并在backgroud中执行VideoEditor的方法.(当然您也可以创建一个Thread,在Thread中执行)
-     */
-    public class SubAsyncTask extends AsyncTask<Object, Object, Boolean> {
-        @Override
-        protected void onPreExecute() {
-            // TODO Auto-generated method stub
-            showProgressDialog();
-            isRunning = true;
-            super.onPreExecute();
-        }
-
-        @Override
-        protected synchronized Boolean doInBackground(Object... params) {
-            // TODO Auto-generated method stub
-            /**
-             * 真正执行的代码,因演示的方法过多, 用每个方法的ID的形式来区分, 您实际使用中, 可直接填入具体方法的代码.
-             */
-            startRunDemoFunction();
-
-
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Boolean result) {
-            // TODO Auto-generated method stub
-            super.onPostExecute(result);
-
-            calcelProgressDialog();
-
-            isRunning = false;
-
-            if (SDKFileUtils.fileExist(dstVideo))
-                findViewById(R.id.id_test_cmdvideo_play_btn).setEnabled(true);
-        }
-    }
-
     private int startRunDemoFunction() {
         int ret = -1;
         switch (demoID) {
-            case R.string.demo_id_avsplit: //音视频分离.
+            case R.string.demo_id_avsplit: // 音视频分离.
                 DemoFunctions.demoAVSplite(mEditor, srcVideo, dstVideo, dstAudio);
                 break;
-            case R.string.demo_id_avmerge:  //合成音频/替换音频
-                DemoFunctions.demoAVMerge(AVEditorDemoActivity.this, mEditor, srcVideo, dstVideo);
+            case R.string.demo_id_avmerge: // 合成音频/替换音频
+                DemoFunctions.demoAVMerge(AVEditorDemoActivity.this, mEditor,
+                        srcVideo, dstVideo);
                 break;
-            case R.string.demo_id_cutaudio:  //剪切音频
-                DemoFunctions.demoAudioCut(AVEditorDemoActivity.this, mEditor, dstAudio);
+            case R.string.demo_id_cutaudio: // 剪切音频
+                DemoFunctions.demoAudioCut(AVEditorDemoActivity.this, mEditor,
+                        dstAudio);
                 break;
-            case R.string.demo_id_cutvideo: //剪切视频
+            case R.string.demo_id_cutvideo: // 剪切视频
                 DemoFunctions.demoVideoCut(mEditor, srcVideo, dstVideo);
                 break;
-            case R.string.demo_id_concatvideo:  //视频拼接
+            case R.string.demo_id_concatvideo: // 视频拼接
                 DemoFunctions.demoVideoConcat(mEditor, srcVideo, dstVideo);
                 break;
 
             case R.string.demo_id_audiodelaymix:
-                DemoFunctions.demoAudioDelayMix(AVEditorDemoActivity.this, mEditor, dstAudio);
+                DemoFunctions.demoAudioDelayMix(AVEditorDemoActivity.this, mEditor,
+                        dstAudio);
                 break;
             case R.string.demo_id_audiovolumemix:
-                DemoFunctions.demoAudioVolumeMix(AVEditorDemoActivity.this, mEditor, dstAudio);
+                DemoFunctions.demoAudioVolumeMix(AVEditorDemoActivity.this,
+                        mEditor, dstAudio);
                 break;
             default:
                 break;
@@ -230,15 +185,15 @@ public class AVEditorDemoActivity extends Activity implements OnClickListener {
 
     private void playDstVideo() {
         if (SDKFileUtils.fileExist(dstVideo)) {
-            Intent intent = new Intent(AVEditorDemoActivity.this, VideoPlayerActivity.class);
+            Intent intent = new Intent(AVEditorDemoActivity.this,
+                    VideoPlayerActivity.class);
             intent.putExtra("videopath", dstVideo);
             startActivity(intent);
         } else {
-            Toast.makeText(AVEditorDemoActivity.this, R.string.file_not_exist, Toast.LENGTH_SHORT).show();
+            Toast.makeText(AVEditorDemoActivity.this, R.string.file_not_exist,
+                    Toast.LENGTH_SHORT).show();
         }
     }
-
-    MediaPlayer audioPlayer = null;
 
     private void playDstAudio() {
         Log.i(TAG, "play dst audio" + dstAudio);
@@ -280,5 +235,42 @@ public class AVEditorDemoActivity extends Activity implements OnClickListener {
             mProgressDialog = null;
         }
     }
-}
 
+    /**
+     * 第二步:创建一个AsyncTask,并在backgroud中执行VideoEditor的方法.(当然您也可以创建一个Thread,
+     * 在Thread中执行)
+     */
+    public class SubAsyncTask extends AsyncTask<Object, Object, Boolean> {
+        @Override
+        protected void onPreExecute() {
+            // TODO Auto-generated method stub
+            showProgressDialog();
+            isRunning = true;
+            super.onPreExecute();
+        }
+
+        @Override
+        protected synchronized Boolean doInBackground(Object... params) {
+            // TODO Auto-generated method stub
+            /**
+             * 真正执行的代码,因演示的方法过多, 用每个方法的ID的形式来区分, 您实际使用中, 可直接填入具体方法的代码.
+             */
+            startRunDemoFunction();
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Boolean result) {
+            // TODO Auto-generated method stub
+            super.onPostExecute(result);
+
+            calcelProgressDialog();
+
+            isRunning = false;
+
+            if (SDKFileUtils.fileExist(dstVideo))
+                findViewById(R.id.id_test_cmdvideo_play_btn).setEnabled(true);
+        }
+    }
+}

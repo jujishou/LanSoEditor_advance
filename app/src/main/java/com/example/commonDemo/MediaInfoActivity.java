@@ -1,13 +1,11 @@
 package com.example.commonDemo;
 
-import com.lansoeditor.demo.R;
-import com.lansosdk.videoeditor.MediaInfo;
-
 import android.app.Activity;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.TextureView;
 import android.widget.TextView;
+
+import com.lansoeditor.advanceDemo.R;
+import com.lansosdk.videoeditor.MediaInfo;
 
 public class MediaInfoActivity extends Activity {
 
@@ -18,7 +16,6 @@ public class MediaInfoActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
-
 
         setContentView(R.layout.mediainfo_layout);
         tvInfo = (TextView) findViewById(R.id.id_mediainfo_tv);
@@ -76,6 +73,5 @@ public class MediaInfoActivity extends Activity {
         }
         return retStr;
     }
-
 
 }

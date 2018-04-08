@@ -1,9 +1,5 @@
 package com.example.advanceDemo.view;
 
-import java.math.BigDecimal;
-
-import com.lansoeditor.demo.R;
-
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -18,6 +14,10 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.ViewConfiguration;
 import android.widget.ImageView;
+
+import com.lansoeditor.advanceDemo.R;
+
+import java.math.BigDecimal;
 
 /**
  * Widget that lets users select a minimum and maximum value on a given
@@ -35,12 +35,27 @@ import android.widget.ImageView;
  * @author Yao (chuan_27049@126.com)
  */
 public class RangeSeekBar<T extends Number> extends ImageView {
+    /**
+     * Default color of a {@link RangeSeekBar}, #FF33B5E5. This is also known as
+     * "Ice Cream Sandwich" blue.
+     */
+    public static final int DEFAULT_COLOR = Color.argb(0xFF, 0x33, 0xB5, 0xE5);
+    /**
+     * An invalid pointer id.
+     */
+    public static final int INVALID_POINTER_ID = 255;
+    // Localized constants from MotionEvent for compatibility
+    // with API < 8 "Froyo".
+    public static final int ACTION_POINTER_UP = 0x6,
+            ACTION_POINTER_INDEX_MASK = 0x0000ff00,
+            ACTION_POINTER_INDEX_SHIFT = 8;
     private static final String TAG = RangeSeekBar.class.getSimpleName();
     private final Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
     private final Paint thumbValuePaint = getThumbValuePaint();
-    private final Bitmap thumbImage = BitmapFactory.decodeResource(getResources(), R.drawable.range_seek_bar_imb);
-    private final Bitmap thumbPressedImage = BitmapFactory.decodeResource(getResources(),
-            R.drawable.range_seek_bar_imb_pressed);
+    private final Bitmap thumbImage = BitmapFactory.decodeResource(
+            getResources(), R.drawable.range_seek_bar_imb);
+    private final Bitmap thumbPressedImage = BitmapFactory.decodeResource(
+            getResources(), R.drawable.range_seek_bar_imb_pressed);
     private final float thumbWidth = thumbImage.getWidth();
     private final float thumbHalfWidth = 0.5f * thumbWidth;
     private final float thumbHalfHeight = 0.5f * thumbImage.getHeight();
@@ -48,37 +63,18 @@ public class RangeSeekBar<T extends Number> extends ImageView {
     private final T absoluteMinValue, absoluteMaxValue;
     private final NumberType numberType;
     private final double absoluteMinValuePrim, absoluteMaxValuePrim;
-    private double normalizedMinValue = 0d;
-    private double normalizedMaxValue = 1d;// normalized：规格化的--点坐标占总长度的比例值，范围从0-1
-    private Thumb pressedThumb = null;
-    private boolean notifyWhileDragging = false;
-    private OnRangeSeekBarChangeListener<T> listener;
-
-    /**
-     * Default color of a {@link RangeSeekBar}, #FF33B5E5. This is also known as
-     * "Ice Cream Sandwich" blue.
-     */
-    public static final int DEFAULT_COLOR = Color.argb(0xFF, 0x33, 0xB5, 0xE5);
-
-    /**
-     * An invalid pointer id.
-     */
-    public static final int INVALID_POINTER_ID = 255;
-
-    // Localized constants from MotionEvent for compatibility
-    // with API < 8 "Froyo".
-    public static final int ACTION_POINTER_UP = 0x6, ACTION_POINTER_INDEX_MASK = 0x0000ff00,
-            ACTION_POINTER_INDEX_SHIFT = 8;
-
-    private float mDownMotionX;// 记录touchEvent按下时的X坐标
-    private int mActivePointerId = INVALID_POINTER_ID;
-
     /**
      * On touch, this offset plus the scaled value from the position of the
      * touch will form the progress value. Usually 0.
      */
     float mTouchProgressOffset;
-
+    private double normalizedMinValue = 0d;
+    private double normalizedMaxValue = 1d;// normalized：规格化的--点坐标占总长度的比例值，范围从0-1
+    private Thumb pressedThumb = null;
+    private boolean notifyWhileDragging = false;
+    private OnRangeSeekBarChangeListener<T> listener;
+    private float mDownMotionX;// 记录touchEvent按下时的X坐标
+    private int mActivePointerId = INVALID_POINTER_ID;
     private int mScaledTouchSlop;
     private boolean mIsDragging;
 
@@ -91,7 +87,8 @@ public class RangeSeekBar<T extends Number> extends ImageView {
      * @throws IllegalArgumentException Will be thrown if min/max value type is not one of Long,
      *                                  Double, Integer, Float, Short, Byte or BigDecimal.
      */
-    public RangeSeekBar(T absoluteMinValue, T absoluteMaxValue, Context context) throws IllegalArgumentException {
+    public RangeSeekBar(T absoluteMinValue, T absoluteMaxValue, Context context)
+            throws IllegalArgumentException {
         super(context);
         this.absoluteMinValue = absoluteMinValue;
         this.absoluteMaxValue = absoluteMaxValue;
@@ -109,7 +106,8 @@ public class RangeSeekBar<T extends Number> extends ImageView {
 
     private final void init() {
         // 被认为是触摸滑动的最短距离
-        mScaledTouchSlop = ViewConfiguration.get(getContext()).getScaledTouchSlop();
+        mScaledTouchSlop = ViewConfiguration.get(getContext())
+                .getScaledTouchSlop();
     }
 
     /**
@@ -208,7 +206,8 @@ public class RangeSeekBar<T extends Number> extends ImageView {
      *
      * @param listener The listener to notify about changed selected values.
      */
-    public void setOnRangeSeekBarChangeListener(OnRangeSeekBarChangeListener<T> listener) {
+    public void setOnRangeSeekBarChangeListener(
+            OnRangeSeekBarChangeListener<T> listener) {
         this.listener = listener;
     }
 
@@ -273,7 +272,8 @@ public class RangeSeekBar<T extends Number> extends ImageView {
                     }
 
                     if (notifyWhileDragging && listener != null) {
-                        listener.onRangeSeekBarValuesChanged(this, getSelectedMinValue(), getSelectedMaxValue());
+                        listener.onRangeSeekBarValuesChanged(this,
+                                getSelectedMinValue(), getSelectedMaxValue());
                     }
                 }
                 break;
@@ -293,7 +293,8 @@ public class RangeSeekBar<T extends Number> extends ImageView {
                 pressedThumb = null;// 手指抬起，则置被touch到的thumb为空
                 invalidate();
                 if (listener != null) {
-                    listener.onRangeSeekBarValuesChanged(this, getSelectedMinValue(), getSelectedMaxValue());
+                    listener.onRangeSeekBarValuesChanged(this,
+                            getSelectedMinValue(), getSelectedMaxValue());
                 }
                 break;
             case MotionEvent.ACTION_POINTER_DOWN: {
@@ -381,7 +382,8 @@ public class RangeSeekBar<T extends Number> extends ImageView {
      * Ensures correct size of the widget.
      */
     @Override
-    protected synchronized void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+    protected synchronized void onMeasure(int widthMeasureSpec,
+                                          int heightMeasureSpec) {
         int width = 200;
         if (MeasureSpec.UNSPECIFIED != MeasureSpec.getMode(widthMeasureSpec)) {
             width = MeasureSpec.getSize(widthMeasureSpec);
@@ -389,8 +391,8 @@ public class RangeSeekBar<T extends Number> extends ImageView {
         int height = thumbImage.getHeight();
         if (MeasureSpec.UNSPECIFIED != MeasureSpec.getMode(heightMeasureSpec)) {
             // 高度为滑动条高度+文字画笔高度
-            height = Math.min(height, MeasureSpec.getSize(heightMeasureSpec)) + (int) getFontHeight(thumbValuePaint)
-                    * 2;
+            height = Math.min(height, MeasureSpec.getSize(heightMeasureSpec))
+                    + (int) getFontHeight(thumbValuePaint) * 2;
         }
         setMeasuredDimension(width, height);
     }
@@ -402,23 +404,33 @@ public class RangeSeekBar<T extends Number> extends ImageView {
     protected synchronized void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
-        Bitmap l_bg = BitmapFactory.decodeResource(getResources(), R.drawable.range_seek_bar_bg_l);
-        Bitmap m_bg = BitmapFactory.decodeResource(getResources(), R.drawable.range_seek_bar_bg_m);
-        Bitmap r_bg = BitmapFactory.decodeResource(getResources(), R.drawable.range_seek_bar_bg_r);
-        Bitmap m_progress = BitmapFactory.decodeResource(getResources(), R.drawable.range_seek_bar_progress);
+        Bitmap l_bg = BitmapFactory.decodeResource(getResources(),
+                R.drawable.range_seek_bar_bg_l);
+        Bitmap m_bg = BitmapFactory.decodeResource(getResources(),
+                R.drawable.range_seek_bar_bg_m);
+        Bitmap r_bg = BitmapFactory.decodeResource(getResources(),
+                R.drawable.range_seek_bar_bg_r);
+        Bitmap m_progress = BitmapFactory.decodeResource(getResources(),
+                R.drawable.range_seek_bar_progress);
 
-        canvas.drawBitmap(l_bg, padding - thumbHalfWidth, 0.5f * (getHeight() - l_bg.getHeight()), paint);
+        canvas.drawBitmap(l_bg, padding - thumbHalfWidth,
+                0.5f * (getHeight() - l_bg.getHeight()), paint);
 
         float bg_middle_left = padding - thumbHalfWidth + l_bg.getWidth();// 需要平铺的中间背景的开始坐标
-        float bg_middle_right = getWidth() - padding + thumbHalfWidth - l_bg.getWidth();// 需要平铺的中间背景的开始坐标
+        float bg_middle_right = getWidth() - padding + thumbHalfWidth
+                - l_bg.getWidth();// 需要平铺的中间背景的开始坐标
 
-        float scale = (bg_middle_right - bg_middle_left) / m_progress.getWidth();// 上层最大最小值间距离与m_progress比例
+        float scale = (bg_middle_right - bg_middle_left)
+                / m_progress.getWidth();// 上层最大最小值间距离与m_progress比例
         Matrix mx = new Matrix();
         mx.postScale(scale, 1f);
-        Bitmap m_bg_new = Bitmap.createBitmap(m_bg, 0, 0, m_progress.getWidth(), m_progress.getHeight(), mx, true);
-        canvas.drawBitmap(m_bg_new, bg_middle_left, 0.5f * (getHeight() - m_bg.getHeight()), paint);
+        Bitmap m_bg_new = Bitmap.createBitmap(m_bg, 0, 0,
+                m_progress.getWidth(), m_progress.getHeight(), mx, true);
+        canvas.drawBitmap(m_bg_new, bg_middle_left,
+                0.5f * (getHeight() - m_bg.getHeight()), paint);
 
-        canvas.drawBitmap(r_bg, bg_middle_right, 0.5f * (getHeight() - r_bg.getHeight()), paint);
+        canvas.drawBitmap(r_bg, bg_middle_right,
+                0.5f * (getHeight() - r_bg.getHeight()), paint);
 
         float rangeL = normalizedToScreen(normalizedMinValue);
         float rangeR = normalizedToScreen(normalizedMaxValue);
@@ -430,32 +442,40 @@ public class RangeSeekBar<T extends Number> extends ImageView {
             pro_mx.postScale(pro_scale, 1f);
             try {
 
-                Bitmap m_progress_new = Bitmap.createBitmap(m_progress, 0, 0, m_progress.getWidth(),
-                        m_progress.getHeight(), pro_mx, true);
+                Bitmap m_progress_new = Bitmap.createBitmap(m_progress, 0, 0,
+                        m_progress.getWidth(), m_progress.getHeight(), pro_mx,
+                        true);
 
-                canvas.drawBitmap(m_progress_new, rangeL, 0.5f * (getHeight() - m_progress.getHeight()), paint);
+                canvas.drawBitmap(m_progress_new, rangeL,
+                        0.5f * (getHeight() - m_progress.getHeight()), paint);
             } catch (Exception e) {
                 // 当pro_scale非常小，例如width=12，Height=48，pro_scale=0.01979065时，
                 // 宽高按比例计算后值为0.237、0.949，系统强转为int型后宽就变成0了。就出现非法参数异常
                 Log.e(TAG,
-                        "IllegalArgumentException--width=" + m_progress.getWidth() + "Height=" + m_progress.getHeight()
-                                + "pro_scale=" + pro_scale, e);
+                        "IllegalArgumentException--width="
+                                + m_progress.getWidth() + "Height="
+                                + m_progress.getHeight() + "pro_scale="
+                                + pro_scale, e);
 
             }
 
         }
 
-        //添加minThumb的对应的值
-        drawThumbMinValue(normalizedToScreen(normalizedMinValue), "" + getSelectedMinValue(), canvas);
+        // 添加minThumb的对应的值
+        drawThumbMinValue(normalizedToScreen(normalizedMinValue), ""
+                + getSelectedMinValue(), canvas);
 
-        //添加maxThumb的对应的值
-        drawThumbMaxValue(normalizedToScreen(normalizedMaxValue), "" + getSelectedMaxValue(), canvas);
+        // 添加maxThumb的对应的值
+        drawThumbMaxValue(normalizedToScreen(normalizedMaxValue), ""
+                + getSelectedMaxValue(), canvas);
 
         // draw minimum thumb
-        drawThumb(normalizedToScreen(normalizedMinValue), Thumb.MIN.equals(pressedThumb), canvas);
+        drawThumb(normalizedToScreen(normalizedMinValue),
+                Thumb.MIN.equals(pressedThumb), canvas);
 
         // draw maximum thumb
-        drawThumb(normalizedToScreen(normalizedMaxValue), Thumb.MAX.equals(pressedThumb), canvas);
+        drawThumb(normalizedToScreen(normalizedMaxValue),
+                Thumb.MAX.equals(pressedThumb), canvas);
 
     }
 
@@ -495,7 +515,8 @@ public class RangeSeekBar<T extends Number> extends ImageView {
      * @param canvas      The canvas to draw upon.
      */
     private void drawThumb(float screenCoord, boolean pressed, Canvas canvas) {
-        canvas.drawBitmap(pressed ? thumbPressedImage : thumbImage, screenCoord - thumbHalfWidth,
+        canvas.drawBitmap(pressed ? thumbPressedImage : thumbImage, screenCoord
+                        - thumbHalfWidth,
                 (float) ((0.5f * getHeight()) - thumbHalfHeight), paint);
     }
 
@@ -509,32 +530,41 @@ public class RangeSeekBar<T extends Number> extends ImageView {
     private void drawThumbMinValue(float screenCoord, String text, Canvas canvas) {
 
         // 得到maxThumb的left在屏幕上的绝对坐标
-        float maxThumbleft = normalizedToScreen(normalizedMaxValue) - thumbHalfWidth;
+        float maxThumbleft = normalizedToScreen(normalizedMaxValue)
+                - thumbHalfWidth;
 
         // 该文字的right坐标
-        float textRight = screenCoord - thumbHalfWidth + getFontlength(thumbValuePaint, text);
+        float textRight = screenCoord - thumbHalfWidth
+                + getFontlength(thumbValuePaint, text);
 
         if (textRight >= maxThumbleft) {
             // 当文字的右边界到达了maxThumb的左边界时
             if (pressedThumb == Thumb.MIN) {
                 // touch的为min
-                canvas.drawText(text, maxThumbleft - getFontlength(thumbValuePaint, text),
-                        (float) ((0.5f * getHeight()) - thumbHalfHeight) - 3, thumbValuePaint);
+                canvas.drawText(text,
+                        maxThumbleft - getFontlength(thumbValuePaint, text),
+                        (float) ((0.5f * getHeight()) - thumbHalfHeight) - 3,
+                        thumbValuePaint);
 
             } else {
 
-                canvas.drawText(text, textRight - getFontlength(thumbValuePaint, text),
-                        (float) ((0.5f * getHeight()) - thumbHalfHeight) - 3, thumbValuePaint);
+                canvas.drawText(text,
+                        textRight - getFontlength(thumbValuePaint, text),
+                        (float) ((0.5f * getHeight()) - thumbHalfHeight) - 3,
+                        thumbValuePaint);
 
             }
 
-//			Log.e(TAG, "textRight>=maxThumbleft***textRight=" + textRight + "maxThumbleft=" + maxThumbleft);
+            // Log.e(TAG, "textRight>=maxThumbleft***textRight=" + textRight +
+            // "maxThumbleft=" + maxThumbleft);
         } else {
             // 文字也从thumb点左边界画起
-            canvas.drawText(text, screenCoord - thumbHalfWidth, (float) ((0.5f * getHeight()) - thumbHalfHeight) - 3,
+            canvas.drawText(text, screenCoord - thumbHalfWidth,
+                    (float) ((0.5f * getHeight()) - thumbHalfHeight) - 3,
                     thumbValuePaint);
 
-//			Log.i(TAG, "textRight<maxThumbleft***textRight=" + textRight + "maxThumbleft=" + maxThumbleft);
+            // Log.i(TAG, "textRight<maxThumbleft***textRight=" + textRight +
+            // "maxThumbleft=" + maxThumbleft);
         }
 
     }
@@ -542,34 +572,41 @@ public class RangeSeekBar<T extends Number> extends ImageView {
     private void drawThumbMaxValue(float screenCoord, String text, Canvas canvas) {
 
         // 得到minThumb文字的right在屏幕上的绝对坐标
-        float minThumbValueRight = normalizedToScreen(normalizedMinValue) - thumbHalfWidth
+        float minThumbValueRight = normalizedToScreen(normalizedMinValue)
+                - thumbHalfWidth
                 + getFontlength(thumbValuePaint, "" + getSelectedMinValue());
 
         // 该文字的right坐标
-        float textRight = screenCoord - thumbHalfWidth + getFontlength(thumbValuePaint, text);
+        float textRight = screenCoord - thumbHalfWidth
+                + getFontlength(thumbValuePaint, text);
 
         if (textRight >= getWidth()) {
             // 文字的right边界坐标达到整个屏幕宽度时
-            canvas.drawText(text, getWidth() - getFontlength(thumbValuePaint, text),
-                    (float) ((0.5f * getHeight()) - thumbHalfHeight) - 3, thumbValuePaint);
+            canvas.drawText(text,
+                    getWidth() - getFontlength(thumbValuePaint, text),
+                    (float) ((0.5f * getHeight()) - thumbHalfHeight) - 3,
+                    thumbValuePaint);
 
         } else if ((screenCoord - thumbHalfWidth) <= minThumbValueRight) {
             // maxThumb文字left边界达到minThumb文字right边界
             if (pressedThumb == Thumb.MAX) {
 
-                canvas.drawText(text, minThumbValueRight, (float) ((0.5f * getHeight()) - thumbHalfHeight) - 3,
+                canvas.drawText(text, minThumbValueRight,
+                        (float) ((0.5f * getHeight()) - thumbHalfHeight) - 3,
                         thumbValuePaint);
 
             } else {
 
                 canvas.drawText(text, screenCoord - thumbHalfWidth,
-                        (float) ((0.5f * getHeight()) - thumbHalfHeight) - 3, thumbValuePaint);
+                        (float) ((0.5f * getHeight()) - thumbHalfHeight) - 3,
+                        thumbValuePaint);
 
             }
 
         } else {
 
-            canvas.drawText(text, screenCoord - thumbHalfWidth, (float) ((0.5f * getHeight()) - thumbHalfHeight) - 3,
+            canvas.drawText(text, screenCoord - thumbHalfWidth,
+                    (float) ((0.5f * getHeight()) - thumbHalfHeight) - 3,
                     thumbValuePaint);
         }
 
@@ -653,7 +690,8 @@ public class RangeSeekBar<T extends Number> extends ImageView {
      * @param value The new normalized min value to set.
      */
     public void setNormalizedMinValue(double value) {
-        normalizedMinValue = Math.max(0d, Math.min(1d, Math.min(value, normalizedMaxValue)));
+        normalizedMinValue = Math.max(0d,
+                Math.min(1d, Math.min(value, normalizedMaxValue)));
         invalidate();// 重新绘制此view
     }
 
@@ -664,7 +702,8 @@ public class RangeSeekBar<T extends Number> extends ImageView {
      * @param value The new normalized max value to set.
      */
     public void setNormalizedMaxValue(double value) {
-        normalizedMaxValue = Math.max(0d, Math.min(1d, Math.max(value, normalizedMinValue)));
+        normalizedMaxValue = Math.max(0d,
+                Math.min(1d, Math.max(value, normalizedMinValue)));
         invalidate();
     }
 
@@ -692,7 +731,8 @@ public class RangeSeekBar<T extends Number> extends ImageView {
             // prevent division by zero, simply return 0.
             return 0d;
         }
-        return (value.doubleValue() - absoluteMinValuePrim) / (absoluteMaxValuePrim - absoluteMinValuePrim);
+        return (value.doubleValue() - absoluteMinValuePrim)
+                / (absoluteMaxValuePrim - absoluteMinValuePrim);
     }
 
     /**
@@ -733,23 +773,11 @@ public class RangeSeekBar<T extends Number> extends ImageView {
     }
 
     /**
-     * Callback listener interface to notify about changed range values.
-     *
-     * @param <T> The Number type the RangeSeekBar has been declared with.
-     * @author Stephan Tittel (stephan.tittel@kom.tu-darmstadt.de)
-     */
-    public interface OnRangeSeekBarChangeListener<T> {
-        public void onRangeSeekBarValuesChanged(RangeSeekBar<?> bar, T minValue, T maxValue);
-    }
-
-    /**
      * Thumb constants (min and max). 只有两个值，一个代表滑动条上的最大值，一个代表滑动条上的最小值
      */
     private static enum Thumb {
         MIN, MAX
     }
-
-    ;
 
     /**
      * Utility enumaration used to convert between Numbers and doubles.
@@ -759,7 +787,8 @@ public class RangeSeekBar<T extends Number> extends ImageView {
     private static enum NumberType {
         LONG, DOUBLE, INTEGER, FLOAT, SHORT, BYTE, BIG_DECIMAL;
 
-        public static <E extends Number> NumberType fromNumber(E value) throws IllegalArgumentException {
+        public static <E extends Number> NumberType fromNumber(E value)
+                throws IllegalArgumentException {
             if (value instanceof Long) {
                 return LONG;
             }
@@ -781,7 +810,8 @@ public class RangeSeekBar<T extends Number> extends ImageView {
             if (value instanceof BigDecimal) {
                 return BIG_DECIMAL;
             }
-            throw new IllegalArgumentException("Number class '" + value.getClass().getName() + "' is not supported");
+            throw new IllegalArgumentException("Number class '"
+                    + value.getClass().getName() + "' is not supported");
         }
 
         public Number toNumber(double value) {
@@ -802,7 +832,21 @@ public class RangeSeekBar<T extends Number> extends ImageView {
                 case BIG_DECIMAL:
                     return new BigDecimal(value);
             }
-            throw new InstantiationError("can't convert " + this + " to a Number object");
+            throw new InstantiationError("can't convert " + this
+                    + " to a Number object");
         }
+    }
+
+    ;
+
+    /**
+     * Callback listener interface to notify about changed range values.
+     *
+     * @param <T> The Number type the RangeSeekBar has been declared with.
+     * @author Stephan Tittel (stephan.tittel@kom.tu-darmstadt.de)
+     */
+    public interface OnRangeSeekBarChangeListener<T> {
+        public void onRangeSeekBarValuesChanged(RangeSeekBar<?> bar,
+                                                T minValue, T maxValue);
     }
 }

@@ -1,5 +1,12 @@
 package com.example.advanceDemo;
 
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.graphics.Bitmap;
+import android.util.Log;
+import android.widget.Toast;
+
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -7,46 +14,11 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import android.app.AlertDialog;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.graphics.Bitmap;
-import android.os.Handler;
-import android.os.Message;
-import android.util.Log;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.Toast;
-
-import com.lansoeditor.demo.R;
-import com.lansosdk.videoeditor.SDKFileUtils;
-
 public class DemoUtil {
 
-    private int interval = 5;
-
-    private List<Bitmap> bmpLists = new ArrayList<Bitmap>();
-
-    public void pushBitmap(Bitmap bmp) {
-
-        interval++;
-        if (bmpLists.size() < 5 && bmp != null && interval % 5 == 0) {
-            bmpLists.add(bmp);
-        } else {
-            Log.i("T", " size >20; push error!");
-        }
-    }
-
-    /**
-     * 同步执行, 很慢.
-     */
-    public void saveToSdcard() {
-        for (Bitmap bmp : bmpLists) {
-            savePng(bmp);
-        }
-    }
-
     static int bmtcnt = 0;
+    private int interval = 5;
+    private List<Bitmap> bmpLists = new ArrayList<Bitmap>();
 
     public static void deleteAll() {
         deleteDir(new File("/sdcard/extract/"));
@@ -68,8 +40,7 @@ public class DemoUtil {
     }
 
     /**
-     * 把图片保存到文件,
-     * 这里只是用来调试程序使用.
+     * 把图片保存到文件, 这里只是用来调试程序使用.
      *
      * @param bmp
      */
@@ -102,41 +73,54 @@ public class DemoUtil {
     }
 
     public static void showHintDialog(Context ctx, int stringId) {
-        new AlertDialog.Builder(ctx)
-                .setTitle("提示")
-                .setMessage(stringId)
+        new AlertDialog.Builder(ctx).setTitle("提示").setMessage(stringId)
                 .setPositiveButton("确定", new DialogInterface.OnClickListener() {
 
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                     }
-                })
-                .show();
+                }).show();
     }
 
     public static void showHintDialog(Context ctx, String str) {
-        new AlertDialog.Builder(ctx)
-                .setTitle("提示")
-                .setMessage(str)
+        new AlertDialog.Builder(ctx).setTitle("提示").setMessage(str)
                 .setPositiveButton("确定", new DialogInterface.OnClickListener() {
 
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                     }
-                })
-                .show();
+                }).show();
     }
-//mhandler.sendMessageDelayed(mhandler.obtainMessage(23),10);  //别地方调用	
-//	    private HandlerLoop mhandler=new HandlerLoop();
-//	    private int maskCnt=1;
-//	    private class HandlerLoop extends Handler
-//	    {
-//	    	@Override
-//	    	public void handleMessage(Message msg) {
-//	    		super.handleMessage(msg);
-//	    
-//	    		switchBitmap();
-//	    		mhandler.sendMessageDelayed(mhandler.obtainMessage(23),10);
-//	    	}
-//	    }
+
+    public void pushBitmap(Bitmap bmp) {
+
+        interval++;
+        if (bmpLists.size() < 5 && bmp != null && interval % 5 == 0) {
+            bmpLists.add(bmp);
+        } else {
+            Log.i("T", " size >20; push error!");
+        }
+    }
+
+    /**
+     * 同步执行, 很慢.
+     */
+    public void saveToSdcard() {
+        for (Bitmap bmp : bmpLists) {
+            savePng(bmp);
+        }
+    }
+    // mhandler.sendMessageDelayed(mhandler.obtainMessage(23),10); //别地方调用
+    // private HandlerLoop mhandler=new HandlerLoop();
+    // private int maskCnt=1;
+    // private class HandlerLoop extends Handler
+    // {
+    // @Override
+    // public void handleMessage(Message msg) {
+    // super.handleMessage(msg);
+    //
+    // switchBitmap();
+    // mhandler.sendMessageDelayed(mhandler.obtainMessage(23),10);
+    // }
+    // }
 }

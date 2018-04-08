@@ -1,81 +1,131 @@
 package com.lansosdk.videoplayer;
 
-import android.annotation.TargetApi;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.res.Resources;
-import android.graphics.SurfaceTexture;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
-import android.os.Build;
-import android.support.annotation.NonNull;
-import android.text.TextUtils;
-import android.util.AttributeSet;
 import android.util.Log;
-import android.view.Gravity;
-import android.view.KeyEvent;
-import android.view.MotionEvent;
 import android.view.Surface;
-import android.view.TextureView.SurfaceTextureListener;
-import android.view.View;
-import android.widget.FrameLayout;
-import android.widget.MediaController;
-import android.widget.TableLayout;
 
 import java.io.IOException;
-import java.util.Map;
-
 
 /**
- * 注意!!!
- * 此代码仅仅是 VideoPlayer 的简易封装, 目的是让代码更清晰一些.
+ * 注意!!! 此代码仅仅是 VideoPlayer 的简易封装, 目的是让代码更清晰一些.
  * <p>
  * 一切API 以 {@link VideoPlayer}中的为准.
  */
 public class VPlayer {
-    private String TAG = "VPlayer";
-    private Uri mUri;
-
+    static final int AR_ASPECT_FIT_PARENT = 0; // without clip
+    static final int AR_ASPECT_FILL_PARENT = 1; // may clip
+    static final int AR_ASPECT_WRAP_CONTENT = 2;
+    static final int AR_MATCH_PARENT = 3;
+    static final int AR_16_9_FIT_PARENT = 4;
+    static final int AR_4_3_FIT_PARENT = 5;
     // all possible internal states
     private static final int STATE_ERROR = -1;
     private static final int STATE_IDLE = 0;
     private static final int STATE_PREPARING = 1;
     private static final int STATE_PREPARED = 2;
     private static final int STATE_PLAYING = 3;
-    private static final int STATE_PAUSED = 4;   //没有stop类型,因为stop就是release
+    private static final int STATE_PAUSED = 4; // 没有stop类型,因为stop就是release
     private static final int STATE_PLAYBACK_COMPLETED = 5;
-
+    private static final int[] s_allAspectRatio = {AR_ASPECT_FIT_PARENT,
+            AR_ASPECT_FILL_PARENT, AR_ASPECT_WRAP_CONTENT, AR_16_9_FIT_PARENT,
+            AR_4_3_FIT_PARENT};
+    private String TAG = "VPlayer";
+    private Uri mUri;
     private int mCurrentState = STATE_IDLE;
-
     // All the stuff we need for playing and showing a video
     private VideoPlayer mMediaPlayer = null;
     private int mMainVideoWidth;
     private int mMainVideoHeight;
-
     private int mSurfaceWidth;
     private int mSurfaceHeight;
     private int mVideoRotationDegree;
-
     private VideoPlayer.OnPlayerVideoSizeChangedListener mOnSizeChangedListener;
     private VideoPlayer.OnPlayerCompletionListener mOnCompletionListener;
     private VideoPlayer.OnPlayerPreparedListener mOnPreparedListener;
     private VideoPlayer.OnPlayerErrorListener mOnErrorListener;
     private VideoPlayer.OnPlayerInfoListener mOnInfoListener;
     private VideoPlayer.OnPlayerSeekCompleteListener mOnSeekCompleteListener;
-
-
     private int mCurrentBufferPercentage;
+    private int mSeekWhenPrepared; // recording the seek position while
+    VideoPlayer.OnPlayerPreparedListener mPreparedListener = new VideoPlayer.OnPlayerPreparedListener() {
+        public void onPrepared(VideoPlayer mp) {
+            mCurrentState = STATE_PREPARED;
 
+            mMainVideoWidth = mp.getVideoWidth();
+            mMainVideoHeight = mp.getVideoHeight();
 
-    private int mSeekWhenPrepared;  // recording the seek position while preparing  
+            int seekToPosition = mSeekWhenPrepared; // mSeekWhenPrepared may be
+            // changed after seekTo()
+            // call
+            if (seekToPosition != 0) {
+                seekTo(seekToPosition);
+            }
+            if (mOnPreparedListener != null) {
+                mOnPreparedListener.onPrepared(mMediaPlayer);
+            }
+
+        }
+    };
+    // preparing
     private boolean mCanPause = true;
     private boolean mCanSeekBack = true;
     private boolean mCanSeekForward = true;
-
     private Context mAppContext;
     private int mVideoSarNum;
     private int mVideoSarDen;
+    VideoPlayer.OnPlayerVideoSizeChangedListener mSizeChangedListener = new VideoPlayer.OnPlayerVideoSizeChangedListener() {
+        public void onVideoSizeChanged(VideoPlayer mp, int width, int height,
+                                       int sarNum, int sarDen) {
+            mMainVideoWidth = mp.getVideoWidth();
+            mMainVideoHeight = mp.getVideoHeight();
+            mVideoSarNum = mp.getVideoSarNum();
+            mVideoSarDen = mp.getVideoSarDen();
+            if (mMainVideoWidth != 0 && mMainVideoHeight != 0) {
+                if (mOnSizeChangedListener != null)
+                    mOnSizeChangedListener.onVideoSizeChanged(mp, width,
+                            height, sarNum, sarDen);
+            }
+        }
+    };
+    private VideoPlayer.OnPlayerCompletionListener mCompletionListener = new VideoPlayer.OnPlayerCompletionListener() {
+        public void onCompletion(VideoPlayer mp) {
+            mCurrentState = STATE_PLAYBACK_COMPLETED;
+            if (mOnCompletionListener != null) {
+                mOnCompletionListener.onCompletion(mMediaPlayer);
+            }
+        }
+    };
+    private VideoPlayer.OnPlayerInfoListener mInfoListener = new VideoPlayer.OnPlayerInfoListener() {
+        public boolean onInfo(VideoPlayer mp, int arg1, int arg2) {
+            if (mOnInfoListener != null) {
+                return mOnInfoListener.onInfo(mp, arg1, arg2);
+            }
+            return true;
+        }
+    };
+    private VideoPlayer.OnPlayerErrorListener mErrorListener = new VideoPlayer.OnPlayerErrorListener() {
+        public boolean onError(VideoPlayer mp, int framework_err, int impl_err) {
+            Log.d(TAG, "Error: " + framework_err + "," + impl_err);
+            mCurrentState = STATE_ERROR;
+            if (mOnErrorListener != null) {
+                if (mOnErrorListener.onError(mMediaPlayer, framework_err,
+                        impl_err)) {
+                    return true;
+                }
+            }
+            return true;
+        }
+    };
+    private VideoPlayer.OnPlayerBufferingUpdateListener mBufferingUpdateListener = new VideoPlayer.OnPlayerBufferingUpdateListener() {
+        public void onBufferingUpdate(VideoPlayer mp, int percent) {
+            mCurrentBufferPercentage = percent;
+        }
+    };
+    private int mCurrentAspectRatioIndex = 0;
+    private int mCurrentAspectRatio = s_allAspectRatio[0];
 
     public VPlayer(Context context) {
         mAppContext = context.getApplicationContext();
@@ -125,8 +175,10 @@ public class VPlayer {
             Log.e(TAG, "mUri==mull, open video error.");
             return;
         }
-        AudioManager am = (AudioManager) mAppContext.getSystemService(Context.AUDIO_SERVICE);
-        am.requestAudioFocus(null, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
+        AudioManager am = (AudioManager) mAppContext
+                .getSystemService(Context.AUDIO_SERVICE);
+        am.requestAudioFocus(null, AudioManager.STREAM_MUSIC,
+                AudioManager.AUDIOFOCUS_GAIN);
         try {
             mMediaPlayer = createPlayer();
             mMediaPlayer.setOnPreparedListener(mPreparedListener);
@@ -146,99 +198,27 @@ public class VPlayer {
         } catch (IOException ex) {
             Log.w(TAG, "Unable to open content: " + mUri, ex);
             mCurrentState = STATE_ERROR;
-            mErrorListener.onError(mMediaPlayer, MediaPlayer.MEDIA_ERROR_UNKNOWN, 0);
+            mErrorListener.onError(mMediaPlayer,
+                    MediaPlayer.MEDIA_ERROR_UNKNOWN, 0);
             return;
         } catch (IllegalArgumentException ex) {
             Log.w(TAG, "Unable to open content: " + mUri, ex);
             mCurrentState = STATE_ERROR;
-            mErrorListener.onError(mMediaPlayer, MediaPlayer.MEDIA_ERROR_UNKNOWN, 0);
+            mErrorListener.onError(mMediaPlayer,
+                    MediaPlayer.MEDIA_ERROR_UNKNOWN, 0);
             return;
         } finally {
             // REMOVED: mPendingSubtitleTracks.clear();
         }
     }
 
-    VideoPlayer.OnPlayerVideoSizeChangedListener mSizeChangedListener =
-            new VideoPlayer.OnPlayerVideoSizeChangedListener() {
-                public void onVideoSizeChanged(VideoPlayer mp, int width, int height, int sarNum, int sarDen) {
-                    mMainVideoWidth = mp.getVideoWidth();
-                    mMainVideoHeight = mp.getVideoHeight();
-                    mVideoSarNum = mp.getVideoSarNum();
-                    mVideoSarDen = mp.getVideoSarDen();
-                    if (mMainVideoWidth != 0 && mMainVideoHeight != 0) {
-                        if (mOnSizeChangedListener != null)
-                            mOnSizeChangedListener.onVideoSizeChanged(mp, width, height, sarNum, sarDen);
-                    }
-                }
-            };
-
-    VideoPlayer.OnPlayerPreparedListener mPreparedListener = new VideoPlayer.OnPlayerPreparedListener() {
-        public void onPrepared(VideoPlayer mp) {
-            mCurrentState = STATE_PREPARED;
-
-            mMainVideoWidth = mp.getVideoWidth();
-            mMainVideoHeight = mp.getVideoHeight();
-
-            int seekToPosition = mSeekWhenPrepared;  // mSeekWhenPrepared may be changed after seekTo() call
-            if (seekToPosition != 0) {
-                seekTo(seekToPosition);
-            }
-            if (mOnPreparedListener != null) {
-                mOnPreparedListener.onPrepared(mMediaPlayer);
-            }
-
-        }
-    };
-
-    private VideoPlayer.OnPlayerCompletionListener mCompletionListener =
-            new VideoPlayer.OnPlayerCompletionListener() {
-                public void onCompletion(VideoPlayer mp) {
-                    mCurrentState = STATE_PLAYBACK_COMPLETED;
-                    if (mOnCompletionListener != null) {
-                        mOnCompletionListener.onCompletion(mMediaPlayer);
-                    }
-                }
-            };
-
-    private VideoPlayer.OnPlayerInfoListener mInfoListener =
-            new VideoPlayer.OnPlayerInfoListener() {
-                public boolean onInfo(VideoPlayer mp, int arg1, int arg2) {
-                    if (mOnInfoListener != null) {
-                        return mOnInfoListener.onInfo(mp, arg1, arg2);
-                    }
-                    return true;
-                }
-            };
-
-    private VideoPlayer.OnPlayerErrorListener mErrorListener =
-            new VideoPlayer.OnPlayerErrorListener() {
-                public boolean onError(VideoPlayer mp, int framework_err, int impl_err) {
-                    Log.d(TAG, "Error: " + framework_err + "," + impl_err);
-                    mCurrentState = STATE_ERROR;
-                    if (mOnErrorListener != null) {
-                        if (mOnErrorListener.onError(mMediaPlayer, framework_err, impl_err)) {
-                            return true;
-                        }
-                    }
-                    return true;
-                }
-            };
-
-    private VideoPlayer.OnPlayerBufferingUpdateListener mBufferingUpdateListener =
-            new VideoPlayer.OnPlayerBufferingUpdateListener() {
-                public void onBufferingUpdate(VideoPlayer mp, int percent) {
-                    mCurrentBufferPercentage = percent;
-                }
-            };
-
-
     public void setOnPreparedListener(VideoPlayer.OnPlayerPreparedListener l) {
         mOnPreparedListener = l;
     }
 
     /**
-     * Register a callback to be invoked when the end of a media file
-     * has been reached during playback.
+     * Register a callback to be invoked when the end of a media file has been
+     * reached during playback.
      *
      * @param l The callback that will be run
      */
@@ -247,10 +227,9 @@ public class VPlayer {
     }
 
     /**
-     * Register a callback to be invoked when an error occurs
-     * during playback or setup.  If no listener is specified,
-     * or if the listener returned false, VideoView will inform
-     * the user of any errors.
+     * Register a callback to be invoked when an error occurs during playback or
+     * setup. If no listener is specified, or if the listener returned false,
+     * VideoView will inform the user of any errors.
      *
      * @param l The callback that will be run
      */
@@ -258,14 +237,14 @@ public class VPlayer {
         mOnErrorListener = l;
     }
 
-
-    public void setOnSeekCompleteListener(VideoPlayer.OnPlayerSeekCompleteListener l) {
+    public void setOnSeekCompleteListener(
+            VideoPlayer.OnPlayerSeekCompleteListener l) {
         mOnSeekCompleteListener = l;
     }
 
     /**
-     * Register a callback to be invoked when an informational event
-     * occurs during playback or setup.
+     * Register a callback to be invoked when an informational event occurs
+     * during playback or setup.
      *
      * @param l The callback that will be run
      */
@@ -279,7 +258,8 @@ public class VPlayer {
             mMediaPlayer.release();
             mMediaPlayer = null;
             mCurrentState = STATE_IDLE;
-            AudioManager am = (AudioManager) mAppContext.getSystemService(Context.AUDIO_SERVICE);
+            AudioManager am = (AudioManager) mAppContext
+                    .getSystemService(Context.AUDIO_SERVICE);
             am.abandonAudioFocus(null);
         }
     }
@@ -308,7 +288,8 @@ public class VPlayer {
             mMediaPlayer.release();
             mMediaPlayer = null;
             mCurrentState = STATE_IDLE;
-            AudioManager am = (AudioManager) mAppContext.getSystemService(Context.AUDIO_SERVICE);
+            AudioManager am = (AudioManager) mAppContext
+                    .getSystemService(Context.AUDIO_SERVICE);
             am.abandonAudioFocus(null);
         }
     }
@@ -317,13 +298,13 @@ public class VPlayer {
         return isInPlaybackState() && mMediaPlayer.isPlaying();
     }
 
+    public boolean isLooping() {
+        return (mMediaPlayer != null) ? mMediaPlayer.isLooping() : false;
+    }
+
     public void setLooping(boolean looping) {
         if (mMediaPlayer != null)
             mMediaPlayer.setLooping(looping);
-    }
-
-    public boolean isLooping() {
-        return (mMediaPlayer != null) ? mMediaPlayer.isLooping() : false;
     }
 
     public void setVolume(float leftVolume, float rightVolume) {
@@ -379,10 +360,8 @@ public class VPlayer {
     }
 
     private boolean isInPlaybackState() {
-        return (mMediaPlayer != null &&
-                mCurrentState != STATE_ERROR &&
-                mCurrentState != STATE_IDLE &&
-                mCurrentState != STATE_PREPARING);
+        return (mMediaPlayer != null && mCurrentState != STATE_ERROR
+                && mCurrentState != STATE_IDLE && mCurrentState != STATE_PREPARING);
     }
 
     public boolean canPause() {
@@ -401,22 +380,6 @@ public class VPlayer {
         return 0;
     }
 
-    static final int AR_ASPECT_FIT_PARENT = 0; // without clip
-    static final int AR_ASPECT_FILL_PARENT = 1; // may clip
-    static final int AR_ASPECT_WRAP_CONTENT = 2;
-    static final int AR_MATCH_PARENT = 3;
-    static final int AR_16_9_FIT_PARENT = 4;
-    static final int AR_4_3_FIT_PARENT = 5;
-
-    private static final int[] s_allAspectRatio = {
-            AR_ASPECT_FIT_PARENT,
-            AR_ASPECT_FILL_PARENT,
-            AR_ASPECT_WRAP_CONTENT,
-            AR_16_9_FIT_PARENT,
-            AR_4_3_FIT_PARENT};
-    private int mCurrentAspectRatioIndex = 0;
-    private int mCurrentAspectRatio = s_allAspectRatio[0];
-
     public int toggleAspectRatio() {
         mCurrentAspectRatioIndex++;
         mCurrentAspectRatioIndex %= s_allAspectRatio.length;
@@ -431,11 +394,15 @@ public class VPlayer {
         if (mUri != null) {
             player = new VideoPlayer();
             player.setOption(VideoPlayer.OPT_CATEGORY_PLAYER, "opensles", 0);
-            player.setOption(VideoPlayer.OPT_CATEGORY_PLAYER, "overlay-format", VideoPlayer.SDL_FCC_RV32);
+            player.setOption(VideoPlayer.OPT_CATEGORY_PLAYER, "overlay-format",
+                    VideoPlayer.SDL_FCC_RV32);
             player.setOption(VideoPlayer.OPT_CATEGORY_PLAYER, "framedrop", 1);
-            player.setOption(VideoPlayer.OPT_CATEGORY_PLAYER, "start-on-prepared", 0);
-            player.setOption(VideoPlayer.OPT_CATEGORY_FORMAT, "http-detect-range-support", 0);
-            player.setOption(VideoPlayer.OPT_CATEGORY_CODEC, "skip_loop_filter", 48);
+            player.setOption(VideoPlayer.OPT_CATEGORY_PLAYER,
+                    "start-on-prepared", 0);
+            player.setOption(VideoPlayer.OPT_CATEGORY_FORMAT,
+                    "http-detect-range-support", 0);
+            player.setOption(VideoPlayer.OPT_CATEGORY_CODEC,
+                    "skip_loop_filter", 48);
 
         }
         mediaPlayer = player;
@@ -450,18 +417,17 @@ public class VPlayer {
     public VideoPlayer getMediaPlayer() {
         return mMediaPlayer;
     }
-    //----------------------------------------一下为测试:
-    //测试播放音频;
-//	vplayer=new VPlayer(getApplicationContext());
-//	vplayer.setVideoPath("/sdcard/niliuchenghe.mp3");
-//	vplayer.setOnPreparedListener(new OnPlayerPreparedListener() {
-//		
-//		@Override
-//		public void onPrepared(VideoPlayer mp) {
-//			vplayer.setSpeed(1.0f);
-//			vplayer.start();
-//		}
-//	});
-//	vplayer.prepareAsync();
+    // ----------------------------------------一下为测试:
+    // 测试播放音频;
+    // vplayer=new VPlayer(getApplicationContext());
+    // vplayer.setVideoPath("/sdcard/niliuchenghe.mp3");
+    // vplayer.setOnPreparedListener(new OnPlayerPreparedListener() {
+    //
+    // @Override
+    // public void onPrepared(VideoPlayer mp) {
+    // vplayer.setSpeed(1.0f);
+    // vplayer.start();
+    // }
+    // });
+    // vplayer.prepareAsync();
 }
-

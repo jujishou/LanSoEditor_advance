@@ -1,22 +1,15 @@
 package com.lansosdk.videoeditor;
 
-import android.annotation.TargetApi;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.os.Build;
 import android.support.v4.util.LruCache;
 import android.util.Log;
-
 
 public class BitmapLruCache {
 
     private final static String TAG = "BitmapLruCache";
-
-    private final LruCache<String, Bitmap> mMemCache;
-
-    private int writeIndex = 0;
     private static final int MAX_NUMBER = 8;
+    private final LruCache<String, Bitmap> mMemCache;
+    private int writeIndex = 0;
 
     public BitmapLruCache() {
 
@@ -57,35 +50,34 @@ public class BitmapLruCache {
         }
     }
 
+    // public synchronized Bitmap getBitmap(String key) {
+    //
+    // final Bitmap b = mMemCache.get(key);
+    //
+    // if (b == null){
+    // mMemCache.remove(key);
+    // return null;
+    // }
+    // return b;
+    // }
 
-//    public synchronized Bitmap getBitmap(String key) {
-//    	
-//        final Bitmap b = mMemCache.get(key);
-//
-//        if (b == null){
-//            mMemCache.remove(key);
-//            return null;
-//        }
-//        return b;
-//    }
-
-//    public synchronized Bitmap getBitmap(long ptsUs) {
-//    	
-//    	String key="pts:" + ptsUs;
-//        final Bitmap b = mMemCache.get(key);
-//
-//        if (b == null){
-//            mMemCache.remove(key);
-//            return null;
-//        }
-//        return b;
-//    }
-//    public synchronized void pushBitmap(long ptsUs, Bitmap bitmap) {
-//    	String key="pts:" + ptsUs;
-//        if (key != null && bitmap != null && getBitmap(ptsUs) == null) {
-//            mMemCache.put(key, bitmap);
-//        }
-//    }
+    // public synchronized Bitmap getBitmap(long ptsUs) {
+    //
+    // String key="pts:" + ptsUs;
+    // final Bitmap b = mMemCache.get(key);
+    //
+    // if (b == null){
+    // mMemCache.remove(key);
+    // return null;
+    // }
+    // return b;
+    // }
+    // public synchronized void pushBitmap(long ptsUs, Bitmap bitmap) {
+    // String key="pts:" + ptsUs;
+    // if (key != null && bitmap != null && getBitmap(ptsUs) == null) {
+    // mMemCache.put(key, bitmap);
+    // }
+    // }
 
     public synchronized void clear() {
         Log.i(TAG, "============mMemCache.evictAll()");
@@ -96,20 +88,20 @@ public class BitmapLruCache {
         return mMemCache.putCount();
     }
 
-//    private Bitmap getBitmapFromMemCache(long ptsUs) {
-//        return getBitmapFromMemCache("pts:" + ptsUs);
-//    }
-//
-//    private void addBitmapToMemCache(long ptsUs, Bitmap bitmap) {
-//        addBitmapToMemCache("pts:" + ptsUs, bitmap);
-//    }
-//    public static Bitmap getFromResource(Resources res, int resId) {
-//        BitmapCache cache = BitmapCache.getInstance();
-//        Bitmap bitmap = cache.getBitmapFromMemCache(resId);
-//        if (bitmap == null) {
-//            bitmap = BitmapFactory.decodeResource(res, resId);
-//            cache.addBitmapToMemCache(resId, bitmap);
-//        }
-//        return bitmap;
-//    }
+    // private Bitmap getBitmapFromMemCache(long ptsUs) {
+    // return getBitmapFromMemCache("pts:" + ptsUs);
+    // }
+    //
+    // private void addBitmapToMemCache(long ptsUs, Bitmap bitmap) {
+    // addBitmapToMemCache("pts:" + ptsUs, bitmap);
+    // }
+    // public static Bitmap getFromResource(Resources res, int resId) {
+    // BitmapCache cache = BitmapCache.getInstance();
+    // Bitmap bitmap = cache.getBitmapFromMemCache(resId);
+    // if (bitmap == null) {
+    // bitmap = BitmapFactory.decodeResource(res, resId);
+    // cache.addBitmapToMemCache(resId, bitmap);
+    // }
+    // return bitmap;
+    // }
 }

@@ -1,7 +1,5 @@
 package com.example.advanceDemo.view;
 
-import com.lansoeditor.demo.R;
-
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
@@ -18,6 +16,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
 
+import com.lansoeditor.advanceDemo.R;
 
 /**
  * 此代码来源于网络, 不属于SDK的一部分. 我们只是用来作为UI部分,演示录制功能.
@@ -99,7 +98,7 @@ public class CameraProgressBar extends View {
      * 是否长按放大
      */
     private boolean isLongScale;
-
+    private OnProgressTouchListener listener;
 
     public CameraProgressBar(Context context) {
         super(context);
@@ -111,7 +110,8 @@ public class CameraProgressBar extends View {
         init(context, attrs);
     }
 
-    public CameraProgressBar(Context context, AttributeSet attrs, int defStyleAttr) {
+    public CameraProgressBar(Context context, AttributeSet attrs,
+                             int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init(context, attrs);
     }
@@ -119,16 +119,25 @@ public class CameraProgressBar extends View {
     private void init(Context context, AttributeSet attrs) {
         mTouchSlop = ViewConfiguration.get(context).getScaledTouchSlop();
         if (attrs != null) {
-            TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.CameraProgressBar);
-            innerColor = a.getColor(R.styleable.CameraProgressBar_innerColor, innerColor);
-            outerColor = a.getColor(R.styleable.CameraProgressBar_outerColor, outerColor);
-            progressColor = a.getColor(R.styleable.CameraProgressBar_progressColor, progressColor);
-            innerRadio = a.getDimensionPixelOffset(R.styleable.CameraProgressBar_innerRadio, innerRadio);
-            progressWidth = a.getDimensionPixelOffset(R.styleable.CameraProgressBar_progressWidth, progressWidth);
-            progress = a.getInt(R.styleable.CameraProgressBar_progress, progress);
+            TypedArray a = context.obtainStyledAttributes(attrs,
+                    R.styleable.CameraProgressBar);
+            innerColor = a.getColor(R.styleable.CameraProgressBar_innerColor,
+                    innerColor);
+            outerColor = a.getColor(R.styleable.CameraProgressBar_outerColor,
+                    outerColor);
+            progressColor = a.getColor(
+                    R.styleable.CameraProgressBar_progressColor, progressColor);
+            innerRadio = a.getDimensionPixelOffset(
+                    R.styleable.CameraProgressBar_innerRadio, innerRadio);
+            progressWidth = a.getDimensionPixelOffset(
+                    R.styleable.CameraProgressBar_progressWidth, progressWidth);
+            progress = a.getInt(R.styleable.CameraProgressBar_progress,
+                    progress);
             scale = a.getFloat(R.styleable.CameraProgressBar_scale, scale);
-            isLongScale = a.getBoolean(R.styleable.CameraProgressBar_isLongScale, isLongScale);
-            maxProgress = a.getInt(R.styleable.CameraProgressBar_maxProgress, maxProgress);
+            isLongScale = a.getBoolean(
+                    R.styleable.CameraProgressBar_isLongScale, isLongScale);
+            maxProgress = a.getInt(R.styleable.CameraProgressBar_maxProgress,
+                    maxProgress);
             a.recycle();
         }
         backgroundPaint = new Paint();
@@ -147,26 +156,28 @@ public class CameraProgressBar extends View {
 
         sweepAngle = ((float) progress / maxProgress) * 360;
 
-        mDetector = new GestureDetectorCompat(context, new GestureDetector.SimpleOnGestureListener() {
-            @Override
-            public boolean onSingleTapConfirmed(MotionEvent e) {
-                isLongClick = false;
-                if (CameraProgressBar.this.listener != null) {
-                    CameraProgressBar.this.listener.onClick(CameraProgressBar.this);
-                }
-                return super.onSingleTapConfirmed(e);
-            }
+        mDetector = new GestureDetectorCompat(context,
+                new GestureDetector.SimpleOnGestureListener() {
+                    @Override
+                    public boolean onSingleTapConfirmed(MotionEvent e) {
+                        isLongClick = false;
+                        if (CameraProgressBar.this.listener != null) {
+                            CameraProgressBar.this.listener
+                                    .onClick(CameraProgressBar.this);
+                        }
+                        return super.onSingleTapConfirmed(e);
+                    }
 
-            @Override
-            public void onLongPress(MotionEvent e) {
-                isLongClick = true;
-                postInvalidate();
-                mLastY = e.getY();
-//                if (CameraProgressBar.this.listener != null) {
-//                    CameraProgressBar.this.listener.onLongClick(CameraProgressBar.this);
-//                }
-            }
-        });
+                    @Override
+                    public void onLongPress(MotionEvent e) {
+                        isLongClick = true;
+                        postInvalidate();
+                        mLastY = e.getY();
+                        // if (CameraProgressBar.this.listener != null) {
+                        // CameraProgressBar.this.listener.onLongClick(CameraProgressBar.this);
+                        // }
+                    }
+                });
         mDetector.setIsLongpressEnabled(true);
     }
 
@@ -188,21 +199,23 @@ public class CameraProgressBar extends View {
         int width = getWidth();
         float circle = width / 2.0f;
 
-        if (/*isLongScale && */!isLongClick) {
+        if (/* isLongScale && */!isLongClick) {
             canvas.scale(scale, scale, circle, circle);
         }
-        //画内圆
+        // 画内圆
         float backgroundRadio = circle - progressWidth - innerRadio;
         canvas.drawCircle(circle, circle, backgroundRadio, backgroundPaint);
 
-        //画内外环
+        // 画内外环
         float halfInnerWidth = innerRadio / 2.0f + progressWidth;
-        RectF innerRectF = new RectF(halfInnerWidth, halfInnerWidth, width - halfInnerWidth, width - halfInnerWidth);
+        RectF innerRectF = new RectF(halfInnerWidth, halfInnerWidth, width
+                - halfInnerWidth, width - halfInnerWidth);
         canvas.drawArc(innerRectF, -90, 360, true, innerPaint);
 
         progressPaint.setColor(outerColor);
         float halfOuterWidth = progressWidth / 2.0f;
-        RectF outerRectF = new RectF(halfOuterWidth, halfOuterWidth, getWidth() - halfOuterWidth, getWidth() - halfOuterWidth);
+        RectF outerRectF = new RectF(halfOuterWidth, halfOuterWidth, getWidth()
+                - halfOuterWidth, getWidth() - halfOuterWidth);
         canvas.drawArc(outerRectF, -90, 360, true, progressPaint);
 
         progressPaint.setColor(progressColor);
@@ -226,9 +239,9 @@ public class CameraProgressBar extends View {
                     if (isBeingDrag) {
                         boolean isUpScroll = y < mLastY;
                         mLastY = y;
-//                        if (this.listener != null) {
-//                            this.listener.onZoom(isUpScroll);
-//                        }
+                        // if (this.listener != null) {
+                        // this.listener.onZoom(isUpScroll);
+                        // }
                     } else {
                         isBeingDrag = Math.abs(y - mLastY) > mTouchSlop;
                     }
@@ -240,16 +253,17 @@ public class CameraProgressBar extends View {
                 if (isLongClick) {
                     isLongClick = false;
                     postInvalidate();
-//                    if (this.listener != null) {
-//                        this.listener.onLongClickUp(this);
-//                    }
+                    // if (this.listener != null) {
+                    // this.listener.onLongClickUp(this);
+                    // }
                 }
                 break;
             case MotionEvent.ACTION_POINTER_DOWN:
                 if (isLongClick) {
-//                    if (this.listener != null) {
-//                        this.listener.onPointerDown(event.getRawX(), event.getRawY());
-//                    }
+                    // if (this.listener != null) {
+                    // this.listener.onPointerDown(event.getRawX(),
+                    // event.getRawY());
+                    // }
                 }
                 break;
         }
@@ -276,20 +290,6 @@ public class CameraProgressBar extends View {
     }
 
     /**
-     * 设置进度
-     *
-     * @param progress
-     */
-    public void setProgress(int progress) {
-        if (progress <= 0) progress = 0;
-        if (progress >= maxProgress) progress = maxProgress;
-        if (progress == this.progress) return;
-        this.progress = progress;
-        this.sweepAngle = ((float) progress / maxProgress) * 360;
-        postInvalidate();
-    }
-
-    /**
      * 还原到初始状态
      */
     public void reset() {
@@ -303,6 +303,23 @@ public class CameraProgressBar extends View {
         return progress;
     }
 
+    /**
+     * 设置进度
+     *
+     * @param progress
+     */
+    public void setProgress(int progress) {
+        if (progress <= 0)
+            progress = 0;
+        if (progress >= maxProgress)
+            progress = maxProgress;
+        if (progress == this.progress)
+            return;
+        this.progress = progress;
+        this.sweepAngle = ((float) progress / maxProgress) * 360;
+        postInvalidate();
+    }
+
     public void setLongScale(boolean longScale) {
         isLongScale = longScale;
     }
@@ -310,8 +327,6 @@ public class CameraProgressBar extends View {
     public void setMaxProgress(int maxProgress) {
         this.maxProgress = maxProgress;
     }
-
-    private OnProgressTouchListener listener;
 
     public void setOnProgressTouchListener(OnProgressTouchListener listener) {
         this.listener = listener;
@@ -328,31 +343,31 @@ public class CameraProgressBar extends View {
          */
         void onClick(CameraProgressBar progressBar);
 
-//        /**
-//         * 长按
-//         * @param progressBar
-//         */
-//        void onLongClick(CameraProgressBar progressBar);
-//
-//        /**
-//         * 移动
-//         * @param zoom true放大
-//         */
-//        void onZoom(boolean zoom);
-//
-//        /**
-//         * 长按抬起
-//         * @param progressBar
-//         */
-//        void onLongClickUp(CameraProgressBar progressBar);
-//
-//        /**
-//         * 触摸对焦
-//         * @param rawX
-//         * @param rawY
-//         */
-//
-//        void onPointerDown(float rawX, float rawY);
+        // /**
+        // * 长按
+        // * @param progressBar
+        // */
+        // void onLongClick(CameraProgressBar progressBar);
+        //
+        // /**
+        // * 移动
+        // * @param zoom true放大
+        // */
+        // void onZoom(boolean zoom);
+        //
+        // /**
+        // * 长按抬起
+        // * @param progressBar
+        // */
+        // void onLongClickUp(CameraProgressBar progressBar);
+        //
+        // /**
+        // * 触摸对焦
+        // * @param rawX
+        // * @param rawY
+        // */
+        //
+        // void onPointerDown(float rawX, float rawY);
     }
 
 }

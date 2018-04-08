@@ -1,8 +1,5 @@
 package com.example.advanceDemo.view;
 
-
-import java.util.LinkedHashMap;
-
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -11,6 +8,8 @@ import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
+
+import java.util.LinkedHashMap;
 
 /**
  * 贴图操作控件
@@ -173,7 +172,6 @@ public class StickerView extends View {
         }// end switch
         return ret;
     }
-
 
     public LinkedHashMap<Integer, StickerItem> getBank() {
         return bank;

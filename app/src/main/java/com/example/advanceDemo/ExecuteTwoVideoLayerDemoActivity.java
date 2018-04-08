@@ -1,13 +1,5 @@
 package com.example.advanceDemo;
 
-import java.nio.IntBuffer;
-
-import jp.co.cyberagent.lansongsdk.gpuimage.GPUImageLookupFilter;
-import jp.co.cyberagent.lansongsdk.gpuimage.GPUImageSepiaFilter;
-import jp.co.cyberagent.lansongsdk.gpuimage.IFAmaroFilter;
-import jp.co.cyberagent.lansongsdk.gpuimage.IFRiseFilter;
-
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -15,10 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -26,36 +15,30 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.advanceDemo.view.ShowHeart;
-import com.lansoeditor.demo.R;
+import com.lansoeditor.advanceDemo.R;
 import com.lansosdk.box.BitmapLayer;
-import com.lansosdk.box.BitmapLoader;
 import com.lansosdk.box.BoxDecoder;
-import com.lansosdk.box.CanvasRunnable;
 import com.lansosdk.box.CanvasLayer;
+import com.lansosdk.box.CanvasRunnable;
 import com.lansosdk.box.DataLayer;
 import com.lansosdk.box.DrawPad;
 import com.lansosdk.box.DrawPadTwoVideoExecute;
-import com.lansosdk.box.DrawPadVideoRunnable;
-import com.lansosdk.box.GifLayer;
 import com.lansosdk.box.MVLayer;
-import com.lansosdk.box.MVLayerENDMode;
 import com.lansosdk.box.TwoVideoLayer;
-import com.lansosdk.box.VideoLayer;
-import com.lansosdk.box.ViewLayer;
 import com.lansosdk.box.onDrawPadCompletedListener;
 import com.lansosdk.box.onDrawPadProgressListener;
 import com.lansosdk.box.onDrawPadThreadProgressListener;
 import com.lansosdk.videoeditor.CopyDefaultVideoAsyncTask;
-import com.lansosdk.videoeditor.DrawPadVideoExecute;
-import com.lansosdk.videoeditor.LanSoEditor;
 import com.lansosdk.videoeditor.MediaInfo;
 import com.lansosdk.videoeditor.SDKDir;
 import com.lansosdk.videoeditor.SDKFileUtils;
 import com.lansosdk.videoeditor.VideoEditor;
-import com.lansosdk.videoeditor.onVideoEditorProgressListener;
+
+import java.nio.IntBuffer;
 
 public class ExecuteTwoVideoLayerDemoActivity extends Activity {
 
+    private static final String TAG = "ExecuteVideoLayerDemoActivity";
     String videoPath = null;
     ProgressDialog mProgressDialog;
     int videoDuration;
@@ -63,22 +46,23 @@ public class ExecuteTwoVideoLayerDemoActivity extends Activity {
     MediaInfo mInfo;
     TextView tvProgressHint;
     TextView tvHint;
-    private String editTmpPath = null;  //视频处理的临时文件存放
+    private String editTmpPath = null; // 视频处理的临时文件存放
     private String dstPath = null;
-
     private TwoVideoLayer twovideoLayer = null;
     private BitmapLayer bitmapLayer = null;
     private CanvasLayer mCanvasLayer = null;
     private DrawPadTwoVideoExecute mDrawPad = null;
-
     /**
      * 用来显示一个心形.
      */
     private ShowHeart mShowHeart;
-
     private boolean isExecuting = false;
-
-    private static final String TAG = "ExecuteVideoLayerDemoActivity";
+    private MediaInfo gifInfo;
+    private long decoderHandler;
+    private IntBuffer mGLRgbBuffer;
+    private int gifInterval = 0;
+    private int frameCount = 0;
+    private DataLayer dataLayer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,7 +78,7 @@ public class ExecuteTwoVideoLayerDemoActivity extends Activity {
 
         initUI();
 
-        //在手机的默认路径下创建一个文件名,用来保存生成的视频文件,(在onDestroy中删除)
+        // 在手机的默认路径下创建一个文件名,用来保存生成的视频文件,(在onDestroy中删除)
         editTmpPath = SDKFileUtils.newMp4PathInBox();
         if (SDKFileUtils.fileExist(editTmpPath)) {
             SDKFileUtils.deleteFile(editTmpPath);
@@ -112,11 +96,11 @@ public class ExecuteTwoVideoLayerDemoActivity extends Activity {
         String videoPath2 = "/sdcard/mask.mp4";
 
         isExecuting = true;
-        mDrawPad = new DrawPadTwoVideoExecute(ExecuteTwoVideoLayerDemoActivity.this, videoPath, videoPath2,
+        mDrawPad = new DrawPadTwoVideoExecute(
+                ExecuteTwoVideoLayerDemoActivity.this, videoPath, videoPath2,
                 544, 960, 2000000, editTmpPath);
 
         mDrawPad.setUseMainVideoPts(true);
-
 
         /**
          * 设置效果视频 是否循环.
@@ -133,11 +117,11 @@ public class ExecuteTwoVideoLayerDemoActivity extends Activity {
                 // TODO Auto-generated method stub
 
                 tvProgressHint.setText(String.valueOf(currentTimeUs));
-                //6秒后消失
+                // 6秒后消失
                 if (currentTimeUs > 6000000 && bitmapLayer != null)
                     v.removeLayer(bitmapLayer);
 
-                //3秒的时候,放大一倍.
+                // 3秒的时候,放大一倍.
                 if (currentTimeUs > 3000000 && bitmapLayer != null)
                     bitmapLayer.setScale(2.0f);
             }
@@ -154,7 +138,8 @@ public class ExecuteTwoVideoLayerDemoActivity extends Activity {
                 isExecuting = false;
 
                 if (SDKFileUtils.fileExist(editTmpPath)) {
-                    boolean ret = VideoEditor.encoderAddAudio(videoPath, editTmpPath, SDKDir.TMP_DIR, dstPath);
+                    boolean ret = VideoEditor.encoderAddAudio(videoPath,
+                            editTmpPath, SDKDir.TMP_DIR, dstPath);
                     if (ret == false) {
                         dstPath = editTmpPath;
                     }
@@ -162,7 +147,7 @@ public class ExecuteTwoVideoLayerDemoActivity extends Activity {
                 findViewById(R.id.id_video_edit_btn2).setEnabled(true);
             }
         });
-//		vDrawPad.setUseMainVideoPts(true);
+        // vDrawPad.setUseMainVideoPts(true);
 
         mDrawPad.pauseRecordDrawPad();
         /**
@@ -171,21 +156,23 @@ public class ExecuteTwoVideoLayerDemoActivity extends Activity {
         if (mDrawPad.startDrawPad()) {
             addLayers();
         } else {
-            Log.e(TAG, "后台容器线程  运行失败,您请检查下是否是路径设置有无, 请用MediaInfo.checkFile执行查看下....");
+            Log.e(TAG,
+                    "后台容器线程  运行失败,您请检查下是否是路径设置有无, 请用MediaInfo.checkFile执行查看下....");
         }
     }
 
     private void addLayers() {
         if (mDrawPad.isRunning()) {
             /**
-             * 一下是在处理过程中,
-             * 增加的几个Layer, 来实现视频在播放过程中叠加别的一些媒体, 像图片, 文字等.
+             * 一下是在处理过程中, 增加的几个Layer, 来实现视频在播放过程中叠加别的一些媒体, 像图片, 文字等.
              */
-            bitmapLayer = mDrawPad.addBitmapLayer(BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher), null);
+            bitmapLayer = mDrawPad.addBitmapLayer(BitmapFactory.decodeResource(
+                    getResources(), R.drawable.ic_launcher), null);
             bitmapLayer.setPosition(300, 200);
 
-            //增加一个笑脸, add a bitmap
-            mDrawPad.addBitmapLayer(BitmapFactory.decodeResource(getResources(), R.drawable.xiaolian), null);
+            // 增加一个笑脸, add a bitmap
+            mDrawPad.addBitmapLayer(BitmapFactory.decodeResource(
+                    getResources(), R.drawable.xiaolian), null);
             mDrawPad.resumeRecordDrawPad();
         }
     }
@@ -216,37 +203,42 @@ public class ExecuteTwoVideoLayerDemoActivity extends Activity {
         tvHint.setText(R.string.drawpadexecute_demo_hint);
         tvProgressHint = (TextView) findViewById(R.id.id_video_edit_progress_hint);
 
-        findViewById(R.id.id_video_edit_btn).setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        findViewById(R.id.id_video_edit_btn).setOnClickListener(
+                new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
 
-                if (mInfo.vDuration >= 60 * 1000) {//大于60秒
-                    showHintDialog();
-                } else {
-                    testDrawPadExecute();
-                }
-            }
-        });
+                        if (mInfo.vDuration >= 60 * 1000) {// 大于60秒
+                            showHintDialog();
+                        } else {
+                            testDrawPadExecute();
+                        }
+                    }
+                });
         findViewById(R.id.id_video_edit_btn2).setEnabled(false);
-        findViewById(R.id.id_video_edit_btn2).setOnClickListener(new OnClickListener() {
+        findViewById(R.id.id_video_edit_btn2).setOnClickListener(
+                new OnClickListener() {
 
-            @Override
-            public void onClick(View v) {
-                if (SDKFileUtils.fileExist(dstPath)) {
-                    Intent intent = new Intent(ExecuteTwoVideoLayerDemoActivity.this, VideoPlayerActivity.class);
-                    intent.putExtra("videopath", dstPath);
-                    startActivity(intent);
-                } else {
-                    Toast.makeText(ExecuteTwoVideoLayerDemoActivity.this, "目标文件不存在", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
+                    @Override
+                    public void onClick(View v) {
+                        if (SDKFileUtils.fileExist(dstPath)) {
+                            Intent intent = new Intent(
+                                    ExecuteTwoVideoLayerDemoActivity.this,
+                                    VideoPlayerActivity.class);
+                            intent.putExtra("videopath", dstPath);
+                            startActivity(intent);
+                        } else {
+                            Toast.makeText(
+                                    ExecuteTwoVideoLayerDemoActivity.this,
+                                    "目标文件不存在", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
 
     }
 
     private void showHintDialog() {
-        new AlertDialog.Builder(this)
-                .setTitle("提示")
+        new AlertDialog.Builder(this).setTitle("提示")
                 .setMessage("视频过大,可能会需要一段时间,您确定要处理吗?")
                 .setPositiveButton("确定", new DialogInterface.OnClickListener() {
 
@@ -255,9 +247,7 @@ public class ExecuteTwoVideoLayerDemoActivity extends Activity {
                         // TODO Auto-generated method stub
                         testDrawPadExecute();
                     }
-                })
-                .setNegativeButton("取消", null)
-                .show();
+                }).setNegativeButton("取消", null).show();
     }
 
     /**
@@ -269,7 +259,8 @@ public class ExecuteTwoVideoLayerDemoActivity extends Activity {
         if (mCanvasLayer != null) {
 
             mCanvasLayer.setClearCanvas(false);
-            mShowHeart = new ShowHeart(ExecuteTwoVideoLayerDemoActivity.this, mCanvasLayer.getPadWidth(), mCanvasLayer.getPadHeight());
+            mShowHeart = new ShowHeart(ExecuteTwoVideoLayerDemoActivity.this,
+                    mCanvasLayer.getPadWidth(), mCanvasLayer.getPadHeight());
             mCanvasLayer.addCanvasRunnable(new CanvasRunnable() {
 
                 @Override
@@ -284,30 +275,27 @@ public class ExecuteTwoVideoLayerDemoActivity extends Activity {
 
     private void addMVLayer() {
         Log.i(TAG, "增加一个MV");
-        String colorMVPath = CopyDefaultVideoAsyncTask.copyFile(ExecuteTwoVideoLayerDemoActivity.this, "mei.mp4");
-        String maskMVPath = CopyDefaultVideoAsyncTask.copyFile(ExecuteTwoVideoLayerDemoActivity.this, "mei_b.mp4");
+        String colorMVPath = CopyDefaultVideoAsyncTask.copyFile(
+                ExecuteTwoVideoLayerDemoActivity.this, "mei.mp4");
+        String maskMVPath = CopyDefaultVideoAsyncTask.copyFile(
+                ExecuteTwoVideoLayerDemoActivity.this, "mei_b.mp4");
         /**
-         * 当mv在解码的时候, 是否异步执行;
-         * 如果异步执行,则MV解码可能没有那么快,从而MV画面会有慢动作的现象.
+         * 当mv在解码的时候, 是否异步执行; 如果异步执行,则MV解码可能没有那么快,从而MV画面会有慢动作的现象.
          * 如果同步执行,则视频处理会等待MV解码完成, 从而处理速度会慢一些,但MV在播放时,是正常的.
          *
-         * @param srcPath  MV的彩色视频
-         * @param maskPath  MV的黑白视频.
-         * @param isAsync   是否异步执行.
+         * @param srcPath
+         *            MV的彩色视频
+         * @param maskPath
+         *            MV的黑白视频.
+         * @param isAsync
+         *            是否异步执行.
          * @return
          */
         MVLayer layer = mDrawPad.addMVLayer(colorMVPath, maskMVPath, true);
         // mv在播放完后, 有3种模式,消失/停留在最后一帧/循环.默认是循环.
-//			  layer.setEndMode(MVLayerENDMode.INVISIBLE); 
+        // layer.setEndMode(MVLayerENDMode.INVISIBLE);
 
     }
-
-    private MediaInfo gifInfo;
-    private long decoderHandler;
-    private IntBuffer mGLRgbBuffer;
-    private int gifInterval = 0;
-    private int frameCount = 0;
-    private DataLayer dataLayer;
 
     /**
      * 用来计算, 在视频走动过程中, 几秒钟插入一个gif图片
@@ -315,7 +303,7 @@ public class ExecuteTwoVideoLayerDemoActivity extends Activity {
      * @return
      */
     private boolean canDrawNext() {
-        if (frameCount % gifInterval == 0) {  //能被整除则说明间隔到了.
+        if (frameCount % gifInterval == 0) { // 能被整除则说明间隔到了.
             frameCount++;
             return true;
         } else {
@@ -331,7 +319,8 @@ public class ExecuteTwoVideoLayerDemoActivity extends Activity {
      */
 
     private void addDataLayer() {
-        String gifPath = CopyDefaultVideoAsyncTask.copyFile(getApplicationContext(), "a.gif");
+        String gifPath = CopyDefaultVideoAsyncTask.copyFile(
+                getApplicationContext(), "a.gif");
         gifInfo = new MediaInfo(gifPath);
         if (gifInfo.prepare()) {
             decoderHandler = BoxDecoder.decoderInit(gifPath);
@@ -341,7 +330,8 @@ public class ExecuteTwoVideoLayerDemoActivity extends Activity {
             dataLayer = mDrawPad.addDataLayer(gifInfo.vWidth, gifInfo.vHeight);
 
             /**
-             * 容器中的onDrawPadThreadProgressListener监听,与 onDrawPadProgressListener不同的地方在于:
+             * 容器中的onDrawPadThreadProgressListener监听,与
+             * onDrawPadProgressListener不同的地方在于:
              * 此回调是在DrawPad渲染完一帧后,立即执行这个回调中的代码,不通过Handler传递出去.
              */
             mDrawPad.setDrawPadThreadProgressListener(new onDrawPadThreadProgressListener() {
@@ -352,10 +342,12 @@ public class ExecuteTwoVideoLayerDemoActivity extends Activity {
                     if (dataLayer != null) {
                         if (canDrawNext()) {
                             int seekZero = -1;
-                            if (decoderHandler != 0 && BoxDecoder.decoderIsEnd(decoderHandler)) {
+                            if (decoderHandler != 0
+                                    && BoxDecoder.decoderIsEnd(decoderHandler)) {
                                 seekZero = 0;
                             }
-                            BoxDecoder.decoderFrame(decoderHandler, seekZero, mGLRgbBuffer.array());
+                            BoxDecoder.decoderFrame(decoderHandler, seekZero,
+                                    mGLRgbBuffer.array());
 
                             dataLayer.pushFrameToTexture(mGLRgbBuffer);
                             mGLRgbBuffer.position(0);
@@ -375,4 +367,4 @@ public class ExecuteTwoVideoLayerDemoActivity extends Activity {
         }
     }
 
-}	
+}

@@ -9,7 +9,7 @@
     	        android:id="@+id/id_camerabeauty_btn"
     	        android:layout_width="wrap_content"
     	        android:layout_height="wrap_content"
-    	        android:text="美颜"
+    	        android:text="美颜+/-"
     	        android:textColor="@color/white"
     	        android:textSize="20sp"
     	        android:layout_margin="10dip"

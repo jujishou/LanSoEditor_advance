@@ -1,78 +1,45 @@
 package com.example.advanceDemo.camera;
 
+import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
+import android.os.PowerManager;
+import android.util.Log;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.example.advanceDemo.VideoPlayerActivity;
+import com.example.advanceDemo.view.CameraProgressBar;
+import com.example.advanceDemo.view.FocusImageView;
+import com.lansoeditor.advanceDemo.R;
+import com.lansosdk.box.CameraLayer;
+import com.lansosdk.box.DrawPad;
+import com.lansosdk.box.SubLayer;
+import com.lansosdk.box.onDrawPadErrorListener;
+import com.lansosdk.box.onDrawPadProgressListener;
+import com.lansosdk.videoeditor.DrawPadCameraView;
+import com.lansosdk.videoeditor.DrawPadCameraView.doFousEventListener;
+import com.lansosdk.videoeditor.DrawPadCameraView.onViewAvailable;
+import com.lansosdk.videoeditor.FilterLibrary;
+import com.lansosdk.videoeditor.FilterLibrary.OnGpuImageFilterChosenListener;
+import com.lansosdk.videoeditor.LanSongUtil;
+import com.lansosdk.videoeditor.SDKFileUtils;
+
 import java.util.ArrayList;
 
 import jp.co.cyberagent.lansongsdk.gpuimage.GPUImageFilter;
 import jp.co.cyberagent.lansongsdk.gpuimage.LanSongBlurFilter;
-import jp.co.cyberagent.lansongsdk.gpuimage.LanSongGrindFilter;
 
+public class CameraSubLayerDemo2Activity extends Activity implements
+        OnClickListener {
 
-import com.example.advanceDemo.VideoPlayerActivity;
-import com.example.advanceDemo.view.CameraProgressBar;
-import com.example.advanceDemo.view.FaceView;
-import com.example.advanceDemo.view.FocusImageView;
-import com.lansoeditor.demo.R;
-import com.lansosdk.box.BitmapLayer;
-import com.lansosdk.box.BitmapLoader;
-import com.lansosdk.box.CameraLayer;
-import com.lansosdk.box.DrawPad;
-import com.lansosdk.box.Layer;
-import com.lansosdk.box.MVLayer;
-import com.lansosdk.box.MVLayerENDMode;
-import com.lansosdk.box.AudioPad;
-import com.lansosdk.box.SubLayer;
-import com.lansosdk.box.ViewLayer;
-import com.lansosdk.box.ViewLayerRelativeLayout;
-import com.lansosdk.box.onDrawPadErrorListener;
-import com.lansosdk.box.onDrawPadOutFrameListener;
-import com.lansosdk.box.onDrawPadProgressListener;
-import com.lansosdk.box.onDrawPadSnapShotListener;
-import com.lansosdk.box.onDrawPadThreadProgressListener;
-import com.lansosdk.videoeditor.AVDecoder;
-import com.lansosdk.videoeditor.CopyDefaultVideoAsyncTask;
-import com.lansosdk.videoeditor.CopyFileFromAssets;
-import com.lansosdk.videoeditor.DrawPadCameraView;
-import com.lansosdk.videoeditor.DrawPadCameraView.doFousEventListener;
-import com.lansosdk.videoeditor.DrawPadCameraView.onViewAvailable;
-import com.lansosdk.videoeditor.FilterLibrary.OnGpuImageFilterChosenListener;
-import com.lansosdk.videoeditor.DrawPadView;
-import com.lansosdk.videoeditor.FilterLibrary;
-import com.lansosdk.videoeditor.LanSongUtil;
-import com.lansosdk.videoeditor.SDKFileUtils;
-import com.lansosdk.videoeditor.VideoEditor;
+    private static final int RECORD_CAMERA_MAX = 15 * 1000 * 1000; // 定义录制的时间为30s
 
-
-import android.app.Activity;
-import android.content.Context;
-import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.PointF;
-import android.hardware.Camera.Face;
-import android.os.Build;
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
-import android.os.PowerManager;
-import android.util.DisplayMetrics;
-import android.util.Log;
-import android.view.View;
-import android.view.ViewGroup;
-import android.view.View.OnClickListener;
-import android.view.animation.AnimationUtils;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.SeekBar;
-import android.widget.SeekBar.OnSeekBarChangeListener;
-import android.widget.TextView;
-import android.widget.Toast;
-
-public class CameraSubLayerDemo2Activity extends Activity implements OnClickListener {
-
-    private static final int RECORD_CAMERA_MAX = 15 * 1000 * 1000; //定义录制的时间为30s
-
-    private static final int RECORD_CAMERA_MIN = 2 * 1000 * 1000; //定义最小2秒
+    private static final int RECORD_CAMERA_MIN = 2 * 1000 * 1000; // 定义最小2秒
 
     private static final String TAG = "CameraSubLayerDemo2Activity";
 
@@ -80,7 +47,7 @@ public class CameraSubLayerDemo2Activity extends Activity implements OnClickList
 
     private CameraLayer mCamLayer = null;
 
-    private String dstPath = null;  //用于录制完成后的目标视频路径.
+    private String dstPath = null; // 用于录制完成后的目标视频路径.
 
     private FocusImageView focusView;
 
@@ -92,48 +59,75 @@ public class CameraSubLayerDemo2Activity extends Activity implements OnClickList
     private CameraProgressBar mProgressBar = null;
 
     private TextView tvSubLayerHint;
-    private int subLayerAngle; //角度
+    private int subLayerAngle; // 角度
     private ArrayList<SubLayer> subLayerArray = new ArrayList<>();
+    private onDrawPadProgressListener drawPadProgressListener = new onDrawPadProgressListener() {
+
+        @Override
+        public void onProgress(DrawPad v, long currentTimeUs) {
+            // TODO Auto-generated method stub
+
+            if (currentTimeUs >= RECORD_CAMERA_MIN && btnOk != null) {
+                btnOk.setVisibility(View.VISIBLE);
+            }
+
+            if (currentTimeUs >= RECORD_CAMERA_MAX) {
+                stopDrawPad();
+                playVideo();
+            }
+            if (tvTime != null) {
+                float timeF = ((float) currentTimeUs / 1000000);
+                float b = (float) (Math.round(timeF * 10)) / 10; // 保留一位小数.
+
+                if (b >= 0)
+                    tvTime.setText(String.valueOf(b));
+            }
+            if (mProgressBar != null) {
+                mProgressBar.setProgress((int) (currentTimeUs / 1000));
+            }
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        //全屏模式下, 隐藏底部的虚拟按键.
+        // 全屏模式下, 隐藏底部的虚拟按键.
         LanSongUtil.hideBottomUIMenu(this);
         mContext = getApplicationContext();
 
         if (LanSongUtil.checkRecordPermission(getBaseContext()) == false) {
-            Toast.makeText(getApplicationContext(), "当前无权限,请打开权限后,重试!!!", Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), "当前无权限,请打开权限后,重试!!!",
+                    Toast.LENGTH_LONG).show();
             finish();
         }
-
 
         setContentView(R.layout.camera_sublayerdemo2_layout);
         mDrawPadCamera = (DrawPadCameraView) findViewById(R.id.id_fullrecord_padview);
 
         initView();
         mProgressBar.setMaxProgress(RECORD_CAMERA_MAX / 1000);
-        mProgressBar.setOnProgressTouchListener(new CameraProgressBar.OnProgressTouchListener() {
-            @Override
-            public void onClick(CameraProgressBar progressBar) {
+        mProgressBar
+                .setOnProgressTouchListener(new CameraProgressBar.OnProgressTouchListener() {
+                    @Override
+                    public void onClick(CameraProgressBar progressBar) {
 
-                if (mDrawPadCamera != null) {
-                    /**
-                     * 这里只是暂停和恢复录制, 可以录制多段,但不可以删除录制好的每一段,
-                     *
-                     * 如果你要分段录制,并支持回删,则可以采用SegmentStart和SegmentStop;
-                     */
-                    if (mDrawPadCamera.isRecording()) {
-                        mDrawPadCamera.pauseRecord();  //暂停录制,如果要停止录制
-                    } else {
-                        mDrawPadCamera.startRecord();
+                        if (mDrawPadCamera != null) {
+                            /**
+                             * 这里只是暂停和恢复录制, 可以录制多段,但不可以删除录制好的每一段,
+                             *
+                             * 如果你要分段录制,并支持回删,则可以采用SegmentStart和SegmentStop;
+                             */
+                            if (mDrawPadCamera.isRecording()) {
+                                mDrawPadCamera.pauseRecord(); // 暂停录制,如果要停止录制
+                            } else {
+                                mDrawPadCamera.startRecord();
+                            }
+                        }
                     }
-                }
-            }
-        });
+                });
         dstPath = SDKFileUtils.newMp4PathInBox();
-        initDrawPad();  //开始录制.
+        initDrawPad(); // 开始录制.
     }
 
     @Override
@@ -143,7 +137,8 @@ public class CameraSubLayerDemo2Activity extends Activity implements OnClickList
         super.onResume();
         if (mWakeLock == null) {
             PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
-            mWakeLock = pm.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK, TAG);
+            mWakeLock = pm.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK,
+                    TAG);
             mWakeLock.acquire();
         }
         startDrawPad();
@@ -162,7 +157,8 @@ public class CameraSubLayerDemo2Activity extends Activity implements OnClickList
         /**
          * 设置录制时的一些参数.
          */
-        mDrawPadCamera.setRealEncodeEnable(padWidth, padHeight, 3000 * 1024, (int) 25, dstPath);
+        mDrawPadCamera.setRealEncodeEnable(padWidth, padHeight, 3000 * 1024,
+                (int) 25, dstPath);
         /**
          * 录制的同时,录制外面的声音.
          */
@@ -216,7 +212,7 @@ public class CameraSubLayerDemo2Activity extends Activity implements OnClickList
     private void startDrawPad() {
         if (mDrawPadCamera.setupDrawpad()) {
             mCamLayer = mDrawPadCamera.getCameraLayer();
-            mDrawPadCamera.startPreview(); //容器开始预览
+            mDrawPadCamera.startPreview(); // 容器开始预览
         } else {
             Log.i(TAG, "建立drawpad线程失败.");
         }
@@ -233,47 +229,22 @@ public class CameraSubLayerDemo2Activity extends Activity implements OnClickList
         }
     }
 
-    private onDrawPadProgressListener drawPadProgressListener = new onDrawPadProgressListener() {
-
-        @Override
-        public void onProgress(DrawPad v, long currentTimeUs) {
-            // TODO Auto-generated method stub
-
-            if (currentTimeUs >= RECORD_CAMERA_MIN && btnOk != null) {
-                btnOk.setVisibility(View.VISIBLE);
-            }
-
-            if (currentTimeUs >= RECORD_CAMERA_MAX) {
-                stopDrawPad();
-                playVideo();
-            }
-            if (tvTime != null) {
-                float timeF = ((float) currentTimeUs / 1000000);
-                float b = (float) (Math.round(timeF * 10)) / 10;  //保留一位小数.
-
-                if (b >= 0)
-                    tvTime.setText(String.valueOf(b));
-            }
-            if (mProgressBar != null) {
-                mProgressBar.setProgress((int) (currentTimeUs / 1000));
-            }
-        }
-    };
-
     /**
      * 选择滤镜效果,
      */
     private void selectFilter() {
         if (mDrawPadCamera != null && mDrawPadCamera.isRunning()) {
-            FilterLibrary.showDialog(this, new OnGpuImageFilterChosenListener() {
+            FilterLibrary.showDialog(this,
+                    new OnGpuImageFilterChosenListener() {
 
-                @Override
-                public void onGpuImageFilterChosenListener(final GPUImageFilter filter, String name) {
-                    if (mCamLayer != null) {
-                        mCamLayer.switchFilterTo(filter);
-                    }
-                }
-            });
+                        @Override
+                        public void onGpuImageFilterChosenListener(
+                                final GPUImageFilter filter, String name) {
+                            if (mCamLayer != null) {
+                                mCamLayer.switchFilterTo(filter);
+                            }
+                        }
+                    });
         }
     }
 
@@ -296,13 +267,11 @@ public class CameraSubLayerDemo2Activity extends Activity implements OnClickList
         super.onDestroy();
         stopDrawPad();
 
-        if (SDKFileUtils.fileExist(dstPath)) {
-            SDKFileUtils.deleteFile(dstPath);
-            dstPath = null;
-        }
+        SDKFileUtils.deleteFile(dstPath);
+        dstPath = null;
     }
 
-    //-------------------------------------------一下是UI界面和控制部分.---------------------------------------------------
+    // -------------------------------------------一下是UI界面和控制部分.---------------------------------------------------
     private void initView() {
         findViewById(R.id.id_fullrecord_cancel).setOnClickListener(this);
 
@@ -314,10 +283,8 @@ public class CameraSubLayerDemo2Activity extends Activity implements OnClickList
         btnOk = (ImageView) findViewById(R.id.id_fullrecord_ok);
         btnOk.setOnClickListener(this);
 
-
         findViewById(R.id.id_camera_sublayer_add).setOnClickListener(this);
         findViewById(R.id.id_camera_sublayer_delete).setOnClickListener(this);
-
 
         focusView = (FocusImageView) findViewById(R.id.id_fullrecord_focusview);
 
@@ -351,11 +318,12 @@ public class CameraSubLayerDemo2Activity extends Activity implements OnClickList
                 break;
             case R.id.id_fullrecord_frontcamera:
                 if (mCamLayer != null) {
-                    if (mDrawPadCamera.isRunning() && CameraLayer.isSupportFrontCamera()) {
-                        //先把DrawPad暂停运行.
+                    if (mDrawPadCamera.isRunning()
+                            && CameraLayer.isSupportFrontCamera()) {
+                        // 先把DrawPad暂停运行.
                         mDrawPadCamera.pausePreview();
                         mCamLayer.changeCamera();
-                        mDrawPadCamera.resumePreview(); //再次开启.
+                        mDrawPadCamera.resumePreview(); // 再次开启.
                     }
                 }
                 break;
@@ -368,9 +336,10 @@ public class CameraSubLayerDemo2Activity extends Activity implements OnClickList
                 selectFilter();
                 break;
             case R.id.id_camera_sublayer_add:
-
                 if (mCamLayer != null) {
                     SubLayer layer = mCamLayer.addSubLayer();
+                    layer.setScale(0.5f);
+
                     subLayerAngle += 10;
                     layer.setRotate(subLayerAngle);
                     subLayerArray.add(layer);
@@ -385,7 +354,6 @@ public class CameraSubLayerDemo2Activity extends Activity implements OnClickList
                     subLayerArray.remove(index);
                     subLayerAngle -= 10;
                     tvSubLayerHint.setText("演示增删多个子图层,个数:" + subLayerArray.size());
-
                 }
                 break;
             default:

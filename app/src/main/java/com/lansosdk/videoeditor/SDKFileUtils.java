@@ -1,5 +1,8 @@
 package com.lansosdk.videoeditor;
 
+import android.text.TextUtils;
+import android.util.Log;
+
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.Closeable;
@@ -11,9 +14,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Calendar;
-
-import android.text.TextUtils;
-import android.util.Log;
 
 public class SDKFileUtils {
 
@@ -45,7 +45,6 @@ public class SDKFileUtils {
             d.mkdirs();
         name += "/";
 
-
         name += String.valueOf(year);
         name += String.valueOf(month);
         name += String.valueOf(day);
@@ -59,7 +58,7 @@ public class SDKFileUtils {
         name += suffix;
 
         try {
-            Thread.sleep(1);  //保持文件名的唯一性.
+            Thread.sleep(1); // 保持文件名的唯一性.
         } catch (InterruptedException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -106,7 +105,7 @@ public class SDKFileUtils {
     /**
      * 在box目录下生成一个指定后缀名的文件,并返回名字的路径.这里仅仅创建一个名字.
      *
-     * @param suffix 指定的后缀名.
+     * @param suffix 指定的后缀名. 如.mp4  或者 .pcm等
      * @return
      */
     public static String createFileInBox(String suffix) {
@@ -123,8 +122,8 @@ public class SDKFileUtils {
     }
 
     /**
-     * 在指定的文件夹里 定义一个文件名字, 名字是当前时间,指定后缀.
-     * 注意: 和 {@link #createFile(String, String)}的区别是,这里不生成文件,只是生成这个路径的字符串.
+     * 在指定的文件夹里 定义一个文件名字, 名字是当前时间,指定后缀. 注意: 和
+     * {@link #createFile(String, String)}的区别是,这里不生成文件,只是生成这个路径的字符串.
      *
      * @param dir    "/sdcard/"
      * @param suffix ".mp4"
@@ -158,22 +157,22 @@ public class SDKFileUtils {
         name += suffix;
 
         try {
-            Thread.sleep(1);  //保持文件名的唯一性.
+            Thread.sleep(1); // 保持文件名的唯一性.
         } catch (InterruptedException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
 
-//				File file=new File(name);
-//				if(file.exists()==false)
-//				{
-//					try {
-//						file.createNewFile();
-//					} catch (IOException e) {
-//						// TODO Auto-generated catch block
-//						e.printStackTrace();
-//					}
-//				}
+        // File file=new File(name);
+        // if(file.exists()==false)
+        // {
+        // try {
+        // file.createNewFile();
+        // } catch (IOException e) {
+        // // TODO Auto-generated catch block
+        // e.printStackTrace();
+        // }
+        // }
         return name;
     }
 
@@ -189,11 +188,11 @@ public class SDKFileUtils {
     public static String copyFile(String srcPath, String suffix) {
         String dstPath = SDKFileUtils.createFile(SDKDir.TMP_DIR, suffix);
 
-//			 	String cmd="/system/bin/cp ";
-//			 	cmd+=srcPath;
-//			 	cmd+=" ";
-//			 	cmd+=dstPath;
-//				Runtime.getRuntime().exec(cmd).waitFor();
+        // String cmd="/system/bin/cp ";
+        // cmd+=srcPath;
+        // cmd+=" ";
+        // cmd+=dstPath;
+        // Runtime.getRuntime().exec(cmd).waitFor();
 
         File srcF = new File(srcPath);
         File dstF = new File(dstPath);
@@ -203,7 +202,9 @@ public class SDKFileUtils {
         if (srcF.length() == dstF.length())
             return dstPath;
         else {
-            Log.e(TAG, "fileCopy is failed! " + srcPath + " src size:" + srcF.length() + " dst size:" + dstF.length());
+            Log.e(TAG,
+                    "fileCopy is failed! " + srcPath + " src size:"
+                            + srcF.length() + " dst size:" + dstF.length());
             SDKFileUtils.deleteFile(dstPath);
             return null;
         }
@@ -283,7 +284,8 @@ public class SDKFileUtils {
         return true;
     }
 
-    public static void copyFile(InputStream in, OutputStream out) throws IOException {
+    public static void copyFile(InputStream in, OutputStream out)
+            throws IOException {
         byte[] buffer = new byte[1024];
         int read;
         while ((read = in.read(buffer)) != -1) {
@@ -333,8 +335,7 @@ public class SDKFileUtils {
         return false;
     }
 
-
-    //---------------------------------
+    // ---------------------------------
 
     /**
      * 删除空目录
@@ -354,9 +355,9 @@ public class SDKFileUtils {
      * 递归删除目录下的所有文件及子目录下所有文件
      *
      * @param dir 将要删除的文件目录
-     * @return boolean Returns "true" if all deletions were successful.
-     * If a deletion fails, the method stops attempting to
-     * delete and returns "false".
+     * @return boolean Returns "true" if all deletions were successful. If a
+     * deletion fails, the method stops attempting to delete and returns
+     * "false".
      */
     public static boolean deleteDir(File dir) {
         if (dir.isDirectory()) {
@@ -372,16 +373,14 @@ public class SDKFileUtils {
         return dir.delete();
     }
     /**
-     *测试
-
-     public static void main(String[] args) {
-     doDeleteEmptyDir("new_dir1");
-     String newDir2 = "new_dir2";
-     boolean success = deleteDir(new File(newDir2));
-     if (success) {
-     System.out.println("Successfully deleted populated directory: " + newDir2);
-     } else {
-     System.out.println("Failed to delete populated directory: " + newDir2);
-     }
-     } */
+     * 测试
+     *
+     * public static void main(String[] args) { doDeleteEmptyDir("new_dir1");
+     * String newDir2 = "new_dir2"; boolean success = deleteDir(new
+     * File(newDir2)); if (success) {
+     * System.out.println("Successfully deleted populated directory: " +
+     * newDir2); } else {
+     * System.out.println("Failed to delete populated directory: " + newDir2); }
+     * }
+     */
 }

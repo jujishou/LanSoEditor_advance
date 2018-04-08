@@ -1,9 +1,5 @@
 package com.example.advanceDemo.view;
 
-import java.util.Iterator;
-import java.util.LinkedList;
-
-
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -13,8 +9,11 @@ import android.util.DisplayMetrics;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
-public class VideoProgressViewOld extends SurfaceView implements SurfaceHolder.Callback, Runnable {
+import java.util.Iterator;
+import java.util.LinkedList;
 
+public class VideoProgressViewOld extends SurfaceView implements
+        SurfaceHolder.Callback, Runnable {
 
     private volatile State currentState = State.PAUSE;
 
@@ -38,7 +37,8 @@ public class VideoProgressViewOld extends SurfaceView implements SurfaceHolder.C
     private DisplayMetrics displayMetrics;
     private int screenWidth, progressHeight;
 
-    private Paint backgroundPaint, progressPaint, flashPaint, minTimePaint, breakPaint, rollbackPaint;
+    private Paint backgroundPaint, progressPaint, flashPaint, minTimePaint,
+            breakPaint, rollbackPaint;
 
     private float perWidth;
     private float flashWidth = 3f;
@@ -50,20 +50,23 @@ public class VideoProgressViewOld extends SurfaceView implements SurfaceHolder.C
     private Canvas canvas = null;
     private Thread thread = null;
     private SurfaceHolder holder = null;
-
+    private float minRecordTimeMS = 2 * 1000f;
+    private float maxRecordTimeMS = 15 * 1000f;
 
     public VideoProgressViewOld(Context context) {
         super(context);
         init(context);
     }
 
-    public VideoProgressViewOld(Context paramContext, AttributeSet paramAttributeSet) {
+    public VideoProgressViewOld(Context paramContext,
+                                AttributeSet paramAttributeSet) {
         super(paramContext, paramAttributeSet);
         init(paramContext);
 
     }
 
-    public VideoProgressViewOld(Context paramContext, AttributeSet paramAttributeSet, int paramInt) {
+    public VideoProgressViewOld(Context paramContext,
+                                AttributeSet paramAttributeSet, int paramInt) {
         super(paramContext, paramAttributeSet, paramInt);
         init(paramContext);
     }
@@ -81,8 +84,8 @@ public class VideoProgressViewOld extends SurfaceView implements SurfaceHolder.C
         rollbackPaint = new Paint();
         backgroundPaint = new Paint();
 
-        //setBackgroundColor(Color.parseColor("#222222"));
-        //setBackgroundColor(Color.parseColor("#4db288"));
+        // setBackgroundColor(Color.parseColor("#222222"));
+        // setBackgroundColor(Color.parseColor("#4db288"));
         //
         backgroundPaint.setStyle(Paint.Style.FILL);
         backgroundPaint.setColor(Color.parseColor("#222222"));
@@ -100,7 +103,7 @@ public class VideoProgressViewOld extends SurfaceView implements SurfaceHolder.C
         breakPaint.setColor(Color.parseColor("#000000"));
 
         rollbackPaint.setStyle(Paint.Style.FILL);
-        //        rollbackPaint.setColor(Color.parseColor("#FF3030"));
+        // rollbackPaint.setColor(Color.parseColor("#FF3030"));
         rollbackPaint.setColor(Color.parseColor("#f15369"));
 
         holder = getHolder();
@@ -112,15 +115,12 @@ public class VideoProgressViewOld extends SurfaceView implements SurfaceHolder.C
         while (drawing) {
             try {
                 myDraw();
-                Thread.sleep(40);  //这里40毫秒更新一次.
+                Thread.sleep(40); // 这里40毫秒更新一次.
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
     }
-
-    private float minRecordTimeMS = 2 * 1000f;
-    private float maxRecordTimeMS = 15 * 1000f;
 
     /**
      * 设置最小录制时间, 单位毫秒
@@ -137,8 +137,7 @@ public class VideoProgressViewOld extends SurfaceView implements SurfaceHolder.C
     }
 
     /**
-     * 当一段录制完成后, 把这一段的时长放进来,
-     * 单位是毫秒.
+     * 当一段录制完成后, 把这一段的时长放进来, 单位是毫秒.
      *
      * @param timeMs
      */
@@ -172,7 +171,8 @@ public class VideoProgressViewOld extends SurfaceView implements SurfaceHolder.C
     }
 
     @Override
-    public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
+    public void surfaceChanged(SurfaceHolder holder, int format, int width,
+                               int height) {
     }
 
     @Override
@@ -221,19 +221,23 @@ public class VideoProgressViewOld extends SurfaceView implements SurfaceHolder.C
                 float left = countWidth;
                 countWidth += (curTime - preTime) * perWidth;
                 if (canvas != null) {
-                    canvas.drawRect(left, 0, countWidth, progressHeight, progressPaint);
+                    canvas.drawRect(left, 0, countWidth, progressHeight,
+                            progressPaint);
 
-                    canvas.drawRect(countWidth, 0, countWidth + breakWidth, progressHeight, breakPaint);
+                    canvas.drawRect(countWidth, 0, countWidth + breakWidth,
+                            progressHeight, breakPaint);
                 }
                 countWidth += breakWidth;
                 preTime = curTime;
             }
         }
 
-        if (timeList.isEmpty() || (!timeList.isEmpty() && timeList.getLast() <= minRecordTimeMS)) {
+        if (timeList.isEmpty()
+                || (!timeList.isEmpty() && timeList.getLast() <= minRecordTimeMS)) {
             float left = perWidth * minRecordTimeMS;
             if (canvas != null) {
-                canvas.drawRect(left, 0, left + minTimeWidth, progressHeight, minTimePaint);
+                canvas.drawRect(left, 0, left + minTimeWidth, progressHeight,
+                        minTimePaint);
             }
         }
         if (currentState == State.BACKSPACE) {
@@ -244,19 +248,21 @@ public class VideoProgressViewOld extends SurfaceView implements SurfaceHolder.C
             }
         }
         /**
-         *  手指按下时，绘制新进度条
+         * 手指按下时，绘制新进度条
          *
-         *  绘制一个新的刻度.
+         * 绘制一个新的刻度.
          *
-         *  当设置新的时间过来后, 这里应该是两个时间戳的相减
+         * 当设置新的时间过来后, 这里应该是两个时间戳的相减
          */
         if (currentState == State.START) {
             perProgress += perWidth * (curSystemTime - initTime);
 
-            float right = (countWidth + perProgress) >= screenWidth ? screenWidth : (countWidth + perProgress);
+            float right = (countWidth + perProgress) >= screenWidth ? screenWidth
+                    : (countWidth + perProgress);
 
             if (canvas != null) {
-                canvas.drawRect(countWidth, 0, right, progressHeight, progressPaint);
+                canvas.drawRect(countWidth, 0, right, progressHeight,
+                        progressPaint);
             }
         }
 
@@ -267,12 +273,14 @@ public class VideoProgressViewOld extends SurfaceView implements SurfaceHolder.C
         if (isVisible) {
             if (currentState == State.START) {
                 if (canvas != null) {
-                    canvas.drawRect(countWidth + perProgress, 0, countWidth + flashWidth + perProgress, progressHeight,
+                    canvas.drawRect(countWidth + perProgress, 0, countWidth
+                                    + flashWidth + perProgress, progressHeight,
                             flashPaint);
                 }
             } else {
                 if (canvas != null) {
-                    canvas.drawRect(countWidth, 0, countWidth + flashWidth, progressHeight, flashPaint);
+                    canvas.drawRect(countWidth, 0, countWidth + flashWidth,
+                            progressHeight, flashPaint);
                 }
             }
         }
@@ -287,6 +295,12 @@ public class VideoProgressViewOld extends SurfaceView implements SurfaceHolder.C
 
         START(0x1), PAUSE(0x2), BACKSPACE(0x3), DELETE(0x4);
 
+        private int mIntValue;
+
+        State(int intValue) {
+            mIntValue = intValue;
+        }
+
         static State mapIntToValue(final int stateInt) {
             for (State value : State.values()) {
                 if (stateInt == value.getIntValue()) {
@@ -294,12 +308,6 @@ public class VideoProgressViewOld extends SurfaceView implements SurfaceHolder.C
                 }
             }
             return PAUSE;
-        }
-
-        private int mIntValue;
-
-        State(int intValue) {
-            mIntValue = intValue;
         }
 
         int getIntValue() {

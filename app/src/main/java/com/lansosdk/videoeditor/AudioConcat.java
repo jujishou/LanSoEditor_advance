@@ -1,9 +1,8 @@
 package com.lansosdk.videoeditor;
 
-import com.lansosdk.box.AudioConcatManager;
-
 import android.content.Context;
 
+import com.lansosdk.box.AudioConcatManager;
 
 /**
  * 音频拼接.
@@ -21,8 +20,7 @@ public class AudioConcat {
     }
 
     /**
-     * 增加音频, 增加多次, 以此拼接, 先增加的放在前面, 后增加的放到后面.
-     * 当然音频仅支持 mp3和 m4a(aac)两种格式.
+     * 增加音频, 增加多次, 以此拼接, 先增加的放在前面, 后增加的放到后面. 当然音频仅支持 mp3和 m4a(aac)两种格式.
      *
      * @param srcPath
      * @return 增加失败返回false;
@@ -59,29 +57,19 @@ public class AudioConcat {
 
     /**
      *
-     *  private void testFile()
-     {
-     AudioConcatManager  mng=new AudioConcatManager(getApplicationContext());
-
-     mng.addAudio("/sdcard/g1.mp3");
-     mng.addAudio("/sdcard/niu30s.m4a");
-     mng.addAudio("/sdcard/g2.mp3");
-
-     String str=mng.executeAudioMix();
-     Log.i(TAG,"str is:"+str);
-
-     mng.release();
-
-     //--------播放.
-     MediaPlayer  player=new MediaPlayer();
-     try {
-     player.setDataSource(str);
-     player.prepare();
-     player.start();
-     }catch (IOException e) {
-     // TODO Auto-generated catch block
-     e.printStackTrace();
-     }
-     }
+     * private void testFile() { AudioConcatManager mng=new
+     * AudioConcatManager(getApplicationContext());
+     *
+     * mng.addAudio("/sdcard/g1.mp3"); mng.addAudio("/sdcard/niu30s.m4a");
+     * mng.addAudio("/sdcard/g2.mp3");
+     *
+     * String str=mng.executeAudioMix(); Log.i(TAG,"str is:"+str);
+     *
+     * mng.release();
+     *
+     * //--------播放. MediaPlayer player=new MediaPlayer(); try {
+     * player.setDataSource(str); player.prepare(); player.start(); }catch
+     * (IOException e) { // TODO Auto-generated catch block e.printStackTrace();
+     * } }
      */
 }

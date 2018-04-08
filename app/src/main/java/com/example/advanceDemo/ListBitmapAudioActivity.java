@@ -1,14 +1,15 @@
 package com.example.advanceDemo;
 
-import com.lansoeditor.demo.R;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 
-public class ListBitmapAudioActivity extends Activity implements OnClickListener {
+import com.lansoeditor.advanceDemo.R;
+
+public class ListBitmapAudioActivity extends Activity implements
+        OnClickListener {
 
     String videoPath = null;
 
@@ -35,13 +36,16 @@ public class ListBitmapAudioActivity extends Activity implements OnClickListener
                 startDemoActivity(ExtractVideoFrameDemoActivity.class, 0);
                 break;
             case R.id.id_getframe_get25frame:
-                startDemoActivity(DisplayFramesActivity.class, DisplayFramesActivity.FRAME_TYPE_25);
+                startDemoActivity(DisplayFramesActivity.class,
+                        DisplayFramesActivity.FRAME_TYPE_25);
                 break;
             case R.id.id_getframe_get60frame:
-                startDemoActivity(DisplayFramesActivity.class, DisplayFramesActivity.FRAME_TYPE_60);
+                startDemoActivity(DisplayFramesActivity.class,
+                        DisplayFramesActivity.FRAME_TYPE_60);
                 break;
             case R.id.id_getframe_allframe:
-                startDemoActivity(DisplayFramesActivity.class, DisplayFramesActivity.FRAME_TYPE_ALL);
+                startDemoActivity(DisplayFramesActivity.class,
+                        DisplayFramesActivity.FRAME_TYPE_ALL);
                 break;
             case R.id.id_getframe_bmpedit:
                 startDemoActivity(BitmapEditDemoActivity.class, 0);

@@ -1,49 +1,30 @@
 package com.example.advanceDemo;
 
-import java.io.IOException;
-import java.util.Locale;
-
-import jp.co.cyberagent.lansongsdk.gpuimage.GPUImageFilter;
-import jp.co.cyberagent.lansongsdk.gpuimage.GPUImageSepiaFilter;
-
-import com.example.advanceDemo.view.MarkArrowView;
-import com.lansoeditor.demo.R;
-import com.lansosdk.box.DrawPadUpdateMode;
-import com.lansosdk.box.MVLayer;
-import com.lansosdk.box.MVLayerENDMode;
-import com.lansosdk.box.VideoLayer;
-import com.lansosdk.box.ViewLayer;
-import com.lansosdk.box.Layer;
-import com.lansosdk.box.onDrawPadSizeChangedListener;
-import com.lansosdk.videoeditor.MediaInfo;
-import com.lansosdk.videoeditor.SDKDir;
-import com.lansosdk.videoeditor.SDKFileUtils;
-import com.lansosdk.videoeditor.VideoEditor;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.graphics.Paint;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
-import android.media.MediaPlayer.OnErrorListener;
-import android.media.MediaPlayer.OnInfoListener;
 import android.media.MediaPlayer.OnPreparedListener;
-import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.Surface;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.SeekBar;
-import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.SeekBar.OnSeekBarChangeListener;
+
+import com.example.advanceDemo.view.MarkArrowView;
+import com.lansoeditor.advanceDemo.R;
+import com.lansosdk.box.VideoLayer;
+import com.lansosdk.box.onDrawPadSizeChangedListener;
+import com.lansosdk.videoeditor.MediaInfo;
+import com.lansosdk.videoeditor.SDKDir;
+import com.lansosdk.videoeditor.SDKFileUtils;
+import com.lansosdk.videoeditor.VideoEditor;
+
+import java.io.IOException;
 
 /**
  *
@@ -79,23 +60,23 @@ public class BitmapLayerMarkActivity extends Activity {
             @Override
             public void onClick(View v) {
                 if (SDKFileUtils.fileExist(dstPath)) {
-                    Intent intent = new Intent(mContext, VideoPlayerActivity.class);
+                    Intent intent = new Intent(mContext,
+                            VideoPlayerActivity.class);
                     intent.putExtra("videopath", dstPath);
                     startActivity(intent);
                 } else {
-                    Toast.makeText(mContext, "目标文件不存在", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(mContext, "目标文件不存在", Toast.LENGTH_SHORT)
+                            .show();
                 }
             }
         });
         playVideo.setVisibility(View.GONE);
 
         /**
-         * 在手机的默认路径下创建一个文件名,
-         * 用来保存生成的视频文件,(在onDestroy中删除)
+         * 在手机的默认路径下创建一个文件名, 用来保存生成的视频文件,(在onDestroy中删除)
          */
         editTmpPath = SDKFileUtils.createMp4FileInBox();
         dstPath = SDKFileUtils.createMp4FileInBox();
-
 
         new Handler().postDelayed(new Runnable() {
 
@@ -143,16 +124,18 @@ public class BitmapLayerMarkActivity extends Activity {
     private void initDrawPad() {
         MediaInfo info = new MediaInfo(mVideoPath);
         if (info.prepare()) {
-//    		mMarkView.setUseMainVideoPts(true);
-            markView.setRealEncodeEnable(480, 480, 1000000, (int) info.vFrameRate, editTmpPath);
-            markView.setDrawPadSize(480, 480, new onDrawPadSizeChangedListener() {
+            // mMarkView.setUseMainVideoPts(true);
+            markView.setRealEncodeEnable(480, 480, 1000000,
+                    (int) info.vFrameRate, editTmpPath);
+            markView.setDrawPadSize(480, 480,
+                    new onDrawPadSizeChangedListener() {
 
-                @Override
-                public void onSizeChanged(int viewWidth, int viewHeight) {
-                    // TODO Auto-generated method stub
-                    startDrawPad();
-                }
-            });
+                        @Override
+                        public void onSizeChanged(int viewWidth, int viewHeight) {
+                            // TODO Auto-generated method stub
+                            startDrawPad();
+                        }
+                    });
         }
     }
 
@@ -162,7 +145,8 @@ public class BitmapLayerMarkActivity extends Activity {
     private void startDrawPad() {
         markView.startDrawPad();
 
-        mLayerMain = markView.addMainVideoLayer(mplayer.getVideoWidth(), mplayer.getVideoHeight(), null);
+        mLayerMain = markView.addMainVideoLayer(mplayer.getVideoWidth(),
+                mplayer.getVideoHeight(), null);
         if (mLayerMain != null) {
             mplayer.setSurface(new Surface(mLayerMain.getVideoTexture()));
         }
@@ -179,7 +163,8 @@ public class BitmapLayerMarkActivity extends Activity {
             toastStop();
 
             if (SDKFileUtils.fileExist(editTmpPath)) {
-                boolean ret = VideoEditor.encoderAddAudio(mVideoPath, editTmpPath, SDKDir.TMP_DIR, dstPath);
+                boolean ret = VideoEditor.encoderAddAudio(mVideoPath,
+                        editTmpPath, SDKDir.TMP_DIR, dstPath);
                 if (!ret) {
                     dstPath = editTmpPath;
                 } else
@@ -190,7 +175,8 @@ public class BitmapLayerMarkActivity extends Activity {
     }
 
     private void toastStop() {
-        Toast.makeText(getApplicationContext(), "录制已停止!!", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getApplicationContext(), "录制已停止!!", Toast.LENGTH_SHORT)
+                .show();
     }
 
     @Override

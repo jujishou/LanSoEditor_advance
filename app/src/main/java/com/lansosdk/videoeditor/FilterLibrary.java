@@ -19,21 +19,96 @@ package com.lansosdk.videoeditor;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.PointF;
-import android.opengl.Matrix;
-import android.util.Log;
 
-import jp.co.cyberagent.lansongsdk.gpuimage.*;
-
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-
-import com.lansoeditor.demo.R;
+import com.lansoeditor.advanceDemo.R;
 import com.lansosdk.box.BitmapLoader;
 
+import jp.co.cyberagent.lansongsdk.gpuimage.GPUImage3x3ConvolutionFilter;
+import jp.co.cyberagent.lansongsdk.gpuimage.GPUImage3x3TextureSamplingFilter;
+import jp.co.cyberagent.lansongsdk.gpuimage.GPUImageAddBlendFilter;
+import jp.co.cyberagent.lansongsdk.gpuimage.GPUImageAlphaBlendFilter;
+import jp.co.cyberagent.lansongsdk.gpuimage.GPUImageBrightnessFilter;
+import jp.co.cyberagent.lansongsdk.gpuimage.GPUImageCGAColorspaceFilter;
+import jp.co.cyberagent.lansongsdk.gpuimage.GPUImageChromaKeyBlendFilter;
+import jp.co.cyberagent.lansongsdk.gpuimage.GPUImageColorBalanceFilter;
+import jp.co.cyberagent.lansongsdk.gpuimage.GPUImageColorBlendFilter;
+import jp.co.cyberagent.lansongsdk.gpuimage.GPUImageColorBurnBlendFilter;
+import jp.co.cyberagent.lansongsdk.gpuimage.GPUImageColorDodgeBlendFilter;
+import jp.co.cyberagent.lansongsdk.gpuimage.GPUImageColorInvertFilter;
+import jp.co.cyberagent.lansongsdk.gpuimage.GPUImageContrastFilter;
+import jp.co.cyberagent.lansongsdk.gpuimage.GPUImageCrosshatchFilter;
+import jp.co.cyberagent.lansongsdk.gpuimage.GPUImageDarkenBlendFilter;
+import jp.co.cyberagent.lansongsdk.gpuimage.GPUImageDifferenceBlendFilter;
+import jp.co.cyberagent.lansongsdk.gpuimage.GPUImageDissolveBlendFilter;
+import jp.co.cyberagent.lansongsdk.gpuimage.GPUImageDivideBlendFilter;
+import jp.co.cyberagent.lansongsdk.gpuimage.GPUImageEmbossFilter;
+import jp.co.cyberagent.lansongsdk.gpuimage.GPUImageExclusionBlendFilter;
+import jp.co.cyberagent.lansongsdk.gpuimage.GPUImageExposureFilter;
+import jp.co.cyberagent.lansongsdk.gpuimage.GPUImageFalseColorFilter;
+import jp.co.cyberagent.lansongsdk.gpuimage.GPUImageFilter;
+import jp.co.cyberagent.lansongsdk.gpuimage.GPUImageGammaFilter;
+import jp.co.cyberagent.lansongsdk.gpuimage.GPUImageGlassSphereFilter;
+import jp.co.cyberagent.lansongsdk.gpuimage.GPUImageGrayscaleFilter;
+import jp.co.cyberagent.lansongsdk.gpuimage.GPUImageHalftoneFilter;
+import jp.co.cyberagent.lansongsdk.gpuimage.GPUImageHardLightBlendFilter;
+import jp.co.cyberagent.lansongsdk.gpuimage.GPUImageHazeFilter;
+import jp.co.cyberagent.lansongsdk.gpuimage.GPUImageHighlightShadowFilter;
+import jp.co.cyberagent.lansongsdk.gpuimage.GPUImageHueBlendFilter;
+import jp.co.cyberagent.lansongsdk.gpuimage.GPUImageHueFilter;
+import jp.co.cyberagent.lansongsdk.gpuimage.GPUImageKuwaharaFilter;
+import jp.co.cyberagent.lansongsdk.gpuimage.GPUImageLaplacianFilter;
+import jp.co.cyberagent.lansongsdk.gpuimage.GPUImageLevelsFilter;
+import jp.co.cyberagent.lansongsdk.gpuimage.GPUImageLightenBlendFilter;
+import jp.co.cyberagent.lansongsdk.gpuimage.GPUImageLinearBurnBlendFilter;
+import jp.co.cyberagent.lansongsdk.gpuimage.GPUImageLookupFilter;
+import jp.co.cyberagent.lansongsdk.gpuimage.GPUImageLuminosityBlendFilter;
+import jp.co.cyberagent.lansongsdk.gpuimage.GPUImageMonochromeFilter;
+import jp.co.cyberagent.lansongsdk.gpuimage.GPUImageMultiplyBlendFilter;
+import jp.co.cyberagent.lansongsdk.gpuimage.GPUImageNormalBlendFilter;
+import jp.co.cyberagent.lansongsdk.gpuimage.GPUImageOpacityFilter;
+import jp.co.cyberagent.lansongsdk.gpuimage.GPUImageOverlayBlendFilter;
+import jp.co.cyberagent.lansongsdk.gpuimage.GPUImagePixelationFilter;
+import jp.co.cyberagent.lansongsdk.gpuimage.GPUImagePosterizeFilter;
+import jp.co.cyberagent.lansongsdk.gpuimage.GPUImageRGBFilter;
+import jp.co.cyberagent.lansongsdk.gpuimage.GPUImageSaturationBlendFilter;
+import jp.co.cyberagent.lansongsdk.gpuimage.GPUImageSaturationFilter;
+import jp.co.cyberagent.lansongsdk.gpuimage.GPUImageScreenBlendFilter;
+import jp.co.cyberagent.lansongsdk.gpuimage.GPUImageSepiaFilter;
+import jp.co.cyberagent.lansongsdk.gpuimage.GPUImageSoftLightBlendFilter;
+import jp.co.cyberagent.lansongsdk.gpuimage.GPUImageSourceOverBlendFilter;
+import jp.co.cyberagent.lansongsdk.gpuimage.GPUImageSphereRefractionFilter;
+import jp.co.cyberagent.lansongsdk.gpuimage.GPUImageSubtractBlendFilter;
+import jp.co.cyberagent.lansongsdk.gpuimage.GPUImageSwirlFilter;
+import jp.co.cyberagent.lansongsdk.gpuimage.GPUImageToonFilter;
+import jp.co.cyberagent.lansongsdk.gpuimage.GPUImageTwoInputFilter;
+import jp.co.cyberagent.lansongsdk.gpuimage.GPUImageVignetteFilter;
+import jp.co.cyberagent.lansongsdk.gpuimage.GPUImageWhiteBalanceFilter;
+import jp.co.cyberagent.lansongsdk.gpuimage.IF1977Filter;
+import jp.co.cyberagent.lansongsdk.gpuimage.IFAmaroFilter;
+import jp.co.cyberagent.lansongsdk.gpuimage.IFBrannanFilter;
+import jp.co.cyberagent.lansongsdk.gpuimage.IFEarlybirdFilter;
+import jp.co.cyberagent.lansongsdk.gpuimage.IFHefeFilter;
+import jp.co.cyberagent.lansongsdk.gpuimage.IFHudsonFilter;
+import jp.co.cyberagent.lansongsdk.gpuimage.IFInkwellFilter;
+import jp.co.cyberagent.lansongsdk.gpuimage.IFLomofiFilter;
+import jp.co.cyberagent.lansongsdk.gpuimage.IFLordKelvinFilter;
+import jp.co.cyberagent.lansongsdk.gpuimage.IFNashvilleFilter;
+import jp.co.cyberagent.lansongsdk.gpuimage.IFRiseFilter;
+import jp.co.cyberagent.lansongsdk.gpuimage.IFSierraFilter;
+import jp.co.cyberagent.lansongsdk.gpuimage.IFSutroFilter;
+import jp.co.cyberagent.lansongsdk.gpuimage.IFToasterFilter;
+import jp.co.cyberagent.lansongsdk.gpuimage.IFValenciaFilter;
+import jp.co.cyberagent.lansongsdk.gpuimage.IFWaldenFilter;
+import jp.co.cyberagent.lansongsdk.gpuimage.IFXproIIFilter;
+import jp.co.cyberagent.lansongsdk.gpuimage.LanSongBeautyAdvanceFilter;
+import jp.co.cyberagent.lansongsdk.gpuimage.LanSongBlackMaskBlendFilter;
+import jp.co.cyberagent.lansongsdk.gpuimage.LanSongBlurFilter;
+import jp.co.cyberagent.lansongsdk.gpuimage.LanSongBulgeDistortionFilter;
+import jp.co.cyberagent.lansongsdk.gpuimage.LanSongDistortionPinchFilter;
+import jp.co.cyberagent.lansongsdk.gpuimage.LanSongDistortionStretchFilter;
+import jp.co.cyberagent.lansongsdk.gpuimage.LanSongMaskBlendFilter;
 
 public class FilterLibrary {
 
@@ -48,7 +123,7 @@ public class FilterLibrary {
 
     public static void showAllFilter() {
         filterList = new FilterList();
-        //2017年11月10日09:38:40 83
+        // 2017年11月10日09:38:40 83
         filterList.addFilter("无", FilterType.NONE);
         filterList.addFilter("美颜", FilterType.BEAUTIFUL);
 
@@ -70,7 +145,6 @@ public class FilterLibrary {
         filterList.addFilter("16if1977", FilterType.IF1977);
         filterList.addFilter("17LORDKELVIN", FilterType.LORDKELVIN);
 
-
         filterList.addFilter("黑色抠图", FilterType.LanSongBLACKMASK);
         filterList.addFilter("区域透明", FilterType.LanSongMASK);
 
@@ -80,12 +154,15 @@ public class FilterLibrary {
         filterList.addFilter("Vignette加轮廓", FilterType.VIGNETTE);
         filterList.addFilter("Haze加减雾", FilterType.HAZE);
         filterList.addFilter("Glass Sphere玻璃球效果", FilterType.GLASS_SPHERE);
-        filterList.addFilter("Sphere Refraction球面折射", FilterType.SPHERE_REFRACTION);
+        filterList.addFilter("Sphere Refraction球面折射",
+                FilterType.SPHERE_REFRACTION);
 
-        //新增
+        // 新增
         filterList.addFilter("PINCH_DISTORTION", FilterType.PINCH_DISTORTION);
-        filterList.addFilter("STRETCH_DISTORTION", FilterType.STRETCH_DISTORTION);
-        filterList.addFilter("Bulge Distortion凸凹调节", FilterType.BULGE_DISTORTION);
+        filterList.addFilter("STRETCH_DISTORTION",
+                FilterType.STRETCH_DISTORTION);
+        filterList.addFilter("Bulge Distortion凸凹调节",
+                FilterType.BULGE_DISTORTION);
 
         filterList.addFilter("Brightness图像亮度", FilterType.BRIGHTNESS);
 
@@ -95,7 +172,8 @@ public class FilterLibrary {
         filterList.addFilter("Posterize色调分离", FilterType.POSTERIZE);
         filterList.addFilter("Sepia复古", FilterType.SEPIA);
 
-        filterList.addFilter("Highlight Shadow阴影高亮", FilterType.HIGHLIGHT_SHADOW);
+        filterList.addFilter("Highlight Shadow阴影高亮",
+                FilterType.HIGHLIGHT_SHADOW);
         filterList.addFilter("Monochrome单色", FilterType.MONOCHROME);
         filterList.addFilter("White Balance白平衡", FilterType.WHITE_BALANCE);
         filterList.addFilter("Exposure曝光度", FilterType.EXPOSURE);
@@ -104,10 +182,11 @@ public class FilterLibrary {
 
         filterList.addFilter("False Color", FilterType.FALSE_COLOR);
         filterList.addFilter("Color Balance颜色平衡", FilterType.COLOR_BALANCE);
-        filterList.addFilter("Levels Min (Mid Adjust)暗色调节", FilterType.LEVELS_FILTER_MIN);
-        filterList.addFilter("Lookup (Amatorka)查找表", FilterType.LOOKUP_AMATORKA);
+        filterList.addFilter("Levels Min (Mid Adjust)暗色调节",
+                FilterType.LEVELS_FILTER_MIN);
+        filterList
+                .addFilter("Lookup (Amatorka)查找表", FilterType.LOOKUP_AMATORKA);
         filterList.addFilter("Crosshatch交叉阴影网格", FilterType.CROSSHATCH);
-
 
         filterList.addFilter("CGA Color Space", FilterType.CGA_COLORSPACE);
         filterList.addFilter("Kuwahara", FilterType.KUWAHARA);
@@ -121,9 +200,11 @@ public class FilterLibrary {
         filterList.addFilter("Saturation饱和度", FilterType.SATURATION);
 
         filterList.addFilter("Blend (Difference)", FilterType.BLEND_DIFFERENCE);
-        filterList.addFilter("Blend (Source Over)", FilterType.BLEND_SOURCE_OVER);
+        filterList.addFilter("Blend (Source Over)",
+                FilterType.BLEND_SOURCE_OVER);
         filterList.addFilter("Blend (Color Burn)", FilterType.BLEND_COLOR_BURN);
-        filterList.addFilter("Blend (Color Dodge)", FilterType.BLEND_COLOR_DODGE);
+        filterList.addFilter("Blend (Color Dodge)",
+                FilterType.BLEND_COLOR_DODGE);
         filterList.addFilter("Blend (Darken)", FilterType.BLEND_DARKEN);
         filterList.addFilter("Blend (Dissolve)", FilterType.BLEND_DISSOLVE);
         filterList.addFilter("Blend (Exclusion)", FilterType.BLEND_EXCLUSION);
@@ -139,7 +220,8 @@ public class FilterLibrary {
         filterList.addFilter("Blend (Hue)", FilterType.BLEND_HUE);
         filterList.addFilter("Blend (Saturation)", FilterType.BLEND_SATURATION);
         filterList.addFilter("Blend (Luminosity)", FilterType.BLEND_LUMINOSITY);
-        filterList.addFilter("Blend (Linear Burn)", FilterType.BLEND_LINEAR_BURN);
+        filterList.addFilter("Blend (Linear Burn)",
+                FilterType.BLEND_LINEAR_BURN);
         filterList.addFilter("Blend (Soft Light)", FilterType.BLEND_SOFT_LIGHT);
         filterList.addFilter("Blend (Subtract)", FilterType.BLEND_SUBTRACT);
         filterList.addFilter("Blend (Chroma Key)", FilterType.BLEND_CHROMA_KEY);
@@ -158,30 +240,36 @@ public class FilterLibrary {
         }
 
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        builder.setTitle("Choose a filter(total:" + filterList.names.size() + " )");
-        builder.setItems(filterList.names.toArray(new String[filterList.names.size()]),
+        builder.setTitle("Choose a filter(total:" + filterList.names.size()
+                + " )");
+        builder.setItems(
+                filterList.names.toArray(new String[filterList.names.size()]),
                 new DialogInterface.OnClickListener() {
                     @Override
-                    public void onClick(final DialogInterface dialog, final int item) {
+                    public void onClick(final DialogInterface dialog,
+                                        final int item) {
                         listener.onGpuImageFilterChosenListener(
-                                getFilterObject(context, filterList.filters.get(item)), filterList.names.get(item));
+                                getFilterObject(context,
+                                        filterList.filters.get(item)),
+                                filterList.names.get(item));
                     }
                 });
         builder.create().show();
     }
 
-    public static GPUImageFilter getFilterObject(final Context context, final FilterType type) {
+    public static GPUImageFilter getFilterObject(final Context context,
+                                                 final FilterType type) {
         switch (type) {
             case NONE:
                 return null;
             /**
-             * 注意: 以下五种美颜级别,仅仅是列举,详情可看@BeautylLevel	; 实际您可以任意组合.
+             * 注意: 以下五种美颜级别,仅仅是列举,详情可看@BeautylLevel ; 实际您可以任意组合.
              * LanSongBeautyLevel1--5是不存在的滤镜, 仅仅是为了兼容其他滤镜而做的参考.
              */
             case BEAUTIFUL:
-                return new LanSongBeautyAdvanceFilter();  //美颜默认全开.
-//          	case BEAUTIFUL2:  //白皙美颜默认不再使用.
-//        		return  new LanSongBeautyWhiteFilter();	
+                return new LanSongBeautyAdvanceFilter(); // 美颜默认全开.
+            // case BEAUTIFUL2: //白皙美颜默认不再使用.
+            // return new LanSongBeautyWhiteFilter();
             case CONTRAST:
                 return new GPUImageContrastFilter(2.0f);
             case GAMMA:
@@ -207,7 +295,8 @@ public class FilterLibrary {
             case HIGHLIGHT_SHADOW:
                 return new GPUImageHighlightShadowFilter(0.0f, 1.0f);
             case MONOCHROME:
-                return new GPUImageMonochromeFilter(1.0f, new float[]{0.6f, 0.45f, 0.3f, 1.0f});
+                return new GPUImageMonochromeFilter(1.0f, new float[]{0.6f,
+                        0.45f, 0.3f, 1.0f});
             case OPACITY:
                 return new GPUImageOpacityFilter(1.0f);
             case RGB:
@@ -220,42 +309,49 @@ public class FilterLibrary {
                 PointF centerPoint = new PointF();
                 centerPoint.x = 0.5f;
                 centerPoint.y = 0.5f;
-                return new GPUImageVignetteFilter(centerPoint, new float[]{0.0f, 0.0f, 0.0f}, 0.3f, 0.75f);
+                return new GPUImageVignetteFilter(centerPoint, new float[]{0.0f,
+                        0.0f, 0.0f}, 0.3f, 0.75f);
             case LanSongBLACKMASK:
                 /**
-                 * 这个滤镜的效果是: 把输入源的某区域 处理成透明(如果bitmap有灰色的毛刺,则可能扣除的不规则,一般使用在用代码生成的bitmap图片中,
+                 * 这个滤镜的效果是: 把输入源的某区域
+                 * 处理成透明(如果bitmap有灰色的毛刺,则可能扣除的不规则,一般使用在用代码生成的bitmap图片中,
                  * 不适用用photoshop等做成的图片).
                  *
                  * 这个滤镜的效果是: 把传递进来的bitmap图片, 从中心叠加到输入源上, 并判断Bitmap中黑色像素RGB中R的值，
-                 *如果等于0, 则设置输入源对应的像素为透明，
-                 *如果不等于0，则把R替换输入源像素中的RGBA中A，从而实现半透明等效果。
+                 * 如果等于0, 则设置输入源对应的像素为透明， 如果不等于0，则把R替换输入源像素中的RGBA中A，从而实现半透明等效果。
                  */
                 return createBlendFilter(context, LanSongBlackMaskBlendFilter.class);
             case LanSongMASK:
                 /**
                  * 这个滤镜的效果是: 把输入源的某区域 处理成透明.
                  *
-                 * 详情是: 把一张有透明区域的图片, 叠加到 输入源的中心位置上, 图片中有透明的地方,则把输入源的对应的地方,透明处理. 等于是把输入源中的一部分抠去.
+                 * 详情是: 把一张有透明区域的图片, 叠加到 输入源的中心位置上, 图片中有透明的地方,则把输入源的对应的地方,透明处理.
+                 * 等于是把输入源中的一部分抠去.
                  */
                 return createBlendFilter(context, LanSongMaskBlendFilter.class);
 
-
             case BLEND_DIFFERENCE:
-                return createBlendFilter(context, GPUImageDifferenceBlendFilter.class);
+                return createBlendFilter(context,
+                        GPUImageDifferenceBlendFilter.class);
             case BLEND_SOURCE_OVER:
-                return createBlendFilter(context, GPUImageSourceOverBlendFilter.class);
+                return createBlendFilter(context,
+                        GPUImageSourceOverBlendFilter.class);
             case BLEND_COLOR_BURN:
-                return createBlendFilter(context, GPUImageColorBurnBlendFilter.class);
+                return createBlendFilter(context,
+                        GPUImageColorBurnBlendFilter.class);
             case BLEND_COLOR_DODGE:
-                return createBlendFilter(context, GPUImageColorDodgeBlendFilter.class);
+                return createBlendFilter(context,
+                        GPUImageColorDodgeBlendFilter.class);
             case BLEND_DARKEN:
                 return createBlendFilter(context, GPUImageDarkenBlendFilter.class);
             case BLEND_DISSOLVE:
                 return createBlendFilter(context, GPUImageDissolveBlendFilter.class);
             case BLEND_EXCLUSION:
-                return createBlendFilter(context, GPUImageExclusionBlendFilter.class);
+                return createBlendFilter(context,
+                        GPUImageExclusionBlendFilter.class);
             case BLEND_HARD_LIGHT:
-                return createBlendFilter(context, GPUImageHardLightBlendFilter.class);
+                return createBlendFilter(context,
+                        GPUImageHardLightBlendFilter.class);
             case BLEND_LIGHTEN:
                 return createBlendFilter(context, GPUImageLightenBlendFilter.class);
             case BLEND_ADD:
@@ -275,17 +371,22 @@ public class FilterLibrary {
             case BLEND_HUE:
                 return createBlendFilter(context, GPUImageHueBlendFilter.class);
             case BLEND_SATURATION:
-                return createBlendFilter(context, GPUImageSaturationBlendFilter.class);
+                return createBlendFilter(context,
+                        GPUImageSaturationBlendFilter.class);
             case BLEND_LUMINOSITY:
-                return createBlendFilter(context, GPUImageLuminosityBlendFilter.class);
+                return createBlendFilter(context,
+                        GPUImageLuminosityBlendFilter.class);
             case BLEND_LINEAR_BURN:
-                return createBlendFilter(context, GPUImageLinearBurnBlendFilter.class);
+                return createBlendFilter(context,
+                        GPUImageLinearBurnBlendFilter.class);
             case BLEND_SOFT_LIGHT:
-                return createBlendFilter(context, GPUImageSoftLightBlendFilter.class);
+                return createBlendFilter(context,
+                        GPUImageSoftLightBlendFilter.class);
             case BLEND_SUBTRACT:
                 return createBlendFilter(context, GPUImageSubtractBlendFilter.class);
             case BLEND_CHROMA_KEY:
-                return createBlendFilter(context, GPUImageChromaKeyBlendFilter.class);
+                return createBlendFilter(context,
+                        GPUImageChromaKeyBlendFilter.class);
             case BLEND_NORMAL:
                 return createBlendFilter(context, GPUImageNormalBlendFilter.class);
 
@@ -303,17 +404,15 @@ public class FilterLibrary {
 
             case BULGE_DISTORTION:
                 /**
-                 * 凸凹
-                 * 可以设置凸凹的地方, 凸凹的范围, 凸起还是凹下.
+                 * 凸凹 可以设置凸凹的地方, 凸凹的范围, 凸起还是凹下.
                  */
                 return new LanSongBulgeDistortionFilter();
 
-            //新增
+            // 新增
             case PINCH_DISTORTION:
                 return new LanSongDistortionPinchFilter();
             case STRETCH_DISTORTION:
                 return new LanSongDistortionStretchFilter();
-
 
             case GLASS_SPHERE:
                 return new GPUImageGlassSphereFilter();
@@ -368,16 +467,13 @@ public class FilterLibrary {
             case IF1977:
                 return new IF1977Filter(context);
 
-           		/*2017年8月5日18:11:17新增*/
+			/* 2017年8月5日18:11:17新增 */
             case EMBOSS:
                 return new GPUImageEmbossFilter();
             case THREE_X_THREE_CONVOLUTION:
                 GPUImage3x3ConvolutionFilter convolution = new GPUImage3x3ConvolutionFilter();
-                convolution.setConvolutionKernel(new float[]{
-                        -1.0f, 0.0f, 1.0f,
-                        -2.0f, 0.0f, 2.0f,
-                        -1.0f, 0.0f, 1.0f
-                });
+                convolution.setConvolutionKernel(new float[]{-1.0f, 0.0f, 1.0f,
+                        -2.0f, 0.0f, 2.0f, -1.0f, 0.0f, 1.0f});
                 return convolution;
             case LAPLACIAN:
                 return new GPUImageLaplacianFilter();
@@ -389,10 +485,12 @@ public class FilterLibrary {
 
     }
 
-    private static GPUImageFilter createBlendFilter(Context context, Class<? extends GPUImageTwoInputFilter> filterClass) {
+    private static GPUImageFilter createBlendFilter(Context context,
+                                                    Class<? extends GPUImageTwoInputFilter> filterClass) {
         try {
             GPUImageTwoInputFilter filter = filterClass.newInstance();
-            filter.setBitmap(BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_launcher));  //这里用默认图片举例.
+            filter.setBitmap(BitmapFactory.decodeResource(
+                    context.getResources(), R.drawable.ic_launcher)); // 这里用默认图片举例.
             return filter;
         } catch (Exception e) {
             e.printStackTrace();
@@ -400,22 +498,17 @@ public class FilterLibrary {
         }
     }
 
-    public interface OnGpuImageFilterChosenListener {
-        void onGpuImageFilterChosenListener(GPUImageFilter filter, String name);
-    }
-
     public enum FilterType {
-        NONE, BEAUTIFUL, BEAUTIFUL2, LanSongBLACKMASK, LanSongMASK, LanSongBLUR, CONTRAST, GRAYSCALE, SEPIA, POSTERIZE, GAMMA, BRIGHTNESS, INVERT, HUE, PIXELATION,
-        SATURATION, EXPOSURE, HIGHLIGHT_SHADOW, MONOCHROME, OPACITY, RGB, WHITE_BALANCE, VIGNETTE, BLEND_COLOR_BURN, BLEND_COLOR_DODGE, BLEND_DARKEN, BLEND_DIFFERENCE,
-        BLEND_DISSOLVE, BLEND_EXCLUSION, BLEND_SOURCE_OVER, BLEND_HARD_LIGHT, BLEND_LIGHTEN, BLEND_ADD, BLEND_DIVIDE, BLEND_MULTIPLY, BLEND_OVERLAY, BLEND_SCREEN, BLEND_ALPHA,
-        BLEND_COLOR, BLEND_HUE, BLEND_SATURATION, BLEND_LUMINOSITY, BLEND_LINEAR_BURN, BLEND_SOFT_LIGHT, BLEND_SUBTRACT, BLEND_CHROMA_KEY, BLEND_NORMAL, LOOKUP_AMATORKA,
-        CROSSHATCH, CGA_COLORSPACE, KUWAHARA, BULGE_DISTORTION, PINCH_DISTORTION, STRETCH_DISTORTION, GLASS_SPHERE, HAZE, SPHERE_REFRACTION, SWIRL, FALSE_COLOR,
-        COLOR_BALANCE, LEVELS_FILTER_MIN, HALFTONE,
+        NONE, BEAUTIFUL, BEAUTIFUL2, LanSongBLACKMASK, LanSongMASK, LanSongBLUR, CONTRAST, GRAYSCALE, SEPIA, POSTERIZE, GAMMA, BRIGHTNESS, INVERT, HUE, PIXELATION, SATURATION, EXPOSURE, HIGHLIGHT_SHADOW, MONOCHROME, OPACITY, RGB, WHITE_BALANCE, VIGNETTE, BLEND_COLOR_BURN, BLEND_COLOR_DODGE, BLEND_DARKEN, BLEND_DIFFERENCE, BLEND_DISSOLVE, BLEND_EXCLUSION, BLEND_SOURCE_OVER, BLEND_HARD_LIGHT, BLEND_LIGHTEN, BLEND_ADD, BLEND_DIVIDE, BLEND_MULTIPLY, BLEND_OVERLAY, BLEND_SCREEN, BLEND_ALPHA, BLEND_COLOR, BLEND_HUE, BLEND_SATURATION, BLEND_LUMINOSITY, BLEND_LINEAR_BURN, BLEND_SOFT_LIGHT, BLEND_SUBTRACT, BLEND_CHROMA_KEY, BLEND_NORMAL, LOOKUP_AMATORKA, CROSSHATCH, CGA_COLORSPACE, KUWAHARA, BULGE_DISTORTION, PINCH_DISTORTION, STRETCH_DISTORTION, GLASS_SPHERE, HAZE, SPHERE_REFRACTION, SWIRL, FALSE_COLOR, COLOR_BALANCE, LEVELS_FILTER_MIN, HALFTONE,
 
-        /*新增*/
+        /* 新增 */
         EMBOSS, THREE_X_THREE_CONVOLUTION, LAPLACIAN, TOON,
 
         AMARO, RISE, HUDSON, XPROII, SIERRA, LOMOFI, EARLYBIRD, SUTRO, TOASTER, BRANNAN, INKWELL, WALDEN, HEFE, VALENCIA, NASHVILLE, IF1977, LORDKELVIN
+    }
+
+    public interface OnGpuImageFilterChosenListener {
+        void onGpuImageFilterChosenListener(GPUImageFilter filter, String name);
     }
 
     public static class FilterAdjuster {
@@ -478,7 +571,7 @@ public class FilterLibrary {
             } else if (filter instanceof GPUImageLevelsFilter) {
                 adjuster = new LevelsMinMidAdjuster().filter(filter);
             }
-            //2017年8月5日17:56:16 新增.
+            // 2017年8月5日17:56:16 新增.
             else if (filter instanceof GPUImageEmbossFilter) {
                 adjuster = new EmbossAdjuster().filter(filter);
             } else if (filter instanceof GPUImage3x3TextureSamplingFilter) {
@@ -514,23 +607,27 @@ public class FilterLibrary {
 
             public abstract void adjust(int percentage);
 
-            protected float range(final int percentage, final float start, final float end) {
+            protected float range(final int percentage, final float start,
+                                  final float end) {
                 return (end - start) * percentage / 100.0f + start;
             }
 
-            protected int range(final int percentage, final int start, final int end) {
+            protected int range(final int percentage, final int start,
+                                final int end) {
                 return (end - start) * percentage / 100 + start;
             }
         }
 
-        private class BeautyAdvanceAdjuster extends Adjuster<LanSongBeautyAdvanceFilter> {
+        private class BeautyAdvanceAdjuster extends
+                Adjuster<LanSongBeautyAdvanceFilter> {
             @Override
             public void adjust(final int percentage) {
                 getFilter().setBeautyLevel(range(percentage, 0.0f, 1.0f));
             }
         }
 
-        private class PixelationAdjuster extends Adjuster<GPUImagePixelationFilter> {
+        private class PixelationAdjuster extends
+                Adjuster<GPUImagePixelationFilter> {
             @Override
             public void adjust(final int percentage) {
                 getFilter().setPixel(range(percentage, 1.0f, 100.0f));
@@ -558,7 +655,8 @@ public class FilterLibrary {
             }
         }
 
-        private class BrightnessAdjuster extends Adjuster<GPUImageBrightnessFilter> {
+        private class BrightnessAdjuster extends
+                Adjuster<GPUImageBrightnessFilter> {
             @Override
             public void adjust(final int percentage) {
                 getFilter().setBrightness(range(percentage, -1.0f, 1.0f));
@@ -572,8 +670,8 @@ public class FilterLibrary {
             }
         }
 
-
-        private class PosterizeAdjuster extends Adjuster<GPUImagePosterizeFilter> {
+        private class PosterizeAdjuster extends
+                Adjuster<GPUImagePosterizeFilter> {
             @Override
             public void adjust(final int percentage) {
                 // In theorie to 256, but only first 50 are interesting
@@ -581,8 +679,8 @@ public class FilterLibrary {
             }
         }
 
-
-        private class SaturationAdjuster extends Adjuster<GPUImageSaturationFilter> {
+        private class SaturationAdjuster extends
+                Adjuster<GPUImageSaturationFilter> {
             @Override
             public void adjust(final int percentage) {
                 getFilter().setSaturation(range(percentage, 0.0f, 2.0f));
@@ -596,7 +694,8 @@ public class FilterLibrary {
             }
         }
 
-        private class HighlightShadowAdjuster extends Adjuster<GPUImageHighlightShadowFilter> {
+        private class HighlightShadowAdjuster extends
+                Adjuster<GPUImageHighlightShadowFilter> {
             @Override
             public void adjust(final int percentage) {
                 getFilter().setShadows(range(percentage, 0.0f, 1.0f));
@@ -604,11 +703,12 @@ public class FilterLibrary {
             }
         }
 
-        private class MonochromeAdjuster extends Adjuster<GPUImageMonochromeFilter> {
+        private class MonochromeAdjuster extends
+                Adjuster<GPUImageMonochromeFilter> {
             @Override
             public void adjust(final int percentage) {
                 getFilter().setIntensity(range(percentage, 0.0f, 1.0f));
-                //getFilter().setColor(new float[]{0.6f, 0.45f, 0.3f, 1.0f});
+                // getFilter().setColor(new float[]{0.6f, 0.45f, 0.3f, 1.0f});
             }
         }
 
@@ -623,20 +723,22 @@ public class FilterLibrary {
             @Override
             public void adjust(final int percentage) {
                 getFilter().setRed(range(percentage, 0.0f, 1.0f));
-                //getFilter().setGreen(range(percentage, 0.0f, 1.0f));
-                //getFilter().setBlue(range(percentage, 0.0f, 1.0f));
+                // getFilter().setGreen(range(percentage, 0.0f, 1.0f));
+                // getFilter().setBlue(range(percentage, 0.0f, 1.0f));
             }
         }
 
-        private class WhiteBalanceAdjuster extends Adjuster<GPUImageWhiteBalanceFilter> {
+        private class WhiteBalanceAdjuster extends
+                Adjuster<GPUImageWhiteBalanceFilter> {
             @Override
             public void adjust(final int percentage) {
                 getFilter().setTemperature(range(percentage, 2000.0f, 8000.0f));
-                //getFilter().setTint(range(percentage, -100.0f, 100.0f));
+                // getFilter().setTint(range(percentage, -100.0f, 100.0f));
             }
         }
 
-        private class LanSongBlurFilterAdjuster extends Adjuster<LanSongBlurFilter> {
+        private class LanSongBlurFilterAdjuster extends
+                Adjuster<LanSongBlurFilter> {
             @Override
             public void adjust(final int percentage) {
                 getFilter().setBlurFactor(range(percentage, 0.0f, 8.0f));
@@ -650,23 +752,26 @@ public class FilterLibrary {
             }
         }
 
-        private class DissolveBlendAdjuster extends Adjuster<GPUImageDissolveBlendFilter> {
+        private class DissolveBlendAdjuster extends
+                Adjuster<GPUImageDissolveBlendFilter> {
             @Override
             public void adjust(final int percentage) {
                 getFilter().setMix(range(percentage, 0.0f, 1.0f));
             }
         }
 
-
-        private class CrosshatchBlurAdjuster extends Adjuster<GPUImageCrosshatchFilter> {
+        private class CrosshatchBlurAdjuster extends
+                Adjuster<GPUImageCrosshatchFilter> {
             @Override
             public void adjust(final int percentage) {
-                getFilter().setCrossHatchSpacing(range(percentage, 0.0f, 0.06f));
+                getFilter()
+                        .setCrossHatchSpacing(range(percentage, 0.0f, 0.06f));
                 getFilter().setLineWidth(range(percentage, 0.0f, 0.006f));
             }
         }
 
-        private class BulgeDistortionAdjuster extends Adjuster<LanSongBulgeDistortionFilter> {
+        private class BulgeDistortionAdjuster extends
+                Adjuster<LanSongBulgeDistortionFilter> {
             @Override
             public void adjust(final int percentage) {
                 getFilter().setRadius(range(percentage, 0.0f, 1.0f));
@@ -674,7 +779,8 @@ public class FilterLibrary {
             }
         }
 
-        private class GlassSphereAdjuster extends Adjuster<GPUImageGlassSphereFilter> {
+        private class GlassSphereAdjuster extends
+                Adjuster<GPUImageGlassSphereFilter> {
             @Override
             public void adjust(final int percentage) {
                 getFilter().setRadius(range(percentage, 0.0f, 1.0f));
@@ -689,7 +795,8 @@ public class FilterLibrary {
             }
         }
 
-        private class SphereRefractionAdjuster extends Adjuster<GPUImageSphereRefractionFilter> {
+        private class SphereRefractionAdjuster extends
+                Adjuster<GPUImageSphereRefractionFilter> {
             @Override
             public void adjust(final int percentage) {
                 getFilter().setRadius(range(percentage, 0.0f, 1.0f));
@@ -703,25 +810,27 @@ public class FilterLibrary {
             }
         }
 
-        private class ColorBalanceAdjuster extends Adjuster<GPUImageColorBalanceFilter> {
+        private class ColorBalanceAdjuster extends
+                Adjuster<GPUImageColorBalanceFilter> {
 
             @Override
             public void adjust(int percentage) {
-                getFilter().setMidtones(new float[]{
-                        range(percentage, 0.0f, 1.0f),
-                        range(percentage / 2, 0.0f, 1.0f),
-                        range(percentage / 3, 0.0f, 1.0f)});
+                getFilter().setMidtones(
+                        new float[]{range(percentage, 0.0f, 1.0f),
+                                range(percentage / 2, 0.0f, 1.0f),
+                                range(percentage / 3, 0.0f, 1.0f)});
             }
         }
 
-        private class LevelsMinMidAdjuster extends Adjuster<GPUImageLevelsFilter> {
+        private class LevelsMinMidAdjuster extends
+                Adjuster<GPUImageLevelsFilter> {
             @Override
             public void adjust(int percentage) {
                 getFilter().setMin(0.0f, range(percentage, 0.0f, 1.0f), 1.0f);
             }
         }
 
-        //---------------2017年8月5日18:06:01新增的滤镜
+        // ---------------2017年8月5日18:06:01新增的滤镜
         private class EmbossAdjuster extends Adjuster<GPUImageEmbossFilter> {
             @Override
             public void adjust(final int percentage) {
@@ -729,7 +838,8 @@ public class FilterLibrary {
             }
         }
 
-        private class GPU3x3TextureAdjuster extends Adjuster<GPUImage3x3TextureSamplingFilter> {
+        private class GPU3x3TextureAdjuster extends
+                Adjuster<GPUImage3x3TextureSamplingFilter> {
             @Override
             public void adjust(final int percentage) {
                 getFilter().setLineSize(range(percentage, 0.0f, 5.0f));

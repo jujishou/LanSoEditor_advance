@@ -1,10 +1,5 @@
 package com.lansosdk.videoeditor;
 
-import java.io.IOException;
-import java.util.ArrayList;
-
-import jp.co.cyberagent.lansongsdk.gpuimage.GPUImageFilter;
-
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.util.Log;
@@ -22,11 +17,16 @@ import com.lansosdk.box.onDrawPadOutFrameListener;
 import com.lansosdk.box.onDrawPadProgressListener;
 import com.lansosdk.box.onDrawPadThreadProgressListener;
 
+import java.util.ArrayList;
+
+import jp.co.cyberagent.lansongsdk.gpuimage.GPUImageFilter;
+
 public class DrawPadPictureExecute {
 
     private static final String TAG = "DrawPadPictureExecute";
     DrawPadBitmapRunnable renderer;
     private int padWidth, padHeight;
+    private boolean mPauseRecord = false;
 
     /**
      * DrawPad的图片转换为视频的后台执行
@@ -39,12 +39,25 @@ public class DrawPadPictureExecute {
      * @param bitrate    编码视频所希望的码率,比特率,设置的越大,则文件越大, 设置小一些会起到视频压缩的效果.
      * @param dstPath    编码视频保存的路径.
      */
-    public DrawPadPictureExecute(Context ctx, int padwidth, int padheight, int durationMs, int framerate, int bitrate, String dstPath) {
+    public DrawPadPictureExecute(Context ctx, int padwidth, int padheight,
+                                 int durationMs, int framerate, int bitrate, String dstPath) {
         if (renderer == null) {
-            renderer = new DrawPadBitmapRunnable(ctx, padwidth, padheight, durationMs, framerate, bitrate, dstPath);
+            renderer = new DrawPadBitmapRunnable(ctx, padwidth, padheight,
+                    durationMs, framerate, bitrate, dstPath);
         }
         this.padWidth = padwidth;
         this.padHeight = padheight;
+    }
+
+    protected static int make32Multi(int value) {
+        if (value < 32) {
+            return 32;
+        } else {
+            value += 16;
+            int val2 = value / 32;
+            val2 *= 32;
+            return val2;
+        }
     }
 
     public void setCheckDrawPadSize(boolean check) {
@@ -54,9 +67,8 @@ public class DrawPadPictureExecute {
     }
 
     /**
-     * 在您配置了 OutFrame, 要输出每一帧的时候, 是否要禁止编码器.
-     * 当你只想要处理后的 数据, 而暂时不需要编码成最终的目标文件时, 把这里设置为true.
-     * 默认是false;
+     * 在您配置了 OutFrame, 要输出每一帧的时候, 是否要禁止编码器. 当你只想要处理后的 数据, 而暂时不需要编码成最终的目标文件时,
+     * 把这里设置为true. 默认是false;
      *
      * @param dis
      */
@@ -96,14 +108,12 @@ public class DrawPadPictureExecute {
         release();
     }
 
-
     public void release() {
         if (renderer != null) {
             renderer.release();
             renderer = null;
         }
     }
-
 
     public void bringToBack(Layer lay) {
         if (renderer != null && renderer.isRunning()) {
@@ -200,8 +210,7 @@ public class DrawPadPictureExecute {
     }
 
     /**
-     * 切换滤镜
-     * 为一个图层切换多个滤镜. 即一个滤镜处理完后的输出, 作为下一个滤镜的输入.
+     * 切换滤镜 为一个图层切换多个滤镜. 即一个滤镜处理完后的输出, 作为下一个滤镜的输入.
      * <p>
      * filter的列表, 是先add进去,最新渲染, 把第一个渲染的结果传递给第二个,第二个传递给第三个,以此类推.
      * <p>
@@ -217,13 +226,10 @@ public class DrawPadPictureExecute {
         }
     }
 
-
     /**
      * DrawPad每执行完一帧画面,会调用这个Listener,返回的timeUs是当前画面的时间戳(微妙),
      * 可以利用这个时间戳来做一些变化,比如在几秒处缩放, 在几秒处平移等等.从而实现一些动画效果.
-     *
-     * @param currentTimeUs 当前DrawPad处理画面的时间戳.,单位微秒.
-     */
+     *d/
     public void setDrawPadProgressListener(onDrawPadProgressListener listener) {
         if (renderer != null) {
             renderer.setDrawPadProgressListener(listener);
@@ -231,14 +237,21 @@ public class DrawPadPictureExecute {
     }
 
     /**
-     * 方法与   onDrawPadProgressListener不同的地方在于:
-     * 即将开始一帧渲染的时候, 直接执行这个回调中的代码,不通过Handler传递出去,你可以精确的执行一些这一帧的如何操作.
+     * 方法与 onDrawPadProgressListener不同的地方在于: 即将开始一帧渲染的时候,
+     * 直接执行这个回调中的代码,不通过Handler传递出去,你可以精确的执行一些这一帧的如何操作.
      * <p>
      * 故不能在回调 内增加各种UI相关的代码.
      */
-    public void setDrawPadThreadProgressListener(onDrawPadThreadProgressListener listener) {
+    public void setDrawPadThreadProgressListener(
+            onDrawPadThreadProgressListener listener) {
         if (renderer != null) {
             renderer.setDrawPadThreadProgressListener(listener);
+        }
+    }
+    public void setDrawPadProgressListener(onDrawPadProgressListener listener)
+    {
+        if(renderer!=null){
+            renderer.setDrawPadProgressListener(listener);
         }
     }
 
@@ -265,20 +278,22 @@ public class DrawPadPictureExecute {
     }
 
     /**
-     * 设置每处理一帧的数据预览监听, 等于把当前处理的这一帧的画面拉出来,
-     * 您可以根据这个画面来自行的编码保存, 或网络传输.
+     * 设置每处理一帧的数据预览监听, 等于把当前处理的这一帧的画面拉出来, 您可以根据这个画面来自行的编码保存, 或网络传输.
      * <p>
-     * 建议在这里拿到数据后, 放到queue中, 然后在其他线程中来异步读取queue中的数据, 请注意queue中数据的总大小, 要及时处理和释放, 以免内存过大,造成OOM问题
+     * 建议在这里拿到数据后, 放到queue中, 然后在其他线程中来异步读取queue中的数据, 请注意queue中数据的总大小, 要及时处理和释放,
+     * 以免内存过大,造成OOM问题
      *
      * @param listener 监听对象
      */
     public void setDrawPadOutFrameListener(onDrawPadOutFrameListener listener) {
         if (renderer != null) {
-            renderer.setDrawpadOutFrameListener(padWidth, padHeight, 1, listener);
+            renderer.setDrawpadOutFrameListener(padWidth, padHeight, 1,
+                    listener);
         }
     }
 
-    public void setDrawPadOutFrameListener(boolean isMulti, onDrawPadOutFrameListener listener) {
+    public void setDrawPadOutFrameListener(boolean isMulti,
+                                           onDrawPadOutFrameListener listener) {
         if (renderer != null) {
             int w = padWidth;
             int h = padHeight;
@@ -290,7 +305,8 @@ public class DrawPadPictureExecute {
         }
     }
 
-    public void setDrawPadOutFrameListener(int width, int height, onDrawPadOutFrameListener listener) {
+    public void setDrawPadOutFrameListener(int width, int height,
+                                           onDrawPadOutFrameListener listener) {
         if (renderer != null) {
             renderer.setDrawpadOutFrameListener(width, height, 1, listener);
         }
@@ -324,12 +340,9 @@ public class DrawPadPictureExecute {
         resumeRecord();
     }
 
-    private boolean mPauseRecord = false;
-
     /**
-     * 暂停录制,
-     * 使用在 : 开始DrawPad后, 需要暂停录制, 来增加一些图层, 然后恢复录制的场合.
-     * 此方法使用在DrawPad线程中的 暂停和恢复的作用, 不能用在一个Activity的onPause和onResume中.
+     * 暂停录制, 使用在 : 开始DrawPad后, 需要暂停录制, 来增加一些图层, 然后恢复录制的场合. 此方法使用在DrawPad线程中的
+     * 暂停和恢复的作用, 不能用在一个Activity的onPause和onResume中.
      */
     public void pauseRecord() {
         if (renderer != null) {
@@ -340,8 +353,7 @@ public class DrawPadPictureExecute {
     }
 
     /**
-     * 恢复录制.
-     * 此方法使用在DrawPad线程中的 暂停和恢复的作用, 不能用在一个Activity的onPause和onResume中.
+     * 恢复录制. 此方法使用在DrawPad线程中的 暂停和恢复的作用, 不能用在一个Activity的onPause和onResume中.
      */
     public void resumeRecord() {
         if (renderer != null && renderer.isRunning()) {
@@ -365,17 +377,6 @@ public class DrawPadPictureExecute {
     public void resetOutFrames() {
         if (renderer != null && renderer.isRunning()) {
             renderer.resetOutFrames();
-        }
-    }
-
-    protected static int make32Multi(int value) {
-        if (value < 32) {
-            return 32;
-        } else {
-            value += 16;
-            int val2 = value / 32;
-            val2 *= 32;
-            return val2;
         }
     }
 }

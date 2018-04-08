@@ -1,64 +1,33 @@
 package com.example.advanceDemo.scene;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-import java.util.Timer;
-import java.util.TimerTask;
-import java.util.concurrent.atomic.AtomicInteger;
-
-
-import jp.co.cyberagent.lansongsdk.gpuimage.GPUImageFilter;
+import android.app.Activity;
+import android.content.Intent;
+import android.media.MediaPlayer;
+import android.media.MediaPlayer.OnCompletionListener;
+import android.media.MediaPlayer.OnPreparedListener;
+import android.os.Bundle;
+import android.os.Handler;
+import android.util.Log;
+import android.view.Surface;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.example.advanceDemo.VideoPlayerActivity;
 import com.example.advanceDemo.view.PaintConstants;
-import com.lansoeditor.demo.R;
+import com.lansoeditor.advanceDemo.R;
 import com.lansosdk.box.DrawPadUpdateMode;
 import com.lansosdk.box.VideoLayer;
 import com.lansosdk.box.ViewLayer;
-import com.lansosdk.box.Layer;
 import com.lansosdk.box.ViewLayerRelativeLayout;
 import com.lansosdk.box.onDrawPadSizeChangedListener;
 import com.lansosdk.videoeditor.DrawPadView;
 import com.lansosdk.videoeditor.MediaInfo;
-import com.lansosdk.videoeditor.SDKDir;
 import com.lansosdk.videoeditor.SDKFileUtils;
-import com.lansosdk.videoeditor.VideoEditor;
 
-import android.app.ActionBar.LayoutParams;
-import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.graphics.Paint;
-import android.media.MediaPlayer;
-import android.media.MediaPlayer.OnCompletionListener;
-import android.media.MediaPlayer.OnPreparedListener;
-import android.opengl.GLSurfaceView;
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
-import android.os.Parcelable;
-import android.support.v4.view.PagerAdapter;
-import android.support.v4.view.ViewPager;
-import android.text.Layout;
-import android.util.Log;
-import android.view.MotionEvent;
-import android.view.Surface;
-import android.view.View;
-import android.view.ViewGroup;
-import android.view.View.OnClickListener;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.SeekBar;
-import android.widget.TextView;
-import android.widget.Toast;
-import android.widget.SeekBar.OnSeekBarChangeListener;
+import java.io.IOException;
 
 /**
  * 采用自动刷新模式 增加视频VideoLayer 到DrawPad中.
@@ -90,11 +59,10 @@ public class VideoLayerAutoUpdateActivity extends Activity {
         mVideoPath = getIntent().getStringExtra("videopath");
         mDrawPad = (DrawPadView) findViewById(R.id.id_vauto_demo_drawpad_view);
 
-        //在手机的默认路径下创建一个文件名,用来保存生成的视频文件,(在onDestroy中删除)
+        // 在手机的默认路径下创建一个文件名,用来保存生成的视频文件,(在onDestroy中删除)
         dstPath = SDKFileUtils.newMp4PathInBox();
 
-
-        //演示例子用到的.
+        // 演示例子用到的.
         PaintConstants.SELECTOR.COLORING = true;
         PaintConstants.SELECTOR.KEEP_IMAGE = true;
 
@@ -140,22 +108,24 @@ public class VideoLayerAutoUpdateActivity extends Activity {
         }
     }
 
-    //Step1: 设置DrawPad 容器的尺寸.并设置是否实时录制容器上的内容.
+    // Step1: 设置DrawPad 容器的尺寸.并设置是否实时录制容器上的内容.
     private void initDrawPad() {
         MediaInfo info = new MediaInfo(mVideoPath, false);
         if (info.prepare()) {
 
-            mDrawPad.setRealEncodeEnable(480, 480, 1000000, (int) info.vFrameRate, dstPath);
+            mDrawPad.setRealEncodeEnable(480, 480, 1000000,
+                    (int) info.vFrameRate, dstPath);
 
-            mDrawPad.setUpdateMode(DrawPadUpdateMode.AUTO_FLUSH, 25);//25是帧率.
+            mDrawPad.setUpdateMode(DrawPadUpdateMode.AUTO_FLUSH, 25);// 25是帧率.
 
-            mDrawPad.setDrawPadSize(480, 480, new onDrawPadSizeChangedListener() {
+            mDrawPad.setDrawPadSize(480, 480,
+                    new onDrawPadSizeChangedListener() {
 
-                @Override
-                public void onSizeChanged(int viewWidth, int viewHeight) {
-                    startDrawPad();
-                }
-            });
+                        @Override
+                        public void onSizeChanged(int viewWidth, int viewHeight) {
+                            startDrawPad();
+                        }
+                    });
         }
     }
 
@@ -165,7 +135,8 @@ public class VideoLayerAutoUpdateActivity extends Activity {
     private void startDrawPad() {
         mDrawPad.startDrawPad();
 
-        mLayerMain = mDrawPad.addMainVideoLayer(mplayer.getVideoWidth(), mplayer.getVideoHeight(), null);
+        mLayerMain = mDrawPad.addMainVideoLayer(mplayer.getVideoWidth(),
+                mplayer.getVideoHeight(), null);
         if (mLayerMain != null) {
             mplayer.setSurface(new Surface(mLayerMain.getVideoTexture()));
         }
@@ -194,8 +165,10 @@ public class VideoLayerAutoUpdateActivity extends Activity {
             mLayerRelativeLayout.bindViewLayer(mViewLayer);
             mLayerRelativeLayout.invalidate();
 
-            ViewGroup.LayoutParams params = mLayerRelativeLayout.getLayoutParams();
-            params.height = mViewLayer.getPadHeight();  //因为布局时, 宽度一致, 这里调整高度,让他们一致.
+            ViewGroup.LayoutParams params = mLayerRelativeLayout
+                    .getLayoutParams();
+            params.height = mViewLayer.getPadHeight(); // 因为布局时, 宽度一致,
+            // 这里调整高度,让他们一致.
 
             mLayerRelativeLayout.setLayoutParams(params);
         }
@@ -209,40 +182,45 @@ public class VideoLayerAutoUpdateActivity extends Activity {
             @Override
             public void onClick(View v) {
                 if (SDKFileUtils.fileExist(dstPath)) {
-                    Intent intent = new Intent(VideoLayerAutoUpdateActivity.this, VideoPlayerActivity.class);
+                    Intent intent = new Intent(
+                            VideoLayerAutoUpdateActivity.this,
+                            VideoPlayerActivity.class);
                     intent.putExtra("videopath", dstPath);
                     startActivity(intent);
                 } else {
-                    Toast.makeText(VideoLayerAutoUpdateActivity.this, "目标文件不存在", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(VideoLayerAutoUpdateActivity.this,
+                            "目标文件不存在", Toast.LENGTH_SHORT).show();
                 }
             }
         });
 
         playVideo.setVisibility(View.GONE);
 
+        findViewById(R.id.id_vauto_demo_pausevideo).setOnClickListener(
+                new OnClickListener() {
 
-        findViewById(R.id.id_vauto_demo_pausevideo).setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (mplayer != null && mplayer.isPlaying()) {
+                            mplayer.pause();
+                        }
+                    }
+                });
+        findViewById(R.id.id_vauto_demo_startvideo).setOnClickListener(
+                new OnClickListener() {
 
-            @Override
-            public void onClick(View v) {
-                if (mplayer != null && mplayer.isPlaying()) {
-                    mplayer.pause();
-                }
-            }
-        });
-        findViewById(R.id.id_vauto_demo_startvideo).setOnClickListener(new OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                if (mplayer != null && mplayer.isPlaying() == false) {
-                    mplayer.start();
-                }
-            }
-        });
+                    @Override
+                    public void onClick(View v) {
+                        if (mplayer != null && mplayer.isPlaying() == false) {
+                            mplayer.start();
+                        }
+                    }
+                });
     }
 
     private void toastStop() {
-        Toast.makeText(getApplicationContext(), "录制已停止!!", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getApplicationContext(), "录制已停止!!", Toast.LENGTH_SHORT)
+                .show();
     }
 
     @Override
@@ -254,7 +232,6 @@ public class VideoLayerAutoUpdateActivity extends Activity {
             mplayer.release();
             mplayer = null;
         }
-
 
         if (mDrawPad != null) {
             mDrawPad.stopDrawPad();

@@ -3,7 +3,6 @@ package com.example.advanceDemo.view;
 import android.graphics.Rect;
 import android.graphics.RectF;
 
-
 /**
  * Created by panyi on 2016/6/16.
  */
@@ -58,7 +57,8 @@ public class RectUtil {
      * @param addRect
      * @param padding
      */
-    public static void rectAddV(final RectF srcRect, final RectF addRect, int padding) {
+    public static void rectAddV(final RectF srcRect, final RectF addRect,
+                                int padding) {
         if (srcRect == null || addRect == null)
             return;
 
@@ -83,7 +83,8 @@ public class RectUtil {
      * @param addRect
      * @param padding
      */
-    public static void rectAddV(final Rect srcRect, final Rect addRect, int padding, int charMinHeight) {
+    public static void rectAddV(final Rect srcRect, final Rect addRect,
+                                int padding, int charMinHeight) {
         if (srcRect == null || addRect == null)
             return;
 
@@ -100,4 +101,4 @@ public class RectUtil {
 
         srcRect.set(left, top, right, bottom);
     }
-}//end class
+}// end class

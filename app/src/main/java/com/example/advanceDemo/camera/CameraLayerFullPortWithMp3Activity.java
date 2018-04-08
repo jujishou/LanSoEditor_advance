@@ -1,92 +1,52 @@
 package com.example.advanceDemo.camera;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-
-import jp.co.cyberagent.lansongsdk.gpuimage.GPUImageFilter;
-import jp.co.cyberagent.lansongsdk.gpuimage.LanSongGrindFilter;
-
+import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
+import android.os.PowerManager;
+import android.util.Log;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.advanceDemo.VideoPlayerActivity;
-import com.example.advanceDemo.view.CameraProgressBar;
-import com.example.advanceDemo.view.FaceView;
 import com.example.advanceDemo.view.FocusImageView;
-import com.lansoeditor.demo.R;
+import com.lansoeditor.advanceDemo.R;
 import com.lansosdk.box.AudioLine;
-import com.lansosdk.box.BitmapLayer;
-import com.lansosdk.box.BitmapLoader;
 import com.lansosdk.box.CameraLayer;
 import com.lansosdk.box.DrawPad;
-import com.lansosdk.box.Layer;
-import com.lansosdk.box.MVLayer;
-import com.lansosdk.box.MVLayerENDMode;
-import com.lansosdk.box.AudioPad;
 import com.lansosdk.box.MicLine;
-import com.lansosdk.box.SubLayer;
-import com.lansosdk.box.ViewLayer;
-import com.lansosdk.box.ViewLayerRelativeLayout;
 import com.lansosdk.box.onDrawPadErrorListener;
-import com.lansosdk.box.onDrawPadOutFrameListener;
 import com.lansosdk.box.onDrawPadProgressListener;
-import com.lansosdk.box.onDrawPadSnapShotListener;
-import com.lansosdk.box.onDrawPadThreadProgressListener;
-import com.lansosdk.videoeditor.AVDecoder;
 import com.lansosdk.videoeditor.BeautyManager;
-import com.lansosdk.videoeditor.CopyDefaultVideoAsyncTask;
 import com.lansosdk.videoeditor.CopyFileFromAssets;
 import com.lansosdk.videoeditor.DrawPadCameraView;
 import com.lansosdk.videoeditor.DrawPadCameraView.doFousEventListener;
 import com.lansosdk.videoeditor.DrawPadCameraView.onViewAvailable;
-import com.lansosdk.videoeditor.FilterLibrary.OnGpuImageFilterChosenListener;
-import com.lansosdk.videoeditor.DrawPadView;
 import com.lansosdk.videoeditor.FilterLibrary;
+import com.lansosdk.videoeditor.FilterLibrary.OnGpuImageFilterChosenListener;
 import com.lansosdk.videoeditor.LanSongUtil;
+import com.lansosdk.videoeditor.MediaInfo;
 import com.lansosdk.videoeditor.SDKFileUtils;
-import com.lansosdk.videoeditor.VideoEditor;
 
+import jp.co.cyberagent.lansongsdk.gpuimage.GPUImageFilter;
 
-import android.app.Activity;
-import android.content.Context;
-import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.PointF;
-import android.hardware.Camera.Face;
-import android.os.Build;
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
-import android.os.PowerManager;
-import android.util.DisplayMetrics;
-import android.util.Log;
-import android.view.View;
-import android.view.ViewGroup;
-import android.view.View.OnClickListener;
-import android.view.animation.AnimationUtils;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.SeekBar;
-import android.widget.SeekBar.OnSeekBarChangeListener;
-import android.widget.TextView;
-import android.widget.Toast;
+public class CameraLayerFullPortWithMp3Activity extends Activity implements
+        OnClickListener {
 
-public class CameraLayerFullPortWithMp3Activity extends Activity implements OnClickListener {
-
-
-    private static final int RECORD_CAMERA_MIN = 2 * 1000 * 1000; //定义最小2秒
-    private static final String TAG = "CameraLayerMp3";
+    private static final int RECORD_CAMERA_MIN = 2 * 1000 * 1000; // 定义最小2秒
+    private static final String TAG = "CameraFullRecordActivity";
     private DrawPadCameraView drawPadCamera;
-
 
     private CameraLayer mCamLayer = null;
     private AudioLine audioLine;
     private MicLine micLine;
 
-    private String dstPath = null;  //用于录制完成后的目标视频路径.
+    private String dstPath = null; // 用于录制完成后的目标视频路径.
 
     private FocusImageView focusView;
 
@@ -94,20 +54,38 @@ public class CameraLayerFullPortWithMp3Activity extends Activity implements OnCl
     private TextView tvTime;
     private Context mContext = null;
 
-
     private ImageView btnOk;
     private Button btnRecord;
+    private onDrawPadProgressListener drawPadProgressListener = new onDrawPadProgressListener() {
+
+        @Override
+        public void onProgress(DrawPad v, long currentTimeUs) {
+
+            if (currentTimeUs >= RECORD_CAMERA_MIN && btnOk != null) {
+                btnOk.setVisibility(View.VISIBLE);
+            }
+            if (tvTime != null) {
+                float timeF = ((float) currentTimeUs / 1000000);
+                float b = (float) (Math.round(timeF * 10)) / 10; // 保留一位小数.
+
+                if (b >= 0)
+                    tvTime.setText(String.valueOf(b));
+            }
+        }
+    };
+    private BeautyManager mBeautyMng;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        //全屏模式下, 隐藏底部的虚拟按键.
+        // 全屏模式下, 隐藏底部的虚拟按键.
         LanSongUtil.hideBottomUIMenu(this);
         mContext = getApplicationContext();
 
         if (LanSongUtil.checkRecordPermission(getBaseContext()) == false) {
-            Toast.makeText(getApplicationContext(), "当前无权限,请打开权限后,重试!!!", Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), "当前无权限,请打开权限后,重试!!!",
+                    Toast.LENGTH_LONG).show();
             finish();
         }
 
@@ -115,6 +93,7 @@ public class CameraLayerFullPortWithMp3Activity extends Activity implements OnCl
         drawPadCamera = (DrawPadCameraView) findViewById(R.id.id_fullrecord_padview);
 
         initView();
+        initBeautyView();
         btnRecord.setOnClickListener(new OnClickListener() {
 
             @Override
@@ -130,7 +109,8 @@ public class CameraLayerFullPortWithMp3Activity extends Activity implements OnCl
                         /**
                          * 把用户选择好的歌曲,设置到drawpad容器中, 开始录制.
                          */
-                        String music = CopyFileFromAssets.copyAssets(getApplicationContext(), "c_li_c_li_2m8s.mp3");
+                        String music = CopyFileFromAssets.copyAssets(
+                                getApplicationContext(), "c_li_c_li_2m8s.mp3");
                         audioLine = drawPadCamera.setRecordExtraMp3(music, true);
                         drawPadCamera.startRecord();
                     }
@@ -139,7 +119,7 @@ public class CameraLayerFullPortWithMp3Activity extends Activity implements OnCl
         });
 
         dstPath = SDKFileUtils.newMp4PathInBox();
-        initDrawPad();  //开始录制.
+        initDrawPad(); // 开始录制.
     }
 
     @Override
@@ -148,7 +128,8 @@ public class CameraLayerFullPortWithMp3Activity extends Activity implements OnCl
         super.onResume();
         if (mWakeLock == null) {
             PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
-            mWakeLock = pm.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK, TAG);
+            mWakeLock = pm.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK,
+                    TAG);
             mWakeLock.acquire();
         }
         startDrawPad();
@@ -158,13 +139,11 @@ public class CameraLayerFullPortWithMp3Activity extends Activity implements OnCl
      * Step1: 开始运行 DrawPad 容器
      */
     private void initDrawPad() {
-        int padWidth = 544;
-        int padHeight = 960;
-        int bitrate = 3000 * 1024;  //码率
         /**
-         * 设置录制时的一些参数.
+         * 先预设 录制时的一些参数.
          */
-        drawPadCamera.setRealEncodeEnable(padWidth, padHeight, bitrate, (int) 25, dstPath);
+        drawPadCamera.setRealEncodeEnable(544, 960, 3000 * 1024, (int) 25,
+                dstPath);
         /**
          * 设置录制处理进度监听.
          */
@@ -173,7 +152,7 @@ public class CameraLayerFullPortWithMp3Activity extends Activity implements OnCl
         /**
          * 相机前后置.是否设置滤镜.
          */
-        drawPadCamera.setCameraParam(false, null, true);
+        drawPadCamera.setCameraParam(true, null, true);
 
         /**
          * 当手动聚焦的时候, 返回聚焦点的位置,让focusView去显示一个聚焦的动画.
@@ -209,12 +188,14 @@ public class CameraLayerFullPortWithMp3Activity extends Activity implements OnCl
      * Step2: 开始运行 Drawpad线程.
      */
     private void startDrawPad() {
-        if (LanSongUtil.isFullScreenRatio(drawPadCamera.getViewWidth(), drawPadCamera.getViewHeight())) {
-            drawPadCamera.setRealEncodeEnable(1088, 544, 3500 * 1024, (int) 25, dstPath);
+        // 如果是屏幕比例大于16:9,则需要重新设置编码参数, 从而画面不变形
+        if (LanSongUtil.isFullScreenRatio(drawPadCamera.getViewWidth(),
+                drawPadCamera.getViewHeight())) {
+            drawPadCamera.setRealEncodeEnable(544, 1088, 3500 * 1024, (int) 25,
+                    dstPath);
         }
         if (drawPadCamera.setupDrawpad()) {
             mCamLayer = drawPadCamera.getCameraLayer();
-            addBitmapLayer();
             drawPadCamera.startPreview();
         } else {
             Log.i(TAG, "建立drawpad线程失败.");
@@ -231,38 +212,22 @@ public class CameraLayerFullPortWithMp3Activity extends Activity implements OnCl
         }
     }
 
-    private onDrawPadProgressListener drawPadProgressListener = new onDrawPadProgressListener() {
-
-        @Override
-        public void onProgress(DrawPad v, long currentTimeUs) {
-
-            if (currentTimeUs >= RECORD_CAMERA_MIN && btnOk != null) {
-                btnOk.setVisibility(View.VISIBLE);
-            }
-            if (tvTime != null) {
-                float timeF = ((float) currentTimeUs / 1000000);
-                float b = (float) (Math.round(timeF * 10)) / 10;  //保留一位小数.
-
-                if (b >= 0)
-                    tvTime.setText(String.valueOf(b));
-            }
-        }
-    };
-
     /**
      * 选择滤镜效果,
      */
     private void selectFilter() {
         if (drawPadCamera != null && drawPadCamera.isRunning()) {
-            FilterLibrary.showDialog(this, new OnGpuImageFilterChosenListener() {
+            FilterLibrary.showDialog(this,
+                    new OnGpuImageFilterChosenListener() {
 
-                @Override
-                public void onGpuImageFilterChosenListener(final GPUImageFilter filter, String name) {
-                    if (mCamLayer != null) {
-                        mCamLayer.switchFilterTo(filter);
-                    }
-                }
-            });
+                        @Override
+                        public void onGpuImageFilterChosenListener(
+                                final GPUImageFilter filter, String name) {
+                            if (mCamLayer != null) {
+                                mCamLayer.switchFilterTo(filter);
+                            }
+                        }
+                    });
         }
     }
 
@@ -287,19 +252,7 @@ public class CameraLayerFullPortWithMp3Activity extends Activity implements OnCl
         dstPath = null;
     }
 
-    private BitmapLayer bmpLayer;
-
-    private void addBitmapLayer() {
-        if (drawPadCamera != null && drawPadCamera.isRunning()) {
-            String bitmapPath = CopyFileFromAssets.copyAssets(getApplicationContext(), "small.png");
-            bmpLayer = drawPadCamera.addBitmapLayer(BitmapFactory.decodeFile(bitmapPath));
-
-            //把位置放到中间的右侧, 因为获取的高度是中心点的高度.
-            bmpLayer.setPosition(bmpLayer.getPadWidth() - bmpLayer.getLayerWidth() / 2, bmpLayer.getPositionY());
-        }
-    }
-
-    //-------------------------------------------一下是UI界面和控制部分.---------------------------------------------------
+    // -------------------------------------------一下是UI界面和控制部分.---------------------------------------------------
     private void initView() {
         findViewById(R.id.id_fullrecord_cancel).setOnClickListener(this);
 
@@ -308,48 +261,52 @@ public class CameraLayerFullPortWithMp3Activity extends Activity implements OnCl
         btnOk = (ImageView) findViewById(R.id.id_fullrecord_ok);
         btnOk.setOnClickListener(this);
 
-
         focusView = (FocusImageView) findViewById(R.id.id_fullrecord_focusview);
 
         findViewById(R.id.id_fullrecord_flashlight).setOnClickListener(this);
         findViewById(R.id.id_fullrecord_frontcamera).setOnClickListener(this);
         findViewById(R.id.id_fullrecord_filter).setOnClickListener(this);
         btnRecord = (Button) findViewById(R.id.id_fullrecord_button);
-        initBeautyView();
     }
-
-    private BeautyManager mBeautyMng;
 
     private void initBeautyView() {
         mBeautyMng = new BeautyManager(getApplicationContext());
-        findViewById(R.id.id_camerabeauty_btn).setOnClickListener(new OnClickListener() {
+        findViewById(R.id.id_camerabeauty_btn).setOnClickListener(
+                new OnClickListener() {
 
-            @Override
-            public void onClick(View v) {
-                if (mBeautyMng.isBeauting()) {
-                    mBeautyMng.deleteBeauty(drawPadCamera.getCameraLayer());
-                } else {
-                    mBeautyMng.addBeauty(drawPadCamera.getCameraLayer());
-                }
-            }
-        });
-        findViewById(R.id.id_camerabeauty_brightadd_btn).setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (mBeautyMng.isBeauting()) {
+                            mBeautyMng.deleteBeauty(drawPadCamera
+                                    .getCameraLayer());
+                        } else {
+                            mBeautyMng.addBeauty(drawPadCamera.getCameraLayer());
+                        }
+                    }
+                });
+        findViewById(R.id.id_camerabeauty_brightadd_btn).setOnClickListener(
+                new OnClickListener() {
 
-            @Override
-            public void onClick(View v) {
-                mBeautyMng.increaseBrightness(drawPadCamera.getCameraLayer());
-            }
-        });
-        findViewById(R.id.id_camerabeaty_brightsub_btn).setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
 
-            @Override
-            public void onClick(View v) {
-                mBeautyMng.discreaseBrightness(drawPadCamera.getCameraLayer());
-            }
-        });
+                        mBeautyMng.increaseBrightness(drawPadCamera
+                                .getCameraLayer());
+                    }
+                });
+        findViewById(R.id.id_camerabeaty_brightsub_btn).setOnClickListener(
+                new OnClickListener() {
+
+                    @Override
+                    public void onClick(View v) {
+                        mBeautyMng.discreaseBrightness(drawPadCamera
+                                .getCameraLayer());
+                    }
+                });
     }
 
     private void playVideo() {
+        Log.e(TAG, "playVideo" + MediaInfo.checkFile(dstPath));
         if (SDKFileUtils.fileExist(dstPath)) {
             Intent intent = new Intent(this, VideoPlayerActivity.class);
             intent.putExtra("videopath", dstPath);
@@ -372,11 +329,12 @@ public class CameraLayerFullPortWithMp3Activity extends Activity implements OnCl
                 break;
             case R.id.id_fullrecord_frontcamera:
                 if (mCamLayer != null) {
-                    if (drawPadCamera.isRunning() && CameraLayer.isSupportFrontCamera()) {
-                        //先把DrawPad暂停运行.
+                    if (drawPadCamera.isRunning()
+                            && CameraLayer.isSupportFrontCamera()) {
+                        // 先把DrawPad暂停运行.
                         drawPadCamera.pausePreview();
                         mCamLayer.changeCamera();
-                        drawPadCamera.resumePreview(); //再次开启.
+                        drawPadCamera.resumePreview(); // 再次开启.
                     }
                 }
                 break;

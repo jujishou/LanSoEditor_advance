@@ -1,13 +1,5 @@
 package com.example.commonDemo;
 
-
-import java.io.File;
-import java.util.Arrays;
-import java.util.Comparator;
-
-import com.lansoeditor.demo.R;
-import com.lansosdk.videoeditor.MediaInfo;
-
 import android.app.ListActivity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -16,21 +8,42 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.lansoeditor.advanceDemo.R;
+import com.lansosdk.videoeditor.MediaInfo;
+
+import java.io.File;
+import java.util.Arrays;
+import java.util.Comparator;
+
 public class FileExplorerActivity extends ListActivity {
 
     private static final String TAG = "FFMpegFileExplorer";
+    private static final String[] VIDEO_EXTS = new String[]{".mp4", ".flv",
+            "mov"};
+    private static final String[] AUDIO_EXTS = new String[]{".mp3", ".aac",
+            "wav"};
+    private static boolean isSelectVideo = true;
     private String mCurrentPath = null;
     private String mRoot = "/sdcard";
     private TextView mTextViewLocation;
     private File[] mFiles;
-    private static final String[] VIDEO_EXTS = new String[]{
-            ".mp4", ".flv", "mov"
-    };
-    private static final String[] AUDIO_EXTS = new String[]{
-            ".mp3", ".aac", "wav"
-    };
 
-    private static boolean isSelectVideo = true;
+    protected static boolean checkExtension(File file) {
+        if (isSelectVideo) {
+            for (int i = 0; i < VIDEO_EXTS.length; i++) {
+                if (file.getName().indexOf(VIDEO_EXTS[i]) > 0) {
+                    return true;
+                }
+            }
+        } else {
+            for (int i = 0; i < AUDIO_EXTS.length; i++) {
+                if (file.getName().indexOf(AUDIO_EXTS[i]) > 0) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,7 +61,6 @@ public class FileExplorerActivity extends ListActivity {
         }
         getDirectory(mRoot);
 
-
     }
 
     @Override
@@ -60,23 +72,6 @@ public class FileExplorerActivity extends ListActivity {
             return;
         }
         super.onBackPressed();
-    }
-
-    protected static boolean checkExtension(File file) {
-        if (isSelectVideo) {
-            for (int i = 0; i < VIDEO_EXTS.length; i++) {
-                if (file.getName().indexOf(VIDEO_EXTS[i]) > 0) {
-                    return true;
-                }
-            }
-        } else {
-            for (int i = 0; i < AUDIO_EXTS.length; i++) {
-                if (file.getName().indexOf(AUDIO_EXTS[i]) > 0) {
-                    return true;
-                }
-            }
-        }
-        return false;
     }
 
     private void sortFilesByDirectory(File[] files) {
@@ -105,47 +100,51 @@ public class FileExplorerActivity extends ListActivity {
                 files = temp;
             }
             mFiles = files;
-            setListAdapter(new FileExplorerAdapter(this, files, temp.length == files.length));
+            setListAdapter(new FileExplorerAdapter(this, files,
+                    temp.length == files.length));
         } catch (Exception ex) {
             Toast.makeText(this, "Error", Toast.LENGTH_LONG).show();
         }
     }
 
     @Override
-    protected void onListItemClick(ListView l, View v, int position, long id) { //当list里的一个item被点击的时候调用
+    protected void onListItemClick(ListView l, View v, int position, long id) { // 当list里的一个item被点击的时候调用
         File file = mFiles[position];
         mCurrentPath = file.getAbsolutePath();
         if (file.isDirectory()) {
             if (file.canRead())
                 getDirectory(mCurrentPath);
             else {
-                Toast.makeText(this, "[" + file.getName() + "] folder can't be read!", Toast.LENGTH_LONG).show();
+                Toast.makeText(this,
+                        "[" + file.getName() + "] folder can't be read!",
+                        Toast.LENGTH_LONG).show();
             }
         } else {
             if (!checkExtension(file)) {
-                Toast.makeText(this, "Not Support This File extensions!", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, "Not Support This File extensions!",
+                        Toast.LENGTH_LONG).show();
                 return;
-
 
             } else if (MediaInfo.isSupport(file.getAbsolutePath())) {
 
                 startPlayer(file.getAbsolutePath());
             } else {
-                Toast.makeText(this, "Not Support This File extensions!", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, "Not Support This File extensions!",
+                        Toast.LENGTH_LONG).show();
             }
         }
     }
 
     private void startPlayer(String filePath) {
-        Intent i = new Intent(); ///这里发送出去，
+        Intent i = new Intent(); // /这里发送出去，
         Bundle b = new Bundle();
         b.putString("SELECT_VIDEO", filePath);
         i.putExtras(b);
         this.setResult(RESULT_OK, i);
         this.finish();
 
-//    	Intent i = new Intent(this, VideoPlayer.class);
-//    	i.putExtra("videofilename", filePath);
-//    	startActivity(i);  
+        // Intent i = new Intent(this, VideoPlayer.class);
+        // i.putExtra("videofilename", filePath);
+        // startActivity(i);
     }
 }

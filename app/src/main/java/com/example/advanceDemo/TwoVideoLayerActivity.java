@@ -1,48 +1,7 @@
 package com.example.advanceDemo;
 
-import java.io.IOException;
-import java.util.Locale;
-
-import jp.co.cyberagent.lansongsdk.gpuimage.GPUImageFilter;
-import jp.co.cyberagent.lansongsdk.gpuimage.GPUImageSepiaFilter;
-import jp.co.cyberagent.lansongsdk.gpuimage.Rotation;
-
-import com.example.advanceDemo.view.BitmapCache;
-import com.example.advanceDemo.view.ShowHeart;
-import com.example.advanceDemo.view.SlidingLayer;
-import com.lansoeditor.demo.R;
-import com.lansosdk.box.BitmapLayer;
-import com.lansosdk.box.BitmapLoader;
-import com.lansosdk.box.BoxDecoder;
-import com.lansosdk.box.CanvasRunnable;
-import com.lansosdk.box.CanvasLayer;
-import com.lansosdk.box.DrawPadUpdateMode;
-import com.lansosdk.box.Layer;
-import com.lansosdk.box.DrawPad;
-import com.lansosdk.box.TwoVideoLayer;
-import com.lansosdk.box.VideoLayer;
-import com.lansosdk.box.YUVLayer;
-import com.lansosdk.box.onDrawPadProgressListener;
-import com.lansosdk.box.onDrawPadSizeChangedListener;
-import com.lansosdk.box.onDrawPadThreadProgressListener;
-import com.lansosdk.videoeditor.CopyFileFromAssets;
-import com.lansosdk.videoeditor.DrawPadView;
-import com.lansosdk.videoeditor.MediaInfo;
-import com.lansosdk.videoeditor.SDKDir;
-import com.lansosdk.videoeditor.SDKFileUtils;
-import com.lansosdk.videoeditor.VideoEditor;
-import com.lansosdk.videoeditor.DrawPadView.onViewAvailable;
-
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
 import android.media.MediaPlayer.OnPreparedListener;
@@ -52,12 +11,22 @@ import android.util.Log;
 import android.view.Surface;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.SeekBar;
-import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.SeekBar.OnSeekBarChangeListener;
+
+import com.lansoeditor.advanceDemo.R;
+import com.lansosdk.box.TwoVideoLayer;
+import com.lansosdk.box.onDrawPadSizeChangedListener;
+import com.lansosdk.videoeditor.CopyFileFromAssets;
+import com.lansosdk.videoeditor.DrawPadView;
+import com.lansosdk.videoeditor.MediaInfo;
+import com.lansosdk.videoeditor.SDKDir;
+import com.lansosdk.videoeditor.SDKFileUtils;
+import com.lansosdk.videoeditor.VideoEditor;
+
+import java.io.IOException;
+
+import jp.co.cyberagent.lansongsdk.gpuimage.Rotation;
 
 /**
  * 演示<双视频图层>的功能.
@@ -73,7 +42,6 @@ public class TwoVideoLayerActivity extends Activity {
     private MediaPlayer mplayer = null;
     private MediaPlayer mplayer2 = null;
     private TwoVideoLayer twoVideoLayer = null;
-
 
     private String editTmpPath = null;
     private String dstPath = null;
@@ -91,7 +59,8 @@ public class TwoVideoLayerActivity extends Activity {
         mDrawPadView = (DrawPadView) findViewById(R.id.id_twovideolayer_view);
         mInfo = new MediaInfo(mVideoPath, false);
         if (mInfo.prepare() == false) {
-            Toast.makeText(TwoVideoLayerActivity.this, "视频源文件错误!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(TwoVideoLayerActivity.this, "视频源文件错误!",
+                    Toast.LENGTH_SHORT).show();
             this.finish();
         }
 
@@ -102,27 +71,30 @@ public class TwoVideoLayerActivity extends Activity {
             public void onClick(View v) {
                 // TODO Auto-generated method stub
                 if (SDKFileUtils.fileExist(dstPath)) {
-                    Intent intent = new Intent(TwoVideoLayerActivity.this, VideoPlayerActivity.class);
+                    Intent intent = new Intent(TwoVideoLayerActivity.this,
+                            VideoPlayerActivity.class);
                     intent.putExtra("videopath", dstPath);
                     startActivity(intent);
                 } else {
-                    Toast.makeText(TwoVideoLayerActivity.this, "目标文件不存在", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(TwoVideoLayerActivity.this, "目标文件不存在",
+                            Toast.LENGTH_SHORT).show();
                 }
             }
         });
         playVideo.setVisibility(View.GONE);
-        findViewById(R.id.id_twovideolayer_testbutton).setOnClickListener(new OnClickListener() {
+        findViewById(R.id.id_twovideolayer_testbutton).setOnClickListener(
+                new OnClickListener() {
 
-            @Override
-            public void onClick(View v) {
-                // TODO Auto-generated method stub
-                if (twoVideoLayer != null) {
-                    isDisplayed = !isDisplayed;
-                    twoVideoLayer.setDisplayTexture2(isDisplayed);
-                }
-            }
-        });
-        //在手机的默认路径下创建一个文件名,用来保存生成的视频文件,(在onDestroy中删除)
+                    @Override
+                    public void onClick(View v) {
+                        // TODO Auto-generated method stub
+                        if (twoVideoLayer != null) {
+                            isDisplayed = !isDisplayed;
+                            twoVideoLayer.setDisplayTexture2(isDisplayed);
+                        }
+                    }
+                });
+        // 在手机的默认路径下创建一个文件名,用来保存生成的视频文件,(在onDestroy中删除)
         editTmpPath = SDKFileUtils.newMp4PathInBox();
         dstPath = SDKFileUtils.newMp4PathInBox();
 
@@ -136,7 +108,8 @@ public class TwoVideoLayerActivity extends Activity {
     }
 
     /**
-     * VideoLayer是外部提供画面来源, 您可以用你们自己的播放器作为画面输入源,也可以用原生的MediaPlayer,只需要视频播放器可以设置surface即可.
+     * VideoLayer是外部提供画面来源,
+     * 您可以用你们自己的播放器作为画面输入源,也可以用原生的MediaPlayer,只需要视频播放器可以设置surface即可.
      * 一下举例是采用MediaPlayer作为视频输入源.
      */
     private void startPlayVideo() {
@@ -173,7 +146,7 @@ public class TwoVideoLayerActivity extends Activity {
     }
 
     /**
-     * Step1:  init DrawPad 初始化
+     * Step1: init DrawPad 初始化
      *
      * @param mp
      */
@@ -184,18 +157,20 @@ public class TwoVideoLayerActivity extends Activity {
         /**
          * 设置使能 实时录制, 即把正在DrawPad中呈现的画面实时的保存下来,实现所见即所得的模式
          */
-        mDrawPadView.setRealEncodeEnable(padWidth, padHeight, 1200 * 1000, (int) mInfo.vFrameRate, editTmpPath);
+        mDrawPadView.setRealEncodeEnable(padWidth, padHeight, 1200 * 1000,
+                (int) mInfo.vFrameRate, editTmpPath);
 
         mDrawPadView.setUseMainVideoPts(true);
 
-        mDrawPadView.setDrawPadSize(padWidth, padHeight, new onDrawPadSizeChangedListener() {
+        mDrawPadView.setDrawPadSize(padWidth, padHeight,
+                new onDrawPadSizeChangedListener() {
 
-            @Override
-            public void onSizeChanged(int viewWidth, int viewHeight) {
-                // TODO Auto-generated method stub
-                startDrawPad();
-            }
-        });
+                    @Override
+                    public void onSizeChanged(int viewWidth, int viewHeight) {
+                        // TODO Auto-generated method stub
+                        startDrawPad();
+                    }
+                });
     }
 
     /**
@@ -205,27 +180,32 @@ public class TwoVideoLayerActivity extends Activity {
         // 开始DrawPad的渲染线程.
         mDrawPadView.pauseDrawPad();
         if (mDrawPadView.startDrawPad()) {
-            //增加一个主视频的 VideoLayer
-            twoVideoLayer = mDrawPadView.addTwoVideoLayer(mplayer.getVideoWidth(), mplayer.getVideoHeight());
+            // 增加一个主视频的 VideoLayer
+            twoVideoLayer = mDrawPadView.addTwoVideoLayer(
+                    mplayer.getVideoWidth(), mplayer.getVideoHeight());
             if (twoVideoLayer != null) {
                 mplayer.setSurface(new Surface(twoVideoLayer.getVideoTexture()));
             }
             mplayer.start();
 
-            //增加第二个视频.
+            // 增加第二个视频.
             mplayer2 = new MediaPlayer();
             try {
-                String video = CopyFileFromAssets.copyAssets(getApplicationContext(), "taohua.mp4");
+                String video = CopyFileFromAssets.copyAssets(
+                        getApplicationContext(), "taohua.mp4");
                 mplayer2.setDataSource(video);
                 mplayer2.prepare();
                 mplayer2.setLooping(true);
-                mplayer2.setSurface(new Surface(twoVideoLayer.getVideoTexture2()));
+                mplayer2.setSurface(new Surface(twoVideoLayer
+                        .getVideoTexture2()));
                 mplayer2.start();
 
-                if (mInfo.vRotateAngle == 90) {  //mInfo是主视频的MediaInfo
-                    twoVideoLayer.setSecondVideoMirror(Rotation.ROTATION_270, true, false);
+                if (mInfo.vRotateAngle == 90) { // mInfo是主视频的MediaInfo
+                    twoVideoLayer.setSecondVideoMirror(Rotation.ROTATION_270,
+                            true, false);
                 } else if (mInfo.vRotateAngle == 270) {
-                    twoVideoLayer.setSecondVideoMirror(Rotation.ROTATION_90, true, false);
+                    twoVideoLayer.setSecondVideoMirror(Rotation.ROTATION_90,
+                            true, false);
                 }
             } catch (IOException e) {
                 // TODO Auto-generated catch block
@@ -263,11 +243,13 @@ public class TwoVideoLayerActivity extends Activity {
         if (mDrawPadView != null && mDrawPadView.isRunning()) {
 
             mDrawPadView.stopDrawPad();
-            Toast.makeText(getApplicationContext(), "录制已停止!!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), "录制已停止!!",
+                    Toast.LENGTH_SHORT).show();
 
-            //增加音频
+            // 增加音频
             if (SDKFileUtils.fileExist(editTmpPath)) {
-                boolean ret = VideoEditor.encoderAddAudio(mVideoPath, editTmpPath, SDKDir.TMP_DIR, dstPath);
+                boolean ret = VideoEditor.encoderAddAudio(mVideoPath,
+                        editTmpPath, SDKDir.TMP_DIR, dstPath);
                 if (!ret) {
                     dstPath = editTmpPath;
                 } else {
@@ -275,7 +257,8 @@ public class TwoVideoLayerActivity extends Activity {
                 }
                 playVideo.setVisibility(View.VISIBLE);
             } else {
-                Log.e(TAG, " player completion, but file:" + editTmpPath + " is not exist!!!");
+                Log.e(TAG, " player completion, but file:" + editTmpPath
+                        + " is not exist!!!");
             }
         }
     }

@@ -1,8 +1,5 @@
 package com.example.advanceDemo.view;
 
-
-import com.lansoeditor.demo.R;
-
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -11,11 +8,11 @@ import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Paint.Style;
-import android.graphics.Path;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.view.View;
 
+import com.lansoeditor.advanceDemo.R;
 
 /**
  * @author panyi
@@ -25,31 +22,25 @@ public class StickerItem {
     private static final int HELP_BOX_PAD = 25;
 
     private static final int BUTTON_WIDTH = 30;
-
+    private static Bitmap deleteBit;
+    private static Bitmap rotateBit;
     public Bitmap bitmap;
     public Rect srcRect;// 原始图片坐标
     public RectF dstRect;// 绘制目标坐标
-    private Rect helpToolsRect;
     public RectF deleteRect;// 删除按钮位置
     public RectF rotateRect;// 旋转按钮位置
-
-    RectF helpBox;
     public Matrix matrix;// 变化矩阵
-    private float roatetAngle = 0;
+    public RectF detectRotateRect;
+    public RectF detectDeleteRect;
+    RectF helpBox;
     boolean isDrawHelpTool = false;
+    private Rect helpToolsRect;
+    private float roatetAngle = 0;
     private Paint dstPaint = new Paint();
     private Paint paint = new Paint();
     private Paint helpBoxPaint = new Paint();
-
     private float initWidth;// 加入屏幕时原始宽度
-
-    private static Bitmap deleteBit;
-    private static Bitmap rotateBit;
-
     private Paint greenPaint = new Paint();
-    public RectF detectRotateRect;
-
-    public RectF detectDeleteRect;
 
     public StickerItem(Context context) {
 

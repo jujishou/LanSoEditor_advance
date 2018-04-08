@@ -1,25 +1,20 @@
 package com.example.advanceDemo;
 
-import java.util.ArrayList;
-
-import com.lansoeditor.demo.R;
-
-
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
-import android.support.v4.view.PagerTitleStrip;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.animation.Animation;
-import android.view.animation.AnimationSet;
 import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
 
+import com.lansoeditor.advanceDemo.R;
+
+import java.util.ArrayList;
 
 public class StartActivity extends Activity {
     private ViewPager mViewPager;
@@ -49,7 +44,7 @@ public class StartActivity extends Activity {
         mPage7 = (ImageView) findViewById(R.id.page7);
         mPage8 = (ImageView) findViewById(R.id.page8);
 
-        //将要分页显示的View装入数组中
+        // 将要分页显示的View装入数组中
         LayoutInflater mLi = LayoutInflater.from(this);
         View view1 = mLi.inflate(R.layout.view1, null);
         View view2 = mLi.inflate(R.layout.view2, null);
@@ -60,7 +55,7 @@ public class StartActivity extends Activity {
         View view7 = mLi.inflate(R.layout.view7, null);
         View view8 = mLi.inflate(R.layout.view8, null);
 
-        //每个页面的view数据
+        // 每个页面的view数据
         final ArrayList<View> views = new ArrayList<View>();
         views.add(view1);
         views.add(view2);
@@ -97,6 +92,12 @@ public class StartActivity extends Activity {
         mViewPager.setAdapter(mPagerAdapter);
     }
 
+    public void startbutton(View v) {
+        Intent intent = new Intent(StartActivity.this, ListMainActivity.class);
+        startActivity(intent);
+        StartActivity.this.finish();
+    }
+
     public class MyOnPageChangeListener implements OnPageChangeListener {
 
         @Override
@@ -104,82 +105,120 @@ public class StartActivity extends Activity {
             Animation animation = null;
             switch (arg0) {
                 case 0:
-                    mPage1.setImageDrawable(getResources().getDrawable(R.drawable.page_now));
-                    mPage2.setImageDrawable(getResources().getDrawable(R.drawable.page));
+                    mPage1.setImageDrawable(getResources().getDrawable(
+                            R.drawable.page_now));
+                    mPage2.setImageDrawable(getResources().getDrawable(
+                            R.drawable.page));
                     if (currIndex == arg0 + 1) {
-                        animation = new TranslateAnimation(20 * (arg0 + 1), 20 * arg0, 0, 0);
+                        animation = new TranslateAnimation(20 * (arg0 + 1),
+                                20 * arg0, 0, 0);
                     }
                     break;
                 case 1:
-                    mPage2.setImageDrawable(getResources().getDrawable(R.drawable.page_now));
-                    mPage1.setImageDrawable(getResources().getDrawable(R.drawable.page));
-                    mPage3.setImageDrawable(getResources().getDrawable(R.drawable.page));
+                    mPage2.setImageDrawable(getResources().getDrawable(
+                            R.drawable.page_now));
+                    mPage1.setImageDrawable(getResources().getDrawable(
+                            R.drawable.page));
+                    mPage3.setImageDrawable(getResources().getDrawable(
+                            R.drawable.page));
                     if (currIndex == arg0 - 1) {
-                        animation = new TranslateAnimation(20 * (arg0 - 1), 20 * arg0, 0, 0);
+                        animation = new TranslateAnimation(20 * (arg0 - 1),
+                                20 * arg0, 0, 0);
 
                     } else if (currIndex == arg0 + 1) {
-                        animation = new TranslateAnimation(20 * (arg0 + 1), 20 * arg0, 0, 0);
+                        animation = new TranslateAnimation(20 * (arg0 + 1),
+                                20 * arg0, 0, 0);
                     }
                     break;
                 case 2:
-                    mPage3.setImageDrawable(getResources().getDrawable(R.drawable.page_now));
-                    mPage2.setImageDrawable(getResources().getDrawable(R.drawable.page));
-                    mPage4.setImageDrawable(getResources().getDrawable(R.drawable.page));
+                    mPage3.setImageDrawable(getResources().getDrawable(
+                            R.drawable.page_now));
+                    mPage2.setImageDrawable(getResources().getDrawable(
+                            R.drawable.page));
+                    mPage4.setImageDrawable(getResources().getDrawable(
+                            R.drawable.page));
                     if (currIndex == arg0 - 1) {
-                        animation = new TranslateAnimation(20 * (arg0 - 1), 20 * arg0, 0, 0);
+                        animation = new TranslateAnimation(20 * (arg0 - 1),
+                                20 * arg0, 0, 0);
                     } else if (currIndex == arg0 + 1) {
-                        animation = new TranslateAnimation(20 * (arg0 + 1), 20 * arg0, 0, 0);
+                        animation = new TranslateAnimation(20 * (arg0 + 1),
+                                20 * arg0, 0, 0);
                     }
                     break;
                 case 3:
-                    mPage4.setImageDrawable(getResources().getDrawable(R.drawable.page_now));
-                    mPage3.setImageDrawable(getResources().getDrawable(R.drawable.page));
-                    mPage5.setImageDrawable(getResources().getDrawable(R.drawable.page));
+                    mPage4.setImageDrawable(getResources().getDrawable(
+                            R.drawable.page_now));
+                    mPage3.setImageDrawable(getResources().getDrawable(
+                            R.drawable.page));
+                    mPage5.setImageDrawable(getResources().getDrawable(
+                            R.drawable.page));
                     if (currIndex == arg0 - 1) {
-                        animation = new TranslateAnimation(20 * (arg0 - 1), 20 * arg0, 0, 0);
+                        animation = new TranslateAnimation(20 * (arg0 - 1),
+                                20 * arg0, 0, 0);
 
                     } else if (currIndex == arg0 + 1) {
-                        animation = new TranslateAnimation(20 * (arg0 + 1), 20 * arg0, 0, 0);
+                        animation = new TranslateAnimation(20 * (arg0 + 1),
+                                20 * arg0, 0, 0);
                     }
                     break;
                 case 4:
-                    mPage5.setImageDrawable(getResources().getDrawable(R.drawable.page_now));
-                    mPage4.setImageDrawable(getResources().getDrawable(R.drawable.page));
-                    mPage6.setImageDrawable(getResources().getDrawable(R.drawable.page));
+                    mPage5.setImageDrawable(getResources().getDrawable(
+                            R.drawable.page_now));
+                    mPage4.setImageDrawable(getResources().getDrawable(
+                            R.drawable.page));
+                    mPage6.setImageDrawable(getResources().getDrawable(
+                            R.drawable.page));
                     if (currIndex == arg0 - 1) {
-                        animation = new TranslateAnimation(20 * (arg0 - 1), 20 * arg0, 0, 0);
+                        animation = new TranslateAnimation(20 * (arg0 - 1),
+                                20 * arg0, 0, 0);
                     } else if (currIndex == arg0 + 1) {
-                        animation = new TranslateAnimation(20 * (arg0 + 1), 20 * arg0, 0, 0);
+                        animation = new TranslateAnimation(20 * (arg0 + 1),
+                                20 * arg0, 0, 0);
                     }
                     break;
                 case 5:
-                    mPage6.setImageDrawable(getResources().getDrawable(R.drawable.page_now));
-                    mPage5.setImageDrawable(getResources().getDrawable(R.drawable.page));
-                    mPage7.setImageDrawable(getResources().getDrawable(R.drawable.page));
+                    mPage6.setImageDrawable(getResources().getDrawable(
+                            R.drawable.page_now));
+                    mPage5.setImageDrawable(getResources().getDrawable(
+                            R.drawable.page));
+                    mPage7.setImageDrawable(getResources().getDrawable(
+                            R.drawable.page));
                     if (currIndex == arg0 - 1) {
-                        animation = new TranslateAnimation(20 * (arg0 - 1), 20 * arg0, 0, 0);
+                        animation = new TranslateAnimation(20 * (arg0 - 1),
+                                20 * arg0, 0, 0);
                     } else if (currIndex == arg0 + 1) {
-                        animation = new TranslateAnimation(20 * (arg0 + 1), 20 * arg0, 0, 0);
+                        animation = new TranslateAnimation(20 * (arg0 + 1),
+                                20 * arg0, 0, 0);
                     }
                     break;
                 case 6:
-                    mPage7.setImageDrawable(getResources().getDrawable(R.drawable.page_now));
-                    mPage6.setImageDrawable(getResources().getDrawable(R.drawable.page));
-                    mPage8.setImageDrawable(getResources().getDrawable(R.drawable.page));
+                    mPage7.setImageDrawable(getResources().getDrawable(
+                            R.drawable.page_now));
+                    mPage6.setImageDrawable(getResources().getDrawable(
+                            R.drawable.page));
+                    mPage8.setImageDrawable(getResources().getDrawable(
+                            R.drawable.page));
                     if (currIndex == arg0 - 1) {
-                        animation = new TranslateAnimation(20 * (arg0 - 1), 20 * arg0, 0, 0);
+                        animation = new TranslateAnimation(20 * (arg0 - 1),
+                                20 * arg0, 0, 0);
                     } else if (currIndex == arg0 + 1) {
-                        animation = new TranslateAnimation(20 * (arg0 + 1), 20 * arg0, 0, 0);
+                        animation = new TranslateAnimation(20 * (arg0 + 1),
+                                20 * arg0, 0, 0);
                     }
                     break;
                 case 7:
-                    mPage8.setImageDrawable(getResources().getDrawable(R.drawable.page_now));
-                    mPage7.setImageDrawable(getResources().getDrawable(R.drawable.page));
-                    mPage1.setImageDrawable(getResources().getDrawable(R.drawable.page));
+                    mPage8.setImageDrawable(getResources().getDrawable(
+                            R.drawable.page_now));
+                    mPage7.setImageDrawable(getResources().getDrawable(
+                            R.drawable.page));
+                    mPage1.setImageDrawable(getResources().getDrawable(
+                            R.drawable.page));
                     if (currIndex == arg0 - 1) {
-                        animation = new TranslateAnimation(20 * (arg0 - 1), 20 * arg0, 0, 0);
+                        animation = new TranslateAnimation(20 * (arg0 - 1),
+                                20 * arg0, 0, 0);
                     } else if (currIndex == arg0 + 1) {
-                        animation = new TranslateAnimation(20 * (arg0 + 1), 20 * arg0, 0, 0);
+                        animation = new TranslateAnimation(20 * (arg0 + 1),
+                                20 * arg0, 0, 0);
                     }
                     break;
             }
@@ -195,12 +234,6 @@ public class StartActivity extends Activity {
         @Override
         public void onPageScrollStateChanged(int arg0) {
         }
-    }
-
-    public void startbutton(View v) {
-        Intent intent = new Intent(StartActivity.this, ListMainActivity.class);
-        startActivity(intent);
-        StartActivity.this.finish();
     }
 
 }

@@ -22,12 +22,10 @@
 		  	    <TextView
 		  	       android:layout_width="wrap_content"
 		  	       android:layout_height="wrap_content"
-		  	       android:layout_centerVertical="true"
-		  	       android:layout_alignParentLeft="true"
+		  	       android:layout_marginTop="40dip"
 		  	       android:background="@color/red"
-		  	       android:text="上层是视频图层."
+		  	       android:text="从里到外 三层:视频层,摄像头图层,UI图层."
 		  	       android:textColor="@color/white"
-		  	       android:textSize="28sp"
 	  	       		/>
    	 </com.lansosdk.box.ViewLayerRelativeLayout>
    	 
@@ -57,7 +55,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="56dp"
-        android:background="#77000000"
+        android:background="#22000000"
         android:paddingLeft="10dp"
         android:paddingRight="10dp" >
 
@@ -124,6 +122,5 @@
 		                    android:layout_height="wrap_content"
 					      android:layout_margin="5dip"/>
 		          	</LinearLayout>
-		      
-             </LinearLayout>
+		</LinearLayout>
 </RelativeLayout>

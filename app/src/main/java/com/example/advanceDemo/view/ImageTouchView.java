@@ -1,8 +1,5 @@
 package com.example.advanceDemo.view;
 
-
-import com.lansoeditor.demo.R;
-
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -20,11 +17,8 @@ import android.graphics.RectF;
 import android.graphics.drawable.BitmapDrawable;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
-import android.util.FloatMath;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.animation.AccelerateInterpolator;
 import android.widget.ImageView;
 
 public class ImageTouchView extends ImageView {
@@ -32,14 +26,9 @@ public class ImageTouchView extends ImageView {
 
     Matrix savedMatrix = new Matrix();
     /**
-     * 屏幕的分辨率
-     */
-    private DisplayMetrics dm;
-    /**
      * 当前模式
      */
     int mode = PaintConstants.MODE.NONE;
-
     /**
      * 存储float类型的x，y值，就是你点下的坐标的X和Y
      */
@@ -47,11 +36,20 @@ public class ImageTouchView extends ImageView {
     PointF curPosition = new PointF();
     PointF mid = new PointF();
     float dist = 1f;
-
     float oldRotation = 0;
     float oldDistX = 1f;
     float oldDistY = 1f;
-
+    // 定义一个内存中的图片，该图片将作为缓冲区
+    Bitmap cacheBitmap = null;
+    // 定义cacheBitmap上的Canvas对象
+    Canvas cacheCanvas = null;
+    int x = 0;
+    int y = 0;
+    Activity mActivity;
+    /**
+     * 屏幕的分辨率
+     */
+    private DisplayMetrics dm;
     /**
      * 位图对象
      */
@@ -59,19 +57,10 @@ public class ImageTouchView extends ImageView {
     private Paint paint;
     private Context context;
 
+    // private String TAG = "APP";
     private Path path;
     private Path tempPath;
-    //定义一个内存中的图片，该图片将作为缓冲区
-    Bitmap cacheBitmap = null;
-
-    //定义cacheBitmap上的Canvas对象
-    Canvas cacheCanvas = null;
     private Paint cachePaint = null;
-
-//	private String TAG = "APP";
-
-    int x = 0;
-    int y = 0;
 
     public ImageTouchView(Context context) {
         super(context);
@@ -80,7 +69,7 @@ public class ImageTouchView extends ImageView {
     public ImageTouchView(Context context, AttributeSet attrs) {
         super(context, attrs);
         this.context = context;
-//		Log.i(TAG, "ImageTouchView(Context context, AttributeSet attrs)=>");
+        // Log.i(TAG, "ImageTouchView(Context context, AttributeSet attrs)=>");
 
         setupView();
     }
@@ -99,14 +88,12 @@ public class ImageTouchView extends ImageView {
         mActivity = acty;
     }
 
-    Activity mActivity;
-
     public void setupView() {
 
-        //获取屏幕分辨率,需要根据分辨率来使用图片居中
+        // 获取屏幕分辨率,需要根据分辨率来使用图片居中
         dm = getContext().getResources().getDisplayMetrics();
 
-        //从ImageView中获取bitmap对象
+        // 从ImageView中获取bitmap对象
         BitmapDrawable bd = (BitmapDrawable) this.getDrawable();
         if (bd != null) {
             bitmap = bd.getBitmap();
@@ -121,9 +108,9 @@ public class ImageTouchView extends ImageView {
 
                 Matrix matrixTemp = new Matrix();
                 matrixTemp.set(matrix);
-                //view的触摸坐标的转换
+                // view的触摸坐标的转换
                 matrixTemp.invert(matrixTemp);
-//				Log.i(TAG, "Touch screen.");
+                // Log.i(TAG, "Touch screen.");
 
                 switch (event.getAction() & MotionEvent.ACTION_MASK) {
                     // 主点按下
@@ -137,7 +124,7 @@ public class ImageTouchView extends ImageView {
                         tempPath.moveTo(event.getX(), event.getY());
 
                         mode = PaintConstants.MODE.DRAG;
-//					Log.i(TAG, "ACTION_DOWN=>.");
+                        // Log.i(TAG, "ACTION_DOWN=>.");
                         break;
                     // 副点按下
                     case MotionEvent.ACTION_POINTER_DOWN:
@@ -153,12 +140,13 @@ public class ImageTouchView extends ImageView {
                         }
                         break;
                     case MotionEvent.ACTION_UP:
-//					Log.i(TAG, "ACTION_UP=>.");
+                        // Log.i(TAG, "ACTION_UP=>.");
                         if (mode == PaintConstants.MODE.COLORING) {
                             cachePaint.setColor(PaintConstants.PEN_COLOR);
                             cachePaint.setStrokeWidth(PaintConstants.PEN_SIZE);
                             cachePaint.setAlpha(PaintConstants.TRANSPARENT);
-                            cachePaint.setMaskFilter(new BlurMaskFilter(5, PaintConstants.BLUR_TYPE));
+                            cachePaint.setMaskFilter(new BlurMaskFilter(5,
+                                    PaintConstants.BLUR_TYPE));
 
                             cacheCanvas.drawPath(path, cachePaint);
                             path.reset();
@@ -174,7 +162,8 @@ public class ImageTouchView extends ImageView {
                         if (!PaintConstants.SELECTOR.KEEP_IMAGE) {
                             if (mode == PaintConstants.MODE.DRAG) {
                                 matrix.set(savedMatrix);
-                                matrix.postTranslate(event.getX() - prev.x, event.getY() - prev.y);
+                                matrix.postTranslate(event.getX() - prev.x,
+                                        event.getY() - prev.y);
                             } else if (mode == PaintConstants.MODE.ZOOM) {
                                 float rotation = (rotation(event) - oldRotation) / 2;
                                 float newDistX = spacingX(event);
@@ -186,14 +175,18 @@ public class ImageTouchView extends ImageView {
                                 if (newDist > 10f) {
                                     matrix.set(savedMatrix);
                                     float tScale = newDist / dist;
-                                    tScale = tScale > 1 ? 1 + ((tScale - 1) / 2) : 1 - (1 - tScale) / 2;
+                                    tScale = tScale > 1 ? 1 + ((tScale - 1) / 2)
+                                            : 1 - (1 - tScale) / 2;
                                     if (PaintConstants.SELECTOR.KEEP_SCALE) {
-                                        matrix.postScale(tScale, tScale, mid.x, mid.y);// 縮放
+                                        matrix.postScale(tScale, tScale, mid.x,
+                                                mid.y);// 縮放
                                     } else {
                                         if (Math.abs(scaleX) >= Math.abs(scaleY)) {
-                                            matrix.postScale(tScale, 1, mid.x, mid.y);// 縮放
+                                            matrix.postScale(tScale, 1, mid.x,
+                                                    mid.y);// 縮放
                                         } else {
-                                            matrix.postScale(1, tScale, mid.x, mid.y);// 縮放
+                                            matrix.postScale(1, tScale, mid.x,
+                                                    mid.y);// 縮放
                                         }
                                     }
                                     if (PaintConstants.SELECTOR.HAIR_RURN)
@@ -202,30 +195,32 @@ public class ImageTouchView extends ImageView {
                             }
                         } else {
                             float[] pointPrev = new float[]{prev.x, prev.y};
-                            float[] pointStop = new float[]{event.getX(), event.getY()};
+                            float[] pointStop = new float[]{event.getX(),
+                                    event.getY()};
 
-
-                            //view的触摸坐标的转换
+                            // view的触摸坐标的转换
                             matrixTemp.mapPoints(pointPrev);
                             matrixTemp.mapPoints(pointStop);
 
                             if (PaintConstants.SELECTOR.COLORING) {
-                                //染色功能
+                                // 染色功能
                                 mode = PaintConstants.MODE.COLORING;
                                 paint.reset();
                                 paint = new Paint(Paint.DITHER_FLAG);
                                 paint.setColor(Color.RED);
-                                //设置图层风格
+                                // 设置图层风格
                                 paint.setStyle(Paint.Style.STROKE);
                                 paint.setStrokeWidth(1);
-                                //反锯齿
+                                // 反锯齿
                                 paint.setAntiAlias(true);
                                 paint.setDither(true);
                                 paint.setColor(PaintConstants.PEN_COLOR);
                                 paint.setStrokeWidth(PaintConstants.PEN_SIZE);
 
-                                path.quadTo(pointPrev[0], pointPrev[1], pointStop[0], pointStop[1]);
-                                tempPath.quadTo(prev.x, prev.y, event.getX(), event.getY());
+                                path.quadTo(pointPrev[0], pointPrev[1],
+                                        pointStop[0], pointStop[1]);
+                                tempPath.quadTo(prev.x, prev.y, event.getX(),
+                                        event.getY());
 
                                 // 更新开始点的位置
                                 prev.set(event.getX(), event.getY());
@@ -233,7 +228,7 @@ public class ImageTouchView extends ImageView {
                                 ImageTouchView.this.setImageBitmap(cacheBitmap);
 
                             } else if (PaintConstants.SELECTOR.ERASE) {
-                                //橡皮擦功能
+                                // 橡皮擦功能
 
                                 mode = PaintConstants.MODE.ERASE;
 
@@ -245,12 +240,14 @@ public class ImageTouchView extends ImageView {
                                 paint.setStrokeJoin(Paint.Join.ROUND);
                                 paint.setStrokeCap(Paint.Cap.ROUND);
                                 paint.setAlpha(0);
-                                paint.setXfermode(new PorterDuffXfermode(Mode.DST_IN));
+                                paint.setXfermode(new PorterDuffXfermode(
+                                        Mode.DST_IN));
                                 paint.setStrokeWidth(PaintConstants.ERASE_SIZE);
 
                                 prev.set(event.getX(), event.getY());
 
-                                cacheCanvas.drawLine(pointPrev[0], pointPrev[1], pointStop[0], pointStop[1], paint);
+                                cacheCanvas.drawLine(pointPrev[0], pointPrev[1],
+                                        pointStop[0], pointStop[1], paint);
                                 ImageTouchView.this.setImageBitmap(cacheBitmap);
                             }
                         }
@@ -335,10 +332,9 @@ public class ImageTouchView extends ImageView {
         point.set(x / 2, y / 2);
     }
 
-
     /**
      * @param bm
-     * @note set cover bitmap , which  overlay on background.
+     * @note set cover bitmap , which overlay on background.
      */
     private void setCoverBitmap(Bitmap bitmap) {
         // setting paint
@@ -346,7 +342,8 @@ public class ImageTouchView extends ImageView {
         cacheCanvas = new Canvas();
 
         if (bitmap != null) {
-            cacheBitmap = Bitmap.createBitmap(bitmap.getWidth(), bitmap.getHeight(), Config.ARGB_8888);
+            cacheBitmap = Bitmap.createBitmap(bitmap.getWidth(),
+                    bitmap.getHeight(), Config.ARGB_8888);
             cacheCanvas.setBitmap(cacheBitmap);
             cacheCanvas.drawBitmap(bitmap, 0, 0, null);
         }
@@ -354,25 +351,19 @@ public class ImageTouchView extends ImageView {
         path = new Path();
         tempPath = new Path();
 
-        //设置图层的颜色
+        // 设置图层的颜色
         cachePaint = new Paint();
-        //设置图层风格
+        // 设置图层风格
         cachePaint.setStyle(Paint.Style.STROKE);
-        //反锯齿
+        // 反锯齿
         cachePaint.setAntiAlias(true);
         cachePaint.setStrokeJoin(Paint.Join.ROUND);
         cachePaint.setStrokeCap(Paint.Cap.ROUND);
         cachePaint.setXfermode(new PorterDuffXfermode(Mode.SRC_ATOP));
-        //设置图层模糊效果
-        cachePaint.setMaskFilter(new BlurMaskFilter(5, PaintConstants.BLUR_TYPE));
+        // 设置图层模糊效果
+        cachePaint
+                .setMaskFilter(new BlurMaskFilter(5, PaintConstants.BLUR_TYPE));
 
     }
 
 }
-
-
-
-
-
-
-

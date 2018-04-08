@@ -36,11 +36,13 @@ public class VideoPreviewView extends SurfaceView {
             mCameraW = cameraW;
             mCameraH = cameraH;
 
-            Display display = ((WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
+            Display display = ((WindowManager) mContext
+                    .getSystemService(Context.WINDOW_SERVICE))
+                    .getDefaultDisplay();
             Point size = new Point();
             display.getSize(size);
 
-            mSqueraW = size.x;  //相机预览画面的宽度默认等于屏幕的宽度来调节高度.
+            mSqueraW = size.x; // 相机预览画面的宽度默认等于屏幕的宽度来调节高度.
             double ratio = (double) mCameraW / mCameraH;
             if (ratio <= 0.0) {
                 throw new IllegalArgumentException();
@@ -66,14 +68,16 @@ public class VideoPreviewView extends SurfaceView {
 
                 int min = Math.min(mCameraW, mCameraH);
                 /**
-                 * TODO  这里应该修改成
+                 * TODO 这里应该修改成
                  */
                 if (min < mSqueraW) {
                     float scale = (float) mSqueraW / min;
-                    setMeasuredDimension((int) (mCameraW * scale), (int) (mCameraH * scale));
+                    setMeasuredDimension((int) (mCameraW * scale),
+                            (int) (mCameraH * scale));
                 } else {
                     float scale = (float) min / mSqueraW;
-                    setMeasuredDimension((int) (mCameraW / scale), (int) (mCameraH / scale));
+                    setMeasuredDimension((int) (mCameraW / scale),
+                            (int) (mCameraH / scale));
                 }
 
                 return;

@@ -1,43 +1,7 @@
 package com.example.advanceDemo;
 
-import java.io.IOException;
-import java.util.Locale;
-
-import jp.co.cyberagent.lansongsdk.gpuimage.GPUImageFilter;
-
-import com.example.advanceDemo.view.BitmapCache;
-import com.example.advanceDemo.view.ShowHeart;
-import com.lansoeditor.demo.R;
-import com.lansosdk.box.BitmapLayer;
-import com.lansosdk.box.CanvasRunnable;
-import com.lansosdk.box.CanvasLayer;
-import com.lansosdk.box.MVLayerENDMode;
-import com.lansosdk.box.Layer;
-import com.lansosdk.box.DrawPad;
-import com.lansosdk.box.MVLayer;
-import com.lansosdk.box.VideoLayer;
-import com.lansosdk.box.onDrawPadOutFrameListener;
-import com.lansosdk.box.onDrawPadProgressListener;
-import com.lansosdk.box.onDrawPadSizeChangedListener;
-import com.lansosdk.box.onLayerAvailableListener;
-import com.lansosdk.videoeditor.CopyDefaultVideoAsyncTask;
-import com.lansosdk.videoeditor.DrawPadView;
-import com.lansosdk.videoeditor.MediaInfo;
-import com.lansosdk.videoeditor.SDKDir;
-import com.lansosdk.videoeditor.SDKFileUtils;
-import com.lansosdk.videoeditor.VideoEditor;
-import com.lansosdk.videoeditor.DrawPadView.onViewAvailable;
-
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
 import android.media.MediaPlayer.OnPreparedListener;
@@ -47,10 +11,26 @@ import android.util.Log;
 import android.view.Surface;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.SeekBar;
-import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.SeekBar.OnSeekBarChangeListener;
+
+import com.lansoeditor.advanceDemo.R;
+import com.lansosdk.box.DrawPad;
+import com.lansosdk.box.Layer;
+import com.lansosdk.box.MVLayer;
+import com.lansosdk.box.MVLayerENDMode;
+import com.lansosdk.box.VideoLayer;
+import com.lansosdk.box.onDrawPadProgressListener;
+import com.lansosdk.box.onDrawPadSizeChangedListener;
+import com.lansosdk.box.onLayerAvailableListener;
+import com.lansosdk.videoeditor.CopyDefaultVideoAsyncTask;
+import com.lansosdk.videoeditor.DrawPadView;
+import com.lansosdk.videoeditor.DrawPadView.onViewAvailable;
+import com.lansosdk.videoeditor.MediaInfo;
+import com.lansosdk.videoeditor.SDKDir;
+import com.lansosdk.videoeditor.SDKFileUtils;
+import com.lansosdk.videoeditor.VideoEditor;
+
+import java.io.IOException;
 
 public class MVLayerDemoActivity extends Activity {
     private static final String TAG = "MVLayerDemoActivity";
@@ -81,7 +61,7 @@ public class MVLayerDemoActivity extends Activity {
             Log.e(TAG, "视频源文件错误!");
             this.finish();
         }
-        //在手机的默认路径下创建一个文件名,用来保存生成的视频文件,(在onDestroy中删除)
+        // 在手机的默认路径下创建一个文件名,用来保存生成的视频文件,(在onDestroy中删除)
         editTmpPath = SDKFileUtils.newMp4PathInBox();
         dstPath = SDKFileUtils.newMp4PathInBox();
 
@@ -126,13 +106,13 @@ public class MVLayerDemoActivity extends Activity {
     protected void onDestroy() {
         super.onDestroy();
 
-
         SDKFileUtils.deleteFile(dstPath);
         SDKFileUtils.deleteFile(editTmpPath);
     }
 
     /**
-     * VideoLayer是外部提供画面来源, 您可以用你们自己的播放器作为画面输入源,也可以用原生的MediaPlayer,只需要视频播放器可以设置surface即可.
+     * VideoLayer是外部提供画面来源,
+     * 您可以用你们自己的播放器作为画面输入源,也可以用原生的MediaPlayer,只需要视频播放器可以设置surface即可.
      * 一下举例是采用MediaPlayer作为视频输入源.
      */
     private void startPlayVideo() {
@@ -170,26 +150,29 @@ public class MVLayerDemoActivity extends Activity {
      * Step1: 开始运行 DrawPad 容器
      */
     private void initDrawPad() {
-        //设置使能 实时录制, 即把正在DrawPad中呈现的画面实时的保存下来,实现所见即所得的模式
-        mDrawPadView.setRealEncodeEnable(480, 480, 1000000, (int) mInfo.vFrameRate, editTmpPath);
-        mDrawPadView.setOnDrawPadProgressListener(new onDrawPadProgressListener() {
+        // 设置使能 实时录制, 即把正在DrawPad中呈现的画面实时的保存下来,实现所见即所得的模式
+        mDrawPadView.setRealEncodeEnable(480, 480, 1000000,
+                (int) mInfo.vFrameRate, editTmpPath);
+        mDrawPadView
+                .setOnDrawPadProgressListener(new onDrawPadProgressListener() {
 
-            @Override
-            public void onProgress(DrawPad v, long currentTimeUs) {
-                // TODO Auto-generated method stub
-                //Log.i(TAG,"MV当前时间戳是"+currentTimeUs);
-            }
-        });
+                    @Override
+                    public void onProgress(DrawPad v, long currentTimeUs) {
+                        // TODO Auto-generated method stub
+                        // Log.i(TAG,"MV当前时间戳是"+currentTimeUs);
+                    }
+                });
 
-        //设置当前DrawPad的宽度和高度,并把宽度自动缩放到父view的宽度,然后等比例调整高度.
-        mDrawPadView.setDrawPadSize(480, 480, new onDrawPadSizeChangedListener() {
+        // 设置当前DrawPad的宽度和高度,并把宽度自动缩放到父view的宽度,然后等比例调整高度.
+        mDrawPadView.setDrawPadSize(480, 480,
+                new onDrawPadSizeChangedListener() {
 
-            @Override
-            public void onSizeChanged(int viewWidth, int viewHeight) {
-                // 开始DrawPad的渲染线程.
-                startDrawPad();
-            }
-        });
+                    @Override
+                    public void onSizeChanged(int viewWidth, int viewHeight) {
+                        // 开始DrawPad的渲染线程.
+                        startDrawPad();
+                    }
+                });
         mDrawPadView.setOnViewAvailable(new onViewAvailable() {
 
             @Override
@@ -204,8 +187,9 @@ public class MVLayerDemoActivity extends Activity {
      */
     private void startDrawPad() {
         if (mDrawPadView.startDrawPad()) {
-            //增加一个主视频的 VideoLayer
-            mLayerMain = mDrawPadView.addMainVideoLayer(mplayer.getVideoWidth(), mplayer.getVideoHeight(), null);
+            // 增加一个主视频的 VideoLayer
+            mLayerMain = mDrawPadView.addMainVideoLayer(
+                    mplayer.getVideoWidth(), mplayer.getVideoHeight(), null);
             if (mLayerMain != null) {
                 mplayer.setSurface(new Surface(mLayerMain.getVideoTexture()));
             }
@@ -219,14 +203,12 @@ public class MVLayerDemoActivity extends Activity {
      * 增加一个MV图层.
      */
     private void addMVLayer() {
+        String colorMVPath = CopyDefaultVideoAsyncTask.copyFile(
+                MVLayerDemoActivity.this, "mei.mp4");
+        String maskMVPath = CopyDefaultVideoAsyncTask.copyFile(
+                MVLayerDemoActivity.this, "mei_b.mp4");
 
-        /**
-         * 拿到两个文件,来还原出mv的视频.
-         */
-        String colorMVPath = CopyDefaultVideoAsyncTask.copyFile(MVLayerDemoActivity.this, "mei.mp4");
-        String maskMVPath = CopyDefaultVideoAsyncTask.copyFile(MVLayerDemoActivity.this, "mei_b.mp4");
-
-        mvLayer = mDrawPadView.addMVLayer(colorMVPath, maskMVPath, false);  //<-----增加MVLayer
+        mvLayer = mDrawPadView.addMVLayer(colorMVPath, maskMVPath, false); // <-----增加MVLayer
         if (mvLayer != null) {
 
             mvLayer.setOnLayerAvailableListener(new onLayerAvailableListener() {
@@ -237,15 +219,17 @@ public class MVLayerDemoActivity extends Activity {
                 }
             });
 
-            //设置它为满屏.
-            float scaleW = (float) mvLayer.getPadWidth() / (float) mvLayer.getLayerWidth();
-            float scaleH = mvLayer.getPadHeight() / (float) mvLayer.getLayerHeight();
+            // 设置它为满屏.
+            float scaleW = (float) mvLayer.getPadWidth()
+                    / (float) mvLayer.getLayerWidth();
+            float scaleH = mvLayer.getPadHeight()
+                    / (float) mvLayer.getLayerHeight();
             mvLayer.setScale(scaleW, scaleH);
 
-            //可以设置当前的MV是否要录制到
-//    	    mvLayer.setVisibility(Layer.VISIBLE_ONLY_PREVIEW);
+            // 可以设置当前的MV是否要录制到
+            // mvLayer.setVisibility(Layer.VISIBLE_ONLY_PREVIEW);
 
-            //可以增加mv在播放结束后的三种模式, 停留在最后一帧/循环/消失/
+            // 可以增加mv在播放结束后的三种模式, 停留在最后一帧/循环/消失/
             mvLayer.setEndMode(MVLayerENDMode.LOOP);
         }
     }
@@ -259,39 +243,47 @@ public class MVLayerDemoActivity extends Activity {
             mDrawPadView.stopDrawPad();
             toastStop();
             if (SDKFileUtils.fileExist(editTmpPath)) {
-                boolean ret = VideoEditor.encoderAddAudio(mVideoPath, editTmpPath, SDKDir.TMP_DIR, dstPath);
+                boolean ret = VideoEditor.encoderAddAudio(mVideoPath,
+                        editTmpPath, SDKDir.TMP_DIR, dstPath);
                 if (!ret) {
                     dstPath = editTmpPath;
                 } else {
                     SDKFileUtils.deleteFile(editTmpPath);
                 }
-                findViewById(R.id.id_mvlayer_saveplay).setVisibility(View.VISIBLE);
+                findViewById(R.id.id_mvlayer_saveplay).setVisibility(
+                        View.VISIBLE);
             } else {
-                Log.e(TAG, " player completion, but file:" + editTmpPath + " is not exist!!!");
+                Log.e(TAG, " player completion, but file:" + editTmpPath
+                        + " is not exist!!!");
             }
         }
     }
 
     private void initView() {
-        findViewById(R.id.id_mvlayer_saveplay).setOnClickListener(new OnClickListener() {
+        findViewById(R.id.id_mvlayer_saveplay).setOnClickListener(
+                new OnClickListener() {
 
-            @Override
-            public void onClick(View v) {
-                // TODO Auto-generated method stub
-                if (SDKFileUtils.fileExist(dstPath)) {
-                    Intent intent = new Intent(MVLayerDemoActivity.this, VideoPlayerActivity.class);
-                    intent.putExtra("videopath", dstPath);
-                    startActivity(intent);
-                } else {
-                    Toast.makeText(MVLayerDemoActivity.this, "目标文件不存在", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
+                    @Override
+                    public void onClick(View v) {
+                        // TODO Auto-generated method stub
+                        if (SDKFileUtils.fileExist(dstPath)) {
+                            Intent intent = new Intent(
+                                    MVLayerDemoActivity.this,
+                                    VideoPlayerActivity.class);
+                            intent.putExtra("videopath", dstPath);
+                            startActivity(intent);
+                        } else {
+                            Toast.makeText(MVLayerDemoActivity.this, "目标文件不存在",
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
         findViewById(R.id.id_mvlayer_saveplay).setVisibility(View.GONE);
     }
 
     private void toastStop() {
-        Toast.makeText(getApplicationContext(), "录制已停止!!", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getApplicationContext(), "录制已停止!!", Toast.LENGTH_SHORT)
+                .show();
         Log.i(TAG, "录制已停止!!");
     }
 }

@@ -1,28 +1,28 @@
 package com.example.advanceDemo.view;
 
+import android.content.Context;
+import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.Bitmap.Config;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Matrix;
+import android.graphics.Paint;
+import android.graphics.Rect;
+
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
-import android.content.Context;
-import android.content.res.Resources;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.graphics.Matrix;
-import android.graphics.Paint;
-import android.graphics.Rect;
-import android.graphics.Bitmap.Config;
-
 public class BitmapUtils {
-
 
     /**
      * 缩放图片
      */
-    public static void bitmapScale(Bitmap baseBitmap, Paint paint, float x, float y) {
+    public static void bitmapScale(Bitmap baseBitmap, Paint paint, float x,
+                                   float y) {
         // 因为要将图片放大，所以要根据放大的尺寸重新创建Bitmap
         Bitmap scaleBitmap = Bitmap.createBitmap(
                 (int) (baseBitmap.getWidth() * x),
@@ -39,7 +39,8 @@ public class BitmapUtils {
     /**
      * 图片旋转
      */
-    public static void bitmapRotate(Bitmap baseBitmap, Paint paint, float degrees) {
+    public static void bitmapRotate(Bitmap baseBitmap, Paint paint,
+                                    float degrees) {
         // 创建一个和原图一样大小的图片
         Bitmap afterBitmap = Bitmap.createBitmap(baseBitmap.getWidth(),
                 baseBitmap.getHeight(), baseBitmap.getConfig());
@@ -54,7 +55,8 @@ public class BitmapUtils {
     /**
      * 图片移动
      */
-    public static void bitmapTranslate(Bitmap baseBitmap, Paint paint, float dx, float dy) {
+    public static void bitmapTranslate(Bitmap baseBitmap, Paint paint,
+                                       float dx, float dy) {
         // 需要根据移动的距离来创建图片的拷贝图大小
         Bitmap afterBitmap = Bitmap.createBitmap(
                 (int) (baseBitmap.getWidth() + dx),
@@ -69,7 +71,8 @@ public class BitmapUtils {
     /**
      * 倾斜图片
      */
-    public static void bitmapSkew(Bitmap baseBitmap, Paint paint, float dx, float dy) {
+    public static void bitmapSkew(Bitmap baseBitmap, Paint paint, float dx,
+                                  float dy) {
         // 根据图片的倾斜比例，计算变换后图片的大小，
         Bitmap afterBitmap = Bitmap.createBitmap(baseBitmap.getWidth()
                 + (int) (baseBitmap.getWidth() * dx), baseBitmap.getHeight()
@@ -83,7 +86,8 @@ public class BitmapUtils {
 
     public static Bitmap decodeFromResource(Context context, int id) {
         Resources res = context.getResources();
-        Bitmap bitmap = BitmapFactory.decodeResource(res, id).copy(Bitmap.Config.ARGB_8888, true);
+        Bitmap bitmap = BitmapFactory.decodeResource(res, id).copy(
+                Config.ARGB_8888, true);
         return bitmap;
     }
 
@@ -95,7 +99,7 @@ public class BitmapUtils {
             try {
                 File file = new File(path);
                 FileOutputStream outputStream = null;
-                //创建文件，并写入内容
+                // 创建文件，并写入内容
                 outputStream = new FileOutputStream(new File(path), true);
                 bitmap.compress(Bitmap.CompressFormat.PNG, 30, outputStream);
                 outputStream.flush();
@@ -105,7 +109,6 @@ public class BitmapUtils {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
 
         }
     }

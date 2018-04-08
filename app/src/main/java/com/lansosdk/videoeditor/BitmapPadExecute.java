@@ -1,23 +1,17 @@
 package com.lansosdk.videoeditor;
 
-import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.List;
-
-import jp.co.cyberagent.lansongsdk.gpuimage.GPUImageFilter;
-import jp.co.cyberagent.lansongsdk.gpuimage.GPUImageSepiaFilter;
-import jp.co.cyberagent.lansongsdk.gpuimage.GPUImageSwirlFilter;
-import jp.co.cyberagent.lansongsdk.gpuimage.LanSongScreenBlendFilter;
-import jp.co.cyberagent.lansongsdk.gpuimage.Rotation;
-
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.util.Log;
 
 import com.lansosdk.box.BitmapLayer;
 import com.lansosdk.box.DrawPad;
 import com.lansosdk.box.onDrawPadOutFrameListener;
+
+import java.util.List;
+
+import jp.co.cyberagent.lansongsdk.gpuimage.GPUImageFilter;
+import jp.co.cyberagent.lansongsdk.gpuimage.LanSongScreenBlendFilter;
 
 /**
  * 一帧操作,
@@ -37,10 +31,10 @@ import com.lansosdk.box.onDrawPadOutFrameListener;
  */
 public class BitmapPadExecute {
     private static final String TAG = "BitmapPadExecute";
+    private final Object mLock = new Object();
     protected DrawPadPictureExecute mDrawPad = null;
     private Bitmap OutBmp;
     private Object OutBmpLock = new Object();
-
     private Context mContext;
 
     public BitmapPadExecute(Context ct) {
@@ -48,36 +42,38 @@ public class BitmapPadExecute {
     }
 
     /**
-     * 准备一下,
-     * 执行建立DrawPad, 配置各种选项.
+     * 准备一下, 执行建立DrawPad, 配置各种选项.
      *
      * @param width  读取图片时的宽度,
      * @param height 读取图片时的高度.
      * @return
      */
     public boolean init(int width, int height) {
-        //创建pad,并设置禁止编码, outframe回调.
-        mDrawPad = new DrawPadPictureExecute(mContext, width, height, -1, 25, 1000000, null);
+        // 创建pad,并设置禁止编码, outframe回调.
+        mDrawPad = new DrawPadPictureExecute(mContext, width, height, -1, 25,
+                1000000, null);
         mDrawPad.setDisableEncode(true);
         mDrawPad.setOutFrameInDrawPad(true);
 
         mDrawPad.setCheckDrawPadSize(true);
 
-        mDrawPad.setDrawPadOutFrameListener(true, new onDrawPadOutFrameListener() {
+        mDrawPad.setDrawPadOutFrameListener(true,
+                new onDrawPadOutFrameListener() {
 
-            @Override
-            public void onDrawPadOutFrame(DrawPad v, Object obj, int type, long ptsUs) {
-                // TODO Auto-generated method stub
-                Bitmap bmp = (Bitmap) obj;
+                    @Override
+                    public void onDrawPadOutFrame(DrawPad v, Object obj,
+                                                  int type, long ptsUs) {
+                        // TODO Auto-generated method stub
+                        Bitmap bmp = (Bitmap) obj;
 
-                if (bmp != null && mDrawPad != null) {
-                    mDrawPad.pauseRecord();
-                    mDrawPad.resetOutFrames();
-                    OutBmp = bmp;
-                    notifyReady();
-                }
-            }
-        });
+                        if (bmp != null && mDrawPad != null) {
+                            mDrawPad.pauseRecord();
+                            mDrawPad.resetOutFrames();
+                            OutBmp = bmp;
+                            notifyReady();
+                        }
+                    }
+                });
         /**
          * 设置暂停标志, 然后开启DrawPad
          */
@@ -86,9 +82,7 @@ public class BitmapPadExecute {
     }
 
     /**
-     * 投进去两个图片, 返回融合好 的图片.
-     * (可以多次执行)
-     * 返回的图片大小等于在prepare的时候设置的大小.
+     * 投进去两个图片, 返回融合好 的图片. (可以多次执行) 返回的图片大小等于在prepare的时候设置的大小.
      *
      * @param bmp1 主图片, (可以来自提取的视频帧等)
      * @param bmp2 效果图片
@@ -97,7 +91,7 @@ public class BitmapPadExecute {
     public synchronized Bitmap getBlendBitmap(Bitmap bmp1, Bitmap bmp2) {
         mDrawPad.pauseRecord();
         mDrawPad.removeAllLayer();
-        //放进去.
+        // 放进去.
         LanSongScreenBlendFilter filter = new LanSongScreenBlendFilter();
         filter.setBitmap(bmp2);
 
@@ -105,7 +99,7 @@ public class BitmapPadExecute {
         layer.setScaledValue(layer.getPadWidth(), layer.getPadHeight());
         mDrawPad.resumeRecord();
 
-        //等待.
+        // 等待.
         OutBmp = null;
         waitUntilReady();
 
@@ -121,16 +115,17 @@ public class BitmapPadExecute {
      * @param filter
      * @return 滤镜处理后的图片.
      */
-    public synchronized Bitmap getFilterBitmap(Bitmap bmp1, GPUImageFilter filter) {
+    public synchronized Bitmap getFilterBitmap(Bitmap bmp1,
+                                               GPUImageFilter filter) {
         if (bmp1 != null && bmp1.isRecycled() == false && filter != null) {
             mDrawPad.pauseRecord();
             mDrawPad.removeAllLayer();
-            //放进去.
+            // 放进去.
             BitmapLayer layer = mDrawPad.addBitmapLayer(bmp1, filter);
             layer.setScaledValue(layer.getPadWidth(), layer.getPadHeight());
             mDrawPad.resumeRecord();
 
-            //等待.
+            // 等待.
             OutBmp = null;
             waitUntilReady();
             return OutBmp;
@@ -151,19 +146,20 @@ public class BitmapPadExecute {
             mDrawPad.pauseRecord();
             mDrawPad.removeAllLayer();
             BitmapLayer layerFirst = null;
-            //放进去.
+            // 放进去.
             for (Bitmap bmp : bmps) {
                 BitmapLayer layer2 = mDrawPad.addBitmapLayer(bmp, null);
                 if (layerFirst == null) {
                     layerFirst = layer2;
                 }
             }
-            //等于第一个的大小.
-            layerFirst.setScaledValue(layerFirst.getPadWidth(), layerFirst.getPadHeight());
+            // 等于第一个的大小.
+            layerFirst.setScaledValue(layerFirst.getPadWidth(),
+                    layerFirst.getPadHeight());
 
             mDrawPad.resumeRecord();
 
-            //等待.
+            // 等待.
             OutBmp = null;
             waitUntilReady();
             return OutBmp;
@@ -183,13 +179,12 @@ public class BitmapPadExecute {
         }
     }
 
-    private final Object mLock = new Object();
-
     private void waitUntilReady() {
         synchronized (mLock) {
             try {
                 mLock.wait(1000);
-            } catch (InterruptedException ie) { /* not expected */ }
+            } catch (InterruptedException ie) { /* not expected */
+            }
         }
     }
 
@@ -199,64 +194,42 @@ public class BitmapPadExecute {
         }
     }
     /**
-     * 测试代码
-     private void testDrawPadExecute(Bitmap bmp1,Bitmap bmp2)
-     {
-     BitmapPad  bendBmp;
-     bendBmp=new BitmapPad(getApplicationContext());
-
-     if(bendBmp.init(bmp1.getWidth()/2,bmp1.getHeight()/2))
-     {
-     Bitmap bmp=bendBmp.getBlendBitmap(bmp1, bmp2);
-     TestFrames.savePng(bmp);
-
-     bmp=bendBmp.getFilterBitmap(bmp1, new GPUImageSwirlFilter());
-     TestFrames.savePng(bmp);
-     bmp=bendBmp.getFilterBitmap(bmp1, new GPUImageSepiaFilter());
-     TestFrames.savePng(bmp);
-     }
-     bendBmp.release();
-     }
-     }
+     * 测试代码 private void testDrawPadExecute(Bitmap bmp1,Bitmap bmp2) { BitmapPad
+     * bendBmp; bendBmp=new BitmapPad(getApplicationContext());
+     *
+     * if(bendBmp.init(bmp1.getWidth()/2,bmp1.getHeight()/2)) { Bitmap
+     * bmp=bendBmp.getBlendBitmap(bmp1, bmp2); TestFrames.savePng(bmp);
+     *
+     * bmp=bendBmp.getFilterBitmap(bmp1, new GPUImageSwirlFilter());
+     * TestFrames.savePng(bmp); bmp=bendBmp.getFilterBitmap(bmp1, new
+     * GPUImageSepiaFilter()); TestFrames.savePng(bmp); } bendBmp.release(); } }
      */
     /**
-     * 给一个图片, 增加多个滤镜的方法演示.
-     *   private void testFile()
-     {
-
-     testGetFilters();  //执行一次;
-     new Thread(new Runnable() {
-
-    @Override public void run() {
-    testGetFilters();  //放到另一个线程执行一次.
-    }
-    }).start();
-     }
+     * 给一个图片, 增加多个滤镜的方法演示. private void testFile() {
      *
-     *  给一张图片, 增加多个滤镜.
-     *  private void testGetFilters()
-     {
-     ArrayList<GPUImageFilter>  filters=new ArrayList<GPUImageFilter>();
-     filters.add(new GPUImageSepiaFilter());
-     filters.add(new GPUImageSwirlFilter());
-     filters.add(new LanSongBulgeDistortionFilter());
-
-     Bitmap bmp=BitmapFactory.decodeFile(CopyFileFromAssets.copyAssets(getApplicationContext(), "t14.jpg"));
-
-     //------------------------一下是调用流程.
-     //创建对象,传递参数 (此类可被多个线程同时开启执行)
-     BitmapGetFilters  getFilter=new BitmapGetFilters(getApplicationContext(), bmp,filters);
-     //设置回调, 注意:回调是在
-     getFilter.setDrawpadOutFrameListener(new onGetFiltersOutFrameListener() {
-
-    @Override public void onOutFrame(BitmapGetFilters v, Object obj) {
-    // TODO Auto-generated method stub
-    Bitmap bmp2=(Bitmap)obj;
-    Log.i(TAG,"DrawPad is:"+bmp2.getWidth()+ bmp2.getHeight());
-    TestFrames.savePng(bmp2);
-    }
-    });
-     getFilter.start();
-     }
+     * testGetFilters(); //执行一次; new Thread(new Runnable() {
+     *
+     * @Override public void run() { testGetFilters(); //放到另一个线程执行一次. }
+     *           }).start(); }
+     *
+     *           给一张图片, 增加多个滤镜. private void testGetFilters() {
+     *           ArrayList<GPUImageFilter> filters=new
+     *           ArrayList<GPUImageFilter>(); filters.add(new
+     *           GPUImageSepiaFilter()); filters.add(new GPUImageSwirlFilter());
+     *           filters.add(new LanSongBulgeDistortionFilter());
+     *
+     *           Bitmap
+     *           bmp=BitmapFactory.decodeFile(CopyFileFromAssets.copyAssets
+     *           (getApplicationContext(), "t14.jpg"));
+     *
+     *           //------------------------一下是调用流程. //创建对象,传递参数 (此类可被多个线程同时开启执行)
+     *           BitmapGetFilters getFilter=new
+     *           BitmapGetFilters(getApplicationContext(), bmp,filters); //设置回调,
+     *           注意:回调是在 getFilter.setDrawpadOutFrameListener(new
+     *           onGetFiltersOutFrameListener() {
+     * @Override public void onOutFrame(BitmapGetFilters v, Object obj) { //
+     *           TODO Auto-generated method stub Bitmap bmp2=(Bitmap)obj;
+     *           Log.i(TAG,"DrawPad is:"+bmp2.getWidth()+ bmp2.getHeight());
+     *           TestFrames.savePng(bmp2); } }); getFilter.start(); }
      */
 }

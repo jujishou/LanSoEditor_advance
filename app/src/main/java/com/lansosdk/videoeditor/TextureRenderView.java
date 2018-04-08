@@ -2,23 +2,12 @@ package com.lansosdk.videoeditor;
 
 import android.annotation.TargetApi;
 import android.content.Context;
-import android.graphics.SurfaceTexture;
 import android.os.Build;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.util.AttributeSet;
-import android.util.Log;
-import android.view.Surface;
-import android.view.SurfaceHolder;
 import android.view.TextureView;
 import android.view.View;
 import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
-
-import java.lang.ref.WeakReference;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-
 
 @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
 public class TextureRenderView extends TextureView implements IRenderView {
@@ -35,13 +24,15 @@ public class TextureRenderView extends TextureView implements IRenderView {
         initView(context);
     }
 
-    public TextureRenderView(Context context, AttributeSet attrs, int defStyleAttr) {
+    public TextureRenderView(Context context, AttributeSet attrs,
+                             int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         initView(context);
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    public TextureRenderView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+    public TextureRenderView(Context context, AttributeSet attrs,
+                             int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
         initView(context);
     }
@@ -59,7 +50,6 @@ public class TextureRenderView extends TextureView implements IRenderView {
     public boolean shouldWaitForResize() {
         return false;
     }
-
 
     @Override
     public void setVideoSize(int videoWidth, int videoHeight) {
@@ -84,13 +74,10 @@ public class TextureRenderView extends TextureView implements IRenderView {
     }
 
     /**
-     * 设置显示的宽高比. 类型有
-     * static final int AR_ASPECT_FIT_PARENT = 0; // without clip
-     * static final int AR_ASPECT_FILL_PARENT = 1; // may clip
-     * static final int AR_ASPECT_WRAP_CONTENT = 2;
-     * static final int AR_MATCH_PARENT = 3;
-     * static final int AR_16_9_FIT_PARENT = 4;
-     * static final int AR_4_3_FIT_PARENT = 5;
+     * 设置显示的宽高比. 类型有 static final int AR_ASPECT_FIT_PARENT = 0; // without clip
+     * static final int AR_ASPECT_FILL_PARENT = 1; // may clip static final int
+     * AR_ASPECT_WRAP_CONTENT = 2; static final int AR_MATCH_PARENT = 3; static
+     * final int AR_16_9_FIT_PARENT = 4; static final int AR_4_3_FIT_PARENT = 5;
      */
     @Override
     public void setDispalyRatio(int aspectRatio) {
@@ -101,7 +88,8 @@ public class TextureRenderView extends TextureView implements IRenderView {
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         mMeasureHelper.doMeasure(widthMeasureSpec, heightMeasureSpec);
-        setMeasuredDimension(mMeasureHelper.getMeasuredWidth(), mMeasureHelper.getMeasuredHeight());
+        setMeasuredDimension(mMeasureHelper.getMeasuredWidth(),
+                mMeasureHelper.getMeasuredHeight());
     }
 
     @Override

@@ -1,24 +1,24 @@
 package com.lansosdk.videoeditor;
 
+import android.app.Activity;
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.os.Build;
+import android.util.Log;
+import android.view.Surface;
+import android.view.View;
+import android.view.WindowManager;
+
+import com.lansosdk.box.LanSoEditorBox;
+
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
-import com.lansosdk.box.LanSoEditorBox;
-
-import android.app.Activity;
-import android.content.Context;
-import android.graphics.Bitmap;
-import android.os.Build;
-import android.util.DisplayMetrics;
-import android.util.Log;
-import android.view.Surface;
-import android.view.View;
-import android.view.WindowManager;
-import android.widget.Toast;
-
 public class LanSongUtil {
+
+    static int bmtcnt = 0;
 
     /**
      * 检查是否有 摄像头和麦克风的权限.
@@ -34,38 +34,26 @@ public class LanSongUtil {
 
     /**
      * 隐藏虚拟按键，并且全屏
-     * <p>
-     * 如果不全屏, 用这样的不行:
-     * int width=mDrawPadView.getDrawPadWidth();
-     * int height=mDrawPadView.getDrawPadHeight();
-     * int padWidth= (padHeight*width)/height;
-     * <p>
-     * padWidth=(int)LanSongUtil.make4Bei((long)padWidth);
-     * <p>
-     * Log.i(TAG,"wwwwwidth:"+width+"height"+height+" pad:"+padHeight+" "+padWidth);
      */
     public static void hideBottomUIMenu(Activity act) {
-        //隐藏虚拟按键，并且全屏
-        if (Build.VERSION.SDK_INT > 11 && Build.VERSION.SDK_INT < 19) { // lower api
+        // 隐藏虚拟按键，并且全屏
+        if (Build.VERSION.SDK_INT > 11 && Build.VERSION.SDK_INT < 19) { // lower
+            // api
             View v = act.getWindow().getDecorView();
             v.setSystemUiVisibility(View.GONE);
         } else if (Build.VERSION.SDK_INT >= 19) {
-            //for new api versions.
+            // for new api versions.
             View decorView = act.getWindow().getDecorView();
             int uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                    | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY | View.SYSTEM_UI_FLAG_FULLSCREEN;
+                    | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+                    | View.SYSTEM_UI_FLAG_FULLSCREEN;
             decorView.setSystemUiVisibility(uiOptions);
         }
     }
 
-    /**
-     * 是否是全面屏的屏幕; 如果屏幕大于16:9则认为是全面屏
-     *
-     * @param padWidth
-     * @param padHeight
-     * @return
-     */
     public static boolean isFullScreenRatio(int padWidth, int padHeight) {
+        Log.i("TT", "padWidth wxh is:" + padWidth + " x " + padHeight);
+
         if (padWidth > padHeight) { // 其他则是屏幕比大于16:9的屏幕
             float ratio = (float) padWidth / (float) padHeight;
             return ratio > 16f / 9f;
@@ -78,12 +66,9 @@ public class LanSongUtil {
     /**
      * 当数据不是16的倍数的时候, 把他调整成16的倍数,
      * <p>
-     * 如果是18,19这样接近16,则等于16, 等于缩小了原有的画面,
-     * 如果是25,28这样接近32,则等于32,  等于稍微拉伸了原来的画面,
+     * 如果是18,19这样接近16,则等于16, 等于缩小了原有的画面, 如果是25,28这样接近32,则等于32, 等于稍微拉伸了原来的画面,
      * 因为最多缩小或拉伸8个像素, 还不至于画面严重变形,而又兼容编码器的要求,故可以这样做.
-     * <p>
-     * 16, 17, 18, 19,20,21,22,23 ==>16;
-     * 24,25,26,27,28,29,30,31,32==>32;
+     * 16, 17, 18, 19,20,21,22,23 ==>16; 24,25,26,27,28,29,30,31,32==>32;
      *
      * @param value
      * @return
@@ -101,8 +86,8 @@ public class LanSongUtil {
     }
 
     /**
-     * 获取lansosdk的建议码率;
-     * 这个码率不是唯一的, 仅仅是我们建议这样设置, 如果您对码率理解很清楚或有一定的压缩要求,则完全可以不用我们的建议,自行设置.
+     * 获取lansosdk的建议码率; 这个码率不是唯一的, 仅仅是我们建议这样设置,
+     * 如果您对码率理解很清楚或有一定的压缩要求,则完全可以不用我们的建议,自行设置.
      *
      * @param wxh 宽度和高度的乘积;
      * @return
@@ -127,14 +112,11 @@ public class LanSongUtil {
 
     public static int checkSuggestBitRate(int wxh, int bitrate) {
         int sugg = getSuggestBitRate(wxh);
-        return bitrate < sugg ? sugg : bitrate;   //如果设置过来的码率小于建议码率,则返回建议码率,不然返回设置码率
+        return bitrate < sugg ? sugg : bitrate; // 如果设置过来的码率小于建议码率,则返回建议码率,不然返回设置码率
     }
 
-    static int bmtcnt = 0;
-
     /**
-     * 把图片保存到文件,
-     * 这里只是用来调试程序使用.
+     * 把图片保存到文件, 这里只是用来调试程序使用.
      *
      * @param bmp
      */
@@ -159,13 +141,15 @@ public class LanSongUtil {
     }
 
     /**
-     * 获取到当前Activity的角度, [只是放到这里, 暂时没有测试] //TODO
+     * 获取到当前Activity的角度, [只是放到这里, 暂时没有测试]
      *
      * @param ctx
      * @return
      */
     public static int getActivityAngle(Context ctx) {
-        int rotation = ((WindowManager) ctx.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay().getRotation();
+        int rotation = ((WindowManager) ctx
+                .getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay()
+                .getRotation();
         int degrees = 0;
         switch (rotation) {
             case Surface.ROTATION_0:

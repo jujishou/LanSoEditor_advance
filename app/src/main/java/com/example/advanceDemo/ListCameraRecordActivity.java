@@ -1,22 +1,23 @@
 package com.example.advanceDemo;
 
-import com.example.advanceDemo.camera.CameraLayerFullLandscapeActivity;
-import com.example.advanceDemo.camera.CameraLayerFullPortWithMp3Activity;
-import com.example.advanceDemo.camera.CameraLayerFullPortActivity;
-import com.example.advanceDemo.camera.CameraLayerFullSegmentActivity;
-import com.example.advanceDemo.camera.CameraLayerKTVDemoActivity;
-import com.example.advanceDemo.camera.CameraLayerRectActivity;
-import com.example.advanceDemo.camera.CameraSubLayerDemo1Activity;
-import com.example.advanceDemo.camera.CameraSubLayerDemo2Activity;
-import com.lansoeditor.demo.R;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 
-public class ListCameraRecordActivity extends Activity implements OnClickListener {
+import com.example.advanceDemo.camera.CameraLayerFullLandscapeActivity;
+import com.example.advanceDemo.camera.CameraLayerFullPortActivity;
+import com.example.advanceDemo.camera.CameraLayerFullPortWithMp3Activity;
+import com.example.advanceDemo.camera.CameraLayerFullSegmentActivity;
+import com.example.advanceDemo.camera.CameraLayerKTVDemoActivity;
+import com.example.advanceDemo.camera.CameraLayerRectActivity;
+import com.example.advanceDemo.camera.CameraSubLayerDemo1Activity;
+import com.example.advanceDemo.camera.CameraSubLayerDemo2Activity;
+import com.lansoeditor.advanceDemo.R;
+
+public class ListCameraRecordActivity extends Activity implements
+        OnClickListener {
 
     private String videoPath;
 
@@ -28,12 +29,16 @@ public class ListCameraRecordActivity extends Activity implements OnClickListene
         videoPath = getIntent().getStringExtra("videopath");
 
         findViewById(R.id.id_cameralist_cameralayer).setOnClickListener(this);
-        findViewById(R.id.id_cameralist_camerafulllayer).setOnClickListener(this);
-        findViewById(R.id.id_cameralist_camerafulllayer2).setOnClickListener(this);
-        findViewById(R.id.id_cameralist_cameralayer_segment).setOnClickListener(this);
+        findViewById(R.id.id_cameralist_camerafulllayer).setOnClickListener(
+                this);
+        findViewById(R.id.id_cameralist_camerafulllayer2).setOnClickListener(
+                this);
+        findViewById(R.id.id_cameralist_cameralayer_segment)
+                .setOnClickListener(this);
 
         findViewById(R.id.id_cameralist_mp3record).setOnClickListener(this);
-        findViewById(R.id.id_cameralist_green_bg_record).setOnClickListener(this);
+        findViewById(R.id.id_cameralist_green_bg_record).setOnClickListener(
+                this);
         findViewById(R.id.id_cameralist_sublayer1).setOnClickListener(this);
         findViewById(R.id.id_cameralist_sublayer2).setOnClickListener(this);
 

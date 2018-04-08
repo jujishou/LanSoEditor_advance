@@ -1,18 +1,14 @@
 package com.example.advanceDemo.view;
 
-import java.util.Random;
-
-import com.lansoeditor.demo.R;
-
-
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Rect;
-import android.util.Log;
-import android.view.SurfaceHolder;
+
+import com.lansoeditor.advanceDemo.R;
+
+import java.util.Random;
 
 public class ShowHeart {
 
@@ -24,15 +20,15 @@ public class ShowHeart {
     int starty;
     int maxh;
     int y_dao;
-    double begin;  // 起始位置
+    double begin; // 起始位置
     Random rm = new Random();
     int old_num = -1;
     float old_xx = 0, old_yy = 0;
     int yadd_1200 = 100;
     BitmapCache bitmapcache;
+    Bitmap bb;
     private Context mContext;
     private int drawCount = 0;
-    Bitmap bb;
 
     public ShowHeart(Context context, int sw, int sh) {
         this.mContext = context;
@@ -42,10 +38,9 @@ public class ShowHeart {
     }
 
     public void init() {
-        //屏幕适配
+        // 屏幕适配
         istartx = -50 + sw / 2;
         istarty = 50;
-
 
         lovestartx = sw / 2 - 16;
         lovestarty = sh / 2 - 68;
@@ -53,9 +48,12 @@ public class ShowHeart {
         ustartx = -94 + sw / 2;
         ustarty = 150 + sh / 2;
 
-        if (sh / 2 > 180 + 150 + 118 + 20) ustarty = 150 + sh / 2 + 20;
-        if (sh / 2 > 180 + 150 + 118 + 40) ustarty = 150 + sh / 2 + 40;
-        if (sh / 2 > 180 + 150 + 118 + 60) ustarty = 150 + sh / 2 + 60;
+        if (sh / 2 > 180 + 150 + 118 + 20)
+            ustarty = 150 + sh / 2 + 20;
+        if (sh / 2 > 180 + 150 + 118 + 40)
+            ustarty = 150 + sh / 2 + 40;
+        if (sh / 2 > 180 + 150 + 118 + 60)
+            ustarty = 150 + sh / 2 + 60;
         if (sh >= 1200) {
             istarty = istarty + yadd_1200;
             ustarty = ustarty + yadd_1200;
@@ -78,20 +76,19 @@ public class ShowHeart {
         return drawCount > 100;
     }
 
-
     public void drawTrack(Canvas cas) {
         drawCount++;
         if (drawCount > 100) {
-            //Log.i("sno","draw结束,返回");
+            // Log.i("sno","draw结束,返回");
             return;
         }
         int hua_num = rm.nextInt(18);
-        begin = begin + 0.2;  //密度
+        begin = begin + 0.2; // 密度
         double b = begin / Math.PI;
-        double a = 13.5 * (16 * Math.pow(Math.sin(b), 3));  //这里的13.5可以控制大小
+        double a = 13.5 * (16 * Math.pow(Math.sin(b), 3)); // 这里的13.5可以控制大小
         double d = -13.5
-                * (13 * Math.cos(b) - 5 * Math.cos(2 * b) - 2
-                * Math.cos(3 * b) - Math.cos(4 * b));
+                * (13 * Math.cos(b) - 5 * Math.cos(2 * b) - 2 * Math.cos(3 * b) - Math
+                .cos(4 * b));
 
         float xx = (float) a;
         float yy = (float) d;
@@ -99,8 +96,7 @@ public class ShowHeart {
         Paint p = new Paint(); // 创建图层
         p.setColor(Color.RED);
         if (old_num != -1) {
-            cas.drawBitmap(bb, startx + old_xx, starty + old_yy,
-                    p);
+            cas.drawBitmap(bb, startx + old_xx, starty + old_yy, p);
         }
         cas.drawBitmap(bb, startx + xx, starty + yy, p);
 

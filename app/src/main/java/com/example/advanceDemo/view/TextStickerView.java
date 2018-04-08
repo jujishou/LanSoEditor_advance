@@ -5,12 +5,9 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.RectF;
-import android.text.DynamicLayout;
-import android.text.Layout;
 import android.text.TextPaint;
 import android.text.TextUtils;
 import android.util.AttributeSet;
@@ -18,11 +15,10 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.EditText;
 
+import com.lansoeditor.advanceDemo.R;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import com.lansoeditor.demo.R;
 
 /**
  * 文本贴图处理控件
@@ -32,54 +28,41 @@ import com.lansoeditor.demo.R;
 public class TextStickerView extends View {
     public static final float TEXT_SIZE_DEFAULT = 80;
     public static final int PADDING = 32;
-    //public static final int PADDING = 0;
+    // public static final int PADDING = 0;
 
     public static final int TEXT_TOP_PADDING = 10;
 
-    //public static final int CHAR_MIN_HEIGHT = 60;
-
-
-    //private String mText;
-    private TextPaint mPaint = new TextPaint();
-
-
-    private Paint debugPaint = new Paint();
-    private Paint mHelpPaint = new Paint();
-
-    private Rect mTextRect = new Rect();// warp text rect record
-    private RectF mHelpBoxRect = new RectF();
-    private Rect mDeleteRect = new Rect();//删除按钮位置
-    private Rect mRotateRect = new Rect();//旋转按钮位置
-
-    private RectF mDeleteDstRect = new RectF();
-    private RectF mRotateDstRect = new RectF();
-
-    private Bitmap mDeleteBitmap;
-    private Bitmap mRotateBitmap;
-
-    private int mCurrentMode = IDLE_MODE;
-    //控件的几种模式
-    private static final int IDLE_MODE = 2;//正常
-    private static final int MOVE_MODE = 3;//移动模式
-    private static final int ROTATE_MODE = 4;//旋转模式
-    private static final int DELETE_MODE = 5;//删除模式
-
-    private EditText mEditText;//输入控件
-
+    // public static final int CHAR_MIN_HEIGHT = 60;
+    public static final int STICKER_BTN_HALF_SIZE = 30;
+    // 控件的几种模式
+    private static final int IDLE_MODE = 2;// 正常
+    private static final int MOVE_MODE = 3;// 移动模式
+    private static final int ROTATE_MODE = 4;// 旋转模式
+    private static final int DELETE_MODE = 5;// 删除模式
     public int layout_x = 0;
     public int layout_y = 0;
-
-    private float last_x = 0;
-    private float last_y = 0;
-
     public float mRotateAngle = 0;
     public float mScale = 1;
+    // private String mText;
+    private TextPaint mPaint = new TextPaint();
+    private Paint debugPaint = new Paint();
+    private Paint mHelpPaint = new Paint();
+    private Rect mTextRect = new Rect();// warp text rect record
+    private RectF mHelpBoxRect = new RectF();
+    private Rect mDeleteRect = new Rect();// 删除按钮位置
+    private Rect mRotateRect = new Rect();// 旋转按钮位置
+    private RectF mDeleteDstRect = new RectF();
+    private RectF mRotateDstRect = new RectF();
+    private Bitmap mDeleteBitmap;
+    private Bitmap mRotateBitmap;
+    private int mCurrentMode = IDLE_MODE;
+    private EditText mEditText;// 输入控件
+    private float last_x = 0;
+    private float last_y = 0;
     private boolean isInitLayout = true;
-
     private boolean isShowHelpBox = true;
-
-    private boolean mAutoNewLine = false;//是否需要自动换行
-    private List<String> mTextContents = new ArrayList<String>(2);//存放所写的文字内容
+    private boolean mAutoNewLine = false;// 是否需要自动换行
+    private List<String> mTextContents = new ArrayList<String>(2);// 存放所写的文字内容
     private String mText;
 
     public TextStickerView(Context context) {
@@ -97,11 +80,16 @@ public class TextStickerView extends View {
         initView(context);
     }
 
+    public static boolean isEmpty(List list) {
+        if (list == null)
+            return true;
+
+        return list.size() == 0;
+    }
+
     public void setEditText(EditText textView) {
         this.mEditText = textView;
     }
-
-    public static final int STICKER_BTN_HALF_SIZE = 30;
 
     private void initView(Context context) {
         debugPaint.setColor(Color.parseColor("#66ff0000"));
@@ -111,11 +99,15 @@ public class TextStickerView extends View {
         mRotateBitmap = BitmapFactory.decodeResource(context.getResources(),
                 R.drawable.sticker_rotate);
 
-        mDeleteRect.set(0, 0, mDeleteBitmap.getWidth(), mDeleteBitmap.getHeight());
-        mRotateRect.set(0, 0, mRotateBitmap.getWidth(), mRotateBitmap.getHeight());
+        mDeleteRect.set(0, 0, mDeleteBitmap.getWidth(),
+                mDeleteBitmap.getHeight());
+        mRotateRect.set(0, 0, mRotateBitmap.getWidth(),
+                mRotateBitmap.getHeight());
 
-        mDeleteDstRect = new RectF(0, 0, STICKER_BTN_HALF_SIZE << 1, STICKER_BTN_HALF_SIZE << 1);
-        mRotateDstRect = new RectF(0, 0, STICKER_BTN_HALF_SIZE << 1, STICKER_BTN_HALF_SIZE << 1);
+        mDeleteDstRect = new RectF(0, 0, STICKER_BTN_HALF_SIZE << 1,
+                STICKER_BTN_HALF_SIZE << 1);
+        mRotateDstRect = new RectF(0, 0, STICKER_BTN_HALF_SIZE << 1,
+                STICKER_BTN_HALF_SIZE << 1);
 
         mPaint.setColor(Color.RED);
         mPaint.setTextAlign(Paint.Align.CENTER);
@@ -168,16 +160,18 @@ public class TextStickerView extends View {
         String[] splits = mText.split("\n");
         for (String text : splits) {
             mTextContents.add(text);
-        }//end for each
+        }// end for each
     }
 
     private void drawContent(Canvas canvas) {
         drawText(canvas);
 
-        //draw x and rotate button
+        // draw x and rotate button
         int offsetValue = ((int) mDeleteDstRect.width()) >> 1;
-        mDeleteDstRect.offsetTo(mHelpBoxRect.left - offsetValue, mHelpBoxRect.top - offsetValue);
-        mRotateDstRect.offsetTo(mHelpBoxRect.right - offsetValue, mHelpBoxRect.bottom - offsetValue);
+        mDeleteDstRect.offsetTo(mHelpBoxRect.left - offsetValue,
+                mHelpBoxRect.top - offsetValue);
+        mRotateDstRect.offsetTo(mHelpBoxRect.right - offsetValue,
+                mHelpBoxRect.bottom - offsetValue);
 
         RectUtil.rotateRect(mDeleteDstRect, mHelpBoxRect.centerX(),
                 mHelpBoxRect.centerY(), mRotateAngle);
@@ -189,29 +183,23 @@ public class TextStickerView extends View {
         }
 
         canvas.save();
-        canvas.rotate(mRotateAngle, mHelpBoxRect.centerX(), mHelpBoxRect.centerY());
+        canvas.rotate(mRotateAngle, mHelpBoxRect.centerX(),
+                mHelpBoxRect.centerY());
         canvas.drawRoundRect(mHelpBoxRect, 10, 10, mHelpPaint);
         canvas.restore();
 
-
         canvas.drawBitmap(mDeleteBitmap, mDeleteRect, mDeleteDstRect, null);
         canvas.drawBitmap(mRotateBitmap, mRotateRect, mRotateDstRect, null);
-        //canvas.drawRect(mRotateDstRect, debugPaint);
-        //canvas.drawRect(mDeleteDstRect, debugPaint);
+        // canvas.drawRect(mRotateDstRect, debugPaint);
+        // canvas.drawRect(mDeleteDstRect, debugPaint);
     }
 
     private void drawText(Canvas canvas) {
         drawText(canvas, layout_x, layout_y, mScale, mRotateAngle);
     }
 
-    public static boolean isEmpty(List list) {
-        if (list == null)
-            return true;
-
-        return list.size() == 0;
-    }
-
-    public void drawText(Canvas canvas, int _x, int _y, float scale, float rotate) {
+    public void drawText(Canvas canvas, int _x, int _y, float scale,
+                         float rotate) {
         if (isEmpty(mTextContents))
             return;
 
@@ -219,44 +207,47 @@ public class TextStickerView extends View {
         int y = _y;
         int text_height = 0;
 
-        mTextRect.set(0, 0, 0, 0);//clear
+        mTextRect.set(0, 0, 0, 0);// clear
         Rect tempRect = new Rect();
         Paint.FontMetricsInt fontMetrics = mPaint.getFontMetricsInt();
-        int charMinHeight = Math.abs(fontMetrics.top) + Math.abs(fontMetrics.bottom);//字体高度
+        int charMinHeight = Math.abs(fontMetrics.top)
+                + Math.abs(fontMetrics.bottom);// 字体高度
         text_height = charMinHeight;
-        //System.out.println("top = "+fontMetrics.top +"   bottom = "+fontMetrics.bottom);
+        // System.out.println("top = "+fontMetrics.top
+        // +"   bottom = "+fontMetrics.bottom);
         for (int i = 0; i < mTextContents.size(); i++) {
             String text = mTextContents.get(i);
             mPaint.getTextBounds(text, 0, text.length(), tempRect);
-            //System.out.println(i + " ---> " + tempRect.height());
-            //text_height = Math.max(charMinHeight, tempRect.height());
-            if (tempRect.height() <= 0) {//处理此行文字为空的情况
+            // System.out.println(i + " ---> " + tempRect.height());
+            // text_height = Math.max(charMinHeight, tempRect.height());
+            if (tempRect.height() <= 0) {// 处理此行文字为空的情况
                 tempRect.set(0, 0, 0, text_height);
             }
 
             RectUtil.rectAddV(mTextRect, tempRect, 0, charMinHeight);
-        }//end for i
+        }// end for i
 
         mTextRect.offset(x, y);
 
-        mHelpBoxRect.set(mTextRect.left - PADDING, mTextRect.top - PADDING
-                , mTextRect.right + PADDING, mTextRect.bottom + PADDING);
+        mHelpBoxRect.set(mTextRect.left - PADDING, mTextRect.top - PADDING,
+                mTextRect.right + PADDING, mTextRect.bottom + PADDING);
         RectUtil.scaleRect(mHelpBoxRect, scale);
 
         canvas.save();
-        canvas.scale(scale, scale, mHelpBoxRect.centerX(), mHelpBoxRect.centerY());
+        canvas.scale(scale, scale, mHelpBoxRect.centerX(),
+                mHelpBoxRect.centerY());
         canvas.rotate(rotate, mHelpBoxRect.centerX(), mHelpBoxRect.centerY());
 
-        //canvas.drawRect(mTextRect, debugPaint);
-        //float left = mHelpBoxRect.left - mTextRect.left;
-        //float right = mHelpBoxRect.right - mTextRect.right;
+        // canvas.drawRect(mTextRect, debugPaint);
+        // float left = mHelpBoxRect.left - mTextRect.left;
+        // float right = mHelpBoxRect.right - mTextRect.right;
 
-        //System.out.println("left = "+left +"   right = "+right);
+        // System.out.println("left = "+left +"   right = "+right);
         int draw_text_y = y + (text_height >> 1) + PADDING;
         for (int i = 0; i < mTextContents.size(); i++) {
             canvas.drawText(mTextContents.get(i), x, draw_text_y, mPaint);
             draw_text_y += text_height;
-        }//end for i
+        }// end for i
         canvas.restore();
     }
 
@@ -335,7 +326,7 @@ public class TextStickerView extends View {
         if (mEditText != null) {
             mEditText.setText(null);
         }
-        //setText(null);
+        // setText(null);
     }
 
     /**
@@ -420,5 +411,4 @@ public class TextStickerView extends View {
         }
     }
 
-
-}//end class
+}// end class

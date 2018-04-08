@@ -1,11 +1,5 @@
 package com.lansosdk.videoeditor;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.OutputStream;
-
-import com.lansosdk.videoeditor.DiskLruCache.Snapshot;
-
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
@@ -16,29 +10,33 @@ import android.os.Environment;
 import android.support.v4.util.LruCache;
 import android.util.Log;
 
+import com.lansosdk.videoeditor.DiskLruCache.Snapshot;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.OutputStream;
 
 /**
- * 图片缓存帮助类
- * 包含内存缓存LruCache和磁盘缓存DiskLruCache
+ * 图片缓存帮助类 包含内存缓存LruCache和磁盘缓存DiskLruCache
  *
  * @author Javen
  */
 public class MemoryDiskCache {
 
     private final static String KEY_INDEX = "index";
-
+    // 磁盘缓存大小
+    private static final int DISKMAXSIZE = 200 * 1024 * 1024;
     private String TAG = MemoryDiskCache.this.getClass().getSimpleName();
-
-    //缓存类
+    // 缓存类
     private LruCache<String, Bitmap> mLruCache;
-
     private DiskLruCache mDiskLruCache;
     private int writeIndex = 0;
-    //磁盘缓存大小
-    private static final int DISKMAXSIZE = 200 * 1024 * 1024;
-
     private File cacheFile = null;
     private int memorySize;
+    /**
+     * 最大是2G
+     */
+    private int sizeCount = 0;
 
     public MemoryDiskCache(Context context) {
         memorySize = (int) (Runtime.getRuntime().maxMemory() / 5);
@@ -50,24 +48,39 @@ public class MemoryDiskCache {
         };
         try {
             // 获取DiskLruCahce对象
-            cacheFile = getDiskCacheDir(context.getApplicationContext(), "diskImageCache");
-
+            cacheFile = getDiskCacheDir(context.getApplicationContext(),
+                    "diskImageCache");
 
             Log.i(TAG, "cacheFile:" + cacheFile.toURI().getPath());
 
             if (cacheFile.exists()) {
                 cacheFile.delete();
             }
-            mDiskLruCache = DiskLruCache.open(cacheFile, getAppVersion(context), 1, DISKMAXSIZE);
+            mDiskLruCache = DiskLruCache.open(cacheFile,
+                    getAppVersion(context), 1, DISKMAXSIZE);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
     /**
-     * 最大是2G
+     * 该方法会判断当前sd卡是否存在，然后选择缓存地址
+     *
+     * @param context
+     * @param uniqueName
+     * @return
      */
-    private int sizeCount = 0;
+    public static File getDiskCacheDir(Context context, String uniqueName) {
+        String cachePath;
+        if (Environment.MEDIA_MOUNTED.equals(Environment
+                .getExternalStorageState())
+                || !Environment.isExternalStorageRemovable()) {
+            cachePath = context.getExternalCacheDir().getPath();
+        } else {
+            cachePath = context.getCacheDir().getPath();
+        }
+        return new File(cachePath + File.separator + uniqueName);
+    }
 
     public synchronized void pushBitmap(Bitmap bitmap) {
 
@@ -95,7 +108,8 @@ public class MemoryDiskCache {
                     Snapshot snapshot = mDiskLruCache.get(key);
                     Bitmap bitmap = null;
                     if (snapshot != null) {
-                        bitmap = BitmapFactory.decodeStream(snapshot.getInputStream(0));
+                        bitmap = BitmapFactory.decodeStream(snapshot
+                                .getInputStream(0));
                         mLruCache.put(key, bitmap);
                     }
                     return bitmap;
@@ -106,7 +120,6 @@ public class MemoryDiskCache {
         }
         return null;
     }
-
 
     public void clear() {
         if (mLruCache != null) {
@@ -130,13 +143,13 @@ public class MemoryDiskCache {
     private void saveToDiskCache(String key, Bitmap bitmap) {
         // 判断是否存在DiskLruCache缓存，若没有存入
         try {
-//            	long  beforeDraw=System.currentTimeMillis();
+            // long beforeDraw=System.currentTimeMillis();
             DiskLruCache.Editor editor = mDiskLruCache.edit(key);
             if (editor != null) {
                 OutputStream outputStream = editor.newOutputStream(0);
                 /**
-                 * 2017年7月5日11:36:09:  测试后发现如果换算成png,因为png是无损压缩, 会导致数据过大, 从而写入到磁盘的速度也很慢
-                 * 不然先在内存里用jpeg压缩下,然后写入的速度快.
+                 * 2017年7月5日11:36:09: 测试后发现如果换算成png,因为png是无损压缩, 会导致数据过大,
+                 * 从而写入到磁盘的速度也很慢 不然先在内存里用jpeg压缩下,然后写入的速度快.
                  */
                 if (bitmap.compress(CompressFormat.JPEG, 100, outputStream)) {
                     editor.commit();
@@ -145,28 +158,11 @@ public class MemoryDiskCache {
                 }
             }
             mDiskLruCache.flush();
-//                Log.i("TIME","putBitmap 消耗时间是:"+ (System.currentTimeMillis() - beforeDraw));
+            // Log.i("TIME","putBitmap 消耗时间是:"+ (System.currentTimeMillis() -
+            // beforeDraw));
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-
-    /**
-     * 该方法会判断当前sd卡是否存在，然后选择缓存地址
-     *
-     * @param context
-     * @param uniqueName
-     * @return
-     */
-    public static File getDiskCacheDir(Context context, String uniqueName) {
-        String cachePath;
-        if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState()) || !Environment.isExternalStorageRemovable()) {
-            cachePath = context.getExternalCacheDir().getPath();
-        } else {
-            cachePath = context.getCacheDir().getPath();
-        }
-        return new File(cachePath + File.separator + uniqueName);
     }
 
     /**
@@ -177,7 +173,8 @@ public class MemoryDiskCache {
      */
     public int getAppVersion(Context context) {
         try {
-            PackageInfo info = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
+            PackageInfo info = context.getPackageManager().getPackageInfo(
+                    context.getPackageName(), 0);
             return info.versionCode;
         } catch (NameNotFoundException e) {
             e.printStackTrace();

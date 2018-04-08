@@ -1,30 +1,22 @@
 package com.example.advanceDemo.view;
 
-
-import com.lansoeditor.demo.R;
-
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.content.Context;
-import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.graphics.Rect;
 import android.util.AttributeSet;
-import android.view.Gravity;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
-import android.view.animation.DecelerateInterpolator;
-import android.view.animation.Interpolator;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
+
+import com.lansoeditor.advanceDemo.R;
 
 public class VideoFocusView extends RelativeLayout {
 
-    private static final String VIDEO_SETTING_NAME = "VIDEO_SETTING";
     public static final int FOCUS_IMG_WH = 120;
+    private static final String VIDEO_SETTING_NAME = "VIDEO_SETTING";
+    float downY;
     private boolean mHaveTouch = false;
     private boolean mShowGrid = false;
     private ImageView mFocusImg;
@@ -43,14 +35,12 @@ public class VideoFocusView extends RelativeLayout {
         addView(mFocusImg);
     }
 
-    float downY;
+    public float getDownY() {
+        return downY;
+    }
 
     public void setDownY(float downY) {
         this.downY = downY;
-    }
-
-    public float getDownY() {
-        return downY;
     }
 
     public void setHaveTouch(boolean val, Rect rect) {
@@ -60,7 +50,7 @@ public class VideoFocusView extends RelativeLayout {
             params.leftMargin = rect.left;
             params.topMargin = rect.top;
             params.width = rect.right - rect.left;
-            //params.width = rect.right - rect.left+50;
+            // params.width = rect.right - rect.left+50;
             params.height = rect.bottom - rect.top;
             mFocusImg.setLayoutParams(params);
             mFocusImg.setVisibility(View.VISIBLE);
@@ -71,7 +61,8 @@ public class VideoFocusView extends RelativeLayout {
         }
     }
 
-    private AnimatorSet startAnimation(View view, long duration, int repeatCount, long delay, float... scale) {
+    private AnimatorSet startAnimation(View view, long duration,
+                                       int repeatCount, long delay, float... scale) {
 
         AnimatorSet as = new AnimatorSet();
         as.setInterpolator(new AccelerateDecelerateInterpolator());
@@ -95,7 +86,6 @@ public class VideoFocusView extends RelativeLayout {
         setMeasuredDimension(specWidthSize, specWidthSize);
         super.onMeasure(widthMeasureSpec, widthMeasureSpec);
     }
-
 
     public GuideStep getCurrentStep() {
         return mCurrentStep;

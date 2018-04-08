@@ -1,6 +1,5 @@
 package com.example.advanceDemo.view;
 
-import android.graphics.BlurMaskFilter;
 import android.graphics.BlurMaskFilter.Blur;
 import android.graphics.Color;
 
@@ -9,23 +8,18 @@ import android.graphics.Color;
  */
 public class PaintConstants {
 
+    public static final float TOUCH_TOLERANCE = 4;
+    public static int PEN_SIZE = 16;
+    public static int PEN_COLOR = Color.RED;
+    public static int ERASE_SIZE = 4;
+    public static Blur BLUR_TYPE = Blur.NORMAL;
+    public static int TRANSPARENT = 15;
+
+    // 画透明度的大小
+
     private PaintConstants() {
 
     }
-
-    public static final float TOUCH_TOLERANCE = 4;
-
-    public static int PEN_SIZE = 16;
-
-    public static int PEN_COLOR = Color.RED;
-
-    public static int ERASE_SIZE = 4;
-
-    public static Blur BLUR_TYPE = BlurMaskFilter.Blur.NORMAL;
-
-    //画透明度的大小
-
-    public static int TRANSPARENT = 15;
 
     /**
      * 图片缩放比例阈值
@@ -45,15 +39,15 @@ public class PaintConstants {
      * 画布模式的选择
      */
     public static class SELECTOR {
-        //是否可以旋转
+        // 是否可以旋转
         public static boolean HAIR_RURN = false;
-        //是否保持比例
+        // 是否保持比例
         public static boolean KEEP_SCALE = true;
-        //固定
+        // 固定
         public static boolean KEEP_IMAGE = false;
-        //挑染
+        // 挑染
         public static boolean COLORING = false;
-        //橡皮擦
+        // 橡皮擦
         public static boolean ERASE = false;
     }
 
@@ -107,21 +101,3 @@ public class PaintConstants {
         public static final int BACKGROUND_COLOR = Color.WHITE;
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

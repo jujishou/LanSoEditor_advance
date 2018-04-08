@@ -58,11 +58,6 @@
 
 package com.example.advanceDemo.view;
 
-import java.lang.reflect.Method;
-import java.util.Random;
-
-import com.lansoeditor.demo.R;
-
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
@@ -76,28 +71,28 @@ import android.support.v4.view.MotionEventCompat;
 import android.support.v4.view.VelocityTrackerCompat;
 import android.support.v4.view.ViewConfigurationCompat;
 import android.util.AttributeSet;
-import android.util.FloatMath;
-import android.util.Log;
 import android.view.Display;
 import android.view.MotionEvent;
 import android.view.VelocityTracker;
 import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.WindowManager;
-import android.view.View.OnClickListener;
 import android.view.animation.Interpolator;
 import android.widget.FrameLayout;
 import android.widget.Scroller;
 
+import com.lansoeditor.advanceDemo.R;
+
+import java.lang.reflect.Method;
+import java.util.Random;
+
 /**
- * 一定要注意, 在xml中slidingLayer中一定要有Linearlayout或RelativeLayout.设置背景要在Linearlayout或RelativeLayout中设置,
- * 不要在SlidingLayer中
+ * 一定要注意, 在xml中slidingLayer中一定要有Linearlayout或RelativeLayout.
+ * 设置背景要在Linearlayout或RelativeLayout中设置, 不要在SlidingLayer中
  *
  * @author lenovo
  */
 public class SlidingLayer extends FrameLayout {
-
-    private static final String KEY_IS_OPEN = "is_open";
 
     /**
      * Default value for the position of the layer. STICK_TO_AUTO shall inspect
@@ -105,40 +100,37 @@ public class SlidingLayer extends FrameLayout {
      * layour (ie.: layout is positioned on the right = STICK_TO_RIGHT).
      */
     public static final int STICK_TO_AUTO = 0;
-
     /**
      * Special value for the position of the layer. STICK_TO_RIGHT means that
      * the view shall be attached to the right side of the screen, and come from
      * there into the viewable area.
      */
     public static final int STICK_TO_RIGHT = -1;
-
     /**
      * Special value for the position of the layer. STICK_TO_LEFT means that the
      * view shall be attached to the left side of the screen, and come from
      * there into the viewable area.
      */
     public static final int STICK_TO_LEFT = -2;
-
     /**
      * Special value for the position of the layer. STICK_TO_MIDDLE means that
      * the view will stay attached trying to be in the middle of the screen and
      * allowing dismissing both to right and left side.
      */
     public static final int STICK_TO_MIDDLE = -3;
-
     /**
-     * Special value for the position of the layer. STICK_TO_TOP means that the view will stay attached to the top
-     * part of the screen, and come from there into the viewable area.
+     * Special value for the position of the layer. STICK_TO_TOP means that the
+     * view will stay attached to the top part of the screen, and come from
+     * there into the viewable area.
      */
     public static final int STICK_TO_TOP = -4;
-
     /**
-     * Special value for the position of the layer. STICK_TO_BOTTOM means that the view will stay attached to the
-     * bottom part of the screen, and come from there into the viewable area.
+     * Special value for the position of the layer. STICK_TO_BOTTOM means that
+     * the view will stay attached to the bottom part of the screen, and come
+     * from there into the viewable area.
      */
     public static final int STICK_TO_BOTTOM = -5;
-
+    private static final String KEY_IS_OPEN = "is_open";
     private static final int MAX_SCROLLING_DURATION = 600; // in ms
     private static final int MIN_DISTANCE_FOR_FLING = 25; // in dip
     private static final Interpolator sMenuInterpolator = new Interpolator() {
@@ -150,16 +142,15 @@ public class SlidingLayer extends FrameLayout {
     };
 
     /**
-     * Sentinel value for no current active pointer. Used by {@link #mActivePointerId}.
+     * Sentinel value for no current active pointer. Used by
+     * {@link #mActivePointerId}.
      */
     private static final int INVALID_POINTER = -1;
     protected int mActivePointerId = INVALID_POINTER;
     protected VelocityTracker mVelocityTracker;
     protected int mMaximumVelocity;
-
-    private Random mRandom;
     protected Bundle mState;
-
+    private Random mRandom;
     private Scroller mScroller;
 
     private int mShadowWidth;
@@ -224,34 +215,42 @@ public class SlidingLayer extends FrameLayout {
      * </ol>
      *
      * @param context  a reference to an existing context
-     * @param attrs    attribute set constructed from attributes set in android .xml file
+     * @param attrs    attribute set constructed from attributes set in android .xml
+     *                 file
      * @param defStyle style res id
      */
     public SlidingLayer(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
 
         // Style
-        final TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.SlidingLayer);
+        final TypedArray ta = context.obtainStyledAttributes(attrs,
+                R.styleable.SlidingLayer);
 
         // Set the side of the screen
         setStickTo(ta.getInt(R.styleable.SlidingLayer_stickTo, STICK_TO_AUTO));
 
         // Sets the shadow drawable
-        int shadowRes = ta.getResourceId(R.styleable.SlidingLayer_shadowDrawable, -1);
+        int shadowRes = ta.getResourceId(
+                R.styleable.SlidingLayer_shadowDrawable, -1);
         if (shadowRes != -1) {
             setShadowDrawable(shadowRes);
         }
 
         // Sets the shadow width
-        setShadowWidth((int) ta.getDimension(R.styleable.SlidingLayer_shadowWidth, 0));
+        setShadowWidth((int) ta.getDimension(
+                R.styleable.SlidingLayer_shadowWidth, 0));
 
         // Sets the ability to close the layer by tapping in any empty space
-        closeOnTapEnabled = ta.getBoolean(R.styleable.SlidingLayer_closeOnTapEnabled, true);
-        // Sets the ability to open the layout by tapping on any of the exposed closed layer
-        openOnTapEnabled = ta.getBoolean(R.styleable.SlidingLayer_openOnTapEnabled, true);
+        closeOnTapEnabled = ta.getBoolean(
+                R.styleable.SlidingLayer_closeOnTapEnabled, true);
+        // Sets the ability to open the layout by tapping on any of the exposed
+        // closed layer
+        openOnTapEnabled = ta.getBoolean(
+                R.styleable.SlidingLayer_openOnTapEnabled, true);
 
         // How much of the view sticks out when closed
-        setOffsetWidth(ta.getDimensionPixelOffset(R.styleable.SlidingLayer_offsetWidth, 0));
+        setOffsetWidth(ta.getDimensionPixelOffset(
+                R.styleable.SlidingLayer_offsetWidth, 0));
 
         ta.recycle();
 
@@ -265,7 +264,8 @@ public class SlidingLayer extends FrameLayout {
         final Context context = getContext();
         mScroller = new Scroller(context, sMenuInterpolator);
         final ViewConfiguration configuration = ViewConfiguration.get(context);
-        mTouchSlop = ViewConfigurationCompat.getScaledPagingTouchSlop(configuration);
+        mTouchSlop = ViewConfigurationCompat
+                .getScaledPagingTouchSlop(configuration);
         mMinimumVelocity = configuration.getScaledMinimumFlingVelocity();
         mMaximumVelocity = configuration.getScaledMaximumFlingVelocity();
 
@@ -278,9 +278,10 @@ public class SlidingLayer extends FrameLayout {
     /**
      * Returns whether the panel is open or not.
      *
-     * @return returns true if the panel is open, false otherwise. Please note that if
-     * the panel was opened with smooth animation this method is not guaranteed to return
-     * true. This method will only return true after the panel has completely opened.
+     * @return returns true if the panel is open, false otherwise. Please note
+     * that if the panel was opened with smooth animation this method is
+     * not guaranteed to return true. This method will only return true
+     * after the panel has completely opened.
      */
     public boolean isOpened() {
         return mIsOpen;
@@ -302,12 +303,13 @@ public class SlidingLayer extends FrameLayout {
         switchLayer(false, smoothAnim, forceClose, 0, 0);
     }
 
-    private void switchLayer(boolean open, boolean smoothAnim, boolean forceSwitch) {
+    private void switchLayer(boolean open, boolean smoothAnim,
+                             boolean forceSwitch) {
         switchLayer(open, smoothAnim, forceSwitch, 0, 0);
     }
 
-    private void switchLayer(final boolean open, final boolean smoothAnim, final boolean forceSwitch,
-                             final int velocityX, final int velocityY) {
+    private void switchLayer(final boolean open, final boolean smoothAnim,
+                             final boolean forceSwitch, final int velocityX, final int velocityY) {
         if (!forceSwitch && open == mIsOpen) {
             setDrawingCacheEnabled(false);
             return;
@@ -329,7 +331,8 @@ public class SlidingLayer extends FrameLayout {
         float ty = mLastY - getHeight() / 2;
 
         // Get boolean for velocity check
-        boolean noVelocityInStickToMidle = mScreenSide == STICK_TO_MIDDLE && Math.abs(velocityX) < mMinimumVelocity
+        boolean noVelocityInStickToMidle = mScreenSide == STICK_TO_MIDDLE
+                && Math.abs(velocityX) < mMinimumVelocity
                 && Math.abs(velocityY) < mMinimumVelocity;
 
         // Follow velocity or translation depending on the case
@@ -357,20 +360,6 @@ public class SlidingLayer extends FrameLayout {
     }
 
     /**
-     * Sets the shadow of the width which will be included within the view by
-     * using padding since it's on the left of the view in this case
-     *
-     * @param shadowWidth Desired width of the shadow
-     * @see #getShadowWidth()
-     * @see #setShadowDrawable(Drawable)
-     * @see #setShadowDrawable(int)
-     */
-    public void setShadowWidth(final int shadowWidth) {
-        mShadowWidth = shadowWidth;
-        invalidate(getLeft(), getTop(), getRight(), getBottom());
-    }
-
-    /**
      * Sets the shadow width by the value of a resource.
      *
      * @param resId The dimension resource id to be set as the shadow width.
@@ -386,6 +375,20 @@ public class SlidingLayer extends FrameLayout {
      */
     public int getShadowWidth() {
         return mShadowWidth;
+    }
+
+    /**
+     * Sets the shadow of the width which will be included within the view by
+     * using padding since it's on the left of the view in this case
+     *
+     * @param shadowWidth Desired width of the shadow
+     * @see #getShadowWidth()
+     * @see #setShadowDrawable(Drawable)
+     * @see #setShadowDrawable(int)
+     */
+    public void setShadowWidth(final int shadowWidth) {
+        mShadowWidth = shadowWidth;
+        invalidate(getLeft(), getTop(), getRight(), getBottom());
     }
 
     /**
@@ -411,6 +414,14 @@ public class SlidingLayer extends FrameLayout {
     }
 
     /**
+     * @return returns the number of pixels that are visible when the panel is
+     * closed
+     */
+    public int getOffsetWidth() {
+        return mOffsetWidth;
+    }
+
+    /**
      * Sets the offset width of the panel. How much sticks out when off screen.
      *
      * @param offsetWidth Width of the offset in pixels
@@ -419,13 +430,6 @@ public class SlidingLayer extends FrameLayout {
     public void setOffsetWidth(int offsetWidth) {
         mOffsetWidth = offsetWidth;
         invalidate(getLeft(), getTop(), getRight(), getBottom());
-    }
-
-    /**
-     * @return returns the number of pixels that are visible when the panel is closed
-     */
-    public int getOffsetWidth() {
-        return mOffsetWidth;
     }
 
     @Override
@@ -485,7 +489,6 @@ public class SlidingLayer extends FrameLayout {
         }
     }
 
-
     @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {
         if (!mEnabled) {
@@ -494,7 +497,8 @@ public class SlidingLayer extends FrameLayout {
 
         final int action = ev.getAction() & MotionEventCompat.ACTION_MASK;
 
-        if (action == MotionEvent.ACTION_CANCEL || action == MotionEvent.ACTION_UP) {
+        if (action == MotionEvent.ACTION_CANCEL
+                || action == MotionEvent.ACTION_UP) {
             mIsDragging = false;
             mIsUnableToDrag = false;
             mActivePointerId = INVALID_POINTER;
@@ -520,7 +524,8 @@ public class SlidingLayer extends FrameLayout {
                     break;
                 }
 
-                final int pointerIndex = MotionEventCompat.findPointerIndex(ev, activePointerId);
+                final int pointerIndex = MotionEventCompat.findPointerIndex(ev,
+                        activePointerId);
                 if (pointerIndex == -1) {
                     mActivePointerId = INVALID_POINTER;
                     break;
@@ -533,11 +538,13 @@ public class SlidingLayer extends FrameLayout {
                 final float dy = y - mLastY;
                 final float yDiff = Math.abs(y - mLastY);
 
-                if (xDiff > mTouchSlop && xDiff > yDiff && allowDragingX(dx, mInitialX)) {
+                if (xDiff > mTouchSlop && xDiff > yDiff
+                        && allowDragingX(dx, mInitialX)) {
                     mIsDragging = true;
                     mLastX = x;
                     setDrawingCacheEnabled(true);
-                } else if (yDiff > mTouchSlop && yDiff > xDiff && allowDragingY(dy, mInitialY)) {
+                } else if (yDiff > mTouchSlop && yDiff > xDiff
+                        && allowDragingY(dy, mInitialY)) {
                     mIsDragging = true;
                     mLastY = y;
                     setDrawingCacheEnabled(true);
@@ -581,14 +588,16 @@ public class SlidingLayer extends FrameLayout {
 
     @Override
     public boolean onTouchEvent(MotionEvent ev) {
-        if (!mEnabled || !mIsDragging && !mLastTouchAllowed && !allowSlidingFromHereX(ev, mInitialX)
+        if (!mEnabled || !mIsDragging && !mLastTouchAllowed
+                && !allowSlidingFromHereX(ev, mInitialX)
                 && !allowSlidingFromHereY(ev, mInitialY)) {
             return false;
         }
 
         final int action = ev.getAction();
 
-        if (action == MotionEvent.ACTION_UP || action == MotionEvent.ACTION_CANCEL
+        if (action == MotionEvent.ACTION_UP
+                || action == MotionEvent.ACTION_CANCEL
                 || action == MotionEvent.ACTION_OUTSIDE) {
             mLastTouchAllowed = false;
         } else {
@@ -611,7 +620,8 @@ public class SlidingLayer extends FrameLayout {
                 break;
             case MotionEvent.ACTION_MOVE:
                 if (!mIsDragging) {
-                    final int pointerIndex = MotionEventCompat.findPointerIndex(ev, mActivePointerId);
+                    final int pointerIndex = MotionEventCompat.findPointerIndex(ev,
+                            mActivePointerId);
                     if (pointerIndex == -1) {
                         mActivePointerId = INVALID_POINTER;
                         break;
@@ -620,19 +630,20 @@ public class SlidingLayer extends FrameLayout {
                     final float xDiff = Math.abs(x - mLastX);
                     final float y = MotionEventCompat.getY(ev, pointerIndex);
                     final float yDiff = Math.abs(y - mLastY);
-//                if (xDiff > mTouchSlop && xDiff > yDiff) {
-//                    mIsDragging = true;
-//                    mLastX = x;
-//                    setDrawingCacheEnabled(true);
-//                } else if (yDiff > mTouchSlop && yDiff > xDiff) {
-//                    mIsDragging = true;
-//                    mLastY = y;
-//                    setDrawingCacheEnabled(true);
-//                }
+                    // if (xDiff > mTouchSlop && xDiff > yDiff) {
+                    // mIsDragging = true;
+                    // mLastX = x;
+                    // setDrawingCacheEnabled(true);
+                    // } else if (yDiff > mTouchSlop && yDiff > xDiff) {
+                    // mIsDragging = true;
+                    // mLastY = y;
+                    // setDrawingCacheEnabled(true);
+                    // }
                 }
                 if (mIsDragging) {
                     // Scroll to follow the motion event
-                    final int activePointerIndex = MotionEventCompat.findPointerIndex(ev, mActivePointerId);
+                    final int activePointerIndex = MotionEventCompat
+                            .findPointerIndex(ev, mActivePointerId);
                     if (activePointerIndex == -1) {
                         mActivePointerId = INVALID_POINTER;
                         break;
@@ -648,7 +659,8 @@ public class SlidingLayer extends FrameLayout {
                     float scrollX = oldScrollX + deltaX;
                     float scrollY = oldScrollY + deltaY;
 
-                    // Log.d("Layer", String.format("Layer scrollX[%f],scrollY[%f]", scrollX, scrollY));
+                    // Log.d("Layer", String.format("Layer scrollX[%f],scrollY[%f]",
+                    // scrollX, scrollY));
                     final float leftBound, rightBound;
                     final float bottomBound, topBound;
                     switch (mScreenSide) {
@@ -699,21 +711,24 @@ public class SlidingLayer extends FrameLayout {
                 if (mIsDragging) {
                     final VelocityTracker velocityTracker = mVelocityTracker;
                     velocityTracker.computeCurrentVelocity(1000, mMaximumVelocity);
-                    final int initialVelocityX = (int) VelocityTrackerCompat.getXVelocity(velocityTracker,
-                            mActivePointerId);
-                    final int initialVelocityY = (int) VelocityTrackerCompat.getYVelocity(velocityTracker,
-                            mActivePointerId);
+                    final int initialVelocityX = (int) VelocityTrackerCompat
+                            .getXVelocity(velocityTracker, mActivePointerId);
+                    final int initialVelocityY = (int) VelocityTrackerCompat
+                            .getYVelocity(velocityTracker, mActivePointerId);
                     final int scrollX = getScrollX();
                     final int scrollY = getScrollY();
-                    final int activePointerIndex = MotionEventCompat.findPointerIndex(ev, mActivePointerId);
+                    final int activePointerIndex = MotionEventCompat
+                            .findPointerIndex(ev, mActivePointerId);
                     final float x = MotionEventCompat.getX(ev, activePointerIndex);
                     final float y = MotionEventCompat.getY(ev, activePointerIndex);
                     final int totalDeltaX = (int) (x - mInitialX);
                     final int totalDeltaY = (int) (y - mInitialY);
 
-                    boolean nextStateOpened = determineNextStateOpened(mIsOpen, scrollX, scrollY, initialVelocityX,
-                            initialVelocityY, totalDeltaX, totalDeltaY);
-                    switchLayer(nextStateOpened, true, true, initialVelocityX, initialVelocityY);
+                    boolean nextStateOpened = determineNextStateOpened(mIsOpen,
+                            scrollX, scrollY, initialVelocityX, initialVelocityY,
+                            totalDeltaX, totalDeltaY);
+                    switchLayer(nextStateOpened, true, true, initialVelocityX,
+                            initialVelocityY);
 
                     mActivePointerId = INVALID_POINTER;
                     endDrag();
@@ -739,8 +754,10 @@ public class SlidingLayer extends FrameLayout {
             }
             case MotionEventCompat.ACTION_POINTER_UP:
                 onSecondaryPointerUp(ev);
-                mLastX = MotionEventCompat.getX(ev, MotionEventCompat.findPointerIndex(ev, mActivePointerId));
-                mLastY = MotionEventCompat.getY(ev, MotionEventCompat.findPointerIndex(ev, mActivePointerId));
+                mLastX = MotionEventCompat.getX(ev,
+                        MotionEventCompat.findPointerIndex(ev, mActivePointerId));
+                mLastY = MotionEventCompat.getY(ev,
+                        MotionEventCompat.findPointerIndex(ev, mActivePointerId));
                 break;
         }
         if (mActivePointerId == INVALID_POINTER) {
@@ -749,7 +766,8 @@ public class SlidingLayer extends FrameLayout {
         return true;
     }
 
-    private boolean allowSlidingFromHereX(final MotionEvent ev, final float initialX) {
+    private boolean allowSlidingFromHereX(final MotionEvent ev,
+                                          final float initialX) {
         switch (mScreenSide) {
             case STICK_TO_LEFT:
             case STICK_TO_RIGHT:
@@ -770,7 +788,8 @@ public class SlidingLayer extends FrameLayout {
         }
     }
 
-    private boolean allowSlidingFromHereY(final MotionEvent ev, final float initialY) {
+    private boolean allowSlidingFromHereY(final MotionEvent ev,
+                                          final float initialY) {
         switch (mScreenSide) {
             case STICK_TO_TOP:
             case STICK_TO_BOTTOM:
@@ -847,7 +866,8 @@ public class SlidingLayer extends FrameLayout {
     }
 
     /**
-     * Based on the current state, position and velocity of the layer we calculate what the next state should be.
+     * Based on the current state, position and velocity of the layer we
+     * calculate what the next state should be.
      *
      * @param currentState
      * @param swipeOffsetX
@@ -858,9 +878,10 @@ public class SlidingLayer extends FrameLayout {
      * @param deltaY
      * @return true means we should open it, false close it.
      */
-    private boolean determineNextStateOpened(final boolean currentState, final float swipeOffsetX,
-                                             final float swipeOffsetY, final int velocityX, final int velocityY,
-                                             final int deltaX, final int deltaY) {
+    private boolean determineNextStateOpened(final boolean currentState,
+                                             final float swipeOffsetX, final float swipeOffsetY,
+                                             final int velocityX, final int velocityY, final int deltaX,
+                                             final int deltaY) {
         final boolean targetState;
         final boolean calcX;
         final boolean calcY;
@@ -885,15 +906,17 @@ public class SlidingLayer extends FrameLayout {
                 break;
         }
 
-        if (calcX && Math.abs(deltaX) > mFlingDistance && Math.abs(velocityX) > mMinimumVelocity) {
+        if (calcX && Math.abs(deltaX) > mFlingDistance
+                && Math.abs(velocityX) > mMinimumVelocity) {
 
-            targetState = mScreenSide == STICK_TO_RIGHT && velocityX <= 0 || mScreenSide == STICK_TO_LEFT
-                    && velocityX > 0;
+            targetState = mScreenSide == STICK_TO_RIGHT && velocityX <= 0
+                    || mScreenSide == STICK_TO_LEFT && velocityX > 0;
 
-        } else if (calcY && Math.abs(deltaY) > mFlingDistance && Math.abs(velocityY) > mMinimumVelocity) {
+        } else if (calcY && Math.abs(deltaY) > mFlingDistance
+                && Math.abs(velocityY) > mMinimumVelocity) {
 
-            targetState = mScreenSide == STICK_TO_BOTTOM && velocityY <= 0 || mScreenSide == STICK_TO_TOP
-                    && velocityY > 0;
+            targetState = mScreenSide == STICK_TO_BOTTOM && velocityY <= 0
+                    || mScreenSide == STICK_TO_TOP && velocityY > 0;
 
         } else {
             final int w = getWidth();
@@ -913,7 +936,8 @@ public class SlidingLayer extends FrameLayout {
                     targetState = swipeOffsetY < h / 2;
                     break;
                 case STICK_TO_MIDDLE:
-                    targetState = Math.abs(swipeOffsetX) < w / 2 && Math.abs(swipeOffsetY) < h / 2;
+                    targetState = Math.abs(swipeOffsetX) < w / 2
+                            && Math.abs(swipeOffsetY) < h / 2;
                     break;
                 default:
                     targetState = true;
@@ -970,7 +994,8 @@ public class SlidingLayer extends FrameLayout {
         final int width = getWidth();
         final int halfWidth = width / 2;
         final float distanceRatio = Math.min(1f, 1.0f * Math.abs(dx) / width);
-        final float distance = halfWidth + halfWidth * distanceInfluenceForSnapDuration(distanceRatio);
+        final float distance = halfWidth + halfWidth
+                * distanceInfluenceForSnapDuration(distanceRatio);
 
         int duration = 0;
         velocity = Math.abs(velocity);
@@ -1034,7 +1059,8 @@ public class SlidingLayer extends FrameLayout {
             // active pointer and adjust accordingly.
             final int newPointerIndex = pointerIndex == 0 ? 1 : 0;
             mLastX = MotionEventCompat.getX(ev, newPointerIndex);
-            mActivePointerId = MotionEventCompat.getPointerId(ev, newPointerIndex);
+            mActivePointerId = MotionEventCompat.getPointerId(ev,
+                    newPointerIndex);
             if (mVelocityTracker != null) {
                 mVelocityTracker.clear();
             }
@@ -1070,8 +1096,9 @@ public class SlidingLayer extends FrameLayout {
     /**
      * Sets the default location where the SlidingLayer will appear
      *
-     * @param screenSide The location where the Sliding layer will appear. Possible values are
-     *                   {@link #STICK_TO_AUTO}, {@link #STICK_TO_BOTTOM}, {@link #STICK_TO_LEFT}, {@link #STICK_TO_MIDDLE}
+     * @param screenSide The location where the Sliding layer will appear. Possible
+     *                   values are {@link #STICK_TO_AUTO}, {@link #STICK_TO_BOTTOM},
+     *                   {@link #STICK_TO_LEFT}, {@link #STICK_TO_MIDDLE}
      *                   {@link #STICK_TO_RIGHT}, {@link #STICK_TO_TOP}
      */
     public void setStickTo(int screenSide) {
@@ -1085,10 +1112,10 @@ public class SlidingLayer extends FrameLayout {
     }
 
     /**
-     * If parameter is set to <code>true</code>, whenever the <code>SlidingLayer</code> is tapped and
-     * the SlidingLayer is opened, it will attempt to close.
-     * If parameter is set to <code>false</code>, then tapping the <code>SlidingLayer</code> will
-     * do nothing
+     * If parameter is set to <code>true</code>, whenever the
+     * <code>SlidingLayer</code> is tapped and the SlidingLayer is opened, it
+     * will attempt to close. If parameter is set to <code>false</code>, then
+     * tapping the <code>SlidingLayer</code> will do nothing
      *
      * @param _closeOnTapEnabled
      */
@@ -1097,9 +1124,9 @@ public class SlidingLayer extends FrameLayout {
     }
 
     /**
-     * Given that there is a visible offset and it is tapped, if the parameter is set
-     * to true it will attempt to open the <code>SlidingLayer</code>. If parameter is false,
-     * tapping a visible offset will yield no result.
+     * Given that there is a visible offset and it is tapped, if the parameter
+     * is set to true it will attempt to open the <code>SlidingLayer</code>. If
+     * parameter is false, tapping a visible offset will yield no result.
      *
      * @param _openOnTapEnabled
      */
@@ -1114,8 +1141,8 @@ public class SlidingLayer extends FrameLayout {
 
         if (mScreenSide == STICK_TO_AUTO) {
             int screenWidth;
-            Display display = ((WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE))
-                    .getDefaultDisplay();
+            Display display = ((WindowManager) getContext().getSystemService(
+                    Context.WINDOW_SERVICE)).getDefaultDisplay();
             try {
                 Class<?> cls = Display.class;
                 Class<?>[] parameterTypes = {Point.class};
@@ -1168,7 +1195,8 @@ public class SlidingLayer extends FrameLayout {
     }
 
     @Override
-    protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
+    protected void onLayout(boolean changed, int left, int top, int right,
+                            int bottom) {
 
         int screenSide = mScreenSide;
 
@@ -1187,16 +1215,20 @@ public class SlidingLayer extends FrameLayout {
             }
 
             if (mScreenSide == STICK_TO_RIGHT) {
-                setPadding(getPaddingLeft() + mShadowWidth, getPaddingTop(), getPaddingRight(), getPaddingBottom());
+                setPadding(getPaddingLeft() + mShadowWidth, getPaddingTop(),
+                        getPaddingRight(), getPaddingBottom());
             } else if (mScreenSide == STICK_TO_BOTTOM) {
-                setPadding(getPaddingLeft(), getPaddingTop() + mShadowWidth, getPaddingRight(), getPaddingBottom());
+                setPadding(getPaddingLeft(), getPaddingTop() + mShadowWidth,
+                        getPaddingRight(), getPaddingBottom());
             } else if (mScreenSide == STICK_TO_LEFT) {
-                setPadding(getPaddingLeft(), getPaddingTop(), getPaddingRight() + mShadowWidth, getPaddingBottom());
+                setPadding(getPaddingLeft(), getPaddingTop(), getPaddingRight()
+                        + mShadowWidth, getPaddingBottom());
             } else if (mScreenSide == STICK_TO_TOP) {
-                setPadding(getPaddingLeft(), getPaddingTop(), getPaddingRight(), getPaddingBottom() + mShadowWidth);
+                setPadding(getPaddingLeft(), getPaddingTop(),
+                        getPaddingRight(), getPaddingBottom() + mShadowWidth);
             } else if (mScreenSide == STICK_TO_MIDDLE) {
-                setPadding(getPaddingLeft() + mShadowWidth, getPaddingTop(), getPaddingRight() + mShadowWidth,
-                        getPaddingBottom());
+                setPadding(getPaddingLeft() + mShadowWidth, getPaddingTop(),
+                        getPaddingRight() + mShadowWidth, getPaddingBottom());
             }
         }
 
@@ -1243,15 +1275,19 @@ public class SlidingLayer extends FrameLayout {
                     break;
                 case STICK_TO_MIDDLE:
 
-                    // Calculate slope m to get direction of swiping and apply the same vector until the end of the
+                    // Calculate slope m to get direction of swiping and apply the
+                    // same vector until the end of the
                     // animation
                     float m = 1;
 
-                    // If no veocity nor translation (difficult to get) the target is random
+                    // If no veocity nor translation (difficult to get) the target
+                    // is random
                     if (xValue == 0 && yValue == 0) {
-                        m = mRandom != null ? (float) Math.tan(mRandom.nextFloat() * Math.PI - Math.PI / 2) : 1;
+                        m = mRandom != null ? (float) Math.tan(mRandom.nextFloat()
+                                * Math.PI - Math.PI / 2) : 1;
                     } else if (xValue == 0) {
-                        // Avoid division by 0 (Get the max value of the tan which is equivalent)
+                        // Avoid division by 0 (Get the max value of the tan which
+                        // is equivalent)
                         m = (float) Math.tan(Math.PI / 2);
                     } else {
                         // Get slope
@@ -1259,12 +1295,16 @@ public class SlidingLayer extends FrameLayout {
                     }
 
                     if (Math.abs(m) >= 1) {
-                        pos[0] = Math.round(getOperationSignForDiffMeasure(xValue) * getHeight() / Math.abs(m)
+                        pos[0] = Math.round(getOperationSignForDiffMeasure(xValue)
+                                * getHeight() / Math.abs(m)
                                 - (mLastX - getWidth() / 2));
-                        pos[1] = Math.round(getOperationSignForDiffMeasure(yValue) * getHeight());
+                        pos[1] = Math.round(getOperationSignForDiffMeasure(yValue)
+                                * getHeight());
                     } else {
-                        pos[0] = Math.round(getOperationSignForDiffMeasure(xValue) * getWidth());
-                        pos[1] = Math.round(getOperationSignForDiffMeasure(yValue) * getWidth() * Math.abs(m)
+                        pos[0] = Math.round(getOperationSignForDiffMeasure(xValue)
+                                * getWidth());
+                        pos[1] = Math.round(getOperationSignForDiffMeasure(yValue)
+                                * getWidth() * Math.abs(m)
                                 - (mLastY - getHeight() / 2));
                     }
                     break;
@@ -1279,7 +1319,8 @@ public class SlidingLayer extends FrameLayout {
         if (mRandom == null) {
             return 1;
         } else {
-            return Math.abs(d) < mMinimumVelocity ? mRandom.nextBoolean() ? 1 : -1 : d > 0 ? -1 : 1;
+            return Math.abs(d) < mMinimumVelocity ? mRandom.nextBoolean() ? 1
+                    : -1 : d > 0 ? -1 : 1;
         }
     }
 
@@ -1296,10 +1337,12 @@ public class SlidingLayer extends FrameLayout {
                 mShadowDrawable.setBounds(0, 0, mShadowWidth, getHeight());
             }
             if (mScreenSide == STICK_TO_TOP) {
-                mShadowDrawable.setBounds(0, getHeight() - mShadowWidth, getWidth(), getHeight());
+                mShadowDrawable.setBounds(0, getHeight() - mShadowWidth,
+                        getWidth(), getHeight());
             }
             if (mScreenSide == STICK_TO_LEFT) {
-                mShadowDrawable.setBounds(getWidth() - mShadowWidth, 0, getWidth(), getHeight());
+                mShadowDrawable.setBounds(getWidth() - mShadowWidth, 0,
+                        getWidth(), getHeight());
             }
             if (mScreenSide == STICK_TO_BOTTOM) {
                 mShadowDrawable.setBounds(0, 0, getWidth(), mShadowWidth);
@@ -1321,9 +1364,12 @@ public class SlidingLayer extends FrameLayout {
                     scrollTo(x, y);
                 }
 
-                // We invalidate a slightly larger area now, this was only optimised for right menu previously
-                // Keep on drawing until the animation has finished. Just re-draw the necessary part
-                invalidate(getLeft() + oldX, getTop() + oldY, getRight() - oldX, getBottom() - oldY);
+                // We invalidate a slightly larger area now, this was only
+                // optimised for right menu previously
+                // Keep on drawing until the animation has finished. Just
+                // re-draw the necessary part
+                invalidate(getLeft() + oldX, getTop() + oldY,
+                        getRight() - oldX, getBottom() - oldY);
                 return;
             }
         }
@@ -1333,39 +1379,54 @@ public class SlidingLayer extends FrameLayout {
     }
 
     /**
-     * Handler interface for obtaining updates on the <code>SlidingLayer</code>'s state.
-     * <code>OnInteractListener</code> allows for external classes to be notified when the <code>SlidingLayer</code>
-     * receives input to be opened or closed.
+     * Handler interface for obtaining updates on the <code>SlidingLayer</code>
+     * 's state. <code>OnInteractListener</code> allows for external classes to
+     * be notified when the <code>SlidingLayer</code> receives input to be
+     * opened or closed.
      */
     public interface OnInteractListener {
 
         /**
-         * This method is called when an attempt is made to open the current <code>SlidingLayer</code>. Note
-         * that because of animation, the <code>SlidingLayer</code> may not be visible yet.
+         * This method is called when an attempt is made to open the current
+         * <code>SlidingLayer</code>. Note that because of animation, the
+         * <code>SlidingLayer</code> may not be visible yet.
          */
         public void onOpen();
 
         /**
-         * This method is called when an attempt is made to close the current <code>SlidingLayer</code>. Note
-         * that because of animation, the <code>SlidingLayer</code> may still be visible.
+         * This method is called when an attempt is made to close the current
+         * <code>SlidingLayer</code>. Note that because of animation, the
+         * <code>SlidingLayer</code> may still be visible.
          */
         public void onClose();
 
         /**
-         * this method is executed after <code>onOpen()</code>, when the animation has finished.
+         * this method is executed after <code>onOpen()</code>, when the
+         * animation has finished.
          */
         public void onOpened();
 
         /**
-         * this method is executed after <code>onClose()</code>, when the animation has finished and the
-         * <code>SlidingLayer</code> is
-         * therefore no longer visible.
+         * this method is executed after <code>onClose()</code>, when the
+         * animation has finished and the <code>SlidingLayer</code> is therefore
+         * no longer visible.
          */
         public void onClosed();
     }
 
     static class SavedState extends BaseSavedState {
 
+        public static final Creator<SavedState> CREATOR = new Creator<SavedState>() {
+            @Override
+            public SavedState createFromParcel(Parcel in) {
+                return new SavedState(in);
+            }
+
+            @Override
+            public SavedState[] newArray(int size) {
+                return new SavedState[size];
+            }
+        };
         Bundle mState;
 
         public SavedState(Parcelable superState) {
@@ -1382,17 +1443,5 @@ public class SlidingLayer extends FrameLayout {
             super.writeToParcel(dest, flags);
             dest.writeBundle(mState);
         }
-
-        public static final Creator<SavedState> CREATOR = new Creator<SavedState>() {
-            @Override
-            public SavedState createFromParcel(Parcel in) {
-                return new SavedState(in);
-            }
-
-            @Override
-            public SavedState[] newArray(int size) {
-                return new SavedState[size];
-            }
-        };
     }
 }

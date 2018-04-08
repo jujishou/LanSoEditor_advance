@@ -62,7 +62,10 @@
         </LinearLayout>
     </RelativeLayout>
 
-       <LinearLayout
+    
+      
+    
+       <LinearLayout 
            android:layout_width="match_parent"
            android:layout_height="wrap_content"
            android:layout_alignParentBottom="true"
@@ -106,6 +109,6 @@
 		            android:visibility="invisible" />
 		    </RelativeLayout>
        </LinearLayout>
-	<include
-		layout="@layout/merge_cameabeauty_control"/>
+           <include 
+			layout="@layout/merge_cameabeauty_control"/>
 </RelativeLayout>

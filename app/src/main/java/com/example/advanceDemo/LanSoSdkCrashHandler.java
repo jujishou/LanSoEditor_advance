@@ -1,5 +1,10 @@
 package com.example.advanceDemo;
 
+import android.text.format.DateFormat;
+import android.util.Log;
+
+import com.lansosdk.box.LanSoEditorBox;
+import com.lansosdk.videoeditor.VideoEditor;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -14,18 +19,8 @@ import java.io.StringWriter;
 import java.io.Writer;
 import java.lang.Thread.UncaughtExceptionHandler;
 
-import com.lansosdk.box.LanSoEditorBox;
-import com.lansosdk.videoeditor.LanSoEditor;
-import com.lansosdk.videoeditor.VideoEditor;
-
-
-import android.os.Environment;
-import android.text.format.DateFormat;
-import android.util.Log;
-
 /**
- * 我们提供的用来 当app异常抛出时， 用来获取当前异常的打印信息， 并保存到代码中设置的位置。
- * 使用方法， 可以参考我们的调用。
+ * 我们提供的用来 当app异常抛出时， 用来获取当前异常的打印信息， 并保存到代码中设置的位置。 使用方法， 可以参考我们的调用。
  */
 public class LanSoSdkCrashHandler implements UncaughtExceptionHandler {
 
@@ -43,17 +38,22 @@ public class LanSoSdkCrashHandler implements UncaughtExceptionHandler {
         final Writer result = new StringWriter();
         final PrintWriter printWriter = new PrintWriter(result);
 
-        // Inject some info about android version and the device, since google can't provide them in the developer console
+        // Inject some info about android version and the device, since google
+        // can't provide them in the developer console
         StackTraceElement[] trace = ex.getStackTrace();
         StackTraceElement[] trace2 = new StackTraceElement[trace.length + 5];
         System.arraycopy(trace, 0, trace2, 0, trace.length);
-        trace2[trace.length + 0] = new StackTraceElement("Android", "LanSongMODEL", android.os.Build.MODEL, -1);
-        trace2[trace.length + 1] = new StackTraceElement("Android", "LanSongVERSION", android.os.Build.VERSION.RELEASE, -1);
-        trace2[trace.length + 2] = new StackTraceElement("Android", "LanSongFINGERPRINT", android.os.Build.FINGERPRINT, -1);
+        trace2[trace.length + 0] = new StackTraceElement("Android",
+                "LanSongMODEL", android.os.Build.MODEL, -1);
+        trace2[trace.length + 1] = new StackTraceElement("Android",
+                "LanSongVERSION", android.os.Build.VERSION.RELEASE, -1);
+        trace2[trace.length + 2] = new StackTraceElement("Android",
+                "LanSongFINGERPRINT", android.os.Build.FINGERPRINT, -1);
 
-        trace2[trace.length + 3] = new StackTraceElement("Android", "LanSong box version:", LanSoEditorBox.VERSION_BOX, -1);
-        trace2[trace.length + 4] = new StackTraceElement("Android", "LanSong editor version:", VideoEditor.getSDKVersion(), -1);
-
+        trace2[trace.length + 3] = new StackTraceElement("Android",
+                "LanSong box version:", LanSoEditorBox.VERSION_BOX, -1);
+        trace2[trace.length + 4] = new StackTraceElement("Android",
+                "LanSong editor version:", VideoEditor.getSDKVersion(), -1);
 
         ex.setStackTrace(trace2);
 
@@ -62,21 +62,24 @@ public class LanSoSdkCrashHandler implements UncaughtExceptionHandler {
         printWriter.close();
         Log.e(TAG, stacktrace);
 
-//        // Save the log on SD card if available
+        // // Save the log on SD card if available
         /**
          * 打开下面这几行, 说明把获取到的错误信息存放到SD卡中.
          */
-//        if(Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
-//            String sdcardPath = Environment.getExternalStorageDirectory().getPath();
-//            writeLog(stacktrace, sdcardPath + "/lansongsdk_crash");
-//            writeLogcat(sdcardPath + "/lansongsdk_logcat");
-//        }
+        // if(Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED))
+        // {
+        // String sdcardPath =
+        // Environment.getExternalStorageDirectory().getPath();
+        // writeLog(stacktrace, sdcardPath + "/lansongsdk_crash");
+        // writeLogcat(sdcardPath + "/lansongsdk_logcat");
+        // }
 
         defaultUEH.uncaughtException(thread, ex);
     }
 
     private void writeLog(String log, String name) {
-        CharSequence timestamp = DateFormat.format("yyyyMMdd_kkmmss", System.currentTimeMillis());
+        CharSequence timestamp = DateFormat.format("yyyyMMdd_kkmmss",
+                System.currentTimeMillis());
         String filename = name + "_" + timestamp + ".log";
 
         FileOutputStream stream;
@@ -102,7 +105,8 @@ public class LanSoSdkCrashHandler implements UncaughtExceptionHandler {
     }
 
     private void writeLogcat(String name) {
-        CharSequence timestamp = DateFormat.format("yyyyMMdd_kkmmss", System.currentTimeMillis());
+        CharSequence timestamp = DateFormat.format("yyyyMMdd_kkmmss",
+                System.currentTimeMillis());
         String filename = name + "_" + timestamp + ".log";
         try {
             writeLogcat2(filename);
@@ -129,7 +133,8 @@ public class LanSoSdkCrashHandler implements UncaughtExceptionHandler {
 
         Process process = Runtime.getRuntime().exec(args);
 
-        InputStreamReader input = new InputStreamReader(process.getInputStream());
+        InputStreamReader input = new InputStreamReader(
+                process.getInputStream());
 
         FileOutputStream fileStream;
         try {

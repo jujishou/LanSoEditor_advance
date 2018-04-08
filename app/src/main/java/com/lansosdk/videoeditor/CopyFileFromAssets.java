@@ -1,19 +1,18 @@
 package com.lansosdk.videoeditor;
 
+import android.content.Context;
+import android.util.Log;
+
+import com.lansosdk.box.LanSoEditorBox;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 
-import com.lansosdk.box.LanSoEditorBox;
-
-import android.content.Context;
-import android.util.Log;
-
 public class CopyFileFromAssets {
     /**
-     * 拷贝资源文件夹中的文件到默认地址.
-     * 如果文件已经存在,则直接返回文件路径
+     * 拷贝资源文件夹中的文件到默认地址. 如果文件已经存在,则直接返回文件路径
      *
      * @param mContext
      * @param assetsName
@@ -27,7 +26,7 @@ public class CopyFileFromAssets {
         if (!dir.exists())
             dir.mkdirs();
         try {
-            if (!(new File(filePath)).exists()) {  //如果不存在.
+            if (!(new File(filePath)).exists()) { // 如果不存在.
                 InputStream is = mContext.getResources().getAssets()
                         .open(assetsName);
                 FileOutputStream fos = new FileOutputStream(filePath);
@@ -39,7 +38,8 @@ public class CopyFileFromAssets {
                 fos.close();
                 is.close();
             } else {
-                Log.i("copyFile", "CopyFileFromAssets.copyAssets() is work. file existe!");
+                Log.i("copyFile",
+                        "CopyFileFromAssets.copyAssets() is work. file existe!");
             }
             return filePath;
         } catch (Exception e) {
@@ -52,7 +52,7 @@ public class CopyFileFromAssets {
 
         // 如果目录不中存在，创建这个目录
         try {
-            if (!(new File(dstPath)).exists()) {  //如果不存在.
+            if (!(new File(dstPath)).exists()) { // 如果不存在.
                 InputStream is = new FileInputStream(srcFile);
                 FileOutputStream fos = new FileOutputStream(dstPath);
                 byte[] buffer = new byte[7168];
@@ -63,13 +63,13 @@ public class CopyFileFromAssets {
                 fos.close();
                 is.close();
             } else {
-                Log.i("copyFile", "CopyFileFromAssets.copyFile() is not work. file existe!");
+                Log.i("copyFile",
+                        "CopyFileFromAssets.copyFile() is not work. file existe!");
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
-
 
     public static String copyResId(Context mContext, int resId) {
         String str2 = mContext.getResources().getString(resId);

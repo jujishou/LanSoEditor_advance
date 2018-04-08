@@ -1,17 +1,7 @@
 package com.example.advanceDemo.scene;
 
-import java.io.IOException;
-import java.nio.IntBuffer;
-import java.util.ArrayList;
-
-import jp.co.cyberagent.lansongsdk.gpuimage.GPUImageSwirlFilter;
-
-
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -19,7 +9,6 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -27,40 +16,26 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.advanceDemo.VideoPlayerActivity;
-import com.example.advanceDemo.view.ShowHeart;
-import com.lansoeditor.demo.R;
+import com.lansoeditor.advanceDemo.R;
 import com.lansosdk.box.Animation;
 import com.lansosdk.box.BitmapLayer;
-import com.lansosdk.box.BoxDecoder;
-import com.lansosdk.box.CanvasRunnable;
 import com.lansosdk.box.CanvasLayer;
-import com.lansosdk.box.DataLayer;
+import com.lansosdk.box.CanvasRunnable;
 import com.lansosdk.box.DrawPad;
 import com.lansosdk.box.DrawPadAllExecute;
-import com.lansosdk.box.DrawPadVideoRunnable;
-import com.lansosdk.box.FileParameter;
-import com.lansosdk.box.GifLayer;
 import com.lansosdk.box.Layer;
-import com.lansosdk.box.MVLayer;
-import com.lansosdk.box.MVLayerENDMode;
 import com.lansosdk.box.MoveAnimation;
 import com.lansosdk.box.ScaleAnimation;
 import com.lansosdk.box.VideoLayer;
-import com.lansosdk.box.ViewLayer;
 import com.lansosdk.box.onDrawPadCompletedListener;
 import com.lansosdk.box.onDrawPadErrorListener;
-import com.lansosdk.box.onDrawPadOutFrameListener;
 import com.lansosdk.box.onDrawPadProgressListener;
-import com.lansosdk.box.onDrawPadThreadProgressListener;
-import com.lansosdk.videoeditor.CopyDefaultVideoAsyncTask;
 import com.lansosdk.videoeditor.CopyFileFromAssets;
-import com.lansosdk.videoeditor.DrawPadVideoExecute;
-import com.lansosdk.videoeditor.LanSoEditor;
 import com.lansosdk.videoeditor.MediaInfo;
-import com.lansosdk.videoeditor.SDKDir;
 import com.lansosdk.videoeditor.SDKFileUtils;
 import com.lansosdk.videoeditor.VideoEditor;
-import com.lansosdk.videoeditor.onVideoEditorProgressListener;
+
+import jp.co.cyberagent.lansongsdk.gpuimage.GPUImageSwirlFilter;
 
 /**
  * 后台执行.
@@ -83,7 +58,9 @@ public class ExecuteAllDrawpadActivity extends Activity {
     private boolean isExecuting = false;
     private Context mContext = null;
     private MediaInfo mInfo = null;
-    private String video3S;  //3秒的视频.
+    private String video3S; // 3秒的视频.
+    private int rectFactor = 0;
+    private GPUImageSwirlFilter swirlFilter = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,17 +74,17 @@ public class ExecuteAllDrawpadActivity extends Activity {
 
         initView();
 
-        //在手机的默认路径下创建一个文件名,用来保存生成的视频文件,(在onDestroy中删除)
+        // 在手机的默认路径下创建一个文件名,用来保存生成的视频文件,(在onDestroy中删除)
         dstPath = SDKFileUtils.newMp4PathInBox();
         new Thread(new Runnable() {
             @Override
             public void run() {
-                videoPath2 = CopyFileFromAssets.copyAssets(getApplicationContext(), "ping25s.mp4");
+                videoPath2 = CopyFileFromAssets.copyAssets(
+                        getApplicationContext(), "ping25s.mp4");
             }
         }).start();
 
-
-        if (mInfo.prepare() && mInfo.vDuration > 3.0f)  //为了很快演示, 这里只要前3秒.
+        if (mInfo.prepare() && mInfo.vDuration > 3.0f) // 为了很快演示, 这里只要前3秒.
         {
             VideoEditor editor = new VideoEditor();
             video3S = SDKFileUtils.createFileInBox(mInfo.fileSuffix);
@@ -128,10 +105,10 @@ public class ExecuteAllDrawpadActivity extends Activity {
         /**
          *
          * @param ctx
-         * @param padwidth 容器宽度/生成视频的宽度
-         * @param padheight 容器高度/生成视频的高度
-         * @param framerate  生成视频的帧率
-         * @param bitrate   生成视频的码率
+         * @param padwidth     容器宽度/生成视频的宽度
+         * @param padheight   容器高度/生成视频的高度
+         * @param framerate   生成视频的帧率
+         * @param bitrate     生成视频的码率
          * @param dstPath   生成视频保存的完整路径 .mp4结尾.
          */
         mDrawPad = new DrawPadAllExecute(mContext, 480, 480, 25, 1000 * 1000, dstPath);
@@ -155,13 +132,15 @@ public class ExecuteAllDrawpadActivity extends Activity {
             public void onProgress(DrawPad v, long currentTimeUs) {
                 tvProgressHint.setText(String.valueOf(currentTimeUs));
 
-                if (currentTimeUs > 18 * 1000 * 1000) {  //18秒的时候停止.
+                if (currentTimeUs > 18 * 1000 * 1000) { // 18秒的时候停止.
                     mDrawPad.stopDrawPad();
-                } else if (currentTimeUs > 15 * 1000 * 1000) {  //显示第4个图层.
+                } else if (currentTimeUs > 15 * 1000 * 1000) { // 显示第4个图层.
                     showFourLayer();
-                } else if (currentTimeUs > 8 * 1000 * 1000 && videoLayer2 == null) {  //8秒的时候增加一个视频图层
+                } else if (currentTimeUs > 8 * 1000 * 1000
+                        && videoLayer2 == null) { // 8秒的时候增加一个视频图层
                     showThreeLayer(currentTimeUs);
-                } else if (currentTimeUs > 3 * 1000 * 1000 && bmpLayer == null) {  //3秒的时候, 增加图片图层
+                } else if (currentTimeUs > 3 * 1000 * 1000 && bmpLayer == null) { // 3秒的时候,
+                    // 增加图片图层
                     showSecondLayer(currentTimeUs);
                 }
             }
@@ -182,8 +161,10 @@ public class ExecuteAllDrawpadActivity extends Activity {
          * 开始执行这个DrawPad
          */
         if (mDrawPad.startDrawPad()) {
-            //增加背景图片
-            mDrawPad.addBitmapLayer(BitmapFactory.decodeResource(getResources(), R.drawable.pad_bg), null);
+            // 增加背景图片
+            mDrawPad.addBitmapLayer(BitmapFactory.decodeResource(getResources(), R.drawable
+                    .pad_bg), null);
+
             // 增加第一个视频
             videoLayer1 = mDrawPad.addVideoLayer(videoPath, null);
         } else {
@@ -196,18 +177,19 @@ public class ExecuteAllDrawpadActivity extends Activity {
      */
     private void showSecondLayer(long currentTimeUs) {
         if (videoLayer1 != null) {
-            if (rectFactor > 100)  //等到100时,结束动画, 删除视频图层,并增加图片图层.
-            {  //停止.
+            if (rectFactor > 100) // 等到100时,结束动画, 删除视频图层,并增加图片图层.
+            { // 停止.
                 mDrawPad.removeLayer(videoLayer1);
                 videoLayer1 = null;
                 rectFactor = 0;
                 addBitmapLayer(currentTimeUs);
-            } else {  //有个动画效果
-                float rect = (100 - rectFactor);  //因为java的小数点不是很精确, 这里用整数表示
+            } else { // 有个动画效果
+                float rect = (100 - rectFactor); // 因为java的小数点不是很精确, 这里用整数表示
                 rectFactor = rectFactor + 5;
                 rect /= 2;
-                rect /= 100;//再次转换为0--1.0的范围
-                videoLayer1.setVisibleRect(0.5f - rect, 0.5f + rect, 0.0f, 1.0f);
+                rect /= 100;// 再次转换为0--1.0的范围
+                videoLayer1
+                        .setVisibleRect(0.5f - rect, 0.5f + rect, 0.0f, 1.0f);
             }
         }
     }
@@ -224,9 +206,9 @@ public class ExecuteAllDrawpadActivity extends Activity {
                 bmpLayer = null;
                 addOtherVideoLayer(currentTimeUs);
                 rectFactor = 0;
-            } else {  //淡淡的消失.
-                float rect = (100 - rectFactor);  //因为java的小数点不是很精确, 这里用整数表示
-                rect /= 100f;  //转换为0--1.0
+            } else { // 淡淡的消失.
+                float rect = (100 - rectFactor); // 因为java的小数点不是很精确, 这里用整数表示
+                rect /= 100f; // 转换为0--1.0
 
                 bmpLayer.setAlphaPercent(rect);
                 bmpLayer.setRedPercent(rect);
@@ -237,9 +219,6 @@ public class ExecuteAllDrawpadActivity extends Activity {
         }
     }
 
-    private int rectFactor = 0;
-    private GPUImageSwirlFilter swirlFilter = null;
-
     private void showFourLayer() {
         if (videoLayer2 != null) {
             if (rectFactor > 120) {
@@ -247,16 +226,16 @@ public class ExecuteAllDrawpadActivity extends Activity {
                 videoLayer2 = null;
                 rectFactor = 0;
                 addCanvasLayer();
-            } else {  //增加滤镜动画
-                float rect = (float) rectFactor;  //因为java的小数点不是很精确, 这里用整数表示
-                rect /= 100f;  //转换为0--1.0
+            } else { // 增加滤镜动画
+                float rect = (float) rectFactor; // 因为java的小数点不是很精确, 这里用整数表示
+                rect /= 100f; // 转换为0--1.0
 
                 if (swirlFilter == null) {
                     swirlFilter = new GPUImageSwirlFilter();
                     videoLayer2.switchFilterTo(swirlFilter);
                 }
                 swirlFilter.setAngle(rect);
-                swirlFilter.setRadius(1.0f);  //设置半径是整个纹理.
+                swirlFilter.setRadius(1.0f); // 设置半径是整个纹理.
                 rectFactor = rectFactor + 5;
             }
         }
@@ -266,11 +245,13 @@ public class ExecuteAllDrawpadActivity extends Activity {
      * 增加图片
      */
     private void addBitmapLayer(long currentTimeUs) {
-        String bmpPath = CopyFileFromAssets.copyAssets(getApplicationContext(), "girl.jpg");
+        String bmpPath = CopyFileFromAssets.copyAssets(getApplicationContext(),
+                "girl.jpg");
         Bitmap bmp = BitmapFactory.decodeFile(bmpPath);
         bmpLayer = mDrawPad.addBitmapLayer(bmp, null);
         bmpLayer.setVisibility(Layer.INVISIBLE);
-        ScaleAnimation scaleAnim = new ScaleAnimation(currentTimeUs + 1000 * 1000, 2 * 1000 * 1000, 0.0f, 1.0f);
+        ScaleAnimation scaleAnim = new ScaleAnimation(
+                currentTimeUs + 1000 * 1000, 2 * 1000 * 1000, 0.0f, 1.0f);
         bmpLayer.addAnimation(scaleAnim);
     }
 
@@ -281,13 +262,17 @@ public class ExecuteAllDrawpadActivity extends Activity {
      */
     private void addOtherVideoLayer(long currentTimeUs) {
         if (videoPath2 == null) {
-            videoPath2 = CopyFileFromAssets.copyAssets(getApplicationContext(), "ping25s.mp4");
+            videoPath2 = CopyFileFromAssets.copyAssets(getApplicationContext(),
+                    "ping25s.mp4");
         }
         videoLayer2 = mDrawPad.addVideoLayer(videoPath2, null);
 
         videoLayer2.setVisibility(Layer.INVISIBLE);
-        Animation move = new MoveAnimation(currentTimeUs + 1000 * 1000, 1 * 1000 * 1000, 0, 0, videoLayer2.getPadWidth() / 2, videoLayer2.getPadHeight() / 2);
-        Animation scale = new ScaleAnimation(currentTimeUs + 1000 * 1000, 1 * 1000 * 1000, 0.0f, 1.0f);
+        Animation move = new MoveAnimation(currentTimeUs + 1000 * 1000,
+                1 * 1000 * 1000, 0, 0, videoLayer2.getPadWidth() / 2,
+                videoLayer2.getPadHeight() / 2);
+        Animation scale = new ScaleAnimation(currentTimeUs + 1000 * 1000,
+                1 * 1000 * 1000, 0.0f, 1.0f);
         videoLayer2.addAnimation(move);
         videoLayer2.addAnimation(scale);
     }
@@ -306,8 +291,9 @@ public class ExecuteAllDrawpadActivity extends Activity {
                     paint.setColor(Color.RED);
                     paint.setAntiAlias(true);
                     paint.setTextSize(30);
-                    canvas.drawColor(Color.YELLOW); //背景设置为黄色.
-                    canvas.drawText("蓝松短视频演示之【转场】", 20, canvasLayer.getPadHeight() / 2, paint);
+                    canvas.drawColor(Color.YELLOW); // 背景设置为黄色.
+                    canvas.drawText("蓝松短视频演示之【转场】", 20,
+                            canvasLayer.getPadHeight() / 2, paint);
                 }
             });
         }
@@ -315,7 +301,6 @@ public class ExecuteAllDrawpadActivity extends Activity {
 
     @Override
     protected void onDestroy() {
-        // TODO Auto-generated method stub
         super.onDestroy();
 
         if (mDrawPad != null) {
@@ -323,7 +308,6 @@ public class ExecuteAllDrawpadActivity extends Activity {
             try {
                 Thread.sleep(100);
             } catch (InterruptedException e) {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
             }
             mDrawPad = null;
@@ -339,30 +323,35 @@ public class ExecuteAllDrawpadActivity extends Activity {
         tvHint.setText(R.string.videolayer_transform_hints);
         tvProgressHint = (TextView) findViewById(R.id.id_video_edit_progress_hint);
 
-
-        findViewById(R.id.id_video_edit_btn).setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startDrawPad();
-            }
-        });
+        findViewById(R.id.id_video_edit_btn).setOnClickListener(
+                new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        startDrawPad();
+                    }
+                });
 
         findViewById(R.id.id_video_edit_btn2).setEnabled(false);
 
-        findViewById(R.id.id_video_edit_btn2).setOnClickListener(new OnClickListener() {
+        findViewById(R.id.id_video_edit_btn2).setOnClickListener(
+                new OnClickListener() {
 
-            @Override
-            public void onClick(View v) {
-                if (SDKFileUtils.fileExist(dstPath)) {
-                    Intent intent = new Intent(mContext, VideoPlayerActivity.class);
-                    String audioPath = CopyFileFromAssets.copyAssets(mContext, "bgMusic20s.m4a");
-                    String ret = VideoEditor.mp4AddAudio(dstPath, audioPath);
-                    intent.putExtra("videopath", ret);
-                    startActivity(intent);
-                } else {
-                    Toast.makeText(ExecuteAllDrawpadActivity.this, "目标文件不存在", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
+                    @Override
+                    public void onClick(View v) {
+                        if (SDKFileUtils.fileExist(dstPath)) {
+                            Intent intent = new Intent(mContext,
+                                    VideoPlayerActivity.class);
+                            String audioPath = CopyFileFromAssets.copyAssets(
+                                    mContext, "bgMusic20s.m4a");
+                            String ret = VideoEditor.mp4AddAudio(dstPath,
+                                    audioPath);
+                            intent.putExtra("videopath", ret);
+                            startActivity(intent);
+                        } else {
+                            Toast.makeText(ExecuteAllDrawpadActivity.this,
+                                    "目标文件不存在", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
     }
-}	
+}

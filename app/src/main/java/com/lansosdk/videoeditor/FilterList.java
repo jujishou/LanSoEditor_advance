@@ -1,16 +1,16 @@
 package com.lansosdk.videoeditor;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-
-import jp.co.cyberagent.lansongsdk.gpuimage.GPUImageFilter;
-
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.util.Log;
 
 import com.lansosdk.videoeditor.FilterLibrary.FilterType;
+
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+
+import jp.co.cyberagent.lansongsdk.gpuimage.GPUImageFilter;
 
 public class FilterList {
     public List<String> names = new LinkedList<String>();
@@ -27,8 +27,7 @@ public class FilterList {
     }
 
     /**
-     * 直接增加进来, 可能和names, filters列表不是一一对应.
-     * 建议一一对应.
+     * 直接增加进来, 可能和names, filters列表不是一一对应. 建议一一对应.
      *
      * @param bmp
      */
