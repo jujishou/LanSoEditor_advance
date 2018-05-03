@@ -12,29 +12,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="59104114-1e24-4d38-b8dc-37cd703a829d" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/assets/a.gif" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/assets/bg10s.mp4" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/assets/dy_xialu1.mp4" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/drawable-xxhdpi/bg_lstodo.jpg" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/cool/VideoEffectDemoActivity.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/java/com/lansosdk/videoeditor/DrawPadVideoExecute2.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/layout/test_fragment.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/layout/test_fragment_drawpad.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/layout/video_effect_layout.xml" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/app/src/main/assets/pic1080x1080.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/app/src/main/assets/pic1080x1080u2.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/AddRemoveGifLayer.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/ExecuteBitmapPadActivity.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/ExecuteBitmapPadActivity2.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/ListFaceDetectedDemoActivity.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/ShowOneBitmapActivity.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/scene/OutBodyDemoActivity.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/app/src/main/res/layout/camera_pop_menu.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/app/src/main/res/layout/cameralayer_fullscreen_demo_layout2.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/app/src/main/res/layout/cameralayer_fullscreen_demo_layout_old.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/app/src/main/res/layout/cameralayer_fullsegment_old_layout.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/app/src/main/res/layout/cameralayer_segment_layout.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/app/src/main/res/layout/test_fullscreen.xml" afterPath="" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/java/com/lansosdk/videoeditor/VideoLayout.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/java/com/lansosdk/videoeditor/VideoLayoutParam.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/4.1/fileHashes/fileHashes.bin" afterPath="$PROJECT_DIR$/.gradle/4.1/fileHashes/fileHashes.bin" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/4.1/fileHashes/fileHashes.lock" afterPath="$PROJECT_DIR$/.gradle/4.1/fileHashes/fileHashes.lock" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/4.1/fileHashes/resourceHashesCache.bin" afterPath="$PROJECT_DIR$/.gradle/4.1/fileHashes/resourceHashesCache.bin" />
@@ -50,137 +29,6 @@
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/jniLibs/armeabi-v7a/libLanSongffmpeg.so" afterPath="$PROJECT_DIR$/app/src/main/jniLibs/armeabi-v7a/libLanSongffmpeg.so" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/app.iml" afterPath="$PROJECT_DIR$/app/app.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build.gradle" afterPath="$PROJECT_DIR$/app/build.gradle" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" afterPath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/BitmapEditDemoActivity.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/BitmapEditDemoActivity.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/BitmapLayerFilterDemoActivity.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/BitmapLayerFilterDemoActivity.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/BitmapLayerMarkActivity.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/BitmapLayerMarkActivity.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/CanvasLayerDemoActivity.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/CanvasLayerDemoActivity.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/Demo1LayerMothedActivity.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/Demo1LayerMothedActivity.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/Demo2LayerMothedActivity.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/Demo2LayerMothedActivity.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/Demo3LayerFilterActivity.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/Demo3LayerFilterActivity.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/DemoApplication.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/DemoApplication.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/DemoUtil.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/DemoUtil.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/DisplayFramesActivity.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/DisplayFramesActivity.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/ExecuteCanvasLayerActivity.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/ExecuteCanvasLayerActivity.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/ExecuteFilterDemoActivity.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/ExecuteFilterDemoActivity.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/ExecuteTwoVideoLayerDemoActivity.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/ExecuteTwoVideoLayerDemoActivity.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/ExecuteVideoLayerActivity.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/ExecuteVideoLayerActivity.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/ExtractVideoFrameDemoActivity.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/ExtractVideoFrameDemoActivity.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/FileExplorerActivity.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/FileExplorerActivity.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/FileExplorerAdapter.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/FileExplorerAdapter.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/LanSoSdkCrashHandler.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/LanSoSdkCrashHandler.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/ListBitmapAudioActivity.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/ListBitmapAudioActivity.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/ListCameraRecordActivity.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/ListCameraRecordActivity.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/ListCoolDemoActivity.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/ListCoolDemoActivity.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/ListLayerDemoActivity.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/ListLayerDemoActivity.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/ListMainActivity.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/ListMainActivity.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/ListSceneDemoActivity.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/ListSceneDemoActivity.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/MVLayerDemoActivity.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/MVLayerDemoActivity.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/StartActivity.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/StartActivity.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/TextureLayerDemoActivity.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/TextureLayerDemoActivity.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/TwoVideoLayerActivity.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/TwoVideoLayerActivity.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/VHeaderConcat.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/VHeaderConcat.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/VideoOneProcessActivity.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/VideoOneProcessActivity.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/VideoPlayerActivity.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/VideoPlayerActivity.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/VideoSpeedDemoActivity.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/VideoSpeedDemoActivity.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/ViewLayerDemoActivity.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/ViewLayerDemoActivity.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/ViewLayerOnlyActivity.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/ViewLayerOnlyActivity.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/camera/CameraLayerFullLandscapeActivity.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/camera/CameraLayerFullLandscapeActivity.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/camera/CameraLayerFullPortActivity.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/camera/CameraLayerFullPortActivity.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/camera/CameraLayerFullPortWithMp3Activity.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/camera/CameraLayerFullPortWithMp3Activity.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/camera/CameraLayerFullSegmentActivity.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/camera/CameraLayerFullSegmentActivity.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/camera/CameraLayerKTVDemoActivity.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/camera/CameraLayerKTVDemoActivity.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/camera/CameraLayerRectActivity.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/camera/CameraLayerRectActivity.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/camera/CameraSubLayerDemo1Activity.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/camera/CameraSubLayerDemo1Activity.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/camera/CameraSubLayerDemo2Activity.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/camera/CameraSubLayerDemo2Activity.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/cool/ParticleDemoActivity.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/cool/ParticleDemoActivity.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/cool/VViewImage3DDemoActivity.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/cool/VViewImage3DDemoActivity.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/scene/ExecuteAllDrawpadActivity.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/scene/ExecuteAllDrawpadActivity.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/scene/ExecuteBitmapLayerActivity.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/scene/ExecuteBitmapLayerActivity.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/scene/LayerLayoutDemoActivity.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/scene/LayerLayoutDemoActivity.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/scene/MoreLayHeadSeekActivity.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/scene/MoreLayHeadSeekActivity.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/scene/PictureSetRealTimeActivity.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/scene/PictureSetRealTimeActivity.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/scene/Video2LayoutActivity.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/scene/Video2LayoutActivity.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/scene/VideoLayerAutoUpdateActivity.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/scene/VideoLayerAutoUpdateActivity.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/scene/VideoLayerTransformActivity.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/scene/VideoLayerTransformActivity.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/view/BitmapCache.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/view/BitmapCache.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/view/BitmapUtils.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/view/BitmapUtils.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/view/CameraProgressBar.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/view/CameraProgressBar.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/view/FaceView.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/view/FaceView.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/view/FilterDemoAdapter.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/view/FilterDemoAdapter.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/view/FocusImageView.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/view/FocusImageView.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/view/HorizontalListView.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/view/HorizontalListView.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/view/ImageTouchView.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/view/ImageTouchView.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/view/LanSongLoveText.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/view/LanSongLoveText.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/view/MarkArrowView.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/view/MarkArrowView.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/view/PaintConstants.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/view/PaintConstants.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/view/RangeSeekBar.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/view/RangeSeekBar.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/view/RectUtil.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/view/RectUtil.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/view/ShowHeart.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/view/ShowHeart.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/view/SlidingLayer.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/view/SlidingLayer.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/view/StereoView.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/view/StereoView.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/view/StickerItem.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/view/StickerItem.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/view/StickerView.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/view/StickerView.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/view/TextStickerView.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/view/TextStickerView.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/view/VideoFocusView.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/view/VideoFocusView.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/view/VideoPreviewView.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/view/VideoPreviewView.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/view/VideoProgressView.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/view/VideoProgressView.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/view/VideoProgressViewOld.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/view/VideoProgressViewOld.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/example/commonDemo/AVEditorDemoActivity.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/commonDemo/AVEditorDemoActivity.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/example/commonDemo/CommonDemoActivity.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/commonDemo/CommonDemoActivity.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/example/commonDemo/DemoFunctions.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/commonDemo/DemoFunctions.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/example/commonDemo/DemoInfo.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/commonDemo/DemoInfo.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/example/commonDemo/FileExplorerActivity.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/commonDemo/FileExplorerActivity.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/example/commonDemo/FileExplorerAdapter.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/commonDemo/FileExplorerAdapter.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/example/commonDemo/MediaInfoActivity.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/commonDemo/MediaInfoActivity.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/example/commonDemo/VideoFocusView.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/commonDemo/VideoFocusView.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/lansosdk/videoeditor/AVDecoder.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/lansosdk/videoeditor/AVDecoder.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/lansosdk/videoeditor/AVEncoder.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/lansosdk/videoeditor/AVEncoder.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/lansosdk/videoeditor/AudioConcat.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/lansosdk/videoeditor/AudioConcat.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/lansosdk/videoeditor/AudioPadExecute.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/lansosdk/videoeditor/AudioPadExecute.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/lansosdk/videoeditor/BeautyManager.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/lansosdk/videoeditor/BeautyManager.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/lansosdk/videoeditor/BitmapLruCache.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/lansosdk/videoeditor/BitmapLruCache.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/lansosdk/videoeditor/BitmapPadExecute.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/lansosdk/videoeditor/BitmapPadExecute.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/lansosdk/videoeditor/CopyDefaultVideoAsyncTask.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/lansosdk/videoeditor/CopyDefaultVideoAsyncTask.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/lansosdk/videoeditor/CopyFileFromAssets.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/lansosdk/videoeditor/CopyFileFromAssets.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/lansosdk/videoeditor/DiskLruCache.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/lansosdk/videoeditor/DiskLruCache.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/lansosdk/videoeditor/DrawPadCameraView.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/lansosdk/videoeditor/DrawPadCameraView.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/lansosdk/videoeditor/DrawPadPictureExecute.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/lansosdk/videoeditor/DrawPadPictureExecute.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/lansosdk/videoeditor/DrawPadVideoExecute.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/lansosdk/videoeditor/DrawPadVideoExecute.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/lansosdk/videoeditor/DrawPadView.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/lansosdk/videoeditor/DrawPadView.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/lansosdk/videoeditor/FilterLibrary.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/lansosdk/videoeditor/FilterLibrary.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/lansosdk/videoeditor/FilterList.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/lansosdk/videoeditor/FilterList.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/lansosdk/videoeditor/IRenderView.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/lansosdk/videoeditor/IRenderView.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/lansosdk/videoeditor/LanSoEditor.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/lansosdk/videoeditor/LanSoEditor.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/lansosdk/videoeditor/LanSongUtil.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/lansosdk/videoeditor/LanSongUtil.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/lansosdk/videoeditor/MeasureHelper.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/lansosdk/videoeditor/MeasureHelper.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/lansosdk/videoeditor/MediaInfo.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/lansosdk/videoeditor/MediaInfo.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/lansosdk/videoeditor/MemoryDiskCache.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/lansosdk/videoeditor/MemoryDiskCache.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/lansosdk/videoeditor/SDKDir.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/lansosdk/videoeditor/SDKDir.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/lansosdk/videoeditor/SDKFileUtils.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/lansosdk/videoeditor/SDKFileUtils.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/lansosdk/videoeditor/TextureRenderView.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/lansosdk/videoeditor/TextureRenderView.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/lansosdk/videoeditor/VideoEditor.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/lansosdk/videoeditor/VideoEditor.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/lansosdk/videoeditor/VideoOneDo.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/lansosdk/videoeditor/VideoOneDo.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/lansosdk/videoeditor/onVideoOneDoProgressListener.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/lansosdk/videoeditor/onVideoOneDoProgressListener.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/lansosdk/videoplayer/IMediaDataSource.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/lansosdk/videoplayer/IMediaDataSource.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/lansosdk/videoplayer/MeasureHelper.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/lansosdk/videoplayer/MeasureHelper.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/lansosdk/videoplayer/TextureRenderView.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/lansosdk/videoplayer/TextureRenderView.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/lansosdk/videoplayer/VPlayer.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/lansosdk/videoplayer/VPlayer.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/lansosdk/videoplayer/VideoPlayer.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/lansosdk/videoplayer/VideoPlayer.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_main.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_main.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/layout/camera_full_record_layout.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/camera_full_record_layout.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/layout/camera_fullport_mp3_layout.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/camera_fullport_mp3_layout.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/layout/cameralayer_fullscreen_demo_layout.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/cameralayer_fullscreen_demo_layout.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/layout/cameralayer_fullsegment_layout.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/cameralayer_fullsegment_layout.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/layout/cameralayer_ktv_demo_layout.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/cameralayer_ktv_demo_layout.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/layout/demo_layout.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/demo_layout.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/layout/drawpad_layout.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/drawpad_layout.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/layout/filter_layer_demo_layout.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/filter_layer_demo_layout.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/layout/list_cool_demo_layout.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/list_cool_demo_layout.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/layout/list_scene_demo_layout.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/list_scene_demo_layout.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/layout/merge_cameabeauty_control.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/merge_cameabeauty_control.xml" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/app/src/main/res/layout/camera_full_record_test_layout.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/test_camera_full_record_layout.xml" />
     </list>
     <ignored path="LanSoEditor_advance.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -235,22 +83,38 @@
       <file leaf-file-name="VideoEffectDemoActivity.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/cool/VideoEffectDemoActivity.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="567">
-              <caret line="389" column="7" lean-forward="false" selection-start-line="389" selection-start-column="7" selection-end-line="389" selection-end-column="7" />
+            <state relative-caret-position="497">
+              <caret line="454" column="75" lean-forward="true" selection-start-line="454" selection-start-column="75" selection-end-line="454" selection-end-column="75" />
+              <folding>
+                <element signature="e#2803#2931#0" expanded="true" />
+                <element signature="e#2930#2931#0" expanded="true" />
+                <element signature="e#3170#3406#0" expanded="true" />
+                <element signature="e#3405#3406#0" expanded="true" />
+                <element signature="e#3457#3658#0" expanded="true" />
+                <element signature="e#3657#3658#0" expanded="true" />
+                <element signature="e#4497#4724#0" expanded="true" />
+                <element signature="e#4723#4724#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="VideoLayoutParam.java" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/app/src/main/java/com/lansosdk/videoeditor/VideoLayoutParam.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="486">
+              <caret line="18" column="7" lean-forward="true" selection-start-line="18" selection-start-column="7" selection-end-line="18" selection-end-column="7" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="VideoOneDo.java" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/app/src/main/java/com/lansosdk/videoeditor/VideoOneDo.java">
+      <file leaf-file-name="A.class" pinned="false" current-in-tab="false">
+        <entry file="jar://$PROJECT_DIR$/app/libs/lansongeditor_hx.jar!/com/lansosdk/box/A.class">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="251">
-              <caret line="381" column="7" lean-forward="true" selection-start-line="381" selection-start-column="7" selection-end-line="381" selection-end-column="7" />
-              <folding>
-                <element signature="e#17944#18109#0" expanded="true" />
-                <element signature="e#18108#18109#0" expanded="true" />
-              </folding>
+            <state relative-caret-position="621">
+              <caret line="44" column="26" lean-forward="false" selection-start-line="44" selection-start-column="26" selection-end-line="44" selection-end-column="26" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -2392,90 +2256,6 @@
               <option name="myItemId" value="com" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="example" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="LanSoEditor_advance" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="LanSoEditor_advance" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="app" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="main" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="java" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="com" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="example" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="advanceDemo" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="LanSoEditor_advance" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="LanSoEditor_advance" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="app" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="main" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="java" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="com" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="example" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="advanceDemo" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="cool" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
           </PATH>
           <PATH>
             <PATH_ELEMENT>
@@ -2519,9 +2299,6 @@
           </PATH>
         </subPane>
       </pane>
-      <pane id="Scratches" />
-      <pane id="Scope" />
-      <pane id="PackagesPane" />
       <pane id="AndroidView">
         <subPane>
           <PATH>
@@ -2636,6 +2413,9 @@
           </PATH>
         </subPane>
       </pane>
+      <pane id="Scratches" />
+      <pane id="Scope" />
+      <pane id="PackagesPane" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -2651,18 +2431,18 @@
     <property name="android.profiler.active" value="true" />
   </component>
   <component name="RecentsManager">
-    <key name="MoveFile.RECENT_KEYS">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="E:\0000Coodec\publish_sdk\LanSoEditor_advance\LanSoEditor_advance\app\src\main\java\com\lansosdk\videoeditor" />
+      <recent name="E:\0000Coodec\publish_sdk\LanSoEditor_advance\LanSoEditor_advance\app\src\main\jniLibs\armeabi-v7a" />
       <recent name="E:\0000Coodec\publish_sdk\LanSoEditor_advance\LanSoEditor_advance\app\libs" />
+      <recent name="E:\0000Coodec\publish_sdk\LanSoEditor_advance\LanSoEditor_advance\app\src\main\res\drawable-xxhdpi" />
+      <recent name="E:\0000Coodec\publish_sdk\LanSoEditor_advance\LanSoEditor_advance\app\src\main" />
     </key>
     <key name="CopyClassDialog.RECENTS_KEY">
       <recent name="com.example.advanceDemo" />
     </key>
-    <key name="CopyFile.RECENT_KEYS">
+    <key name="MoveFile.RECENT_KEYS">
       <recent name="E:\0000Coodec\publish_sdk\LanSoEditor_advance\LanSoEditor_advance\app\libs" />
-      <recent name="E:\0000Coodec\publish_sdk\LanSoEditor_advance\LanSoEditor_advance\app\src\main\res\drawable-xxhdpi" />
-      <recent name="E:\0000Coodec\publish_sdk\LanSoEditor_advance\LanSoEditor_advance\app\src\main" />
-      <recent name="E:\0000Coodec\publish_sdk\LanSoEditor_advance\LanSoEditor_advance\app\src\main\res" />
-      <recent name="E:\0000Coodec\publish_sdk\LanSoEditor_advance\LanSoEditor_advance\app\src\main\jniLibs\armeabi-v7a" />
     </key>
   </component>
   <component name="RunDashboard">
@@ -2747,7 +2527,7 @@
       <option name="DEEP_LINK" value="" />
       <option name="ACTIVITY_CLASS" value="" />
       <method>
-        <option name="com.android.instantApps.provision.BeforeRunTask" enabled="true" clearCache="false" clearProvisionedDevices="false" myTimestamp="1523161065180" />
+        <option name="com.android.instantApps.provision.BeforeRunTask" enabled="true" clearCache="false" clearProvisionedDevices="false" myTimestamp="1525307316195" />
       </method>
     </configuration>
     <configuration default="true" type="AndroidTestRunConfigurationType" factoryName="Android Instrumented Tests">
@@ -2794,7 +2574,7 @@
         <option name="ADVANCED_PROFILING_ENABLED" value="false" />
       </Profilers>
       <method>
-        <option name="com.android.instantApps.provision.BeforeRunTask" enabled="true" clearCache="false" clearProvisionedDevices="false" myTimestamp="1523161065180" />
+        <option name="com.android.instantApps.provision.BeforeRunTask" enabled="true" clearCache="false" clearProvisionedDevices="false" myTimestamp="1525307316196" />
       </method>
     </configuration>
     <configuration default="true" type="Application" factoryName="Application">
@@ -2975,9 +2755,7 @@
       </Profilers>
       <option name="DEEP_LINK" value="" />
       <option name="ACTIVITY_CLASS" value="" />
-      <method>
-        <option name="com.android.instantApps.provision.BeforeRunTask" enabled="true" clearCache="false" clearProvisionedDevices="false" myTimestamp="1523161065180" />
-      </method>
+      <method />
     </configuration>
     <list size="1">
       <item index="0" class="java.lang.String" itemvalue="Android App.app" />
@@ -3030,7 +2808,7 @@
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="0" />
     <editor active="true" />
     <layout>
-      <window_info id="Android Profiler" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4978355" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Android Profiler" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="false" weight="0.4978355" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32887402" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3277592" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Build Variants" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.24360341" sideWeight="0.5039019" order="3" side_tool="true" content_ui="tabs" />
@@ -3041,12 +2819,12 @@
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" show_stripe_button="true" weight="0.32998884" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32998884" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32998884" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Logcat" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.451505" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Logcat" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.451505" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Captures" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Gradle Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32998884" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.23773988" sideWeight="0.4960981" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.35341153" sideWeight="0.4960981" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Problems" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Gradle" active="false" anchor="right" auto_hide="true" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32995737" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
@@ -3092,67 +2870,10 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://D:/snowwolf/蓝松科技/大大大大大/e00b12781c79af52fc734c9b58a6f2ab.jpg">
-      <provider selected="true" editor-type-id="images">
-        <state />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/ExecuteAudioConcatActivity.java" />
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/CanvasLayerDemoActivity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="6723">
-          <caret line="295" column="13" lean-forward="false" selection-start-line="295" selection-start-column="13" selection-end-line="295" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/FileExplorerActivity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1890">
-          <caret line="83" column="9" lean-forward="false" selection-start-line="83" selection-start-column="9" selection-end-line="83" selection-end-column="9" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/lansosdk/videoeditor/BeautyManager.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2376">
-          <caret line="103" column="7" lean-forward="false" selection-start-line="103" selection-start-column="7" selection-end-line="103" selection-end-column="7" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/lansosdk/videoeditor/VideoEditor.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="486">
-          <caret line="323" column="24" lean-forward="false" selection-start-line="323" selection-start-column="24" selection-end-line="323" selection-end-column="24" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$PROJECT_DIR$/app/libs/lansongeditor_hx.jar!/com/lansosdk/box/a.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="189">
-          <caret line="10" column="0" lean-forward="true" selection-start-line="10" selection-start-column="0" selection-end-line="10" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/lansosdk/videoeditor/AudioConcat.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="486">
-          <caret line="22" column="7" lean-forward="false" selection-start-line="22" selection-start-column="7" selection-end-line="22" selection-end-column="7" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/BitmapLayerFilterDemoActivity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="781">
-          <caret line="78" column="21" lean-forward="false" selection-start-line="78" selection-start-column="21" selection-end-line="78" selection-end-column="21" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/lansosdk/videoeditor/DrawPadVideoExecute.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="386">
           <caret line="597" column="5" lean-forward="true" selection-start-line="597" selection-start-column="5" selection-end-line="597" selection-end-column="5" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -3174,7 +2895,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -3182,7 +2902,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="27">
           <caret line="371" column="26" lean-forward="false" selection-start-line="371" selection-start-column="26" selection-end-line="371" selection-end-column="26" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -3232,7 +2951,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="567">
           <caret line="62" column="7" lean-forward="true" selection-start-line="62" selection-start-column="7" selection-end-line="62" selection-end-column="7" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -3261,7 +2979,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -3276,25 +2993,23 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="295">
           <caret line="107" column="37" lean-forward="false" selection-start-line="107" selection-start-column="37" selection-end-line="107" selection-end-column="37" />
-          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/title.xml">
+      <provider editor-type-id="android-designer2">
+        <state />
+      </provider>
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="351">
           <caret line="13" column="0" lean-forward="false" selection-start-line="13" selection-start-column="0" selection-end-line="13" selection-end-column="0" />
         </state>
-      </provider>
-      <provider editor-type-id="android-designer2">
-        <state />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/DisplayFramesActivity.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="243">
           <caret line="55" column="54" lean-forward="false" selection-start-line="55" selection-start-column="54" selection-end-line="55" selection-end-column="54" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -3309,7 +3024,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -3332,7 +3046,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-387">
           <caret line="159" column="13" lean-forward="false" selection-start-line="159" selection-start-column="13" selection-end-line="159" selection-end-column="13" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -3340,9 +3053,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="214">
           <caret line="129" column="0" lean-forward="false" selection-start-line="129" selection-start-column="0" selection-end-line="129" selection-end-column="0" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -3354,14 +3064,14 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/AndroidManifest.xml">
+      <provider editor-type-id="android-manifest">
+        <state />
+      </provider>
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="297">
           <caret line="122" column="41" lean-forward="false" selection-start-line="122" selection-start-column="41" selection-end-line="122" selection-end-column="41" />
           <folding />
         </state>
-      </provider>
-      <provider editor-type-id="android-manifest">
-        <state />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/commonDemo/DemoInfo.java">
@@ -3375,7 +3085,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="359">
           <caret line="103" column="0" lean-forward="true" selection-start-line="103" selection-start-column="0" selection-end-line="103" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -3383,7 +3092,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="506">
           <caret line="191" column="62" lean-forward="true" selection-start-line="191" selection-start-column="62" selection-end-line="191" selection-end-column="62" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -3391,36 +3099,33 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="837">
           <caret line="40" column="42" lean-forward="false" selection-start-line="40" selection-start-column="42" selection-end-line="40" selection-end-column="42" />
-          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/list_scene_demo_layout.xml">
+      <provider editor-type-id="android-designer2">
+        <state />
+      </provider>
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="616">
           <caret line="55" column="0" lean-forward="false" selection-start-line="55" selection-start-column="0" selection-end-line="55" selection-end-column="0" />
         </state>
       </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/activity_main.xml">
       <provider editor-type-id="android-designer2">
         <state />
       </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/activity_main.xml">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="2052">
           <caret line="76" column="4" lean-forward="false" selection-start-line="76" selection-start-column="4" selection-end-line="76" selection-end-column="4" />
-          <folding />
         </state>
-      </provider>
-      <provider editor-type-id="android-designer2">
-        <state />
       </provider>
     </entry>
     <entry file="jar://$PROJECT_DIR$/app/libs/lansongeditor_hx.jar!/com/lansosdk/box/bd.class">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="648">
           <caret line="28" column="23" lean-forward="false" selection-start-line="28" selection-start-column="23" selection-end-line="28" selection-end-column="23" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -3428,7 +3133,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="216">
           <caret line="11" column="5" lean-forward="false" selection-start-line="11" selection-start-column="5" selection-end-line="11" selection-end-column="5" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -3436,7 +3140,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="9693">
           <caret line="416" column="9" lean-forward="false" selection-start-line="416" selection-start-column="9" selection-end-line="416" selection-end-column="9" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -3444,7 +3147,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="2970">
           <caret line="141" column="71" lean-forward="false" selection-start-line="141" selection-start-column="71" selection-end-line="141" selection-end-column="71" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -3452,7 +3154,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="837">
           <caret line="67" column="16" lean-forward="false" selection-start-line="67" selection-start-column="16" selection-end-line="67" selection-end-column="16" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -3460,26 +3161,100 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="783">
           <caret line="43" column="13" lean-forward="false" selection-start-line="43" selection-start-column="13" selection-end-line="43" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/lansosdk/videoeditor/VideoOneDo.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="278">
+          <caret line="412" column="24" lean-forward="true" selection-start-line="412" selection-start-column="24" selection-end-line="412" selection-end-column="24" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$PROJECT_DIR$/app/libs/lansongeditor_hx.jar!/com/lansosdk/box/A.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="162">
+          <caret line="27" column="19" lean-forward="false" selection-start-line="27" selection-start-column="19" selection-end-line="27" selection-end-column="19" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$PROJECT_DIR$/app/libs/lansongeditor_hx.jar!/com/lansosdk/box/A.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="162">
+          <caret line="27" column="19" lean-forward="false" selection-start-line="27" selection-start-column="19" selection-end-line="27" selection-end-column="19" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$PROJECT_DIR$/app/libs/lansongeditor_hx.jar!/com/lansosdk/box/MoveAnimation.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="402">
+          <caret line="38" column="75" lean-forward="false" selection-start-line="38" selection-start-column="75" selection-end-line="38" selection-end-column="75" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$PROJECT_DIR$/app/libs/lansongeditor_hx.jar!/com/lansosdk/box/MVLayer.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="512">
+          <caret line="52" column="22" lean-forward="true" selection-start-line="52" selection-start-column="22" selection-end-line="52" selection-end-column="22" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$PROJECT_DIR$/app/libs/lansongeditor_hx.jar!/com/lansosdk/box/A.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="621">
+          <caret line="44" column="26" lean-forward="false" selection-start-line="44" selection-start-column="26" selection-end-line="44" selection-end-column="26" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$PROJECT_DIR$/app/libs/lansongeditor_hx.jar!/com/lansosdk/box/A.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="621">
+          <caret line="44" column="26" lean-forward="false" selection-start-line="44" selection-start-column="26" selection-end-line="44" selection-end-column="26" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$PROJECT_DIR$/app/libs/lansongeditor_hx.jar!/com/lansosdk/box/A.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="189">
+          <caret line="10" column="0" lean-forward="false" selection-start-line="10" selection-start-column="0" selection-end-line="10" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$PROJECT_DIR$/app/libs/lansongeditor_hx.jar!/com/lansosdk/box/A.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="621">
+          <caret line="44" column="26" lean-forward="false" selection-start-line="44" selection-start-column="26" selection-end-line="44" selection-end-column="26" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/cool/VideoEffectDemoActivity.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="567">
-          <caret line="389" column="7" lean-forward="false" selection-start-line="389" selection-start-column="7" selection-end-line="389" selection-end-column="7" />
-          <folding />
+        <state relative-caret-position="497">
+          <caret line="454" column="75" lean-forward="true" selection-start-line="454" selection-start-column="75" selection-end-line="454" selection-end-column="75" />
+          <folding>
+            <element signature="e#2803#2931#0" expanded="true" />
+            <element signature="e#2930#2931#0" expanded="true" />
+            <element signature="e#3170#3406#0" expanded="true" />
+            <element signature="e#3405#3406#0" expanded="true" />
+            <element signature="e#3457#3658#0" expanded="true" />
+            <element signature="e#3657#3658#0" expanded="true" />
+            <element signature="e#4497#4724#0" expanded="true" />
+            <element signature="e#4723#4724#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/lansosdk/videoeditor/VideoOneDo.java">
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/lansosdk/videoeditor/VideoLayoutParam.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="251">
-          <caret line="381" column="7" lean-forward="true" selection-start-line="381" selection-start-column="7" selection-end-line="381" selection-end-column="7" />
-          <folding>
-            <element signature="e#17944#18109#0" expanded="true" />
-            <element signature="e#18108#18109#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="486">
+          <caret line="18" column="7" lean-forward="true" selection-start-line="18" selection-start-column="7" selection-end-line="18" selection-end-column="7" />
+          <folding />
         </state>
       </provider>
     </entry>
