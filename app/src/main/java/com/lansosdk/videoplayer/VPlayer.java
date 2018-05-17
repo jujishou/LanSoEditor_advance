@@ -76,7 +76,8 @@ public class VPlayer {
     private Context mAppContext;
     private int mVideoSarNum;
     private int mVideoSarDen;
-    VideoPlayer.OnPlayerVideoSizeChangedListener mSizeChangedListener = new VideoPlayer.OnPlayerVideoSizeChangedListener() {
+    VideoPlayer.OnPlayerVideoSizeChangedListener mSizeChangedListener = new VideoPlayer
+            .OnPlayerVideoSizeChangedListener() {
         public void onVideoSizeChanged(VideoPlayer mp, int width, int height,
                                        int sarNum, int sarDen) {
             mMainVideoWidth = mp.getVideoWidth();
@@ -119,7 +120,8 @@ public class VPlayer {
             return true;
         }
     };
-    private VideoPlayer.OnPlayerBufferingUpdateListener mBufferingUpdateListener = new VideoPlayer.OnPlayerBufferingUpdateListener() {
+    private VideoPlayer.OnPlayerBufferingUpdateListener mBufferingUpdateListener = new VideoPlayer
+            .OnPlayerBufferingUpdateListener() {
         public void onBufferingUpdate(VideoPlayer mp, int percent) {
             mCurrentBufferPercentage = percent;
         }

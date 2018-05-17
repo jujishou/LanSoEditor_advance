@@ -37,15 +37,21 @@ import java.io.InputStream;
 
 /**
  * 演示: 使用DrawPad来实现 视频和图片的实时叠加.
+ * <p>
  * 流程是: 先创建一个DrawPad,然后在视频播放过程中,从DrawPad中增加一个BitmapLayer,然后可以调节SeekBar来对Layer的每个
  * 参数进行调节.
+ * <p>
  * 可以调节的有:平移,旋转,缩放,RGBA值,显示/不显示(闪烁)效果. 实际使用中, 可用这些属性来做些动画,比如平移+RGBA调节,呈现舒缓移除的效果.
  * 缓慢缩放呈现照片播放效果;旋转呈现欢快的炫酷效果等等.
  */
 
 public class Demo1LayerMothedActivity extends Activity implements
         OnSeekBarChangeListener {
-    private static final String TAG = "Demo1LayerDemo";
+    private static final String TAG = "Demo1LayerMothedActivity";
+    int testCnt = 0;
+    boolean isPaused = false;
+    int progressCnt = 0;
+    int nextBmp = 0;
     private String videoPath;
     private DrawPadView drawPadView;
     private MediaPlayer mplayer = null;
@@ -76,7 +82,7 @@ public class Demo1LayerMothedActivity extends Activity implements
         drawPadView = (DrawPadView) findViewById(R.id.DrawPad_view);
         initView();
 
-        // 在手机的默认路径下创建一个文件名,用来保存生成的视频文件,
+        // 在手机的默认路径下创建一个文件名,用来保存生成的视频文件,(在onDestroy中删除)
         editTmpPath = SDKFileUtils.newMp4PathInBox();
         dstPath = SDKFileUtils.newMp4PathInBox();
 
@@ -144,21 +150,17 @@ public class Demo1LayerMothedActivity extends Activity implements
 
         if (drawPadView.isRunning() == false && drawPadView.startDrawPad()) {
 
-            //增加一个背景图片;
-            Bitmap bmp = BitmapFactory.decodeResource(getResources(), R.drawable.bg_lstodo);
-            BitmapLayer bmpLayer = drawPadView.addBitmapLayer(bmp);
-            if (bmpLayer != null) {
-                bmpLayer.setScaledValue(bmpLayer.getPadWidth(), bmpLayer.getPadHeight());
-            }
-
-            //增加视频图层;
-            videoLayer = drawPadView.addVideoLayer2(mplayer.getVideoWidth(), mplayer
-                    .getVideoHeight(), null);
+            //增加背景图片
+//            Bitmap bmp = BitmapFactory.decodeResource(getResources(), R.drawable.bg_lstodo);
+//            BitmapLayer bmpLayer = drawPadView.addBitmapLayer(bmp);
+//            if (bmpLayer != null) {
+//                bmpLayer.setScaledValue(bmpLayer.getPadWidth(), bmpLayer.getPadHeight());
+//            }
+            videoLayer = drawPadView.addVideoLayer2(mplayer.getVideoWidth(), mplayer.getVideoHeight(), null);
             if (videoLayer != null) {
                 mplayer.setSurface(new Surface(videoLayer.getVideoTexture()));
                 mplayer.start();
             }
-            //恢复drawpad的运行;
             drawPadView.resumeDrawPad();
         }
     }
@@ -173,8 +175,7 @@ public class Demo1LayerMothedActivity extends Activity implements
             DemoUtil.showToast(getApplicationContext(), "录制已停止!!");
 
             if (SDKFileUtils.fileExist(editTmpPath)) {
-                boolean ret = VideoEditor.encoderAddAudio(videoPath, editTmpPath, SDKDir.TMP_DIR,
-                        dstPath);
+                boolean ret = VideoEditor.encoderAddAudio(videoPath, editTmpPath, SDKDir.TMP_DIR, dstPath);
                 if (!ret) {
                     dstPath = editTmpPath;
                 } else {
@@ -187,9 +188,6 @@ public class Demo1LayerMothedActivity extends Activity implements
         }
     }
 
-    /**
-     * 增加Gif图层;
-     */
     private void addGifLayer() {
         if (drawPadView != null && drawPadView.isRunning()) {
             drawPadView.addGifLayer(R.drawable.g07);
@@ -197,9 +195,7 @@ public class Demo1LayerMothedActivity extends Activity implements
     }
 
     /**
-     * 从DrawPad中得到一个BitmapLayer,填入要显示的图片,您实际可以是资源图片
-     * ,也可以是png或jpg,或网络上的图片等,
-     * <p>
+     * 从DrawPad中得到一个BitmapLayer,填入要显示的图片,您实际可以是资源图片,也可以是png或jpg,或网络上的图片等,
      * 最后解码转换为统一的 Bitmap格式即可.
      */
     private void addBitmapLayer() {
@@ -286,13 +282,11 @@ public class Demo1LayerMothedActivity extends Activity implements
             @Override
             public void onClick(View v) {
                 if (SDKFileUtils.fileExist(dstPath)) {
-                    Intent intent = new Intent(Demo1LayerMothedActivity.this, VideoPlayerActivity
-                            .class);
+                    Intent intent = new Intent(Demo1LayerMothedActivity.this, VideoPlayerActivity.class);
                     intent.putExtra("videopath", dstPath);
                     startActivity(intent);
                 } else {
-                    Toast.makeText(Demo1LayerMothedActivity.this, "目标文件不存在", Toast.LENGTH_SHORT)
-                            .show();
+                    Toast.makeText(Demo1LayerMothedActivity.this, "目标文件不存在", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -305,6 +299,10 @@ public class Demo1LayerMothedActivity extends Activity implements
         skbar.setMax(maxvalue);
     }
 
+    /**
+     * 提示:实际使用中没有主次之分, 只要是继承自Layer的对象,都可以调节,这里仅仅是举例
+     * 可以调节的有:平移,旋转,缩放,RGBA值,显示/不显示(闪烁)效果.
+     */
     @Override
     public void onProgressChanged(SeekBar seekBar, int progress,
                                   boolean fromUser) {

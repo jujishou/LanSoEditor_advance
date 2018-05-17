@@ -176,9 +176,9 @@ public class DrawPadVideoExecute {
         }
     }
 
-    public void setLanSongVideoMode(boolean is) {
+    public void setEditModeVideo(boolean is) {
         if (renderer != null) {
-            renderer.setLanSongVideoMode(is);
+            renderer.setEditModeVideo(is);
         }
     }
 
@@ -230,6 +230,7 @@ public class DrawPadVideoExecute {
     }
 
     /**
+     * 在您配置了 OutFrame, 要输出每一帧的时候, 是否要禁止编码器. 当你只想要处理后的 数据, 而暂时不需要编码成最终的目标文件时,
      * 把这里设置为true. 默认是false;
      *
      * @param dis
@@ -255,8 +256,10 @@ public class DrawPadVideoExecute {
     /**
      * DrawPad每执行完一帧画面,会调用这个Listener,返回的timeUs是当前画面的时间戳(微妙),
      * 可以利用这个时间戳来做一些变化,比如在几秒处缩放, 在几秒处平移等等.从而实现一些动画效果.
+     * <p>
      * (注意, 这个进度回调, 是经过Handler异步调用, 工作在主线程的. 如果你要严格按照时间来,则需要用setDrawPadThreadProgressListener)
      *
+     * @param currentTimeUs 当前DrawPad处理画面的时间戳.,单位微秒.
      */
     public void setDrawPadProgressListener(onDrawPadProgressListener listener) {
         if (renderer != null) {
@@ -299,6 +302,7 @@ public class DrawPadVideoExecute {
 
     /**
      * 设置每处理一帧的数据监听, 等于把当前处理的这一帧的画面拉出来, 您可以根据这个画面来自行的编码保存, 或网络传输.
+     * <p>
      * 建议在这里拿到数据后, 放到queue中, 然后在其他线程中来异步读取queue中的数据, 请注意queue中数据的总大小, 要及时处理和释放,
      * 以免内存过大,造成OOM问题
      *
@@ -333,7 +337,7 @@ public class DrawPadVideoExecute {
     /**
      * 把当前图层放到DrawPad的最底部. DrawPad运行后,有效.
      *
-     * @param layer
+     * @param pen
      */
     public void bringToBack(Layer layer) {
         if (renderer != null && renderer.isRunning()) {
@@ -511,6 +515,7 @@ public class DrawPadVideoExecute {
      * @param startFromPadUs   从容器的什么位置开始增加
      * @param startAudioTimeUs 把当前声音的开始时间增加进去.
      * @param durationUs       增加多少, 时长.
+     * @param isLoop           是否循环.
      * @return
      */
     public AudioSource addSubAudio(String srcPath, long startFromPadUs,
@@ -681,7 +686,7 @@ public class DrawPadVideoExecute {
      * TwoVideoLayer 或MVLayer;
      *
      * @param videoPath  视频的完整路径;
-     * @param filter 视频滤镜 ,如果不增加滤镜,则赋值为null
+     * @param filter视频滤镜 ,如果不增加滤镜,则赋值为null
      * @return
      */
     public VideoLayer addVideoLayer(String videoPath, GPUImageFilter filter) {

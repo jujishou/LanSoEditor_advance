@@ -130,7 +130,6 @@ public class ExecuteBitmapLayerActivity extends Activity {
                 tvProgressHint.setText(String.valueOf(currentTimeUs));
             }
         });
-
         /**
          * 处理完毕后的监听
          */

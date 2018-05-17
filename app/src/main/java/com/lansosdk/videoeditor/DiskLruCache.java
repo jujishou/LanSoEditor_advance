@@ -115,37 +115,37 @@ public final class DiskLruCache implements Closeable {
     private static final Charset UTF_8 = Charset.forName("UTF-8");
     private static final int IO_BUFFER_SIZE = 8 * 1024;
 
-	/*
+    /*
      * This cache uses a journal file named "journal". A typical journal file
-	 * looks like this: libcore.io.DiskLruCache 1 100 2
-	 * 
-	 * CLEAN 3400330d1dfc7f3f7f4b8d4d803dfcf6 832 21054 DIRTY
-	 * 335c4c6028171cfddfbaae1a9c313c52 CLEAN 335c4c6028171cfddfbaae1a9c313c52
-	 * 3934 2342 REMOVE 335c4c6028171cfddfbaae1a9c313c52 DIRTY
-	 * 1ab96a171faeeee38496d8b330771a7a CLEAN 1ab96a171faeeee38496d8b330771a7a
-	 * 1600 234 READ 335c4c6028171cfddfbaae1a9c313c52 READ
-	 * 3400330d1dfc7f3f7f4b8d4d803dfcf6
-	 * 
-	 * The first five lines of the journal form its header. They are the
-	 * constant string "libcore.io.DiskLruCache", the disk cache's version, the
-	 * application's version, the value count, and a blank line.
-	 * 
-	 * Each of the subsequent lines in the file is a record of the state of a
-	 * cache entry. Each line contains space-separated values: a state, a key,
-	 * and optional state-specific values. o DIRTY lines track that an entry is
-	 * actively being created or updated. Every successful DIRTY action should
-	 * be followed by a CLEAN or REMOVE action. DIRTY lines without a matching
-	 * CLEAN or REMOVE indicate that temporary files may need to be deleted. o
-	 * CLEAN lines track a cache entry that has been successfully published and
-	 * may be read. A publish line is followed by the lengths of each of its
-	 * values. o READ lines track accesses for LRU. o REMOVE lines track entries
-	 * that have been deleted.
-	 * 
-	 * The journal file is appended to as cache operations occur. The journal
-	 * may occasionally be compacted by dropping redundant lines. A temporary
-	 * file named "journal.tmp" will be used during compaction; that file should
-	 * be deleted if it exists when the cache is opened.
-	 */
+     * looks like this: libcore.io.DiskLruCache 1 100 2
+     *
+     * CLEAN 3400330d1dfc7f3f7f4b8d4d803dfcf6 832 21054 DIRTY
+     * 335c4c6028171cfddfbaae1a9c313c52 CLEAN 335c4c6028171cfddfbaae1a9c313c52
+     * 3934 2342 REMOVE 335c4c6028171cfddfbaae1a9c313c52 DIRTY
+     * 1ab96a171faeeee38496d8b330771a7a CLEAN 1ab96a171faeeee38496d8b330771a7a
+     * 1600 234 READ 335c4c6028171cfddfbaae1a9c313c52 READ
+     * 3400330d1dfc7f3f7f4b8d4d803dfcf6
+     *
+     * The first five lines of the journal form its header. They are the
+     * constant string "libcore.io.DiskLruCache", the disk cache's version, the
+     * application's version, the value count, and a blank line.
+     *
+     * Each of the subsequent lines in the file is a record of the state of a
+     * cache entry. Each line contains space-separated values: a state, a key,
+     * and optional state-specific values. o DIRTY lines track that an entry is
+     * actively being created or updated. Every successful DIRTY action should
+     * be followed by a CLEAN or REMOVE action. DIRTY lines without a matching
+     * CLEAN or REMOVE indicate that temporary files may need to be deleted. o
+     * CLEAN lines track a cache entry that has been successfully published and
+     * may be read. A publish line is followed by the lengths of each of its
+     * values. o READ lines track accesses for LRU. o REMOVE lines track entries
+     * that have been deleted.
+     *
+     * The journal file is appended to as cache operations occur. The journal
+     * may occasionally be compacted by dropping redundant lines. A temporary
+     * file named "journal.tmp" will be used during compaction; that file should
+     * be deleted if it exists when the cache is opened.
+     */
 
     private final File directory;
     private final File journalFile;
@@ -236,7 +236,7 @@ public final class DiskLruCache implements Closeable {
      * Returns the ASCII characters up to but not including the next "\r\n", or
      * "\n".
      *
-     * @throws EOFException if the stream is exhausted before the next newline character.
+     * @throws java.io.EOFException if the stream is exhausted before the next newline character.
      */
     public static String readAsciiLine(InputStream in) throws IOException {
         // TODO: support UTF-8 here instead
@@ -301,7 +301,7 @@ public final class DiskLruCache implements Closeable {
      * @param appVersion
      * @param valueCount the number of values per cache entry. Must be positive.
      * @param maxSize    the maximum number of bytes this cache should use to store
-     * @throws IOException if reading or writing the cache directory fails
+     * @throws java.io.IOException if reading or writing the cache directory fails
      */
     public static DiskLruCache open(File directory, int appVersion,
                                     int valueCount, long maxSize) throws IOException {
@@ -491,11 +491,11 @@ public final class DiskLruCache implements Closeable {
             return null;
         }
 
-		/*
-		 * Open all streams eagerly to guarantee that we see a single published
-		 * snapshot. If we opened streams lazily then the streams could come
-		 * from different edits.
-		 */
+        /*
+         * Open all streams eagerly to guarantee that we see a single published
+         * snapshot. If we opened streams lazily then the streams could come
+         * from different edits.
+         */
         InputStream[] ins = new InputStream[valueCount];
         try {
             for (int i = 0; i < valueCount; i++) {

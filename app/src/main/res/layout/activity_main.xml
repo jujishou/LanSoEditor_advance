@@ -71,7 +71,7 @@
 	
          
       <RelativeLayout  android:id="@+id/id_mainlist_xuanku" style="@style/main_item_reletivelayout2">
-           	 <TextView   android:text="常用效果【新】" style="@style/main_item_textview"/>
+           	 <TextView   android:text="特效+子图层【新】" style="@style/main_item_textview"/>
 			<TextView  style="@style/main_item_arrow"/> 
 	</RelativeLayout>
 	

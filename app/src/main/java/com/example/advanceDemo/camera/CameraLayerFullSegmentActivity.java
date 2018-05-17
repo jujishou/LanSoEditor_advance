@@ -165,10 +165,7 @@ public class CameraLayerFullSegmentActivity extends Activity implements
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (SDKFileUtils.fileExist(dstPath)) {
-            SDKFileUtils.deleteFile(dstPath);
-            dstPath = null;
-        }
+        dstPath = null;
     }
 
     /**
@@ -251,11 +248,10 @@ public class CameraLayerFullSegmentActivity extends Activity implements
                     VideoConcat concat = new VideoConcat();
                     concat.concatVideo(segmentArray, tmpVideo);
 
-                    // LSTODO 如果视频变速了,但音频没有变速,则合成后的音频将变短.
+                    //如果视频变速了,但音频没有变速,则合成后的音频将变短.
                     editor.executeVideoMergeAudio(tmpVideo, musicPath, dstPath);
                     SDKFileUtils.deleteFile(tmpVideo);
                 } else {
-                    // editor.executeConcatMP4(segments, dstPath);
                     VideoConcat concat = new VideoConcat();
                     concat.concatVideo(segmentArray, dstPath);
                 }

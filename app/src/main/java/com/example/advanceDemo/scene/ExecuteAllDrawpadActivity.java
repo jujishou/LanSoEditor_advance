@@ -105,13 +105,19 @@ public class ExecuteAllDrawpadActivity extends Activity {
         /**
          *
          * @param ctx
-         * @param padwidth     容器宽度/生成视频的宽度
-         * @param padheight   容器高度/生成视频的高度
-         * @param framerate   生成视频的帧率
-         * @param bitrate     生成视频的码率
-         * @param dstPath   生成视频保存的完整路径 .mp4结尾.
+         * @param padwidth
+         *            容器宽度/生成视频的宽度
+         * @param padheight
+         *            容器高度/生成视频的高度
+         * @param framerate
+         *            生成视频的帧率
+         * @param bitrate
+         *            生成视频的码率
+         * @param dstPath
+         *            生成视频保存的完整路径 .mp4结尾.
          */
-        mDrawPad = new DrawPadAllExecute(mContext, 480, 480, 25, 1000 * 1000, dstPath);
+        mDrawPad = new DrawPadAllExecute(mContext, 480, 480, 25, 1000 * 1000,
+                dstPath);
         /**
          * 设置错误监听
          */
@@ -162,13 +168,13 @@ public class ExecuteAllDrawpadActivity extends Activity {
          */
         if (mDrawPad.startDrawPad()) {
             // 增加背景图片
-            mDrawPad.addBitmapLayer(BitmapFactory.decodeResource(getResources(), R.drawable
-                    .pad_bg), null);
-
+            mDrawPad.addBitmapLayer(BitmapFactory.decodeResource(
+                    getResources(), R.drawable.pad_bg), null);
             // 增加第一个视频
             videoLayer1 = mDrawPad.addVideoLayer(videoPath, null);
         } else {
-            Log.e(TAG, "后台容器线程  运行失败,您请检查下是否是路径设置有无, 请用MediaInfo.checkFile执行查看下....");
+            Log.e(TAG,
+                    "后台容器线程  运行失败,您请检查下是否是路径设置有无, 请用MediaInfo.checkFile执行查看下....");
         }
     }
 
@@ -301,6 +307,7 @@ public class ExecuteAllDrawpadActivity extends Activity {
 
     @Override
     protected void onDestroy() {
+        // TODO Auto-generated method stub
         super.onDestroy();
 
         if (mDrawPad != null) {
@@ -308,6 +315,7 @@ public class ExecuteAllDrawpadActivity extends Activity {
             try {
                 Thread.sleep(100);
             } catch (InterruptedException e) {
+                // TODO Auto-generated catch block
                 e.printStackTrace();
             }
             mDrawPad = null;

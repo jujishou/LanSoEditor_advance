@@ -78,6 +78,7 @@ public class ExecuteVideoLayerActivity extends Activity {
     private ShowHeart mShowHeart;
     private boolean isExecuting = false;
     private Context mContext = null;
+    private MVLayer mvlayer;
     private MediaInfo gifInfo;
     private long decoderHandler;
     private IntBuffer mGLRgbBuffer;
@@ -159,8 +160,6 @@ public class ExecuteVideoLayerActivity extends Activity {
                 // TODO Auto-generated method stub
             }
         });
-        // mDrawPad.setUseMainVideoPts(true);
-
         addOtherAudio();
 
         // 在开启前,先设置为暂停录制,因为要增加一些图层.
@@ -196,18 +195,16 @@ public class ExecuteVideoLayerActivity extends Activity {
             /**
              * 一下是在处理过程中, 增加的几个Layer, 来实现视频在播放过程中叠加别的一些媒体, 像图片, 文字等.
              */
-            bitmapLayer = mDrawPad.addBitmapLayer(BitmapFactory.decodeResource(
-                    getResources(), R.drawable.ic_launcher));
+            bitmapLayer = mDrawPad.addBitmapLayer(BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher));
             bitmapLayer.setPosition(300, 200);
 
             // 增加一个笑脸, add a bitmap
-            mDrawPad.addBitmapLayer(BitmapFactory.decodeResource(
-                    getResources(), R.drawable.xiaolian));
+            mDrawPad.addBitmapLayer(BitmapFactory.decodeResource(getResources(), R.drawable.xiaolian));
 
             // 你可以增加其他图层.
             // addCanvasLayer();
             // addDataLayer();
-            // addMVLayer();
+            addMVLayer();
             // addGifLayer();
 
             // 增加完图层, 恢复运行.
@@ -323,24 +320,10 @@ public class ExecuteVideoLayerActivity extends Activity {
     }
 
     private void addMVLayer() {
-        Log.i(TAG, "增加一个MV");
-        String colorMVPath = CopyDefaultVideoAsyncTask.copyFile(
-                ExecuteVideoLayerActivity.this, "mei.mp4");
-        String maskMVPath = CopyDefaultVideoAsyncTask.copyFile(
-                ExecuteVideoLayerActivity.this, "mei_b.mp4");
-        /**
-         * 当mv在解码的时候, 是否异步执行; 如果异步执行,则MV解码可能没有那么快,从而MV画面会有慢动作的现象.
-         * 如果同步执行,则视频处理会等待MV解码完成, 从而处理速度会慢一些,但MV在播放时,是正常的.
-         *
-         * @param srcPath
-         *            MV的彩色视频
-         * @param maskPath
-         *            MV的黑白视频.
-         * @param isAsync
-         *            是否异步执行.
-         * @return
-         */
-        MVLayer layer = mDrawPad.addMVLayer(colorMVPath, maskMVPath, true);
+        String colorMVPath = CopyDefaultVideoAsyncTask.copyFile(ExecuteVideoLayerActivity.this, "mei.mp4");
+        String maskMVPath = CopyDefaultVideoAsyncTask.copyFile(ExecuteVideoLayerActivity.this, "mei_b.mp4");
+
+        mvlayer = mDrawPad.addMVLayer(colorMVPath, maskMVPath, true);
         // mv在播放完后, 有3种模式,消失/停留在最后一帧/循环.默认是循环.
         // layer.setEndMode(MVLayerENDMode.INVISIBLE);
     }

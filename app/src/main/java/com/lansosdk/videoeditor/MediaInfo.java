@@ -232,17 +232,6 @@ public class MediaInfo {
         return ret;
     }
 
-    /**
-     * checkFile的测试代码. String str=SDKFileUtils.createMp4FileInBox();
-     * Log.i(TAG,MediaInfo.checkFile(null));
-     * Log.i(TAG,MediaInfo.checkFile(str));
-     * Log.i(TAG,MediaInfo.checkFile("/sdcard/2x.mp4"));
-     * Log.i(TAG,MediaInfo.checkFile("/sdcard/06.gif"));
-     * Log.i(TAG,MediaInfo.checkFile("/sdcard/dan_44100_1_9s.pcm"));
-     * Log.i(TAG,MediaInfo.checkFile("/sdcard/qq48000.m4a"));
-     * Log.i(TAG,MediaInfo.checkFile("/sdcard/hongdou10s.mp3"));
-     */
-    // -------------------------------文件操作-------------------------
     private static boolean fileExist(String absolutePath) {
         if (absolutePath == null)
             return false;
@@ -252,7 +241,6 @@ public class MediaInfo {
 
     /**
      * 准备当前媒体的信息
-     * <p>
      * 去底层运行相关方法, 得到媒体信息.
      *
      * @return 如获得当前媒体信息并支持格式, 则返回true, 否则返回false;
@@ -265,16 +253,15 @@ public class MediaInfo {
                 getSuccess = true;
                 return isSupport();
             } else {
-                /**
-                 * 如果返回的值是-13, 请检查您的手机设备是否是Android6.0以上,并确定是否打开读写文件的授权.
-                 * 很多客户是因为没有授权而失败.我们提供了PermissionsManager类来检测,可参考使用.
-                 *
-                 */
-                Log.e(TAG, "mediainfo prepare media is failed:" + filePath);
+                if (ret == -13) {
+                    Log.e(TAG, "MediaInfo执行失败，可能您没有打开读写文件授权导致的，我们提供了PermissionsManager类来检测,可参考使用");
+                } else {
+                    Log.e(TAG, "MediaInfo执行失败，" + prepareErrorInfo(filePath));
+                }
                 return false;
             }
         } else {
-            Log.e(TAG, "mediainfo prepare error . file is may be not exist!");
+            Log.e(TAG, "MediaInfo执行失败,你设置的文件不存在.您的设置是:"+filePath );
             return false;
         }
     }
@@ -435,6 +422,35 @@ public class MediaInfo {
         this.aCodecName = name;
     }
 
+    private String prepareErrorInfo(String videoPath) {
+        String ret = " ";
+        if (videoPath == null) {
+            ret = "文件名为空指针, null";
+        } else {
+            File file = new File(videoPath);
+            if (file.exists() == false) {
+                ret = "文件不存在," + videoPath;
+            } else if (file.isDirectory()) {
+                ret = "您设置的路径是一个文件夹," + videoPath;
+            } else if (file.length() == 0) {
+                ret = "文件存在,但文件的大小为0字节." + videoPath;
+            } else {
+                if (fileSuffix.equals("pcm") || fileSuffix.equals("yuv")) {
+                    String str = "文件路径:" + filePath + "\n";
+                    str += "文件名:" + fileName + "\n";
+                    str += "文件后缀:" + fileSuffix + "\n";
+                    str += "文件大小(字节):" + file.length() + "\n";
+                    ret = "文件存在,但文件的后缀可能表示是裸数据";
+                    ret += str;
+                } else {
+                    ret = "文件存在, 但MediaInfo.prepare获取媒体信息失败,请查看下 文件是否是音频或视频, 或许演示工程APP名字不是我们demo中的名字:" + videoPath;
+                }
+            }
+
+        }
+        return ret;
+    }
+
     private String getFileNameFromPath(String path) {
         if (path == null)
             return "";
@@ -455,15 +471,15 @@ public class MediaInfo {
             return "";
     }
     /*
-	 * ****************************************************************************
-	 * 测试 // new Thread(new Runnable() { // // @Override // public void run() {
-	 * // // TODO Auto-generated method stub // MediaInfo mif=new
-	 * MediaInfo("/sdcard/2x.mp4"); //这里是我们的测试视频地址, 如您测试, 则需要修改视频地址. //
-	 * mif.prepare(); // Log.i(TAG,"mif is:"+ mif.toString()); // mif.release();
-	 * // } // },"testMediaInfo#1").start(); // new Thread(new Runnable() { //
-	 * // @Override // public void run() { // // TODO Auto-generated method stub
-	 * // MediaInfo mif=new MediaInfo("/sdcard/2x.mp4");//这里是我们的测试视频地址, 如您测试,
-	 * 则需要修改视频地址. // mif.prepare(); // Log.i(TAG,"mif is:"+ mif.toString()); //
-	 * mif.release(); // } // },"testMediaInfo#2").start();
-	 */
+     * ****************************************************************************
+     * 测试 // new Thread(new Runnable() { // // @Override // public void run() {
+     * // // TODO Auto-generated method stub // MediaInfo mif=new
+     * MediaInfo("/sdcard/2x.mp4"); //这里是我们的测试视频地址, 如您测试, 则需要修改视频地址. //
+     * mif.prepare(); // Log.i(TAG,"mif is:"+ mif.toString()); // mif.release();
+     * // } // },"testMediaInfo#1").start(); // new Thread(new Runnable() { //
+     * // @Override // public void run() { // // TODO Auto-generated method stub
+     * // MediaInfo mif=new MediaInfo("/sdcard/2x.mp4");//这里是我们的测试视频地址, 如您测试,
+     * 则需要修改视频地址. // mif.prepare(); // Log.i(TAG,"mif is:"+ mif.toString()); //
+     * mif.release(); // } // },"testMediaInfo#2").start();
+     */
 }

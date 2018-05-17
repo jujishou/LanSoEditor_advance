@@ -144,6 +144,7 @@ public class ExecuteCanvasLayerActivity extends Activity {
 
             @Override
             public void onCompleted(DrawPad v) {
+                // TODO Auto-generated method stub
                 tvProgressHint.setText("DrawPadExecute Completed!!!");
 
                 isExecuting = false;
@@ -152,7 +153,8 @@ public class ExecuteCanvasLayerActivity extends Activity {
                 }
             }
         });
-        mDrawPad.setDrawpadOutFrameListener(480, 480, 1,new onDrawPadOutFrameListener() {
+        mDrawPad.setDrawpadOutFrameListener(480, 480, 1,
+                new onDrawPadOutFrameListener() {
 
                     @Override
                     public void onDrawPadOutFrame(DrawPad v, Object obj,

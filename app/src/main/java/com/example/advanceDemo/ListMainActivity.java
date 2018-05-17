@@ -20,9 +20,14 @@ import android.widget.Toast;
 
 import com.anthonycr.grant.PermissionsManager;
 import com.anthonycr.grant.PermissionsResultAction;
+import com.lansosdk.box.DrawPad;
+import com.lansosdk.box.onDrawPadProgressListener;
+import com.lansosdk.videoeditor.DrawPadVideoExecute;
+import com.lansosdk.videoeditor.EditModeVideoDialog;
 import com.lansoeditor.advanceDemo.R;
 import com.lansosdk.box.LanSoEditorBox;
 import com.lansosdk.videoeditor.CopyDefaultVideoAsyncTask;
+import com.lansosdk.videoeditor.EditModeVideo;
 import com.lansosdk.videoeditor.LanSoEditor;
 import com.lansosdk.videoeditor.MediaInfo;
 import com.lansosdk.videoeditor.SDKDir;
@@ -31,51 +36,21 @@ import com.lansosdk.videoeditor.VideoEditor;
 
 import java.io.File;
 import java.util.Calendar;
-import java.util.Locale;
 
 public class ListMainActivity extends Activity implements OnClickListener {
 
     private static final String TAG = "MainActivity";
     private static final boolean VERBOSE = false;
     private final static int SELECT_FILE_REQUEST_CODE = 10;
+    int permissionCnt = 0;
     private TextView tvVideoPath;
     private boolean isPermissionOk = false;
-
-    // ------------------------------------------------------------
-    @SuppressLint("NewApi")
-    public static boolean selfPermissionGranted(Context context,
-                                                String permission) {
-        // For Android < Android M, self permissions are always granted.
-        boolean result = true;
-        int targetSdkVersion = 0;
-        try {
-            final PackageInfo info = context.getPackageManager()
-                    .getPackageInfo(context.getPackageName(), 0);
-            targetSdkVersion = info.applicationInfo.targetSdkVersion;
-        } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
-        }
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (targetSdkVersion >= Build.VERSION_CODES.M) {
-                // targetSdkVersion >= Android M, we can
-                // use Context#checkSelfPermission
-                result = context.checkSelfPermission(permission) == PackageManager.PERMISSION_GRANTED;
-            } else {
-                // targetSdkVersion < Android M, we have to use
-                // PermissionChecker
-                result = PermissionChecker.checkSelfPermission(context,
-                        permission) == PermissionChecker.PERMISSION_GRANTED;
-            }
-        }
-        return result;
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        Thread.setDefaultUncaughtExceptionHandler(new LanSoSdkCrashHandler());
+//		Thread.setDefaultUncaughtExceptionHandler(new LanSoSdkCrashHandler());
         setContentView(R.layout.activity_main);
         /**
          * 初始化SDK
@@ -84,10 +59,11 @@ public class ListMainActivity extends Activity implements OnClickListener {
         /**
          * 检查权限
          */
-        checkPermission();
+        testPermission();
 
         initView();
-         showHintDialog();
+         showVersionDialog();
+        testFile();
     }
 
     @Override
@@ -99,6 +75,10 @@ public class ListMainActivity extends Activity implements OnClickListener {
 
     @Override
     public void onClick(View v) {
+        if (isPermissionOk == false) {
+            testPermission();
+        }
+
         if (isPermissionOk) {
             if (checkPath() == false)
                 return;
@@ -116,7 +96,7 @@ public class ListMainActivity extends Activity implements OnClickListener {
                     startDemoActivity(ListCoolDemoActivity.class);
                     break;
                 case R.id.id_mainlist_videoonedo:
-                    startDemoActivity(VideoOneProcessActivity.class);
+                    startDemoActivity(VideoOneDODemoActivity.class);
                     break;
                 case R.id.id_mainlist_bitmaps:
                     startDemoActivity(ListBitmapAudioActivity.class);
@@ -128,7 +108,7 @@ public class ListMainActivity extends Activity implements OnClickListener {
                     break;
             }
         } else {
-            showHintDialog(R.string.permission_hint);
+            DemoUtil.showHintDialog(ListMainActivity.this, R.string.permission_hint);
         }
     }
 
@@ -144,54 +124,22 @@ public class ListMainActivity extends Activity implements OnClickListener {
         findViewById(R.id.id_mainlist_bitmaps).setOnClickListener(this);
         findViewById(R.id.id_mainlist_videoplay).setOnClickListener(this);
         // /----------------------
-        findViewById(R.id.id_main_select_video).setOnClickListener(
-                new OnClickListener() {
+        findViewById(R.id.id_main_select_video).setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startSelectVideoActivity();
+            }
+        });
 
-                    @Override
-                    public void onClick(View v) {
-                        startSelectVideoActivity();
-                    }
-                });
-
-        findViewById(R.id.id_main_use_default_videobtn).setOnClickListener(
-                new OnClickListener() {
-
-                    @Override
-                    public void onClick(View v) {
-                        new CopyDefaultVideoAsyncTask(ListMainActivity.this,
-                                tvVideoPath, "dy_xialu1.mp4").execute();
-                    }
-                });
+        findViewById(R.id.id_main_use_default_videobtn).setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new CopyDefaultVideoAsyncTask(ListMainActivity.this, tvVideoPath, "dy_xialu2.mp4").execute();
+            }
+        });
     }
 
-    private void checkPermission() {
-        // 因为从android6.0系统有各种权限的限制,这里先检查是否有读写的权限,PermissionsManager采用github上开源库,不属于我们sdk的一部分.
-        // 下载地址是:https://github.com/anthonycr/Grant,您也可以使用别的方式来检查app所需权限.
-        PermissionsManager.getInstance()
-                .requestAllManifestPermissionsIfNecessary(this,
-                        new PermissionsResultAction() {
-                            @Override
-                            public void onGranted() {
-                                isPermissionOk = true;
-                                Toast.makeText(ListMainActivity.this,
-                                        R.string.message_granted,
-                                        Toast.LENGTH_SHORT).show();
-                            }
-
-                            @Override
-                            public void onDenied(String permission) {
-                                isPermissionOk = false;
-                                String message = String.format(
-                                        Locale.getDefault(),
-                                        getString(R.string.message_denied),
-                                        permission);
-                                Toast.makeText(ListMainActivity.this, message,
-                                        Toast.LENGTH_SHORT).show();
-                            }
-                        });
-    }
-
-    private void showHintDialog() {
+    private void showVersionDialog() {
         DisplayMetrics dm = new DisplayMetrics();
         dm = getResources().getDisplayMetrics();
 
@@ -205,45 +153,27 @@ public class ListMainActivity extends Activity implements OnClickListener {
         Log.i(TAG, "current year is:" + year + " month is:" + month
                 + " limit year:" + lyear + " limit month:" + lmonth);
         String timeHint = getResources().getString(R.string.sdk_limit);
-        String version = VideoEditor.getSDKVersion() + ";\n BOX:"
-                + LanSoEditorBox.VERSION_BOX;
+        String version = VideoEditor.getSDKVersion() + ";\n BOX:" + LanSoEditorBox.VERSION_BOX;
+        version += dm.widthPixels + " x" + dm.heightPixels;
+
         timeHint = String.format(timeHint, version, lyear, lmonth);
 
-        new AlertDialog.Builder(this).setTitle("提示").setMessage(timeHint)
-                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
-
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                    }
-                }).show();
-    }
-
-    private void showHintDialog(int stringId) {
-        new AlertDialog.Builder(this).setTitle("提示").setMessage(stringId)
-                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
-
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                    }
-                }).show();
+        DemoUtil.showHintDialog(ListMainActivity.this, timeHint);
     }
 
     private boolean checkPath() {
-        if (tvVideoPath.getText() != null
-                && tvVideoPath.getText().toString().isEmpty()) {
-            Toast.makeText(ListMainActivity.this, "请输入视频地址", Toast.LENGTH_SHORT)
-                    .show();
+        if (tvVideoPath.getText() != null && tvVideoPath.getText().toString().isEmpty()) {
+            Toast.makeText(ListMainActivity.this, "请输入视频地址", Toast.LENGTH_SHORT).show();
             return false;
         } else {
             String path = tvVideoPath.getText().toString();
             if ((new File(path)).exists() == false) {
-                Toast.makeText(ListMainActivity.this, "文件不存在",
-                        Toast.LENGTH_SHORT).show();
+                Toast.makeText(ListMainActivity.this, "文件不存在", Toast.LENGTH_SHORT).show();
                 return false;
             } else {
                 MediaInfo info = new MediaInfo(path, false);
                 boolean ret = info.prepare();
-                Log.i(TAG, "info:" + info.toString());
+                Log.i(TAG, "info:" + info.toString() + " is EditModeVideo:" + EditModeVideo.checkEditModeVideo(path));
                 return ret;
             }
         }
@@ -261,10 +191,8 @@ public class ListMainActivity extends Activity implements OnClickListener {
             case RESULT_OK:
                 if (requestCode == SELECT_FILE_REQUEST_CODE) {
                     Bundle b = data.getExtras();
-                    String string = b.getString("SELECT_VIDEO");
-                    Log.i("sno", "SELECT_VIDEO is:" + string);
-                    if (tvVideoPath != null)
-                        tvVideoPath.setText(string);
+                    String seleced = b.getString("SELECT_VIDEO");
+                    checkConvertDialog(seleced);
                 }
                 break;
             default:
@@ -279,10 +207,53 @@ public class ListMainActivity extends Activity implements OnClickListener {
         startActivity(intent);
     }
 
+    private void testPermission() {
+        if (permissionCnt > 2) {
+            DemoUtil.showHintDialog(ListMainActivity.this, "Demo没有读写权限,请关闭后重新打开demo,并在弹出框中选中[允许]");
+            return;
+        }
+        permissionCnt++;
+        // PermissionsManager采用github上开源库,不属于我们sdk的一部分.
+        // 下载地址是:https://github.com/anthonycr/Grant,您也可以使用别的方式来检查app所需权限.
+        PermissionsManager.getInstance().requestAllManifestPermissionsIfNecessary(this,
+                new PermissionsResultAction() {
+                    @Override
+                    public void onGranted() {
+                        isPermissionOk = true;
+                    }
+
+                    @Override
+                    public void onDenied(String permission) {
+                        isPermissionOk = false;
+                    }
+                });
+    }
+
+    private void checkConvertDialog(final String file)
+    {
+        new AlertDialog.Builder(ListMainActivity.this)
+                .setTitle("提示")
+                .setMessage("是否转换为 编辑模式 [建议转换]!")
+                .setPositiveButton("转换", new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        EditModeVideoDialog editMode=new EditModeVideoDialog(ListMainActivity.this,file,tvVideoPath);
+                        editMode.start();
+                    }
+                })
+                .setNegativeButton("不转", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        if(tvVideoPath!=null){
+                            tvVideoPath.setText(file);
+                        }
+                    }
+                })
+                .show();
+    }
     // --------------------------------
     private void testFile() {
 
-
     }
-
 }

@@ -1,12 +1,12 @@
 package com.example.advanceDemo.camera;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.PowerManager;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -40,32 +40,25 @@ import jp.co.cyberagent.lansongsdk.gpuimage.GPUImageFilter;
 /**
  * 在部分华为手机上出现前置摄像头, 画面倒置的问题, 解决如下:
  * <p>
- * 方案1, 如果当前Activity继承自原生Activity; 则manifest.xml中的代码如下:
- * <activity
+ * 方案1, 如果当前Activity继承自原生Activity; 则manifest.xml中的代码如下: <activity
  * android:name="com.example.advanceDemo.CameraLayerFullLandscapeActivity"
  * android:screenOrientation="landscape"
- * android:theme="@android:style/Theme.NoTitleBar.Fullscreen" > </activity>
- *
- * 方案2,
- * 如果当前Activity继承自v7包的 AppCompatActivity,则manifest.xml的代码如下:
- * <activity
+ * android:theme="@android:style/Theme.NoTitleBar.Fullscreen" > </activity> 方案2,
+ * 如果当前Activity继承自v7包的 AppCompatActivity,则manifest.xml的代码如下: <activity
  * android:name="com.example.advanceDemo.CameraLayerFullLandscapeActivity"
  * android:screenOrientation="landscape"
  * android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen" >
- * </activity>
- *
- * 其中theme需要定义在styles.xml中如下:
- * <style
+ * </activity> 其中theme需要定义在styles.xml中如下: <style
  * name="Theme.AppCompat.Light.NoActionBar.FullScreen"
  * parent="@style/Theme.AppCompat.Light"> <item name="windowNoTitle">true</item>
  * <item name="windowActionBar">false</item> <item
  * name="android:windowFullscreen">true</item> <item
  * name="android:windowContentOverlay">@null</item> </style>
  */
- public class CameraLayerFullLandscapeActivity extends Activity implements
- OnClickListener{
+public class CameraLayerFullLandscapeActivity extends AppCompatActivity
+        implements OnClickListener {
     private static final long RECORD_CAMERA_TIME = 15 * 1000 * 1000; // 定义录制的时间为20s
-    private static final String TAG = "CameraLayerFullLandscape";
+    private static final String TAG = "CameraLayerFullLandscapeActivity";
 
     private DrawPadCameraView mDrawPadCamera;
 
@@ -148,8 +141,7 @@ import jp.co.cyberagent.lansongsdk.gpuimage.GPUImageFilter;
         super.onResume();
         if (mWakeLock == null) {
             PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
-            mWakeLock = pm.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK,
-                    TAG);
+            mWakeLock = pm.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK,TAG);
             mWakeLock.acquire();
         }
         playVideo.setVisibility(View.GONE);
@@ -172,8 +164,7 @@ import jp.co.cyberagent.lansongsdk.gpuimage.GPUImageFilter;
         int padHeight = 544;
         int bitrate = 3000 * 1024;
         int frameRate = 25;
-        mDrawPadCamera.setRealEncodeEnable(padWidth, padHeight, bitrate,
-                frameRate, dstPath);
+        mDrawPadCamera.setRealEncodeEnable(padWidth, padHeight, bitrate,frameRate, dstPath);
         /**
          * 设置进度回调
          */
@@ -273,6 +264,10 @@ import jp.co.cyberagent.lansongsdk.gpuimage.GPUImageFilter;
             Log.i(TAG, "onViewAvaiable  drawPad停止工作!!!!	");
             toastStop();
             mCameraLayer = null;
+
+            // VHeaderConcat scale=new VHeaderConcat();
+            // scale.start(getApplicationContext(), "/sdcard/video_start.mp4",
+            // dstPath);
         }
         playVideo.setVisibility(View.VISIBLE);
     }

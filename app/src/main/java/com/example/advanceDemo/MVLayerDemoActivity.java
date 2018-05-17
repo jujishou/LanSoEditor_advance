@@ -65,6 +65,7 @@ public class MVLayerDemoActivity extends Activity {
         editTmpPath = SDKFileUtils.newMp4PathInBox();
         dstPath = SDKFileUtils.newMp4PathInBox();
 
+
         new Handler().postDelayed(new Runnable() {
 
             @Override
@@ -72,7 +73,7 @@ public class MVLayerDemoActivity extends Activity {
                 // TODO Auto-generated method stub
                 startPlayVideo();
             }
-        }, 500);
+        },300);
     }
 
     @Override
@@ -164,15 +165,13 @@ public class MVLayerDemoActivity extends Activity {
                 });
 
         // 设置当前DrawPad的宽度和高度,并把宽度自动缩放到父view的宽度,然后等比例调整高度.
-        mDrawPadView.setDrawPadSize(480, 480,
-                new onDrawPadSizeChangedListener() {
-
-                    @Override
-                    public void onSizeChanged(int viewWidth, int viewHeight) {
-                        // 开始DrawPad的渲染线程.
-                        startDrawPad();
-                    }
-                });
+        mDrawPadView.setDrawPadSize(480, 480, new onDrawPadSizeChangedListener() {
+            @Override
+            public void onSizeChanged(int viewWidth, int viewHeight) {
+                // 开始DrawPad的渲染线程.
+                startDrawPad();
+            }
+        });
         mDrawPadView.setOnViewAvailable(new onViewAvailable() {
 
             @Override
@@ -203,14 +202,11 @@ public class MVLayerDemoActivity extends Activity {
      * 增加一个MV图层.
      */
     private void addMVLayer() {
-        String colorMVPath = CopyDefaultVideoAsyncTask.copyFile(
-                MVLayerDemoActivity.this, "mei.mp4");
-        String maskMVPath = CopyDefaultVideoAsyncTask.copyFile(
-                MVLayerDemoActivity.this, "mei_b.mp4");
+        String colorMVPath = CopyDefaultVideoAsyncTask.copyFile(MVLayerDemoActivity.this, "mei.mp4");
+        String maskMVPath = CopyDefaultVideoAsyncTask.copyFile(MVLayerDemoActivity.this, "mei_b.mp4");
 
         mvLayer = mDrawPadView.addMVLayer(colorMVPath, maskMVPath, false); // <-----增加MVLayer
         if (mvLayer != null) {
-
             mvLayer.setOnLayerAvailableListener(new onLayerAvailableListener() {
 
                 @Override
@@ -220,15 +216,12 @@ public class MVLayerDemoActivity extends Activity {
             });
 
             // 设置它为满屏.
-            float scaleW = (float) mvLayer.getPadWidth()
-                    / (float) mvLayer.getLayerWidth();
-            float scaleH = mvLayer.getPadHeight()
-                    / (float) mvLayer.getLayerHeight();
+            float scaleW = (float) mvLayer.getPadWidth() / (float) mvLayer.getLayerWidth();
+            float scaleH = mvLayer.getPadHeight() / (float) mvLayer.getLayerHeight();
             mvLayer.setScale(scaleW, scaleH);
 
             // 可以设置当前的MV是否要录制到
             // mvLayer.setVisibility(Layer.VISIBLE_ONLY_PREVIEW);
-
             // 可以增加mv在播放结束后的三种模式, 停留在最后一帧/循环/消失/
             mvLayer.setEndMode(MVLayerENDMode.LOOP);
         }

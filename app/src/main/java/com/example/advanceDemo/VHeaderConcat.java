@@ -12,13 +12,13 @@ import com.lansosdk.videoeditor.SDKFileUtils;
 import com.lansosdk.videoeditor.VideoEditor;
 
 /**
- * 临时写的,用来给录制好的视频增加片头
+ * 临时写的,用来给录制好的视频增加片头, 没有做过多的验证, 请注意.
  *
  * @author Administrator
  */
 public class VHeaderConcat {
 
-    private static final String TAG = "VHeaderConcat";
+    private static final String TAG = "VideoScale";
     String videoPath = null;
     MediaInfo mInfo;
     private String editTmpPath = null;
@@ -79,10 +79,12 @@ public class VHeaderConcat {
             } else {
                 SDKFileUtils.deleteFile(editTmpPath);
             }
+
             // 一下是测试.
             VideoEditor editor = new VideoEditor();
             String[] videoArray = {dstPath, recordVideo};
             editor.executeConcatMP4(videoArray, "/sdcard/concat3.mp4");
+            Log.i(TAG, "拼接完成----------------");
             dstPath = "/sdcard/concat3.mp4";
 
         }

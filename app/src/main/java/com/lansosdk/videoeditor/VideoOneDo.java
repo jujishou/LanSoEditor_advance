@@ -85,6 +85,7 @@ public class VideoOneDo {
     protected int logoPosition = LOGO_POSITION_RIGHT_TOP;
     protected int scaleWidth, scaleHeight;
     protected float compressFactor = 1.0f;
+    protected long videoBitRate = 0;
 
     protected String textAdd = null;
     // -------------------音频参数--------------------
@@ -99,6 +100,7 @@ public class VideoOneDo {
     private List<TimeRange> timeStretchArray = null;
     private List<TimeRange> timeFreezeArray = null;
     private List<TimeRange> timeRepeatArray = null;
+    private boolean isEditModeVideo;
     private onVideoOneDoProgressListener monVideoOneDoProgressListener;
     private onVideoOneDoCompletedListener monVideoOneDOCompletedListener = null;
     private onVideoOneDoErrorListener monVideoOneDoErrorListener = null;
@@ -210,8 +212,20 @@ public class VideoOneDo {
      * @param percent 压缩比, 值范围0.0f---1.0f;
      */
     public void setCompressPercent(float percent) {
-        if (percent > 0.0f) {
+        if (percent > 0.0f && isEditModeVideo == false) {
             compressFactor = percent;
+        }
+    }
+
+    /**
+     * 直接设置码率
+     *
+     * @param bitrate
+     */
+    public void setBitrate(long bitrate) {
+        if (bitrate > 0 && isEditModeVideo == false) {
+            compressFactor = 1.0f;
+            videoBitRate = bitrate;
         }
     }
 
@@ -296,9 +310,17 @@ public class VideoOneDo {
         }
     }
 
+    public void setEditModeVideo() {
+        isEditModeVideo = true;
+        compressFactor = 1.0f;
+        videoBitRate = 0;
+    }
+
     /**
      * 增加文字, 这里仅仅是举例, 原理: 增加一个CanvasLayer图层, 把文字绘制到Canvas图层上. 文字的位置,
      * 是Canvas绘制出来的.
+     *
+     * @param text
      */
     public void setText(String text) {
         textAdd = text;
@@ -319,6 +341,7 @@ public class VideoOneDo {
         }
         timeStretchArray.add(new TimeRange(startTimeUs, endTimeUs, speed));
     }
+
     /**
      * 注释同上; 只是您可以把前台预览收集到的多个拉伸数组放进来;
      *
@@ -415,9 +438,8 @@ public class VideoOneDo {
 
         srcInfo = new MediaInfo(videoPath, false);
         if (srcInfo.prepare() == false) {
-            if (monVideoOneDoErrorListener != null && isExecuting) {
-                monVideoOneDoErrorListener.oError(this,
-                        VIDEOONEDO_ERROR_SRCFILE);
+            if (monVideoOneDoErrorListener != null) {
+                monVideoOneDoErrorListener.oError(this, VIDEOONEDO_ERROR_SRCFILE);
             }
             return false;
         }
@@ -433,8 +455,7 @@ public class VideoOneDo {
                 startTimeUs = 0;
                 Log.w(TAG, "开始时间无效,恢复为0...");
             }
-            if (du < (startTimeUs + cutDurationUs)) { // 如果总时间
-                // 小于要截取的时间,则截取时间默认等于总时间.
+            if (du < (startTimeUs + cutDurationUs)) { // 如果总时间 小于要截取的时间,则截取时间默认等于总时间.
                 cutDurationUs = 0;
                 Log.w(TAG, "剪切时长无效,恢复为0...");
             }
@@ -467,15 +488,10 @@ public class VideoOneDo {
 
             /**
              * 设置当前需要显示的区域 ,以左上角为0,0坐标.
-             *
-             * @param startX
-             *            开始的X坐标, 即从宽度的什么位置开始
-             * @param startY
-             *            开始的Y坐标, 即从高度的什么位置开始
-             * @param cropW
-             *            需要显示的宽度
-             * @param cropH
-             *            需要显示的高度.
+             * @param startX 开始的X坐标, 即从宽度的什么位置开始
+             * @param startY 开始的Y坐标, 即从高度的什么位置开始
+             * @param cropW 需要显示的宽度
+             * @param cropH 需要显示的高度.
              */
             fileParamter.setShowRect(startX, startY, cropWidth, cropHeight);
             fileParamter.setStartTimeUs(startTimeUs);
@@ -487,10 +503,11 @@ public class VideoOneDo {
                 padHeight = scaleHeight;
             }
 
-            float f = (float) (padHeight * padWidth)
-                    / (float) (fileParamter.info.vWidth * fileParamter.info.vHeight);
-            float bitrate = f * fileParamter.info.vBitRate * compressFactor
-                    * 2.0f;
+            float f = (float) (padHeight * padWidth) / (float) (fileParamter.info.vWidth * fileParamter.info.vHeight);
+            float bitrate = f * fileParamter.info.vBitRate * compressFactor * 2.0f;
+            if (videoBitRate > 0) {
+                bitrate = videoBitRate;
+            }
             drawPad = new DrawPadVideoExecute(context, fileParamter, padWidth,
                     padHeight, (int) bitrate, videoFilter, dstPath);
         } else { // 没有裁剪
@@ -499,17 +516,28 @@ public class VideoOneDo {
             int padHeight = srcInfo.getHeight();
 
             float bitrate = (float) srcInfo.vBitRate * compressFactor * 1.5f;
-            if (scaleHeight > 0 && scaleWidth > 0) {
-                padWidth = scaleWidth;
-                padHeight = scaleHeight;
-                float f = (float) (padHeight * padWidth)
-                        / (float) (srcInfo.vWidth * srcInfo.vHeight);
-                bitrate *= f;
+            if (videoBitRate > 0) {
+                bitrate = videoBitRate;
+            } else {
+                if (scaleHeight > 0 && scaleWidth > 0) {
+                    padWidth = scaleWidth;
+                    padHeight = scaleHeight;
+                    float f = (float) (padHeight * padWidth)
+                            / (float) (srcInfo.vWidth * srcInfo.vHeight);
+                    bitrate *= f;
+                }
             }
+            if (videoBitRate > 0) {
+                bitrate = videoBitRate;
+            }
+
             drawPad = new DrawPadVideoExecute(context, videoPath, startTimeUs,
                     padWidth, padHeight, (int) bitrate, videoFilter, dstPath);
         }
 
+        if (isEditModeVideo) {
+            drawPad.setEditModeVideo(isEditModeVideo);
+        }
         drawPad.setDrawPadErrorListener(new onDrawPadErrorListener() {
 
             @Override
@@ -534,14 +562,15 @@ public class VideoOneDo {
                     float percent = time / (float) tmpvDuration;
 
                     float b = (float) (Math.round(percent * 100)) / 100; // 保留两位小数.
-                    if (b < 1.0f && monVideoOneDoProgressListener != null&& isExecuting) {
-                        monVideoOneDoProgressListener.onProgress(VideoOneDo.this, b);
+                    if (b < 1.0f && monVideoOneDoProgressListener != null
+                            && isExecuting) {
+                        monVideoOneDoProgressListener.onProgress(
+                                VideoOneDo.this, b);
                     }
                 }
                 if (cutDurationUs > 0 && currentTimeUs > cutDurationUs) { // 设置了结束时间,
                     // 如果当前时间戳大于结束时间,则停止容器.
                     drawPad.stopDrawPad();
-                    completeDrawPad();
                 }
             }
         });
@@ -564,6 +593,7 @@ public class VideoOneDo {
                 completeDrawPad();
             }
         });
+
         /**
          * 增加音频参数.
          */
@@ -585,10 +615,13 @@ public class VideoOneDo {
         }
 
         drawPad.pauseRecord();
+
         if (drawPad.startDrawPad()) {
             videoLayer = drawPad.getMainVideoLayer();
-            videoLayer.setScaledValue(videoLayer.getPadWidth(),videoLayer.getPadHeight());
+            videoLayer.setScaledValue(videoLayer.getPadWidth(), videoLayer.getPadHeight());
+
             addBitmapLayer(); // 增加图片图层
+
             addCanvasLayer(); // 增加文字图层.
             drawPad.resumeRecord(); // 开始恢复处理.
             return true;
@@ -606,6 +639,7 @@ public class VideoOneDo {
         }
 
         if (audioPad != null) { // 只有音频的情况
+
             if (SDKFileUtils.fileExist(audioPadSavePath)) {
                 mergeAV(audioPadSavePath);
                 SDKFileUtils.deleteFile(audioPadSavePath);
@@ -614,7 +648,6 @@ public class VideoOneDo {
                 Log.e(TAG, "音频容器执行失败,请把打印信息发给我们.谢谢!");
             }
         }
-
         MediaInfo info = new MediaInfo(dstPath, false);
         if (info.prepare()) {
             if (monVideoOneDOCompletedListener != null && isExecuting) {
@@ -628,6 +661,7 @@ public class VideoOneDo {
                         VIDEOONEDO_ERROR_DSTERROR);
             }
         }
+
         isExecuting = false;
 
         // Log.d(TAG,"最后的视频文件是:"+MediaInfo.checkFile(dstPath));
@@ -770,7 +804,8 @@ public class VideoOneDo {
                 && scaleWidth == 0 && scaleHeight == 0
                 && compressFactor == 1.0f && textAdd == null
                 && timeStretchArray == null && timeFreezeArray == null
-                && timeRepeatArray == null) {
+                && timeRepeatArray == null
+                && isEditModeVideo == false) {
             return true;
         } else {
             return false;
@@ -835,6 +870,7 @@ public class VideoOneDo {
 
                 @Override
                 public void onCompleted(AudioPad v) {
+
                     completeDrawPad();
                 }
             });

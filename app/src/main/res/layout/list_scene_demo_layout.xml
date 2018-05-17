@@ -26,6 +26,7 @@
 			<TextView  style="@style/main_item_arrow"/> 
 	</RelativeLayout>
      
+
 	 <RelativeLayout  android:id="@+id/id_layer_videotransform" style="@style/main_item_reletivelayout">
            	 <TextView   android:text="多图层转换(前台转场)" style="@style/main_item_textview"/>
 			<TextView  style="@style/main_item_arrow"/> 
@@ -53,5 +54,14 @@
            	 <TextView   android:text="视频任意点变速" style="@style/main_item_textview"/>
 			<TextView  style="@style/main_item_arrow"/> 
 	</RelativeLayout>
+	
+	 <RelativeLayout  android:id="@+id/id_layer_videoreverse" style="@style/main_item_reletivelayout">
+           	 <TextView   android:text="视频任意点倒序播放" style="@style/main_item_textview"/>
+			<TextView  style="@style/main_item_arrow"/> 
+	</RelativeLayout>
+  
+
+  
+
 </LinearLayout>
 </ScrollView>

@@ -13,6 +13,8 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Surface;
 import android.view.TextureView.SurfaceTextureListener;
+import android.widget.SeekBar;
+import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -136,10 +138,46 @@ public class VideoPlayerActivity extends Activity {
                                                   int width, int height) {
                 if (isSupport) {
                     play(new Surface(surface)); // 采用系统本身的MediaPlayer播放
-                    // startVPlayer(new Surface(surface)); //我们SDK提供的播放器.
+//					 startVPlayer(new Surface(surface)); //我们SDK提供的播放器.
                 }
             }
         });
+
+        SeekBar skbar = (SeekBar) findViewById(R.id.id_player_skbar);
+        skbar.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                // TODO Auto-generated method stub
+
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+                // TODO Auto-generated method stub
+
+            }
+
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress,
+                                          boolean fromUser) {
+
+                int timeMs = (int) ((progress / 100f) * mInfo.vDuration * 1000);
+                Log.i(TAG, "seek 到的时间是:" + timeMs);
+
+                if (vplayer != null) {
+                    vplayer.seekTo(timeMs);
+                }
+
+                if (mediaPlayer != null) {
+                    mediaPlayer.seekTo(timeMs);
+                    mediaPlayer.start();
+                }
+
+            }
+        });
+
+
     }
 
     private void showHintDialog() {
@@ -210,17 +248,13 @@ public class VideoPlayerActivity extends Activity {
                 // 因为是竖屏.宽度小于高度.
                 if (screenWidth > mInfo.vWidth) {
                     tvSizeHint.setText(R.string.origal_width);
-                    textureView
-                            .setDispalyRatio(IRenderView.AR_ASPECT_WRAP_CONTENT);
-
+                    textureView.setDispalyRatio(IRenderView.AR_ASPECT_WRAP_CONTENT);
                 } else { // 大于屏幕的宽度
                     tvSizeHint.setText(R.string.fix_width);
-                    textureView
-                            .setDispalyRatio(IRenderView.AR_ASPECT_FIT_PARENT);
+                    textureView.setDispalyRatio(IRenderView.AR_ASPECT_FIT_PARENT);
                 }
 
-                textureView.setVideoSize(mp.getVideoWidth(),
-                        mp.getVideoHeight());
+                textureView.setVideoSize(mp.getVideoWidth(), mp.getVideoHeight());
                 textureView.requestLayout();
                 vplayer.start();
                 vplayer.setLooping(true);
@@ -231,12 +265,10 @@ public class VideoPlayerActivity extends Activity {
             @Override
             public void onCompletion(VideoPlayer mp) {
                 isPaused = true;
-                Toast.makeText(VideoPlayerActivity.this, "视频播放完成",
-                        Toast.LENGTH_SHORT).show();
+                Toast.makeText(VideoPlayerActivity.this, "视频播放完成", Toast.LENGTH_SHORT).show();
             }
         });
         vplayer.prepareAsync();
-
     }
 
     @Override

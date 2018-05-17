@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">蓝松视频编辑专业版本DEMO</string>
+    <string name="app_name">蓝松视频编辑专业版本</string>
 
     <string name="message_granted">All permissions have been granted.</string>
     <string name="message_denied">Permission \"%1$s\" has been denied.</string>
@@ -10,7 +10,7 @@
      <string name="lansong_hint">杭州蓝松科技有限公司\n   专业的视频处理SDK开发团队.</string>
     <string name="sdk_limit">SDK版本号是:%1$s\nSDK底层做了授权限制,【仅可在此demo中运行】,并有效时间到 \"%2$d\"年 \"%3$d\"月之前,请注意.</string>
     	
-    <string name="adv_hint5">"此专业版本SDK为商业收费授权合作的形式,价格可联系我们.  www.lansongtech.com"</string>
+    <string name="adv_hint5">"此为蓝松短视频专业版SDK,商业收费授权合作的形式,价格可联系我们.  联系方式:\n QQ:1852600324\n 公司电话:0571-89052701\n email:support@lansongtech.com."</string>
   	
   	<string name="select_video">请选择视频</string>
 		

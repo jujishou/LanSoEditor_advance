@@ -1,5 +1,6 @@
 package com.example.advanceDemo.camera;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -41,6 +42,7 @@ import java.io.IOException;
 
 import jp.co.cyberagent.lansongsdk.gpuimage.GPUImageFilter;
 
+@SuppressLint("SdCardPath")
 public class CameraLayerFullPortActivity extends Activity implements
         OnClickListener {
 
@@ -49,7 +51,8 @@ public class CameraLayerFullPortActivity extends Activity implements
     private static final int RECORD_CAMERA_MIN = 2 * 1000 * 1000; // 定义最小2秒
 
     private static final String TAG = "CameraFullRecordActivity";
-    // ------------------------------------------一下是UI界面和控制部分
+    // ------------------------------------------一下是UI界面和控制部分.---------------------------------------------------
+    SeekBar testSeekBar;
     private DrawPadCameraView mDrawPadCamera;
     private CameraLayer mCamLayer = null;
     private String dstPath = null; // 用于录制完成后的目标视频路径.
@@ -119,6 +122,7 @@ public class CameraLayerFullPortActivity extends Activity implements
                         if (mDrawPadCamera != null) {
                             /**
                              * 这里只是暂停和恢复录制, 可以录制多段,但不可以删除录制好的每一段,
+                             *
                              * 如果你要分段录制,并支持回删,则可以采用SegmentStart和SegmentStop;
                              */
                             if (mDrawPadCamera.isRecording()) {
@@ -202,8 +206,7 @@ public class CameraLayerFullPortActivity extends Activity implements
      */
     private void startDrawPad() {
         // 如果是屏幕比例大于16:9,则需要重新设置编码参数, 从而画面不变形
-        if (LanSongUtil.isFullScreenRatio(mDrawPadCamera.getViewWidth(), mDrawPadCamera
-                .getViewHeight())) {
+        if (LanSongUtil.isFullScreenRatio(mDrawPadCamera.getViewWidth(), mDrawPadCamera.getViewHeight())) {
             mDrawPadCamera.setRealEncodeEnable(544, 1088, 3500 * 1024, (int) 25, dstPath);
         }
         if (mDrawPadCamera.setupDrawpad()) // 建立图层.
@@ -262,9 +265,6 @@ public class CameraLayerFullPortActivity extends Activity implements
     protected void onDestroy() {
         super.onDestroy();
         stopDrawPad();
-
-        SDKFileUtils.deleteFile(dstPath);
-        dstPath = null;
     }
 
     /**

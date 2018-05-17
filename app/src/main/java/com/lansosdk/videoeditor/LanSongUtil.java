@@ -34,6 +34,15 @@ public class LanSongUtil {
 
     /**
      * 隐藏虚拟按键，并且全屏
+     * <p>
+     * 如果不全屏, 用这样的不行: int width=mDrawPadView.getDrawPadWidth(); int
+     * height=mDrawPadView.getDrawPadHeight(); int padWidth=
+     * (padHeight*width)/height;
+     * <p>
+     * padWidth=(int)LanSongUtil.make4Bei((long)padWidth);
+     * <p>
+     * Log.i(TAG,"wwwwwidth:"+width+"height"+height+" pad:"+padHeight+" "+
+     * padWidth);
      */
     public static void hideBottomUIMenu(Activity act) {
         // 隐藏虚拟按键，并且全屏
@@ -68,6 +77,7 @@ public class LanSongUtil {
      * <p>
      * 如果是18,19这样接近16,则等于16, 等于缩小了原有的画面, 如果是25,28这样接近32,则等于32, 等于稍微拉伸了原来的画面,
      * 因为最多缩小或拉伸8个像素, 还不至于画面严重变形,而又兼容编码器的要求,故可以这样做.
+     * <p>
      * 16, 17, 18, 19,20,21,22,23 ==>16; 24,25,26,27,28,29,30,31,32==>32;
      *
      * @param value
@@ -141,7 +151,7 @@ public class LanSongUtil {
     }
 
     /**
-     * 获取到当前Activity的角度, [只是放到这里, 暂时没有测试]
+     * 获取到当前Activity的角度, [只是放到这里, 暂时没有测试] //TODO
      *
      * @param ctx
      * @return

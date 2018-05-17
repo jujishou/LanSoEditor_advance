@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
@@ -280,16 +279,18 @@ public class Demo3LayerFilterActivity extends Activity {
             if (decoderHandler != 0) {
                 mGLRgbBuffer = IntBuffer.allocate(info.vWidth * info.vHeight);
                 mGLRgbBuffer.position(0);
-                AVDecoder
-                        .decoderFrame(decoderHandler, -1, mGLRgbBuffer.array());
+                AVDecoder.decoderFrame(decoderHandler, -1, mGLRgbBuffer.array());
                 AVDecoder.decoderRelease(decoderHandler);
 
                 // 转换为bitmap
                 Bitmap bmp = Bitmap.createBitmap(info.vWidth, info.vHeight,
                         Bitmap.Config.ARGB_8888);
                 bmp.copyPixelsFromBuffer(mGLRgbBuffer);
+                decoderHandler = 0;
+
                 // 拿到图片, 去获取多个滤镜.
                 getBitmapFilters(bmp, info.vRotateAngle);
+
                 return true;
             }
         }
@@ -325,7 +326,8 @@ public class Demo3LayerFilterActivity extends Activity {
         }
         getFilter.setRorate(angle);
 
-        getFilter.setDrawpadOutFrameListener(new onGetFiltersOutFrameListener() {
+        getFilter
+                .setDrawpadOutFrameListener(new onGetFiltersOutFrameListener() {
                     @Override
                     public void onOutFrame(BitmapGetFilters v, Object obj) {
                         Bitmap bmp2 = (Bitmap) obj;
@@ -349,7 +351,8 @@ public class Demo3LayerFilterActivity extends Activity {
         GPUImageFilter filter = FilterLibrary.getFilterList().getFilter(
                 getApplicationContext(), currrentFilterName);
         videoOneDo.setFilter(filter);
-        videoOneDo.setOnVideoOneDoProgressListener(new onVideoOneDoProgressListener() {
+        videoOneDo
+                .setOnVideoOneDoProgressListener(new onVideoOneDoProgressListener() {
 
                     @Override
                     public void onProgress(VideoOneDo v, float percent) {
@@ -372,12 +375,6 @@ public class Demo3LayerFilterActivity extends Activity {
                 dstPath = dstVideo;
                 videoOneDo.release();
                 videoOneDo = null;
-
-                if(SDKFileUtils.fileExist(dstPath)){
-                    showHintDialog("预览");
-                }else{
-                    showHintDialog("执行错误,请联系我们.");
-                }
             }
         });
         if (videoOneDo.start()) {
@@ -387,6 +384,17 @@ public class Demo3LayerFilterActivity extends Activity {
                     Toast.LENGTH_SHORT).show();
         }
     }
+
+    private void showHintDialog(int stringId) {
+        new AlertDialog.Builder(this).setTitle("提示").setMessage(stringId)
+                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                    }
+                }).show();
+    }
+
     public class GetBitmapFiltersTask extends
             AsyncTask<Object, Object, Boolean> {
         private String video;
@@ -415,24 +423,6 @@ public class Demo3LayerFilterActivity extends Activity {
                 listFilterView.setAdapter(listAdapter);
             }
         }
-    }
-
-    /**
-     * 开始预览
-     */
-    private void showHintDialog(String hint) {
-        new AlertDialog.Builder(this).setTitle("提示").setMessage(hint)
-                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
-
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        if(SDKFileUtils.fileExist(dstPath)){
-                            Intent intent = new Intent(Demo3LayerFilterActivity.this,VideoPlayerActivity.class);
-                            intent.putExtra("videopath", dstPath);
-                            startActivity(intent);
-                        }
-                    }
-                }).show();
     }
 
 }

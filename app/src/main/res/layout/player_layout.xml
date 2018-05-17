@@ -15,7 +15,6 @@
         android:id="@+id/surface1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
-        
     </FrameLayout>
     <LinearLayout 
         android:layout_width="match_parent"
@@ -27,16 +26,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
         	android:textColor="@color/red"
-        	android:textSize="20sp"
             />
           
-      <!--    <TextView 
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/videoplay_hint"
-        	android:textColor="@color/red"
-            />
-         --> 
         <TextView 
             android:id="@+id/id_palyer_screenhinit"
             android:layout_width="match_parent"
@@ -61,7 +52,12 @@
             android:layout_height="wrap_content"
         	android:textColor="@color/blue"
             />
-           
     </LinearLayout>
 
+    <SeekBar 
+        android:id="@+id/id_player_skbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="20dip"/>
 </RelativeLayout>

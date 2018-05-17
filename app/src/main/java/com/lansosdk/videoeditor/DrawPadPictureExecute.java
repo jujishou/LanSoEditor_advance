@@ -80,7 +80,7 @@ public class DrawPadPictureExecute {
 
     public void setLanSongVideoMode(boolean is) {
         if (renderer != null) {
-            renderer.setLanSongVideoMode(is);
+            renderer.setEditModeVideo(is);
         }
     }
 
@@ -229,7 +229,9 @@ public class DrawPadPictureExecute {
     /**
      * DrawPad每执行完一帧画面,会调用这个Listener,返回的timeUs是当前画面的时间戳(微妙),
      * 可以利用这个时间戳来做一些变化,比如在几秒处缩放, 在几秒处平移等等.从而实现一些动画效果.
-     *d/
+     *
+     * @param currentTimeUs 当前DrawPad处理画面的时间戳.,单位微秒.
+     */
     public void setDrawPadProgressListener(onDrawPadProgressListener listener) {
         if (renderer != null) {
             renderer.setDrawPadProgressListener(listener);
@@ -246,12 +248,6 @@ public class DrawPadPictureExecute {
             onDrawPadThreadProgressListener listener) {
         if (renderer != null) {
             renderer.setDrawPadThreadProgressListener(listener);
-        }
-    }
-    public void setDrawPadProgressListener(onDrawPadProgressListener listener)
-    {
-        if(renderer!=null){
-            renderer.setDrawPadProgressListener(listener);
         }
     }
 

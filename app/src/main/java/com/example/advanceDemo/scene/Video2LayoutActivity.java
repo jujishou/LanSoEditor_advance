@@ -20,7 +20,6 @@ import com.lansoeditor.advanceDemo.R;
 import com.lansosdk.box.BitmapLayer;
 import com.lansosdk.box.DrawPadUpdateMode;
 import com.lansosdk.box.VideoLayer;
-import com.lansosdk.box.VideoLayer2;
 import com.lansosdk.box.onDrawPadSizeChangedListener;
 import com.lansosdk.videoeditor.CopyFileFromAssets;
 import com.lansosdk.videoeditor.DrawPadView;
@@ -33,6 +32,7 @@ import java.io.IOException;
 
 public class Video2LayoutActivity extends Activity {
     private static final String TAG = "Video2LayoutActivity";
+    boolean isFirstRemove = false;
     boolean isDestorying = false; // 是否正在销毁, 因为销毁会停止DrawPad
     private String mVideoPath;
     private String videoPath2;
@@ -42,7 +42,7 @@ public class Video2LayoutActivity extends Activity {
     private boolean mplayerReady = false;
     private boolean mplayer2Ready = false;
     private VideoLayer videoLayer1 = null;
-    private VideoLayer2 videoLayer2 = null;
+    private VideoLayer videoLayer2 = null;
     private String editTmpPath = null;
     private String dstPath = null;
     private LinearLayout playVideo;
@@ -127,19 +127,21 @@ public class Video2LayoutActivity extends Activity {
         if (mplayerReady && mplayer2Ready) {
             mInfo = new MediaInfo(mVideoPath, false);
             if (mInfo.prepare()) {
-                drawPadView.setUpdateMode(DrawPadUpdateMode.ALL_VIDEO_READY, 25);
+                drawPadView
+                        .setUpdateMode(DrawPadUpdateMode.ALL_VIDEO_READY, 25);
 
-                drawPadView.setRealEncodeEnable(480, 480, 1200000, (int) mInfo.vFrameRate,
-                        editTmpPath);
+                drawPadView.setRealEncodeEnable(480, 480, 1200000,
+                        (int) mInfo.vFrameRate, editTmpPath);
 
-                drawPadView.setDrawPadSize(480, 480, new onDrawPadSizeChangedListener() {
+                drawPadView.setDrawPadSize(480, 480,
+                        new onDrawPadSizeChangedListener() {
 
-                    @Override
-                    public void onSizeChanged(int viewWidth,
-                                              int viewHeight) {
-                        startDrawPad();
-                    }
-                });
+                            @Override
+                            public void onSizeChanged(int viewWidth,
+                                                      int viewHeight) {
+                                startDrawPad();
+                            }
+                        });
             }
         }
 
@@ -168,7 +170,7 @@ public class Video2LayoutActivity extends Activity {
             }
 
             // 增加另一个视频.
-            videoLayer2 = drawPadView.addVideoLayer2(mplayer2.getVideoWidth(),
+            videoLayer2 = drawPadView.addVideoLayer(mplayer2.getVideoWidth(),
                     mplayer2.getVideoHeight(), null);
             mplayer2.setSurface(new Surface(videoLayer2.getVideoTexture())); // 视频
             mplayer2.start();
@@ -177,11 +179,11 @@ public class Video2LayoutActivity extends Activity {
             drawPadView.resumeDrawPad();
 
             // 对两个视频布局一下.
-            videoLayer1.setScale(0.5f);
+            videoLayer1.setScale(0.5f, 1.0f); // 因为宽度缩放一半,高度没有缩放, 会变形一点.
             videoLayer1.setPosition(videoLayer1.getPadWidth() / 4,
                     videoLayer1.getPositionY());
 
-            videoLayer2.setScale(0.5f);
+            videoLayer2.setScale(0.5f, 1.0f); // 因为宽度缩放一半,高度没有缩放, 会变形一点.
             videoLayer2.setPosition(videoLayer2.getPadWidth() * 3 / 4,
                     videoLayer2.getPositionY());
         }

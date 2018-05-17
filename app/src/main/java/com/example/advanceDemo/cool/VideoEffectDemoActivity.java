@@ -6,11 +6,14 @@ import android.media.MediaPlayer.OnCompletionListener;
 import android.media.MediaPlayer.OnPreparedListener;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.Surface;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.example.advanceDemo.DemoUtil;
 import com.lansoeditor.advanceDemo.R;
 import com.lansosdk.box.DrawPad;
 import com.lansosdk.box.DrawPadUpdateMode;
@@ -21,7 +24,9 @@ import com.lansosdk.box.onDrawPadSizeChangedListener;
 import com.lansosdk.box.onDrawPadThreadProgressListener;
 import com.lansosdk.videoeditor.DrawPadView;
 import com.lansosdk.videoeditor.MediaInfo;
+import com.lansosdk.videoeditor.SDKDir;
 import com.lansosdk.videoeditor.SDKFileUtils;
+import com.lansosdk.videoeditor.VideoEditor;
 
 import jp.co.cyberagent.lansongsdk.gpuimage.GPUImageColorInvertFilter;
 import jp.co.cyberagent.lansongsdk.gpuimage.GPUImageLaplacianFilter;
@@ -29,20 +34,32 @@ import jp.co.cyberagent.lansongsdk.gpuimage.GPUImageToonFilter;
 import jp.co.cyberagent.lansongsdk.gpuimage.LanSongBlurFilter;
 import jp.co.cyberagent.lansongsdk.gpuimage.LanSongColorEdgeFilter;
 
+/**
+ * 演示: 使用DrawPad来实现 视频和图片的实时叠加.
+ * <p>
+ * 流程是: 先创建一个DrawPad,然后在视频播放过程中,从DrawPad中增加一个BitmapLayer,然后可以调节SeekBar来对Layer的每个
+ * 参数进行调节.
+ * <p>
+ * 可以调节的有:平移,旋转,缩放,RGBA值,显示/不显示(闪烁)效果. 实际使用中, 可用这些属性来做些动画,比如平移+RGBA调节,呈现舒缓移除的效果.
+ * 缓慢缩放呈现照片播放效果;旋转呈现欢快的炫酷效果等等.
+ */
+
 public class VideoEffectDemoActivity extends Activity implements OnClickListener {
-    private static final String TAG = "VideoEffectDemo";
+    private static final String TAG = "Demo1LayerMothedActivity";
     private static final int ONESCALE_FRAMES = 6;
     private static final int SCALE_STATUS_NONE = 0;
     private static final int SCALE_STATUS_ADD = 1;
     private static final int SCALE_STATUS_DEL = 2;  //减去;
     private static final int OUTBODY_FRAMES = 15;
+    int testCnt = 0;
+    boolean isPaused = false;
     private String videoPath;
     private DrawPadView drawPadView;
-
     private MediaPlayer mplayer = null;
-
     private VideoLayer2 videoLayer = null;
+    private String editTmpPath = null;
     private String dstPath = null;
+    private LinearLayout playVideo;
     private MediaInfo mInfo = null;
     private int colorEdgeCnt = 0;
     private int colorScaleStatus = SCALE_STATUS_NONE;
@@ -70,6 +87,8 @@ public class VideoEffectDemoActivity extends Activity implements OnClickListener
         drawPadView = (DrawPadView) findViewById(R.id.id_videoeffect_drawpadview);
         initView();
 
+        // 在手机的默认路径下创建一个文件名,用来保存生成的视频文件,(在onDestroy中删除)
+        editTmpPath = SDKFileUtils.newMp4PathInBox();
         dstPath = SDKFileUtils.newMp4PathInBox();
 
         new Handler().postDelayed(new Runnable() {
@@ -125,9 +144,6 @@ public class VideoEffectDemoActivity extends Activity implements OnClickListener
                 startDrawPad();
             }
         });
-        /**
-         * 监听容器执行的进度,根据执行进度,调整画面, 从而有运动效果;
-         */
         drawPadView.setOnDrawPadThreadProgressListener(new onDrawPadThreadProgressListener() {
 
             @Override
@@ -136,9 +152,6 @@ public class VideoEffectDemoActivity extends Activity implements OnClickListener
                 videoOutBody();
             }
         });
-        /**
-         * 设置容器为自动播放;
-         */
         drawPadView.setUpdateMode(DrawPadUpdateMode.AUTO_FLUSH, 25);
     }
 
@@ -163,7 +176,21 @@ public class VideoEffectDemoActivity extends Activity implements OnClickListener
      */
     private void stopDrawPad() {
         if (drawPadView != null && drawPadView.isRunning()) {
+
             drawPadView.stopDrawPad();
+            DemoUtil.showToast(getApplicationContext(), "录制已停止!!");
+
+            if (SDKFileUtils.fileExist(editTmpPath)) {
+                boolean ret = VideoEditor.encoderAddAudio(videoPath, editTmpPath, SDKDir.TMP_DIR, dstPath);
+                if (!ret) {
+                    dstPath = editTmpPath;
+                } else {
+                    SDKFileUtils.deleteFile(editTmpPath);
+                }
+                playVideo.setVisibility(View.VISIBLE);
+            } else {
+                Log.e(TAG, " player completion, but file not exist" + editTmpPath);
+            }
         }
     }
 
@@ -225,9 +252,6 @@ public class VideoEffectDemoActivity extends Activity implements OnClickListener
         }
     }
 
-    /**
-     * 视频增加背景
-     */
     private void videoBackGroundBlur() {
         if (videoLayer != null) {
 
@@ -240,12 +264,6 @@ public class VideoEffectDemoActivity extends Activity implements OnClickListener
         }
     }
 
-    /**
-     * 同时显示16个一样的画面;
-     *
-     * 原理是: 已有一个画面, 再给当前视频图层增加15个子图层, 从而有16个图层,
-     * 把16个图层,同时缩放, 计算好位置,显示出来即可; 类似你在界面放放16个按钮;
-     */
     private void video16Image() {
         if (videoLayer != null) {
 
@@ -269,9 +287,6 @@ public class VideoEffectDemoActivity extends Activity implements OnClickListener
         }
     }
 
-    /**
-     * 剩下两行的显示;
-     */
     private void video16ImageLayout() {
         for (int i = 1; i < 4; i++) {
 
@@ -281,15 +296,18 @@ public class VideoEffectDemoActivity extends Activity implements OnClickListener
 
             SubLayer layer1 = videoLayer.addSubLayer();
             layer1.setScale(0.25F);
-            layer1.setPosition(videoLayer.getPositionX() + videoLayer.getScaleX(), videoLayer.getPositionY() + videoLayer.getScaleY() * i);
+            layer1.setPosition(videoLayer.getPositionX() + videoLayer.getScaleX(), videoLayer.getPositionY() +
+                    videoLayer.getScaleY() * i);
 
             SubLayer layer2 = videoLayer.addSubLayer();
             layer2.setScale(0.25F);
-            layer2.setPosition(layer1.getPositionX() + videoLayer.getScaleX(), videoLayer.getPositionY() + videoLayer.getScaleY() * i);
+            layer2.setPosition(layer1.getPositionX() + videoLayer.getScaleX(), videoLayer.getPositionY() + videoLayer
+                    .getScaleY() * i);
 
             SubLayer layer3 = videoLayer.addSubLayer();
             layer3.setScale(0.25F);
-            layer3.setPosition(layer2.getPositionX() + videoLayer.getScaleX(), videoLayer.getPositionY() + videoLayer.getScaleY() * i);
+            layer3.setPosition(layer2.getPositionX() + videoLayer.getScaleX(), videoLayer.getPositionY() + videoLayer
+                    .getScaleY() * i);
         }
     }
 
@@ -310,14 +328,16 @@ public class VideoEffectDemoActivity extends Activity implements OnClickListener
             layer2.setRGBAPercent(0.3f);
         }
     }
-    /**
-     * 画面放大一下,然后缩小一下;
-     * 因为是运动的效果, 要放到progressListener中; 当点击时候, 调用videoColorStart();
-     */
+
     private void videoColorStart() {
         colorScaleEnable = true;
         colorScaleStatus = SCALE_STATUS_ADD;
     }
+
+    /**
+     * 画面放大一下,然后缩小一下;
+     * 因为是运动的效果, 要放到progressListener中; 当点击时候, 调用videoColorStart();
+     */
     private void videoColorEndge() {
         if (colorScaleEnable) {
             if (colorEdgeFilter == null) {
@@ -348,9 +368,6 @@ public class VideoEffectDemoActivity extends Activity implements OnClickListener
         }
     }
 
-    /**
-     * 恢复视频默认状态;
-     */
     private void resetVideo() {
         videoLayer.switchFilterTo(null);
         colorEdgeFilter = null;
@@ -361,10 +378,6 @@ public class VideoEffectDemoActivity extends Activity implements OnClickListener
     }
 
     /**
-     * 原理是:
-     *    视频图层原有一个画面, 再上面增加一个子图层, 原画面不变, 调节子图层画面的缩放和透明度.
-     *    画面放大和透明, 随着运动, 就类似出窍的效果;
-     *
      * 视频子图层的每一帧, 要放到进度回调中;
      * 是一种运动效果;, 放到进度中
      */
@@ -443,6 +456,7 @@ public class VideoEffectDemoActivity extends Activity implements OnClickListener
     protected void onDestroy() {
         super.onDestroy();
         SDKFileUtils.deleteFile(dstPath);
+        SDKFileUtils.deleteFile(editTmpPath);
     }
 
     private void initView() {

@@ -71,9 +71,8 @@ public class AVDecoder {
      * 用list保存起来,不用每次都解码同一个视频.
      *
      * @param handle 当前文件的句柄,
-     * @param seekUs 是否要seek, 大于等于0说明要seek,
+     * @param seekUs 是否要seek, 大于等于0说明要seek; 如果seek的时间大于视频的总时长,则返回视频最后一帧的画面;
      * @param out    输出. 数组由外部创建, 创建时的大小应等于 视频的宽度*高度*4;
-     *               <p>
      *               注意: 此类采用的ffmpeg中的软解码来做的, 如果您感觉软解有点慢, 我们提供了异步线程解码的形式,
      *               可以加速解码处理,请联系我们.
      * @return 返回的是当前帧的时间戳.单位是US 微秒
@@ -90,6 +89,8 @@ public class AVDecoder {
 
     /**
      * [视频解码] 解码是否到文件尾.
+     * <p>
+     * 如果seek的位置,大于视频的时长,则返回视频最后一帧的时间戳和画面;
      *
      * @param handle
      * @return
@@ -111,8 +112,7 @@ public class AVDecoder {
                 mGLRgbBuffer = IntBuffer.allocate(info.vWidth * info.vHeight);
                 long beforeDraw = System.currentTimeMillis();
                 mGLRgbBuffer.position(0);
-                AVDecoder
-                        .decoderFrame(decoderHandler, -1, mGLRgbBuffer.array());
+                AVDecoder.decoderFrame(decoderHandler, -1, mGLRgbBuffer.array());
                 Log.i("TIME",
                         "draw comsume time is :"
                                 + (System.currentTimeMillis() - beforeDraw));
@@ -143,18 +143,28 @@ public class AVDecoder {
      *           new Thread(new Runnable() {
      * @Override public void run() { // TODO Auto-generated method stub
      *           testDecoder2("/sdcard/ping20s.mp4","/sdcard/ping20s.yuv"); }
-     *           }).start(); } private void testDecoder2(String src,String dst)
-     *           { long decoderHandler; IntBuffer mGLRgbBuffer; String
-     *           gifPath=src; MediaInfo gifInfo=new MediaInfo(gifPath);
-     *           if(gifInfo.prepare()) {
-     *           decoderHandler=AVDecoder.decoderInit(gifPath); FileWriteUtls
-     *           write=new FileWriteUtls(dst); mGLRgbBuffer =
-     *           IntBuffer.allocate(gifInfo.vWidth * gifInfo.vHeight);
-     *           while(AVDecoder.decoderIsEnd(decoderHandler)==false) {
-     *           mGLRgbBuffer.position(0);
-     *           AVDecoder.decoderFrame(decoderHandler, -1,
-     *           mGLRgbBuffer.array()); mGLRgbBuffer.position(0);
-     *           write.writeFile(mGLRgbBuffer); } write.closeWriteFile();
-     *           Log.i(TAG,"write closeEEEE!"); } }
+     *           }).start(); }
+     *
+     *           private void testDecoder3(String src) {
+    long decoderHandler;
+    IntBuffer mGLRgbBuffer;
+
+    MediaInfo gifInfo = new MediaInfo(src);
+    if (gifInfo.prepare()) {
+
+    long starttime=System.currentTimeMillis();
+    decoderHandler = AVDecoder.decoderInit(src);
+    mGLRgbBuffer =IntBuffer.allocate(gifInfo.vWidth * gifInfo.vHeight);
+
+    while (AVDecoder.decoderIsEnd(decoderHandler) == false) {
+    mGLRgbBuffer.position(0);
+    AVDecoder.decoderFrame(decoderHandler, -1, mGLRgbBuffer.array());
+    mGLRgbBuffer.position(0);
+    }
+    AVDecoder.decoderRelease(decoderHandler);
+    Log.i(TAG,"RGBA 解码用时:"+(System.currentTimeMillis() - starttime));
+    }
+    }
+
      */
 }

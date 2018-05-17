@@ -45,7 +45,7 @@ public class CanvasLayerDemoActivity extends Activity {
     private static final String TAG = "CanvasLayerDemoActivity";
     ShowHeart mShowHeart;
     private String mVideoPath;
-    private DrawPadView drawPadView;
+    private DrawPadView mDrawPadView;
     private MediaPlayer mplayer = null;
     private VideoLayer mLayerMain = null;
     private CanvasLayer mCanvasLayer = null;
@@ -67,7 +67,7 @@ public class CanvasLayerDemoActivity extends Activity {
             Log.e(TAG, " video path is error.finish\n");
             finish();
         }
-        drawPadView = (DrawPadView) findViewById(R.id.id_canvaslayer_drawpadview);
+        mDrawPadView = (DrawPadView) findViewById(R.id.id_canvaslayer_drawpadview);
 
         playVideo = (LinearLayout) findViewById(R.id.id_canvasLayer_saveplay);
         playVideo.setOnClickListener(new OnClickListener() {
@@ -143,13 +143,13 @@ public class CanvasLayerDemoActivity extends Activity {
      * Step1: 初始化 DrawPad 容器
      */
     private void initDrawPad() {
-        drawPadView.setUseMainVideoPts(true);
+        mDrawPadView.setUseMainVideoPts(true);
 
         // 设置使能 实时录制, 即把正在DrawPad中呈现的画面实时的保存下来,实现所见即所得的模式
-        drawPadView.setRealEncodeEnable(480, 480, 1000000,
+        mDrawPadView.setRealEncodeEnable(480, 480, 1000000,
                 (int) mInfo.vFrameRate, editTmpPath);
         // 设置当前DrawPad的宽度和高度,并把宽度自动缩放到父view的宽度,然后等比例调整高度.
-        drawPadView.setDrawPadSize(480, 480,
+        mDrawPadView.setDrawPadSize(480, 480,
                 new onDrawPadSizeChangedListener() {
 
                     @Override
@@ -160,25 +160,29 @@ public class CanvasLayerDemoActivity extends Activity {
                     }
                 });
 
-        drawPadView.setOnDrawPadProgressListener(new onDrawPadProgressListener() {
+        mDrawPadView
+                .setOnDrawPadProgressListener(new onDrawPadProgressListener() {
 
-            @Override
-            public void onProgress(DrawPad v, long currentTimeUs) {
+                    @Override
+                    public void onProgress(DrawPad v, long currentTimeUs) {
+                        // TODO Auto-generated method stub
 
-                if (currentTimeUs > 20 * 1000 * 1000 && mCanvasLayer != null) {
-                    drawPadView.removeLayer(mCanvasLayer);
-                    mCanvasLayer = null;
-                }
-            }
-        });
-        drawPadView.setOnDrawPadThreadProgressListener(new onDrawPadThreadProgressListener() {
+                        if (currentTimeUs > 20 * 1000 * 1000
+                                && mCanvasLayer != null) {
+                            mDrawPadView.removeLayer(mCanvasLayer);
+                            mCanvasLayer = null;
+                        }
+                    }
+                });
+        mDrawPadView
+                .setOnDrawPadThreadProgressListener(new onDrawPadThreadProgressListener() {
 
-            @Override
-            public void onThreadProgress(DrawPad v, long currentTimeUs) {
-                Log.i(TAG, "ThreadProgress 的时间戳是:" + currentTimeUs);
-                frameCnt++;
-            }
-        });
+                    @Override
+                    public void onThreadProgress(DrawPad v, long currentTimeUs) {
+                        Log.i(TAG, "ThreadProgress 的时间戳是:" + currentTimeUs);
+                        frameCnt++;
+                    }
+                });
 
     }
 
@@ -186,10 +190,10 @@ public class CanvasLayerDemoActivity extends Activity {
      * Step2: 开始运行容器
      */
     private void startDrawPad() {
-        drawPadView.pauseDrawPad();
-        if (drawPadView.startDrawPad()) {
+        mDrawPadView.pauseDrawPad();
+        if (mDrawPadView.startDrawPad()) {
             // 增加一个主视频的 VideoLayer
-            mLayerMain = drawPadView.addMainVideoLayer(
+            mLayerMain = mDrawPadView.addMainVideoLayer(
                     mplayer.getVideoWidth(), mplayer.getVideoHeight(), null);
             if (mLayerMain != null) {
                 mplayer.setSurface(new Surface(mLayerMain.getVideoTexture()));
@@ -199,7 +203,7 @@ public class CanvasLayerDemoActivity extends Activity {
 
             addCanvasLayer(); // 增加一个CanvasLayer
 
-            drawPadView.resumeDrawPad();
+            mDrawPadView.resumeDrawPad();
         }
     }
 
@@ -207,9 +211,9 @@ public class CanvasLayerDemoActivity extends Activity {
      * Step3: 停止容器,停止后,为新的视频文件增加上音频部分.
      */
     private void stopDrawPad() {
-        if (drawPadView != null && drawPadView.isRunning()) {
+        if (mDrawPadView != null && mDrawPadView.isRunning()) {
 
-            drawPadView.stopDrawPad();
+            mDrawPadView.stopDrawPad();
 
             toastStop();
 
@@ -230,10 +234,10 @@ public class CanvasLayerDemoActivity extends Activity {
     }
 
     private void addCanvasLayer() {
-        if (drawPadView == null)
+        if (mDrawPadView == null)
             return;
 
-        mCanvasLayer = drawPadView.addCanvasLayer();
+        mCanvasLayer = mDrawPadView.addCanvasLayer();
         if (mCanvasLayer != null) {
             /**
              * 在绘制一帧的时候, 是否清除上一帧绘制的 内容.
@@ -289,14 +293,14 @@ public class CanvasLayerDemoActivity extends Activity {
             mplayer = null;
         }
 
-        if (drawPadView != null) {
-            drawPadView.stopDrawPad();
+        if (mDrawPadView != null) {
+            mDrawPadView.stopDrawPad();
         }
     }
 
     private void toastStop() {
-
-        Toast.makeText(getApplicationContext(), "录制已停止!!", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getApplicationContext(), "录制已停止!!", Toast.LENGTH_SHORT)
+                .show();
         Log.i(TAG, "录制已停止!!");
     }
 

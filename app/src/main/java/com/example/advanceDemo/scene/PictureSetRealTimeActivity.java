@@ -32,11 +32,12 @@ import com.lansosdk.videoeditor.SDKFileUtils;
  * 演示: 图片合成视频的同时保存成文件. 流程: 把DrawPadView设置为自动刷新模式,
  * 然后一次性增加多个BitmapLayer,根据画面走动的时间戳来 操作每个BitmapLayer是否移动,是否显示.
  * <p>
- * 这里仅仅演示移动的属性,
- * 您实际中可以移动,缩放,旋转,RGBA值调节来混合使用,因为BitmapLayer继承自ILayer,故有这些特性.
+ * 这里仅仅演示移动的属性, 您实际中可以移动,缩放,旋转,RGBA值调节来混合使用,因为BitmapLayer继承自ILayer,故有这些特性.
  * <p>
  * 比如你根据时间戳来调节图片的RGBA中的A值(alpha透明度),则实现图片的淡入淡出效果.
+ * <p>
  * 使用移动+缩放+RGBA调节,则实现一些缓慢照片变化的效果,浪漫文艺范的效果.
+ * <p>
  * 视频标记就是一个典型的BitmapLayer的使用场景.
  */
 public class PictureSetRealTimeActivity extends Activity {
@@ -63,9 +64,10 @@ public class PictureSetRealTimeActivity extends Activity {
 
             @Override
             public void run() {
+                // TODO Auto-generated method stub
                 initDrawPad();
             }
-        }, 200);
+        }, 500);
     }
 
     @Override
@@ -99,14 +101,17 @@ public class PictureSetRealTimeActivity extends Activity {
         drawPadView.setOnDrawPadProgressListener(new DrawPadProgressListener());
         // 设置DrawPad的宽高, 这里设置为480x480,如果您已经在xml中固定大小,则不需要再次设置,
         // 可以直接调用startDrawPad来开始录制.
-        drawPadView.setDrawPadSize(480, 480, new onDrawPadSizeChangedListener() {
-            @Override
-            public void onSizeChanged(int viewWidth, int viewHeight) {
-                startDrawPad();
-            }
-        });
+        drawPadView.setDrawPadSize(480, 480,
+                new onDrawPadSizeChangedListener() {
 
-        // 当界面再次返回的时候,依旧显示图片更新的动画效果,即重新开始DrawPad
+                    @Override
+                    public void onSizeChanged(int viewWidth, int viewHeight) {
+                        // TODO Auto-generated method stub
+                        startDrawPad();
+                    }
+                });
+
+        // 这里仅仅是举例,当界面再次返回的时候,依旧显示图片更新的动画效果,即重新开始DrawPad, 很多时候是不需要这样的场景, 这里仅仅是举例
         drawPadView.setOnViewAvailable(new onViewAvailable() {
 
             @Override
@@ -194,6 +199,7 @@ public class PictureSetRealTimeActivity extends Activity {
 
                     @Override
                     public void onClick(View v) {
+                        // TODO Auto-generated method stub
                         if (SDKFileUtils.fileExist(dstPath)) {
                             Intent intent = new Intent(
                                     PictureSetRealTimeActivity.this,
@@ -216,13 +222,17 @@ public class PictureSetRealTimeActivity extends Activity {
 
     @Override
     protected void onDestroy() {
+        // TODO Auto-generated method stub
         super.onDestroy();
         isDestorying = true;
         if (drawPadView != null) {
             drawPadView.stopDrawPad();
             drawPadView = null;
         }
-        SDKFileUtils.deleteFile(dstPath);
+
+        if (SDKFileUtils.fileExist(dstPath)) {
+            SDKFileUtils.deleteFile(dstPath);
+        }
     }
 
     // DrawPad完成时的回调.

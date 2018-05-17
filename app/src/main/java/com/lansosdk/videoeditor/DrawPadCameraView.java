@@ -127,7 +127,7 @@ public class DrawPadCameraView extends FrameLayout {
     private onDrawPadCompletedListener drawpadCompletedListener = null;
     private onDrawPadErrorListener drawPadErrorListener = null;
     private CameraLayer extCameraLayer = null;
-    private boolean isFastVideoMode = false;
+    private boolean isEditModeVideo = false;
     /**
      * 是否也录制mic的声音.
      */
@@ -187,9 +187,9 @@ public class DrawPadCameraView extends FrameLayout {
         mTextureRenderView.setDispalyRatio(AR_ASPECT_FIT_PARENT);
 
         View renderUIView = mTextureRenderView.getView();
-        LayoutParams lp = new LayoutParams(
-                LayoutParams.WRAP_CONTENT,
-                LayoutParams.WRAP_CONTENT, Gravity.CENTER);
+        FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(
+                FrameLayout.LayoutParams.WRAP_CONTENT,
+                FrameLayout.LayoutParams.WRAP_CONTENT, Gravity.CENTER);
         renderUIView.setLayoutParams(lp);
         addView(renderUIView);
         mTextureRenderView.setVideoRotation(mVideoRotationDegree);
@@ -340,13 +340,11 @@ public class DrawPadCameraView extends FrameLayout {
      * 设置当前DrawPad的宽度和高度,并把宽度自动缩放到父view的宽度,然后等比例调整高度.
      * <p>
      * 如果在父view中已经预设好了希望的宽高,则可以不调用这个方法,直接
-     * {@link #startDrawPad(onDrawPadProgressListener, onDrawPadCompletedListener)}
      * 可以通过 {@link #getViewHeight()} 和 {@link #getViewWidth()}来得到当前view的宽度和高度.
      * <p>
      * <p>
      * 注意: 这里的宽度和高度,会根据手机屏幕的宽度来做调整,默认是宽度对齐到手机的左右两边, 然后调整高度,
      * 把调整后的高度作为DrawPad渲染线程的真正宽度和高度. 注意: 此方法需要在
-     * {@link #startDrawPad(onDrawPadProgressListener, onDrawPadCompletedListener)}
      * 前调用. 比如设置的宽度和高度是480,480,
      * 而父view的宽度是等于手机分辨率是1080x1920,则DrawPad默认对齐到手机宽度1080,然后把高度也按照比例缩放到1080.
      *
@@ -384,7 +382,7 @@ public class DrawPadCameraView extends FrameLayout {
     /**
      * 当前drawpad容器运行了多长时间, 仅供参考使用. 没有特别的意义. 内部每渲染一帧, 则会回调这里.
      * 仅仅作为drawpad容器运行时间的参考, 如果你要看当前视频图层的运行时间,则应设置图层的监听,而不是容器运行时间的监听, 可以通过
-     * {@link #resetDrawPadRunTime()}来复位这个时间.
+     * {@link #resetDrawPadRunTime(long)} 来复位这个时间.
      *
      * @param li
      */
@@ -409,8 +407,6 @@ public class DrawPadCameraView extends FrameLayout {
      * <p>
      * 此回调中 {@link onDrawPadProgressListener #onProgress(DrawPad, long)}
      * 中的long是当前即将编码的时间戳, 单位是US微秒.
-     *
-     * @param currentTimeUs 当前DrawPad处理画面的时间戳.,单位微秒.
      */
     public void setOnDrawPadProgressListener(onDrawPadProgressListener listener) {
         if (renderer != null) {
@@ -549,11 +545,11 @@ public class DrawPadCameraView extends FrameLayout {
         extCameraLayer = layer;
     }
 
-    public void setLanSongVideoMode(boolean is) {
+    public void setEditModeVideo(boolean is) {
         if (renderer != null) {
-            renderer.setLanSongVideoMode(is);
+            renderer.setEditModeVideo(is);
         } else {
-            isFastVideoMode = is;
+            isEditModeVideo = is;
         }
     }
 
@@ -631,8 +627,8 @@ public class DrawPadCameraView extends FrameLayout {
                 }
                 renderer.setEncoderEnable(encWidth, encHeight, encBitRate,
                         encFrameRate, encodeOutput);
-                if (isFastVideoMode) {
-                    renderer.setLanSongVideoMode(isFastVideoMode);
+                if (isEditModeVideo) {
+                    renderer.setEditModeVideo(isEditModeVideo);
                 }
                 // 设置DrawPad处理的进度监听, 回传的currentTimeUs单位是微秒.
                 renderer.setDrawpadSnapShotListener(drawpadSnapShotListener);
@@ -1148,7 +1144,7 @@ public class DrawPadCameraView extends FrameLayout {
     }
 
     /**
-     * 获取一个VideoLayer,从中获取surface {@link VideoLayer#getSurface()}来设置到播放器中,
+     * 获取一个VideoLayer,从中获取surface 来设置到播放器中,
      * 用播放器提供的画面,来作为DrawPad的画面输入源.
      * <p>
      * 注意:此方法一定在 startDrawPad之后,在stopDrawPad之前调用.
@@ -1309,8 +1305,6 @@ public class DrawPadCameraView extends FrameLayout {
 
     /**
      * 从渲染线程列表中移除并销毁这个Layer; 注意:此方法一定在 startDrawPad之后,在stopDrawPad之前调用.
-     *
-     * @param Layer
      */
     public void removeLayer(Layer layer) {
         if (layer != null) {
@@ -1477,7 +1471,6 @@ public class DrawPadCameraView extends FrameLayout {
          * <p>
          * 当您本来设置的大小是480x480,而DrawPad会自动的缩放到父view的宽度时,会调用这个回调,提示大小已经改变,
          * 这时您可以开始startDrawPad 如果你设置的大小更好等于当前Texture的大小,则不会调用这个, 详细的注释见
-         * {@link DrawPadCameraView#startDrawPad(onDrawPadProgressListener, onDrawPadCompletedListener)}
          */
         @Override
         public void onSurfaceTextureSizeChanged(SurfaceTexture surface,

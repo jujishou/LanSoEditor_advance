@@ -128,7 +128,7 @@ public class DrawPadView extends FrameLayout {
     private boolean frameListenerInDrawPad = false;
     private onDrawPadCompletedListener drawpadCompletedListener = null;
     private onDrawPadErrorListener drawPadErrorListener = null;
-    private boolean isFastVideoMode = false;
+    private boolean isEditModeVideo = false;
     /**
      * 是否也录制mic的声音.
      */
@@ -188,9 +188,9 @@ public class DrawPadView extends FrameLayout {
         mTextureRenderView.setDispalyRatio(AR_ASPECT_FIT_PARENT);
 
         View renderUIView = mTextureRenderView.getView();
-        LayoutParams lp = new LayoutParams(
-                LayoutParams.WRAP_CONTENT,
-                LayoutParams.WRAP_CONTENT, Gravity.CENTER);
+        FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(
+                FrameLayout.LayoutParams.WRAP_CONTENT,
+                FrameLayout.LayoutParams.WRAP_CONTENT, Gravity.CENTER);
         renderUIView.setLayoutParams(lp);
         addView(renderUIView);
         mTextureRenderView.setVideoRotation(mVideoRotationDegree);
@@ -543,11 +543,11 @@ public class DrawPadView extends FrameLayout {
      *
      * @param is
      */
-    public void setLanSongVideoMode(boolean is) {
+    public void setEditModeVideo(boolean is) {
         if (renderer != null) {
-            renderer.setLanSongVideoMode(is);
+            renderer.setEditModeVideo(is);
         } else {
-            isFastVideoMode = is;
+            isEditModeVideo = is;
         }
     }
 
@@ -577,10 +577,8 @@ public class DrawPadView extends FrameLayout {
         boolean ret = false;
         if (mSurfaceTexture != null && renderer == null && drawPadWidth > 0
                 && drawPadHeight > 0) {
-            renderer = new DrawPadViewRender(getContext(), drawPadWidth,
-                    drawPadHeight); // <----从这里去建立DrawPad线程.
+            renderer = new DrawPadViewRender(getContext(), drawPadWidth,drawPadHeight);
             if (renderer != null) {
-
                 renderer.setUseMainVideoPts(isUseMainPts);
                 // 因为要预览,这里设置显示的Surface,当然如果您有特殊情况需求,也可以不用设置,但displayersurface和EncoderEnable要设置一个,DrawPadRender才可以工作.
                 renderer.setDisplaySurface(new Surface(mSurfaceTexture));
@@ -595,8 +593,8 @@ public class DrawPadView extends FrameLayout {
                 }
                 renderer.setEncoderEnable(encWidth, encHeight, encBitRate,
                         encFrameRate, encodeOutput);
-                if (isFastVideoMode) {
-                    renderer.setLanSongVideoMode(isFastVideoMode);
+                if (isEditModeVideo) {
+                    renderer.setEditModeVideo(isEditModeVideo);
                 }
                 renderer.setUpdateMode(mUpdateMode, mAutoFlushFps);
 

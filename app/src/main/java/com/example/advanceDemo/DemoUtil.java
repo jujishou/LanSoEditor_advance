@@ -1,5 +1,6 @@
 package com.example.advanceDemo;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -72,8 +73,8 @@ public class DemoUtil {
         Log.i("x", str);
     }
 
-    public static void showHintDialog(Context ctx, int stringId) {
-        new AlertDialog.Builder(ctx).setTitle("提示").setMessage(stringId)
+    public static void showHintDialog(Activity aty, int stringId) {
+        new AlertDialog.Builder(aty).setTitle("提示").setMessage(stringId)
                 .setPositiveButton("确定", new DialogInterface.OnClickListener() {
 
                     @Override
@@ -82,8 +83,8 @@ public class DemoUtil {
                 }).show();
     }
 
-    public static void showHintDialog(Context ctx, String str) {
-        new AlertDialog.Builder(ctx).setTitle("提示").setMessage(str)
+    public static void showHintDialog(Activity aty, String str) {
+        new AlertDialog.Builder(aty).setTitle("提示").setMessage(str)
                 .setPositiveButton("确定", new DialogInterface.OnClickListener() {
 
                     @Override

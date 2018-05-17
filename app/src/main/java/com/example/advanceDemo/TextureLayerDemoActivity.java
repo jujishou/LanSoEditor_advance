@@ -26,9 +26,6 @@ import com.lansosdk.videoeditor.FilterLibrary.OnGpuImageFilterChosenListener;
 import jp.co.cyberagent.lansongsdk.gpuimage.GPUImageFilter;
 import jp.co.cyberagent.lansongsdk.gpuimage.GPUImageSepiaFilter;
 
-/**
- * 演示增加一个纹理图层;
- */
 public class TextureLayerDemoActivity extends Activity {
     public static final int NO_TEXTURE = -1;
     private static final String TAG = "TextureLayerDemoActivity";
@@ -96,8 +93,7 @@ public class TextureLayerDemoActivity extends Activity {
     }
 
     /**
-     * 增加一个纹理. 因为需要OpenGL的语境, 则需要在我们的DrawPadThreadProgress中增加;
-     *
+     * 增加一个纹理.
      */
     private void addTextureLayer() {
         if (textureLayer == null) {

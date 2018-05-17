@@ -130,25 +130,31 @@ public class ViewLayerDemoActivity extends Activity implements OnClickListener {
             drawPadView.setRealEncodeEnable(480, 480, 1000000,
                     (int) info.vFrameRate, editTmpPath);
 
-            drawPadView.setOnDrawPadProgressListener(new onDrawPadProgressListener() {
+            drawPadView
+                    .setOnDrawPadProgressListener(new onDrawPadProgressListener() {
 
                         @Override
                         public void onProgress(DrawPad v, long currentTimeUs) {
 
-                            if (currentTimeUs > 10 * 1000 * 1000){
+                            if (currentTimeUs > 10 * 1000 * 1000) // 在第7秒的时候,
+                            // 不再显示.
+                            {
                                 hideWord();
-                            } else if (currentTimeUs > 3 * 1000 * 1000) {
+                            } else if (currentTimeUs > 3 * 1000 * 1000) // 在第三秒的时候,
+                            // 显示tvWord
+                            {
                                 showWord();
                             }
                         }
                     });
-            drawPadView.setDrawPadSize(480, 480, new onDrawPadSizeChangedListener() {
+            drawPadView.setDrawPadSize(480, 480,
+                    new onDrawPadSizeChangedListener() {
 
-                @Override
-                public void onSizeChanged(int viewWidth, int viewHeight) {
-                    startDrawPad();
-                }
-            });
+                        @Override
+                        public void onSizeChanged(int viewWidth, int viewHeight) {
+                            startDrawPad();
+                        }
+                    });
         }
     }
 
@@ -217,7 +223,8 @@ public class ViewLayerDemoActivity extends Activity implements OnClickListener {
             // UI图层的移动缩放旋转.
             // mViewLayer.setScale(0.5f);
             // mViewLayer.setRotate(60);
-            // mViewLayer.setPosition(mViewLayer.getPadWidth()-mViewLayer.getLayerWidth()/4,mViewLayer.getPositionY()/4);
+            // mViewLayer.setPosition(mViewLayer.getPadWidth()-mViewLayer.getLayerWidth()/4,mViewLayer.getPositionY()
+            // /4);
         }
     }
 

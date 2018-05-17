@@ -35,6 +35,7 @@ public class ListSceneDemoActivity extends Activity implements OnClickListener {
         findViewById(R.id.id_layer_videotransform).setOnClickListener(this);
         findViewById(R.id.id_layer_videotransform2).setOnClickListener(this);
         findViewById(R.id.id_layer_videobiansu).setOnClickListener(this);
+        findViewById(R.id.id_layer_videoreverse).setOnClickListener(this);
 
         findViewById(R.id.id_layer_cuoluo_layout).setOnClickListener(this);
         findViewById(R.id.id_layer_video2_layout).setOnClickListener(this);
@@ -64,6 +65,9 @@ public class ListSceneDemoActivity extends Activity implements OnClickListener {
                 break;
             case R.id.id_layer_videobiansu:
                 startDemoActivity(VideoSpeedDemoActivity.class);
+                break;
+            case R.id.id_layer_videoreverse:
+                showHintDialog("此功能演示在合作后提供");
                 break;
             default:
                 break;

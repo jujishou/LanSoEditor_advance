@@ -789,9 +789,9 @@ public class VideoPlayer {
         mOnNativeInvokeListener = listener;
     }
 
-	/*
+    /*
      * ControlMessage
-	 */
+     */
 
     public void setOnMediaCodecSelectListener(
             OnMediaCodecSelectListener listener) {
@@ -813,9 +813,9 @@ public class VideoPlayer {
         void onPrepared(VideoPlayer mp);
     }
 
-	/*
-	 * NativeInvoke
-	 */
+    /*
+     * NativeInvoke
+     */
 
     public interface OnPlayerCompletionListener {
         void onCompletion(VideoPlayer mp);

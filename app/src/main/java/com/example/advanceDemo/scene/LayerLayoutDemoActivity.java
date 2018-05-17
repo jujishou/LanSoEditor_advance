@@ -33,6 +33,7 @@ import com.lansosdk.videoeditor.VideoEditor;
 
 /**
  * 演示: 使用DrawPad来实现 视频和图片的实时叠加.
+ * <p>
  * 流程是: 先创建一个DrawPad,然后在视频播放过程中,从DrawPad中增加一个BitmapLayer,然后可以调节SeekBar来对Layer的每个
  * 参数进行调节.
  * <p>
@@ -41,7 +42,7 @@ import com.lansosdk.videoeditor.VideoEditor;
  */
 
 public class LayerLayoutDemoActivity extends Activity {
-    private static final String TAG = "Demo1LayerMothedActivity";
+    private static final String TAG = "LayerLayout";
 
     private String videoPath;
 
@@ -130,6 +131,15 @@ public class LayerLayoutDemoActivity extends Activity {
 
         drawPadView.setRealEncodeEnable(padWidth, padHeight, 1000000,
                 (int) mInfo.vFrameRate, editTmpPath);
+
+        drawPadView
+                .setOnDrawPadProgressListener(new onDrawPadProgressListener() {
+
+                    @Override
+                    public void onProgress(DrawPad v, long currentTimeUs) {
+
+                    }
+                });
     }
 
     /**
@@ -141,7 +151,6 @@ public class LayerLayoutDemoActivity extends Activity {
         if (drawPadView.isRunning() == false && drawPadView.startDrawPad()) {
             BitmapLayer layer = drawPadView.addBitmapLayer(BitmapFactory
                     .decodeResource(getResources(), R.drawable.videobg));
-
             layer.setScaledValue(layer.getPadWidth(), layer.getPadHeight()); // 填充整个屏幕.
 
             videoLayer = drawPadView.addMainVideoLayer(mplayer.getVideoWidth(),mplayer.getVideoHeight(), null);
@@ -152,11 +161,11 @@ public class LayerLayoutDemoActivity extends Activity {
                 videoLayer.setScale(0.8f);
                 videoLayer.setPosition(videoLayer.getPositionX(),
                         videoLayer.getLayerHeight() / 2);
+
             }
-            addBitmapLayer(); //增加图片
+            addBitmapLayer();
 
-            addGifLayer(); //增加Gif图层;
-
+            addGifLayer();
             drawPadView.resumeDrawPad();
         }
     }
@@ -242,7 +251,8 @@ public class LayerLayoutDemoActivity extends Activity {
                 }
                 playVideo.setVisibility(View.VISIBLE);
             } else {
-                Log.e(TAG, " player completion, but file not exist" + editTmpPath);
+                Log.e(TAG, " player completion, but file:" + editTmpPath
+                        + " is not exist!!!");
             }
         }
     }
@@ -277,13 +287,11 @@ public class LayerLayoutDemoActivity extends Activity {
             @Override
             public void onClick(View v) {
                 if (SDKFileUtils.fileExist(dstPath)) {
-                    Intent intent = new Intent(LayerLayoutDemoActivity.this, VideoPlayerActivity
-                            .class);
+                    Intent intent = new Intent(LayerLayoutDemoActivity.this, VideoPlayerActivity.class);
                     intent.putExtra("videopath", dstPath);
                     startActivity(intent);
                 } else {
-                    Toast.makeText(LayerLayoutDemoActivity.this, "目标文件不存在", Toast.LENGTH_SHORT)
-                            .show();
+                    Toast.makeText(LayerLayoutDemoActivity.this, "目标文件不存在", Toast.LENGTH_SHORT).show();
                 }
             }
         });

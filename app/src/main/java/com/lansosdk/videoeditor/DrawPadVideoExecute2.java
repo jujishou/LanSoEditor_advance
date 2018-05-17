@@ -28,9 +28,6 @@ import java.util.List;
 
 import jp.co.cyberagent.lansongsdk.gpuimage.GPUImageFilter;
 
-/**
- *
- */
 public class DrawPadVideoExecute2 {
 
     private static final String TAG = "DrawpadVideoExecute";
@@ -181,7 +178,7 @@ public class DrawPadVideoExecute2 {
 
     public void setLanSongVideoMode(boolean is) {
         if (renderer != null) {
-            renderer.setLanSongVideoMode(is);
+            renderer.setEditModeVideo(is);
         }
     }
 
@@ -232,12 +229,7 @@ public class DrawPadVideoExecute2 {
     public void setUpdateMode(DrawPadUpdateMode mode, int fps) {
     }
 
-    /**
-     * 在您配置了 OutFrame, 要输出每一帧的时候, 是否要禁止编码器. 当你只想要处理后的 数据, 而暂时不需要编码成最终的目标文件时,
-     * 把这里设置为true. 默认是false;
-     *
-     * @param dis
-     */
+    @Deprecated
     public void setDisableEncode(boolean dis) {
         if (renderer != null && renderer.isRunning() == false) {
             renderer.setDisableEncode(dis);
@@ -259,10 +251,10 @@ public class DrawPadVideoExecute2 {
     /**
      * DrawPad每执行完一帧画面,会调用这个Listener,返回的timeUs是当前画面的时间戳(微妙),
      * 可以利用这个时间戳来做一些变化,比如在几秒处缩放, 在几秒处平移等等.从而实现一些动画效果.
+     * <p>
+     * (注意, 这个进度回调, 是经过Handler异步调用, 工作在主线程的. 如果你要严格按照时间来,则需要用setDrawPadThreadProgressListener)
      *
-     * (注意, 这个进度回调, 是经过Handler异步调用, 工作在主线程的. 如果你要严格按照时间来,
-     * 则需要用setDrawPadThreadProgressListener)
-     *
+     * @param currentTimeUs 当前DrawPad处理画面的时间戳.,单位微秒.
      */
     public void setDrawPadProgressListener(onDrawPadProgressListener listener) {
         if (renderer != null) {
@@ -272,10 +264,7 @@ public class DrawPadVideoExecute2 {
 
     /**
      * 方法与 onDrawPadProgressListener不同的地方在于: 即将开始一帧渲染的时候,
-     *
-     * 直接执行这个回调中的代码,不通过Handler传递出去,你可以精确的执行一些这一帧的如何操作.
-     * 故不能在回调 内增加各种UI相关的代码.
-     *
+     * 直接执行这个回调中的代码,不通过Handler传递出去,你可以精确的执行一些这一帧的如何操作. 故不能在回调 内增加各种UI相关的代码.
      */
     public void setDrawPadThreadProgressListener(
             onDrawPadThreadProgressListener listener) {
@@ -520,7 +509,8 @@ public class DrawPadVideoExecute2 {
      * @param srcPath
      * @param startFromPadUs   从容器的什么位置开始增加
      * @param startAudioTimeUs 把当前声音的开始时间增加进去.
-     * @param durationUs       增加多少时长.
+     * @param durationUs       增加多少, 时长.
+     * @param isLoop           是否循环.
      * @return
      */
     public AudioSource addSubAudio(String srcPath, long startFromPadUs,
@@ -534,9 +524,7 @@ public class DrawPadVideoExecute2 {
     }
 
     /**
-     * 增加时间冻结,即在视频的什么时间段开始冻结, 静止的结束时间; 为了统一: 这里用结束时间;
-     *
-     * 比如你要从原视频的5秒地方开始静止, 静止3秒钟,
+     * 增加时间冻结,即在视频的什么时间段开始冻结, 静止的结束时间; 为了统一: 这里用结束时间; 比如你要从原视频的5秒地方开始静止, 静止3秒钟,
      * 则这里是3*1000*1000 , 8*1000*1000 (画面停止的过程中, 可以做一些缩放,移动等特写等)
      *
      * @param startTimeUs 从输入的视频/音频的哪个时间点开始冻结,
@@ -574,7 +562,9 @@ public class DrawPadVideoExecute2 {
 
     /**
      * 增加时间重复;
+     * <p>
      * 类似综艺节目中, 当好玩的画面发生的时候, 多次重复的效果.
+     * <p>
      * 在DrawPad容器开始前调用
      *
      * @param startUs 相对原视频/原音频的开始时间;
@@ -591,6 +581,7 @@ public class DrawPadVideoExecute2 {
 
     /**
      * 增加时间拉伸
+     * <p>
      * 在DrawPad容器开始前调用
      *
      * @param list

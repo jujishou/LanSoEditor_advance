@@ -12,6 +12,7 @@ import com.lansoeditor.advanceDemo.R;
 import com.lansosdk.videoeditor.MediaInfo;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 
@@ -68,19 +69,33 @@ public class FileExplorerActivity extends ListActivity {
 
             File f = new File(dirPath);
             File[] temp = f.listFiles();
-            sortFilesByDirectory(temp);
+
+            ArrayList<File> nameArray=new ArrayList<>();
+            for(File item: temp){
+                String name=item.getName();
+                if(name.startsWith(".")==false){
+                    nameArray.add(item);
+                }
+            }
+
+            File[] fileArray=new File[nameArray.size()];
+            for(int i=0;i<nameArray.size();i++){
+                fileArray[i]=nameArray.get(i);
+            }
+
+            sortFilesByDirectory(fileArray);
 
             File[] files = null;
             if (!dirPath.equals(mRoot)) {
-                files = new File[temp.length + 1];
-                System.arraycopy(temp, 0, files, 1, temp.length);
+                files = new File[fileArray.length + 1];
+                System.arraycopy(fileArray, 0, files, 1, fileArray.length);
                 files[0] = new File(f.getParent());
             } else {
-                files = temp;
+                files = fileArray;
             }
             mFiles = files;
             setListAdapter(new FileExplorerAdapter(this, files,
-                    temp.length == files.length));
+                    fileArray.length == files.length));
         } catch (Exception ex) {
             Toast.makeText(this, "Error", Toast.LENGTH_LONG).show();
         }

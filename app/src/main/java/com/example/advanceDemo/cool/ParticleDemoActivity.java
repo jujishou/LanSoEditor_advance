@@ -43,6 +43,7 @@ public class ParticleDemoActivity extends Activity implements OnClickListener {
     private static final String TAG = "ViewLayerDemoActivity";
     RelativeLayout particleLayout;
     ParticleSystem ps;
+    long lastTimeUs = 0;
     private String mVideoPath;
     private DrawPadView drawPadView;
     private MediaPlayer mplayer = null;

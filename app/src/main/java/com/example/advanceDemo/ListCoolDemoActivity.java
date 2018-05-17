@@ -25,7 +25,7 @@ public class ListCoolDemoActivity extends Activity implements OnClickListener {
         findViewById(R.id.id_cool_image3d).setOnClickListener(this);
         findViewById(R.id.id_cool_particle).setOnClickListener(this);
         findViewById(R.id.id_cool_videoeffect).setOnClickListener(this);
-
+        findViewById(R.id.id_cool_videoseek).setOnClickListener(this);
     }
 
     @Override
@@ -40,6 +40,9 @@ public class ListCoolDemoActivity extends Activity implements OnClickListener {
             case R.id.id_cool_videoeffect:
                 startDemoActivity(VideoEffectDemoActivity.class);
                 break;
+            case R.id.id_cool_videoseek:
+                startDemoActivity(VideoPlaySeekDemoActivity.class);
+                break;
             default:
                 break;
         }
@@ -50,5 +53,4 @@ public class ListCoolDemoActivity extends Activity implements OnClickListener {
         intent.putExtra("videopath", videoPath);
         startActivity(intent);
     }
-
 }

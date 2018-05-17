@@ -238,7 +238,9 @@ public class VideoSpeedDemoActivity extends Activity implements
 
                     if (mplayer != null) {
                         // Log.i(TAG,"get video progress------当前进度是:"+mplayer.getCurrentPosition());
-                        float progress = (float) (mplayer.getCurrentPosition())/ (float) mplayer.getDuration();
+                        float progress = (float) (mplayer.getCurrentPosition())
+                                / (float) mplayer.getDuration();
+
                         skProgress.setProgress((int) (progress * 100));
                     }
 

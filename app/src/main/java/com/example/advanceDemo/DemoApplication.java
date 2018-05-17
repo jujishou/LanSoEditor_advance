@@ -10,8 +10,6 @@ import com.lansosdk.videoeditor.MediaInfo;
 public class DemoApplication extends Application {
 
     private static DemoApplication instance;
-    private String srcVideo;
-    private MediaInfo mInfo = null;
 
     public static DemoApplication getInstance() {
         if (instance == null) {
@@ -22,7 +20,6 @@ public class DemoApplication extends Application {
 
     @Override
     public void onCreate() {
-        // TODO Auto-generated method stub
         super.onCreate();
         instance = this;
     }
@@ -35,28 +32,8 @@ public class DemoApplication extends Application {
         return getBaseContext().getResources();
     }
 
-    public String getVideoPath() {
-        if (srcVideo == null) {
-            srcVideo = CopyFileFromAssets.copyAssets(getContext(),
-                    "ping20s.mp4");
-        }
-        return srcVideo;
-    }
 
-    public void setVideoPath(String video) {
-        srcVideo = video;
-    }
 
-    public MediaInfo getVideoMediaInfo() {
-        if (mInfo == null) {
-            mInfo = new MediaInfo(srcVideo);
-            if (mInfo.prepare() == false) {
-                srcVideo = CopyFileFromAssets.copyAssets(getContext(),
-                        "ping20s.mp4");
-                mInfo = new MediaInfo(srcVideo);
-                mInfo.prepare();
-            }
-        }
-        return mInfo;
-    }
+
+
 }
