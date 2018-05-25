@@ -50,7 +50,7 @@ public class ListMainActivity extends Activity implements OnClickListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-//		Thread.setDefaultUncaughtExceptionHandler(new LanSoSdkCrashHandler());
+		Thread.setDefaultUncaughtExceptionHandler(new LanSoSdkCrashHandler());
         setContentView(R.layout.activity_main);
         /**
          * 初始化SDK
@@ -254,6 +254,6 @@ public class ListMainActivity extends Activity implements OnClickListener {
     }
     // --------------------------------
     private void testFile() {
-
+            Log.i(TAG,"是否支持"+MediaInfo.isSupport("/sdcard/support.mp4"));
     }
 }

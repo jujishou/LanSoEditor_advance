@@ -12,6 +12,7 @@ import android.util.Log;
 
 import java.io.File;
 import java.lang.ref.WeakReference;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -38,10 +39,19 @@ import java.util.Locale;
 public class VideoEditor {
 
 
-    private static final String TAG = "VideoEditor";
+    private static final String TAG = "LanSoJni";
 
     public static final String version="20180508_AutoEncoder";
 
+    /**
+     * 解析参数失败 返回1
+     无输出文件 2；
+     输入文件为空：3
+     sdk未授权 -1；
+     解码器错误：69
+     收到线程的中断信号：255
+     如硬件编码器错误，则返回：26625---26630
+     */
     /**
      * 是否强制使用硬件编码器;
      * 默认先硬件编码,如果无法完成则切换为软编码
@@ -161,6 +171,12 @@ public class VideoEditor {
     /**
      * 执行成功,返回0, 失败返回错误码.
      *
+     * 解析参数失败 返回1
+     sdk未授权 -1；
+     解码器错误：69
+     收到线程的中断信号：255
+     如硬件编码器错误，则返回：26625---26630
+
      * @param cmdArray ffmpeg命令的字符串数组, 可参考此文件中的各种方法举例来编写.
      * @return 执行成功, 返回0, 失败返回错误码.
      */
@@ -197,11 +213,7 @@ public class VideoEditor {
             cmdList.add("-t");
             cmdList.add(String.valueOf(duration));
 
-            if(0!=executeWithEncoder(cmdList, bitrate, dstPath, true)){
-                return executeWithEncoder(cmdList, bitrate, dstPath, false);
-            }else{
-                return 0;
-            }
+            return executeAutoSwitch(cmdList, bitrate, dstPath);
         } else {
             return VIDEO_EDITOR_EXECUTE_FAILED;
         }
@@ -209,6 +221,10 @@ public class VideoEditor {
 
     /**
      * 拷贝文件, 成功返回0,失败返回-1;
+     *
+     * @param srcPath
+     * @param dstPath
+     * @return
      */
     public static native int copyFile(String srcPath, String dstPath);
 
@@ -512,11 +528,7 @@ public class VideoEditor {
                 cmdList.add("-acodec");
                 cmdList.add("copy");
 
-                if(0!=executeWithEncoder(cmdList, nbitrate, dstPath, true)){
-                    return executeWithEncoder(cmdList, nbitrate, dstPath, false);
-                }else{
-                    return 0;
-                }
+                return executeAutoSwitch(cmdList, nbitrate, dstPath);
             }
         }
         return VIDEO_EDITOR_EXECUTE_FAILED;
@@ -548,7 +560,13 @@ public class VideoEditor {
 
     /**
      * 把原视频文件中的音频部分, 增加到新的视频中,
-     * 不再使用
+     * <p>
+     * LSTODO 删除这个.
+     *
+     * @param oldMp4 源视频, 需要内部有音频部分, 如没有音频则则方法无动作.
+     * @param newMp4 通过视频录制后,保存的新视频.里面只有视频部分或h264裸码流,需确保里面没有音频部分.
+     * @param dstMp4 方法处理完后, 增加音频后的文件目标路径.
+     * @return 执行成功, 返回true, 失败返回false(一般源视频中没有音频会执行失败)
      */
     public static boolean encoderAddAudio(String oldMp4, String newMp4, String dstMp4) {
         //
@@ -616,7 +634,6 @@ public class VideoEditor {
 
     /**
      * 删除多媒体文件中的音频,把多媒体中的视频部分提取出来，这样提出的视频播放，就没有声音了，
-     *
      * @param srcFile 输入的MP4文件
      * @param dstFile 删除音频后的多媒体文件的输出绝对路径,路径的文件名类型是.mp4
      * @return 返回执行的结果.
@@ -923,11 +940,7 @@ public class VideoEditor {
             cmdList.add("-t");
             cmdList.add(String.valueOf(durationS));
 
-            if(0!=executeWithEncoder(cmdList, bitrate, dstFile, true)){
-                return executeWithEncoder(cmdList, bitrate, dstFile, false);
-            }else{
-                return 0;
-            }
+            return executeAutoSwitch(cmdList, bitrate, dstFile);
         } else {
             return VIDEO_EDITOR_EXECUTE_FAILED;
         }
@@ -971,11 +984,7 @@ public class VideoEditor {
             cmdList.add("-vf");
             cmdList.add(scalecmd);
 
-            if(0!=executeWithEncoder(cmdList, bitrate, dstFile, true)){
-                return executeWithEncoder(cmdList, bitrate, dstFile, false);
-            }else{
-                return 0;
-            }
+            return executeAutoSwitch(cmdList, bitrate, dstFile);
 
         } else {
             return VIDEO_EDITOR_EXECUTE_FAILED;
@@ -1018,11 +1027,7 @@ public class VideoEditor {
                 cmdList.add("copy");
             }
 
-            if(0!=executeWithEncoder(cmdList, bitrate, dstFile, true)){
-                return executeWithEncoder(cmdList, bitrate, dstFile, false);
-            }else{
-                return 0;
-            }
+            return executeAutoSwitch(cmdList, bitrate, dstFile);
         } else {
             return VIDEO_EDITOR_EXECUTE_FAILED;
         }
@@ -1070,11 +1075,7 @@ public class VideoEditor {
             } else {
                 cmdList.add("copy");
             }
-            if(0!=executeWithEncoder(cmdList, bitrate, dstFile, true)){
-                return executeWithEncoder(cmdList, bitrate, dstFile, false);
-            }else{
-                return 0;
-            }
+            return executeAutoSwitch(cmdList, bitrate, dstFile);
         } else {
             return VIDEO_EDITOR_EXECUTE_FAILED;
         }
@@ -1470,6 +1471,68 @@ public class VideoEditor {
             SDKFileUtils.deleteFile(tsPathArray.get(i));
         }
     }
+    /**
+     * 不同来源的mp4文件进行拼接;
+     * 拼接的所有视频分辨率必须一致;
+     *
+     * 【内部用到了编解码, 耗时,有进度,建议分辨率不要大于720P】
+     *
+     * @param videos  所有的视频
+     * @param ignorecheck  是否要忽略检测每个每个视频的分辨率, 如果您确信已经相等,则设为false;
+     * @param dstBitrate 输出视频在编码时的码率
+     * @param dstPath 输出视频的路径
+     * @return
+     */
+    public int executeConcatDiffentMp4(ArrayList<String> videos,boolean ignorecheck,int dstBitrate,String dstPath){
+
+        if(videos!=null && videos.size()>1){
+            if(ignorecheck || checkVideoSizeSame(videos)){
+                String filter = String.format(Locale.getDefault(), "concat=n=%d:v=1:a=1", videos.size());
+
+                List<String> cmdList = new ArrayList<String>();
+                cmdList.add("-vcodec");
+                cmdList.add("lansoh264_dec");
+
+                cmdList.add("-i");
+                cmdList.add(videos.get(0));
+
+                for (int i=1;i<videos.size();i++){
+                    cmdList.add("-i");
+                    cmdList.add(videos.get(i));
+                }
+                cmdList.add("-filter_complex");
+                cmdList.add(filter);
+
+                cmdList.add("-acodec");
+                cmdList.add("libfaac");
+                cmdList.add("-b:a");
+                cmdList.add("128000");
+
+                return executeAutoSwitch(cmdList, dstBitrate, dstPath);
+            }
+        }
+        return -1;
+    }
+    private boolean checkVideoSizeSame(ArrayList<String> videos){
+        int w=0;
+        int h=0;
+        for (String item: videos){
+            MediaInfo info=new MediaInfo(item,false);
+            if(info.prepare()){
+
+                if(w ==0&& h==0){
+                    w=info.getWidth();
+                    h=info.getHeight();
+                }else if(info.getWidth()!=w || info.getHeight() !=h){
+                    Log.i(TAG,"视频拼接中, 有个视频的分辨率不等于其他分辨率");
+                    return false;
+                }
+            }else{
+                return false;
+            }
+        }
+        return true;  //返回正常;
+    }
 
     /**
      * 裁剪一个mp4分辨率，把视频画面的某一部分裁剪下来，
@@ -1509,11 +1572,7 @@ public class VideoEditor {
         cmdList.add("-acodec");
         cmdList.add("copy");
 
-        if(0!=executeWithEncoder(cmdList, bitrate, dstFile, true)){
-            return executeWithEncoder(cmdList, bitrate, dstFile, false);
-        }else{
-            return 0;
-        }
+        return executeAutoSwitch(cmdList, bitrate, dstFile);
     }
 
     /**
@@ -1550,11 +1609,7 @@ public class VideoEditor {
             cmdList.add("-acodec");
             cmdList.add("copy");
 
-            if(0!=executeWithEncoder(cmdList, bitrate, dstFile, true)){
-                return executeWithEncoder(cmdList, bitrate, dstFile, false);
-            }else{
-                return 0;
-            }
+            return executeAutoSwitch(cmdList, bitrate, dstFile);
         } else {
             return VIDEO_EDITOR_EXECUTE_FAILED;
         }
@@ -1563,6 +1618,16 @@ public class VideoEditor {
     /**
      * 【此方法用到编解码】
      * 缩放的同时增加logo水印.
+     *
+     * @param videoFile
+     * @param pngPath
+     * @param scaleWidth
+     * @param scaleHeight
+     * @param overX
+     * @param overY
+     * @param dstFile
+     * @param bitrate
+     * @return
      */
     public int executeVideoFrameScale(String videoFile, String pngPath, int scaleWidth, int scaleHeight, int overX,
                                       int overY, String dstFile, int bitrate) {
@@ -1587,11 +1652,7 @@ public class VideoEditor {
             cmdList.add("-acodec");
             cmdList.add("copy");
 
-            if(0!=executeWithEncoder(cmdList, bitrate, dstFile, true)){
-                return executeWithEncoder(cmdList, bitrate, dstFile, false);
-            }else{
-                return 0;
-            }
+            return executeAutoSwitch(cmdList, bitrate, dstFile);
         } else {
             return VIDEO_EDITOR_EXECUTE_FAILED;
         }
@@ -1646,80 +1707,9 @@ public class VideoEditor {
         cmdList.add("-acodec");
         cmdList.add("copy");
 
-        if(0!=executeWithEncoder(cmdList, bitrate, dstFile, true)){
-            return executeWithEncoder(cmdList, bitrate, dstFile, false);
-        }else{
-            return 0;
-        }
+        return executeAutoSwitch(cmdList, bitrate, dstFile);
     }
 
-    /**
-     * 不再使用
-     * @return
-     */
-    @Deprecated
-    public static String mp4AddAudio(String videoPath, String audioPath) {
-        String ret = SDKFileUtils.createMp4FileInBox();
-        VideoEditor editor = new VideoEditor();
-        editor.executeVideoMergeAudio(videoPath, audioPath, ret);
-        return ret;
-}
-    /**
-     * 把mp3或m4a格式的音频文件, 转换为pcm的采样点数据,
-     *
-     * @param srcPach 编码的音频文件, 后缀是mp3 或m4a 或aac
-     * @param pcmPath 音频文件解码后的目标文件, 后缀是pcm
-     * @return
-     */
-    @Deprecated
-    public int executeDecodeMp3ToPcm(String srcPach, String pcmPath) {
-        // ffmpeg -i hongdou.mp3 -f s16le -acodec pcm_s16le dan.pcm
-        List<String> cmdList = new ArrayList<String>();
-
-        cmdList.add("-i");
-        cmdList.add(srcPach);
-
-        cmdList.add("-f");
-        cmdList.add("s16le");
-        cmdList.add("-acodec");
-        cmdList.add("pcm_s16le");
-        cmdList.add("-y");
-        cmdList.add(pcmPath);
-
-        String[] command = new String[cmdList.size()];
-        for (int i = 0; i < cmdList.size(); i++) {
-            command[i] = (String) cmdList.get(i);
-        }
-        return executeVideoEditor(command);
-    }
-    public static boolean encoderAddAudio(String oldMp4, String newMp4,
-                                          String tmpDir, String dstMp4) {
-        //
-        MediaInfo info = new MediaInfo(oldMp4, false);
-        if (info.prepare()) {
-            String audioPath = null;
-            if (info.aCodecName != null) // 只有在有音频的场合,才增加.
-            {
-                if (info.aCodecName.equalsIgnoreCase("aac")) {
-                    audioPath = SDKFileUtils.createFile(tmpDir, ".aac");
-                } else if (info.aCodecName.equalsIgnoreCase("mp3"))
-                    audioPath = SDKFileUtils.createFile(tmpDir, ".mp3");
-
-                if (audioPath != null) {
-                    VideoEditor veditor = new VideoEditor();
-                    veditor.executeDeleteVideo(oldMp4, audioPath); // 获得音频
-                    veditor.executeVideoMergeAudio(newMp4, audioPath, dstMp4); // 合并到新视频文件中.
-                    SDKFileUtils.deleteFile(audioPath);
-                    return true;
-                }
-            } else {
-                Log.w(TAG, "old mp4 file no audio . do not add audio");
-            }
-        } else {
-            Log.w(TAG, "old mp4 file prepare error!!,do not add audio");
-        }
-        return false;
-    }
     public int executeVideoCutOverlay(String videoFile, String decCodec, String pngPath, float startTimeS, float
             duationS,
                                       int overX, int overY, String dstFile, int bitrate) {
@@ -1789,11 +1779,7 @@ public class VideoEditor {
         cmdList.add("-acodec");
         cmdList.add("copy");
 
-        if(0!=executeWithEncoder(cmdList, bitrate, dstFile, true)){
-            return executeWithEncoder(cmdList, bitrate, dstFile, false);
-        }else{
-            return 0;
-        }
+        return executeAutoSwitch(cmdList, bitrate, dstFile);
     }
 
 
@@ -1825,11 +1811,7 @@ public class VideoEditor {
         cmdList.add("-r");
         cmdList.add("25");
 
-        if(0!=executeWithEncoder(cmdList, bitrate, dstPath, true)){
-            return executeWithEncoder(cmdList, bitrate, dstPath, false);
-        }else{
-            return 0;
-        }
+        return executeAutoSwitch(cmdList, bitrate, dstPath);
     }
 
     /**
@@ -1914,11 +1896,7 @@ public class VideoEditor {
         cmdList.add("-acodec");
         cmdList.add("copy");
 
-        if(0!=executeWithEncoder(cmdList, bitrate, dstFile, true)){
-            return executeWithEncoder(cmdList, bitrate, dstFile, false);
-        }else{
-            return 0;
-        }
+        return executeAutoSwitch(cmdList, bitrate, dstFile);
     }
     /**
      * 【此方法用到编解码】
@@ -1961,11 +1939,7 @@ public class VideoEditor {
 
             cmdList.add("-acodec");
             cmdList.add("copy");
-            if(0!=executeWithEncoder(cmdList, bitrate, dstFile, true)){
-                return executeWithEncoder(cmdList, bitrate, dstFile, false);
-            }else{
-                return 0;
-            }
+            return executeAutoSwitch(cmdList, bitrate, dstFile);
         } else {
             return VIDEO_EDITOR_EXECUTE_FAILED;
         }
@@ -2020,11 +1994,7 @@ public class VideoEditor {
             cmdList.add("-acodec");
             cmdList.add("copy");
 
-            if(0!=executeWithEncoder(cmdList, bitrate, dstFile, true)){
-                return executeWithEncoder(cmdList, bitrate, dstFile, false);
-            }else{
-                return 0;
-            }
+            return executeAutoSwitch(cmdList, bitrate, dstFile);
         } else {
             return VIDEO_EDITOR_EXECUTE_FAILED;
         }
@@ -2086,11 +2056,7 @@ public class VideoEditor {
             cmdList.add("-acodec");
             cmdList.add("copy");
 
-            if(0!=executeWithEncoder(cmdList, bitrate, dstFile, true)){
-                return executeWithEncoder(cmdList, bitrate, dstFile, false);
-            }else{
-                return 0;
-            }
+            return executeAutoSwitch(cmdList, bitrate, dstFile);
         } else {
             return VIDEO_EDITOR_EXECUTE_FAILED;
         }
@@ -2148,11 +2114,7 @@ public class VideoEditor {
             cmdList.add("-acodec");
             cmdList.add("copy");
 
-            if(0!=executeWithEncoder(cmdList, bitrate, dstFile, true)){
-                return executeWithEncoder(cmdList, bitrate, dstFile, false);
-            }else{
-                return 0;
-            }
+            return executeAutoSwitch(cmdList, bitrate, dstFile);
         } else {
             return VIDEO_EDITOR_EXECUTE_FAILED;
         }
@@ -2190,11 +2152,7 @@ public class VideoEditor {
             cmdList.add("-acodec");
             cmdList.add("copy");
 
-            if(0!=executeWithEncoder(cmdList, bitrate, dstPath, true)){
-                return executeWithEncoder(cmdList, bitrate, dstPath, false);
-            }else{
-                return 0;
-            }
+            return executeAutoSwitch(cmdList, bitrate, dstPath);
         } else {
             return VIDEO_EDITOR_EXECUTE_FAILED;
         }
@@ -2230,11 +2188,7 @@ public class VideoEditor {
             cmdList.add("-acodec");
             cmdList.add("copy");
 
-            if(0!=executeWithEncoder(cmdList, bitrate, dstPath, true)){
-                return executeWithEncoder(cmdList, bitrate, dstPath, false);
-            }else{
-                return 0;
-            }
+            return executeAutoSwitch(cmdList, bitrate, dstPath);
         } else {
             return VIDEO_EDITOR_EXECUTE_FAILED;
         }
@@ -2317,12 +2271,7 @@ public class VideoEditor {
             cmdList.add("[v]");
             cmdList.add("-map");
             cmdList.add("[a]");
-
-            if(0!=executeWithEncoder(cmdList, bitrate, dstPath, true)){
-                return executeWithEncoder(cmdList, bitrate, dstPath, false);
-            }else{
-                return 0;
-            }
+            return executeAutoSwitch(cmdList, bitrate, dstPath);
         } else {
             return VIDEO_EDITOR_EXECUTE_FAILED;
         }
@@ -2360,11 +2309,7 @@ public class VideoEditor {
             cmdList.add("-map");
             cmdList.add("[v]");
 
-            if(0!=executeWithEncoder(cmdList, bitrate, dstPath, true)){
-                return executeWithEncoder(cmdList, bitrate, dstPath, false);
-            }else{
-                return 0;
-            }
+            return executeAutoSwitch(cmdList, bitrate, dstPath);
         } else {
             return VIDEO_EDITOR_EXECUTE_FAILED;
         }
@@ -2399,11 +2344,7 @@ public class VideoEditor {
             cmdList.add("-acodec");
             cmdList.add("copy");
 
-            if(0!=executeWithEncoder(cmdList, bitrate, dstPath, true)){
-                return executeWithEncoder(cmdList, bitrate, dstPath, false);
-            }else{
-                return 0;
-            }
+            return executeAutoSwitch(cmdList, bitrate, dstPath);
         } else {
             return VIDEO_EDITOR_EXECUTE_FAILED;
         }
@@ -2438,11 +2379,7 @@ public class VideoEditor {
             cmdList.add("-acodec");
             cmdList.add("copy");
 
-            if(0!=executeWithEncoder(cmdList, bitrate, dstPath, true)){
-                return executeWithEncoder(cmdList, bitrate, dstPath, false);
-            }else{
-                return 0;
-            }
+            return executeAutoSwitch(cmdList, bitrate, dstPath);
         } else {
             return VIDEO_EDITOR_EXECUTE_FAILED;
         }
@@ -2474,12 +2411,7 @@ public class VideoEditor {
             cmdList.add("-c:a");
             cmdList.add("copy");
 
-            if(0!=executeWithEncoder(cmdList, bitrate, dstPath, true)){
-                return executeWithEncoder(cmdList, bitrate, dstPath, false);
-            }else{
-                return 0;
-            }
-
+            return executeAutoSwitch(cmdList, bitrate, dstPath);
         } else {
             return VIDEO_EDITOR_EXECUTE_FAILED;
         }
@@ -2512,11 +2444,7 @@ public class VideoEditor {
             cmdList.add("-c:a");
             cmdList.add("copy");
 
-            if(0!=executeWithEncoder(cmdList, bitrate, dstPath, true)){
-                return executeWithEncoder(cmdList, bitrate, dstPath, false);
-            }else{
-                return 0;
-            }
+            return executeAutoSwitch(cmdList, bitrate, dstPath);
         } else {
             return VIDEO_EDITOR_EXECUTE_FAILED;
         }
@@ -2548,11 +2476,7 @@ public class VideoEditor {
             cmdList.add("-c:a");
             cmdList.add("copy");
 
-            if(0!=executeWithEncoder(cmdList, bitrate, dstPath, true)){
-                return executeWithEncoder(cmdList, bitrate, dstPath, false);
-            }else{
-                return 0;
-            }
+            return executeAutoSwitch(cmdList, bitrate, dstPath);
         } else {
             return VIDEO_EDITOR_EXECUTE_FAILED;
         }
@@ -2584,11 +2508,7 @@ public class VideoEditor {
             cmdList.add("-c:a");
             cmdList.add("copy");
 
-            if(0!=executeWithEncoder(cmdList, bitrate, dstPath, true)){
-                return executeWithEncoder(cmdList, bitrate, dstPath, false);
-            }else{
-                return 0;
-            }
+            return executeAutoSwitch(cmdList, bitrate, dstPath);
         } else {
             return VIDEO_EDITOR_EXECUTE_FAILED;
         }
@@ -2624,11 +2544,7 @@ public class VideoEditor {
             cmdList.add("-acodec");
             cmdList.add("copy");
 
-            if(0!=executeWithEncoder(cmdList, bitrate, dstPath, true)){
-                return executeWithEncoder(cmdList, bitrate, dstPath, false);
-            }else{
-                return 0;
-            }
+            return executeAutoSwitch(cmdList, bitrate, dstPath);
 
         } else {
             return VIDEO_EDITOR_EXECUTE_FAILED;
@@ -2705,11 +2621,7 @@ public class VideoEditor {
             cmdList.add("areverse");
 
 
-            if(0!=executeWithEncoder(cmdList, bitrate, dstPath, true)){
-                return executeWithEncoder(cmdList, bitrate, dstPath, false);
-            }else{
-                return 0;
-            }
+            return executeAutoSwitch(cmdList, bitrate, dstPath);
         } else {
             return VIDEO_EDITOR_EXECUTE_FAILED;
         }
@@ -2803,11 +2715,7 @@ public class VideoEditor {
             cmdList.add("-filter_complex");
             cmdList.add(filter);
 
-            if(0!=executeWithEncoder(cmdList, bitrate, dstFile, true)){
-                return executeWithEncoder(cmdList, bitrate, dstFile, false);
-            }else{
-                return 0;
-            }
+            return executeAutoSwitch(cmdList, bitrate, dstFile);
         } else {
             return VIDEO_EDITOR_EXECUTE_FAILED;
         }
@@ -2844,11 +2752,7 @@ public class VideoEditor {
             cmdList.add("-i");
             cmdList.add(srcPath);
 
-            if(0!=executeWithEncoder(cmdList, bitrate, dstPath, true)){
-                return executeWithEncoder(cmdList, bitrate, dstPath, false);
-            }else{
-                return 0;
-            }
+            return executeAutoSwitch(cmdList, bitrate, dstPath);
         } else {
             return VIDEO_EDITOR_EXECUTE_FAILED;
         }
@@ -2880,11 +2784,7 @@ public class VideoEditor {
         cmdList.add("-acodec");
         cmdList.add("copy");
 
-        if(0!=executeWithEncoder(cmdList, bitrate, dstPath, true)){
-            return executeWithEncoder(cmdList, bitrate, dstPath, false);
-        }else{
-            return 0;
-        }
+        return executeAutoSwitch(cmdList, bitrate, dstPath);
     }
 
     public int testVideoAddText(String videoPath, String decoder, int bitrate, String dstPath) {
@@ -2902,17 +2802,14 @@ public class VideoEditor {
         cmdList.add("-acodec");
         cmdList.add("copy");
 
-        if(0!=executeWithEncoder(cmdList, bitrate, dstPath, true)){
-            return executeWithEncoder(cmdList, bitrate, dstPath, false);
-        }else{
-            return 0;
-        }
+        return executeAutoSwitch(cmdList, bitrate, dstPath);
     }
 
     /**
      * 把yuv的视频文件, 增加图片上去, 这里仅仅是增加图片,转换视频部分, 没有音频部分, 您如果需要音频部分,需要另外merge
      * 【此方法用到编解码】
      * 为客户测试使用.
+     * @return
      */
     public int executeYuvAddWaterMark(String yuvPath, int width, int height, String imagePngPath, int x, int y, String dstFile, int bitrate) {
         //ffmpeg -f rawvideo -video_size 1280x720 -pix_fmt nv21 -i cachevideo.yuv vv.mp4
@@ -2943,11 +2840,8 @@ public class VideoEditor {
             cmdList.add("-acodec");
             cmdList.add("copy");
 
-            if(0!=executeWithEncoder(cmdList, bitrate, dstFile, true)){
-                return executeWithEncoder(cmdList, bitrate, dstFile, false);
-            }else{
-                return 0;
-            }
+
+            return executeAutoSwitch(cmdList, bitrate, dstFile);
         } else {
             return VIDEO_EDITOR_EXECUTE_FAILED;
         }
@@ -3042,12 +2936,7 @@ public class VideoEditor {
 //						cmdList.add("-acodec");  //音频采用默认编码.
 //						cmdList.add("copy");
 
-            if(0!=executeWithEncoder(cmdList, bitrate, dstPath, true)){
-                return executeWithEncoder(cmdList, bitrate, dstPath, false);
-            }else{
-                return 0;
-            }
-
+            return executeAutoSwitch(cmdList, bitrate, dstPath);
         } else {
             return VIDEO_EDITOR_EXECUTE_FAILED;
         }
@@ -3092,12 +2981,7 @@ public class VideoEditor {
 
 //						cmdList.add("-acodec");  //音频采用默认编码.
 //						cmdList.add("copy");
-            if(0!=executeWithEncoder(cmdList, bitrate, dstPath, true)){
-                return executeWithEncoder(cmdList, bitrate, dstPath, false);
-            }else{
-                return 0;
-            }
-
+            return executeAutoSwitch(cmdList, bitrate, dstPath);
         } else {
             return VIDEO_EDITOR_EXECUTE_FAILED;
         }
@@ -3180,82 +3064,6 @@ public class VideoEditor {
         int sugg = getSuggestBitRate(wxh);
         return bitrate < sugg ? sugg : bitrate;   //如果设置过来的码率小于建议码率,则返回建议码率,不然返回设置码率
     }
-    protected native int ConvertEditMode(String input, int inW, int inH, String dstPath);
-
-    /**
-     * 把普通视频转换为 编辑模式的视频;
-     * @param input
-     * @param dstPath
-     * @return
-     */
-    public int convertToEditMode(String input,String dstPath)
-    {
-        MediaInfo info=new MediaInfo(input,false);
-        if(info.prepare() && info.isHaveVideo()){
-            return ConvertEditMode(input,info.vWidth,info.vHeight,dstPath);
-        }else{
-            return -1;
-        }
-    }
-
-    public  int a(int width, int height) {
-        int wxh = width * height;
-
-        if (wxh <= 480 * 480) {
-            return 5 * 1024 * 1024;
-        } else if (wxh <= 640 * 480) {
-            return 6 * 1024 * 1024;
-        } else if (wxh < 800 * 480) {
-            return 7 * 1024 * 1024;
-        } else if (wxh <= 960 * 544) {
-            return 8 * 1024 * 1024;
-        } else if (wxh <= 1280 * 720) {
-            return 9 * 1024 * 1024;
-        } else if (wxh <= 1920 * 1088) {
-            return 10 * 1024 * 1024;
-        } else {
-            return 12 * 1024 * 1024;
-        }
-    }
-    //-----------------------------一下是客户定制的方法,没有做全面测试,请注意-------------custom----
-
-    /**
-     *
-     * @param srcPath
-     * @param decoder
-     * @param video2
-     * @param x
-     * @param y
-     * @param bitrate
-     * @param dstPath
-     * @return
-     */
-    public int execute2VideoOverlay(String srcPath, String decoder,String video2,int x,int y,int bitrate, String dstPath) {
-        if (fileExist(srcPath)) {
-            String filter = String.format(Locale.getDefault(), "overlay=%d:%d;[0:a][1:a]amix=inputs=2", x,y);
-            List<String> cmdList = new ArrayList<String>();
-
-            cmdList.add("-vcodec");
-            cmdList.add(decoder);
-
-            cmdList.add("-i");
-            cmdList.add(srcPath);
-
-            cmdList.add("-i");
-            cmdList.add(video2);
-
-            cmdList.add("-filter_complex");
-            cmdList.add(filter);
-
-            if(0!=executeWithEncoder(cmdList, bitrate, dstPath, true)){
-                return executeWithEncoder(cmdList, bitrate, dstPath, false);
-            }else{
-                return 0;
-            }
-        } else {
-            return VIDEO_EDITOR_EXECUTE_FAILED;
-        }
-    }
 
     //--------------------------------------------------------------------
     private static final String MIME_TYPE_AVC = "video/avc";
@@ -3314,6 +3122,88 @@ public class VideoEditor {
         Log.w(TAG, "not find nv21 or yuv420p. default return yuv420p");
         return "yuv420p";
     }
+    public int executeAutoSwitch(List<String> cmdList,int bitrate, String dstPath)
+    {
+        int ret=0;
+
+        //先硬编码
+        ret=executeWithEncoder(cmdList, bitrate, dstPath, true);
+        if(ret!=0){
+            //软编码；
+            ret=executeWithEncoder(cmdList, bitrate, dstPath, false);
+        }
+        if(ret!=0) {
+            boolean replace=false;
+            for(int i=0;i<cmdList.size();i++){
+                String cmd=cmdList.get(i);
+                if("lansoh264_dec".equals(cmd)){
+                    cmdList.remove(i);
+                    cmdList.add(i,"h264");
+                    replace=true;
+                }
+            }
+            if(replace){
+                Log.d("LanSoJni","开始使用软解码，软编码执行...just do software decoder and encoder");
+                ret=executeWithEncoder(cmdList, bitrate, dstPath, false);
+            }
+        }
+        return ret;
+    }
+    public static boolean encoderAddAudio(String oldMp4, String newMp4,
+                                          String tmpDir, String dstMp4) {
+        //
+        MediaInfo info = new MediaInfo(oldMp4, false);
+        if (info.prepare()) {
+            String audioPath = null;
+            if (info.aCodecName != null) // 只有在有音频的场合,才增加.
+            {
+                if (info.aCodecName.equalsIgnoreCase("aac")) {
+                    audioPath = SDKFileUtils.createFile(tmpDir, ".aac");
+                } else if (info.aCodecName.equalsIgnoreCase("mp3"))
+                    audioPath = SDKFileUtils.createFile(tmpDir, ".mp3");
+
+                if (audioPath != null) {
+                    VideoEditor veditor = new VideoEditor();
+                    veditor.executeDeleteVideo(oldMp4, audioPath); // 获得音频
+                    veditor.executeVideoMergeAudio(newMp4, audioPath, dstMp4); // 合并到新视频文件中.
+                    SDKFileUtils.deleteFile(audioPath);
+                    return true;
+                }
+            } else {
+                Log.w(TAG, "old mp4 file no audio . do not add audio");
+            }
+        } else {
+            Log.w(TAG, "old mp4 file prepare error!!,do not add audio");
+        }
+        return false;
+    }
+    protected native int ConvertEditMode(String input, int inW, int inH, String dstPath);
+    /**
+     * 把普通视频转换为 编辑模式的视频;
+     * @param input
+     * @param dstPath
+     * @return
+     */
+    public int convertToEditMode(String input,String dstPath)
+    {
+        MediaInfo info=new MediaInfo(input,false);
+        if(info.prepare() && info.isHaveVideo()){
+            return ConvertEditMode(input,info.vWidth,info.vHeight,dstPath);
+        }else{
+            return -1;
+        }
+    }
+    /**
+     * 不再使用
+     * @return
+     */
+    @Deprecated
+    public static String mp4AddAudio(String videoPath, String audioPath) {
+        String ret = SDKFileUtils.createMp4FileInBox();
+        VideoEditor editor = new VideoEditor();
+        editor.executeVideoMergeAudio(videoPath, audioPath, ret);
+        return ret;
+    }
     /**
      * 增加编码器,并开始执行;
      * @param cmdList
@@ -3324,26 +3214,30 @@ public class VideoEditor {
      */
     public int executeWithEncoder(List<String> cmdList,int bitrate, String dstPath, boolean isHWEnc)
     {
+        List<String> cmdList2 = new ArrayList<String>();
+        for(String item: cmdList){
+            cmdList2.add(item);
+        }
 
-        cmdList.add("-vcodec");
+        cmdList2.add("-vcodec");
         if(isForceHWEncoder){
             Log.d(TAG,"用硬件编码器...");
-            cmdList.add("lansoh264_enc");
-            cmdList.add("-pix_fmt");
-            cmdList.add("yuv420p");
+            cmdList2.add("lansoh264_enc");
+            cmdList2.add("-pix_fmt");
+            cmdList2.add("yuv420p");
         }else if(isForceSoftWareEncoder){
 
             Log.d(TAG,"强制使用软件编码器...");
-            cmdList.add("libx264");
+            cmdList2.add("libx264");
 
-            cmdList.add("-profile:v");
-            cmdList.add("baseline");
+            cmdList2.add("-profile:v");
+            cmdList2.add("baseline");
 
-            cmdList.add("-preset");
-            cmdList.add("ultrafast");
+            cmdList2.add("-preset");
+            cmdList2.add("ultrafast");
 
-            cmdList.add("-g");
-            cmdList.add("30");
+            cmdList2.add("-g");
+            cmdList2.add("30");
         }else{
             if(!isHWEnc){
                 Log.i(TAG,"当前手机的硬件编码器不支持您的设置, 切换为软编码执行,可能有点慢!");
@@ -3353,34 +3247,36 @@ public class VideoEditor {
             }
 
             if(isHWEnc){
-                cmdList.add("lansoh264_enc");
-                cmdList.add("-pix_fmt");
-                cmdList.add("yuv420p");
+                cmdList2.add("lansoh264_enc");
+                cmdList2.add("-pix_fmt");
+                cmdList2.add("yuv420p");
             }else{
-                cmdList.add("libx264");
+                cmdList2.add("libx264");
+                cmdList2.add("-profile:v");
+                cmdList2.add("baseline");
 
-                cmdList.add("-profile:v");
-                cmdList.add("baseline");
+                cmdList2.add("-preset");
+                cmdList2.add("ultrafast");
 
-                cmdList.add("-preset");
-                cmdList.add("ultrafast");
-
-                cmdList.add("-g");
-                cmdList.add("30");
+                cmdList2.add("-g");
+                cmdList2.add("30");
             }
         }
-        cmdList.add("-b:v");
-        cmdList.add(checkBitRate(bitrate));
+        cmdList2.add("-b:v");
+        cmdList2.add(checkBitRate(bitrate));
 
-        cmdList.add("-y");
-        cmdList.add(dstPath);
-        String[] command = new String[cmdList.size()];
-        for (int i = 0; i < cmdList.size(); i++) {
-            command[i] = (String) cmdList.get(i);
+        cmdList2.add("-y");
+        cmdList2.add(dstPath);
+        String[] command = new String[cmdList2.size()];
+        for (int i = 0; i < cmdList2.size(); i++) {
+            command[i] = (String) cmdList2.get(i);
         }
-//        long time=System.currentTimeMillis();
+
+//        Log.i(TAG,"command is:");
+//        for(String cmd: cmdList2){
+//            Log.i(TAG,cmd);
+//        }
         int ret=executeVideoEditor(command);
-//        Log.i(TAG,"execute custom time is:"+(System.currentTimeMillis()- time));
         return ret;
     }
 }

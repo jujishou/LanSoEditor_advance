@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 
 import com.example.advanceDemo.cool.ParticleDemoActivity;
+import com.example.advanceDemo.cool.TestLottieActivity;
 import com.example.advanceDemo.cool.VViewImage3DDemoActivity;
 import com.example.advanceDemo.cool.VideoEffectDemoActivity;
 import com.lansoeditor.advanceDemo.R;
@@ -26,6 +27,7 @@ public class ListCoolDemoActivity extends Activity implements OnClickListener {
         findViewById(R.id.id_cool_particle).setOnClickListener(this);
         findViewById(R.id.id_cool_videoeffect).setOnClickListener(this);
         findViewById(R.id.id_cool_videoseek).setOnClickListener(this);
+        findViewById(R.id.id_cool_lottie1).setOnClickListener(this);
     }
 
     @Override
@@ -42,6 +44,9 @@ public class ListCoolDemoActivity extends Activity implements OnClickListener {
                 break;
             case R.id.id_cool_videoseek:
                 startDemoActivity(VideoPlaySeekDemoActivity.class);
+                break;
+            case R.id.id_cool_lottie1:
+                startDemoActivity(TestLottieActivity.class);
                 break;
             default:
                 break;

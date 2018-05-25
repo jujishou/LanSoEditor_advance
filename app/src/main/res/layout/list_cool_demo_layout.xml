@@ -32,6 +32,12 @@
 		<TextView   android:text="精确定位【seek】" style="@style/main_item_textview"/>
 		<TextView  style="@style/main_item_arrow"/>
 	</RelativeLayout>
+
+	<RelativeLayout  android:id="@+id/id_cool_lottie1" style="@style/main_item_reletivelayout">
+		<TextView   android:text="加载AE模板(Lottie)" style="@style/main_item_textview"/>
+		<TextView  style="@style/main_item_arrow"/>
+	</RelativeLayout>
+
   	<TextView 
   	    android:layout_margin="20dip"
   	    android:layout_width="match_parent"
