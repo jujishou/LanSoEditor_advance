@@ -9,7 +9,6 @@ import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.PowerManager;
 import android.util.Log;
-import android.view.Surface;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
@@ -38,8 +37,6 @@ import com.lansosdk.videoeditor.FilterLibrary.OnGpuImageFilterChosenListener;
 import com.lansosdk.videoeditor.LanSongUtil;
 import com.lansosdk.videoeditor.SDKFileUtils;
 
-import java.io.IOException;
-
 import jp.co.cyberagent.lansongsdk.gpuimage.GPUImageFilter;
 
 @SuppressLint("SdCardPath")
@@ -50,7 +47,7 @@ public class CameraLayerFullPortActivity extends Activity implements
 
     private static final int RECORD_CAMERA_MIN = 2 * 1000 * 1000; // 定义最小2秒
 
-    private static final String TAG = "CameraFullRecordActivity";
+    private static final String TAG = "CameraFullRecord";
     // ------------------------------------------一下是UI界面和控制部分.---------------------------------------------------
     SeekBar testSeekBar;
     private DrawPadCameraView mDrawPadCamera;
@@ -165,6 +162,8 @@ public class CameraLayerFullPortActivity extends Activity implements
          * 设置录制处理进度监听.
          */
         mDrawPadCamera.setOnDrawPadProgressListener(drawPadProgressListener);
+
+
 
         /**
          * 相机前后置.是否设置滤镜.
@@ -303,30 +302,30 @@ public class CameraLayerFullPortActivity extends Activity implements
 
     }
 
-    /**
-     * 增加效果视频
-     */
-    private void addEffectVideo() {
-        mplayer2 = new MediaPlayer();
-        try {
-            mplayer2.setDataSource("/sdcard/taohua.mp4");
-            mplayer2.prepare();
-            /**
-             * 从摄像头图层获取一个surface, 作为视频的输出窗口
-             */
-            mplayer2.setSurface(new Surface(mCamLayer.getVideoTexture2()));
-            mplayer2.start();
-
-            /**
-             * 把视频的滤镜 设置到摄像头图层中. 当然您也可以用switchFilterList来增加多个滤镜对象.比如先美颜,
-             * 最后增加效果视频.
-             */
-            mCamLayer.switchFilterTo(mCamLayer.getEffectFilter());
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+//    /**
+//     * 增加效果视频
+//     */
+//    private void addEffectVideo() {
+//        mplayer2 = new MediaPlayer();
+//        try {
+//            mplayer2.setDataSource("/sdcard/taohua.mp4");
+//            mplayer2.prepare();
+//            /**
+//             * 从摄像头图层获取一个surface, 作为视频的输出窗口
+//             */
+//            mplayer2.setSurface(new Surface(mCamLayer.getVideoTexture2()));
+//            mplayer2.start();
+//
+//            /**
+//             * 把视频的滤镜 设置到摄像头图层中. 当然您也可以用switchFilterList来增加多个滤镜对象.比如先美颜,
+//             * 最后增加效果视频.
+//             */
+//            mCamLayer.switchFilterTo(mCamLayer.getEffectFilter());
+//
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//    }
 
     private void initView() {
         findViewById(R.id.id_fullrecord_cancel).setOnClickListener(this);

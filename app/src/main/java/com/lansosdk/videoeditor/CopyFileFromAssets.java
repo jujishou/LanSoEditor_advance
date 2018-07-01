@@ -27,8 +27,7 @@ public class CopyFileFromAssets {
             dir.mkdirs();
         try {
             if (!(new File(filePath)).exists()) { // 如果不存在.
-                InputStream is = mContext.getResources().getAssets()
-                        .open(assetsName);
+                InputStream is = mContext.getResources().getAssets().open(assetsName);
                 FileOutputStream fos = new FileOutputStream(filePath);
                 byte[] buffer = new byte[7168];
                 int count = 0;
@@ -38,8 +37,7 @@ public class CopyFileFromAssets {
                 fos.close();
                 is.close();
             } else {
-                Log.i("copyFile",
-                        "CopyFileFromAssets.copyAssets() is work. file existe!");
+                Log.i("copyFile","CopyFileFromAssets.copyAssets() is work. file existe:"+filePath);
             }
             return filePath;
         } catch (Exception e) {

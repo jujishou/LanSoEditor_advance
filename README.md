@@ -1,9 +1,6 @@
 ## LanSoEditor_advance android  video editor  advance sdk . filter, overlay,remark,mixer and so on安卓平台视频编辑专业版本，基于【容器图层】架构， 类似UI布局中的各种控件和Layout的关系，类似Photoshop中的图层思路，搭积木一样的编辑您个性化视频。
-## 版本是2.9.1
-*  增加动态AE模板举例,利用Lottie把AE美工做好的效果,转换为视频
-*  AE模板可让用户修改文字,图片等内容;
-*  当前暂时举例一个, 下一版本会上下各种类似的举例;
-*  VideoEditor在自动切换优化;
+## 版本是2.9.5
+*  深度优化支持AE模板的功能, 更改为后台先处理好,然后预览的模式;
 *  其他代码的优化;
 
 

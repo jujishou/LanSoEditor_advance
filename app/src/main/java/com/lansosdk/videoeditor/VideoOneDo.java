@@ -1115,34 +1115,5 @@ public class VideoOneDo {
         }
         editor.executeVideoEditor(command);
     }
-    // ------------------test
-    // public static void test(Context ctx)
-    // {
-    // VideoOneDo videoOneDo=new VideoOneDo(ctx, "/sdcard/ping20s.mp4");
-    // //videoOneDo.setBackGroundMusic("/sdcard/niliuchenghe.mp3");
-    // //videoOneDo.setBackGroundMusic("/sdcard/niliuchenghe.mp3",true,1.8f);
-    // //videoOneDo.setBackGroundMusic("/sdcard/niliuchenghe.mp3",true,1.2f,0.5f);
-    // //videoOneDo.setBackGroundMusic("/sdcard/niu30s.m4a",true,0.2f);
-    // //videoOneDo.setBackGroundMusic("/sdcard/summer10s.mp3",true,0.2f);
-    // videoOneDo.setBackGroundMusic("/sdcard/niu9s.m4a");
-    //
-    // videoOneDo.setOnVideoOneDoProgressListener(new
-    // onVideoOneDoProgressListener() {
-    //
-    // @Override
-    // public void onProgress(VideoOneDo v, float percent) {
-    //
-    // Log.i(TAG,"----test:"+percent);
-    // }
-    // });
-    // videoOneDo.setOnVideoOneDoCompletedListener(new
-    // onVideoOneDoCompletedListener() {
-    //
-    // @Override
-    // public void onCompleted(VideoOneDo v, String dstVideo) {
-    // Log.i(TAG,"处理最后的文件是:"+dstVideo);
-    // }
-    // });
-    // videoOneDo.start();
-    // }
+
 }

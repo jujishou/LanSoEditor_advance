@@ -8,7 +8,6 @@ import com.lansosdk.box.AudioSource;
 import com.lansosdk.box.BitmapLayer;
 import com.lansosdk.box.CanvasLayer;
 import com.lansosdk.box.DataLayer;
-import com.lansosdk.box.DrawPadUpdateMode;
 import com.lansosdk.box.DrawPadVideoRunnable2;
 import com.lansosdk.box.FileParameter;
 import com.lansosdk.box.GifLayer;
@@ -30,23 +29,30 @@ import jp.co.cyberagent.lansongsdk.gpuimage.GPUImageFilter;
 
 public class DrawPadVideoExecute2 {
 
-    private static final String TAG = "DrawpadVideoExecute";
+    private static final String TAG = "DrawpadVideoExecute2";
     protected boolean isCheckBitRate = true;
     protected boolean isCheckPadSize = true;
     private DrawPadVideoRunnable2 renderer = null;
     private int padWidth, padHeight;
     private boolean mPauseRecord = false;
 
+
+    public DrawPadVideoExecute2(Context ctx, String srcPath,String dstPath) {
+        this.init(ctx,srcPath,0,dstPath);
+    }
     /**
-     * @param ctx       语境,android的Context
-     * @param srcPath   主视频的路径
-     * @param padwidth  DrawPad的的宽度
-     * @param padheight DrawPad的的高度
-     * @param bitrate   编码视频所希望的码率,比特率.
-     * @param filter    为视频图层增加一个滤镜 如果您要增加多个滤镜,则用
-     *                  {@link #switchFilterList(Layer, ArrayList)}
-     * @param dstPath   视频处理后保存的路径.
+     *
+     * 单位为微秒 1s=1000*1000微秒; 注意!!!
+     *
+     * @param ctx
+     * @param srcPath     视频的完整路径.
+     * @param startTimeUs 开始时间.
+     * @param dstPath     处理后保存的目标文件.
      */
+    public DrawPadVideoExecute2(Context ctx, String srcPath, long startTimeUs,String dstPath) {
+        this.init(ctx,srcPath,startTimeUs,dstPath);
+    }
+
     public DrawPadVideoExecute2(Context ctx, String srcPath, int padwidth,
                                 int padheight, int bitrate, GPUImageFilter filter, String dstPath) {
         if (renderer == null) {
@@ -101,7 +107,6 @@ public class DrawPadVideoExecute2 {
         this.padWidth = padwidth;
         this.padHeight = padheight;
     }
-
     /**
      * 相对于上面,只是少了码率.
      *
@@ -122,7 +127,20 @@ public class DrawPadVideoExecute2 {
         this.padWidth = padwidth;
         this.padHeight = padheight;
     }
+    private void init(Context ctx, String srcPath, long startTimeUs,String dstPath)
+    {
+        MediaInfo info=new MediaInfo(srcPath,false);
+        if (renderer == null && info.prepare()) {
+            int padW=info.getWidth();
+            int padH=info.getHeight();
 
+            int bitrate=(int)(info.vBitRate*1.5f);
+            renderer = new DrawPadVideoRunnable2(ctx, srcPath, startTimeUs, padW,padH,bitrate, null, dstPath);
+
+            this.padWidth = padW;
+            this.padHeight = padH;
+        }
+    }
     /**
      * 增加了FileParameter类, 其中FileParameter的配置是:
      * <p>
@@ -209,33 +227,6 @@ public class DrawPadVideoExecute2 {
             renderer.adjustEncodeSpeed(speed);
         }
     }
-
-    /**
-     * 此方法已废弃, 请不要使用;
-     *
-     * @param use
-     */
-    @Deprecated
-    public void setUseMainVideoPts(boolean use) {
-    }
-
-    /**
-     * 此方法已废弃, 请不要使用;
-     *
-     * @param mode
-     * @param fps
-     */
-    @Deprecated
-    public void setUpdateMode(DrawPadUpdateMode mode, int fps) {
-    }
-
-    @Deprecated
-    public void setDisableEncode(boolean dis) {
-        if (renderer != null && renderer.isRunning() == false) {
-            renderer.setDisableEncode(dis);
-        }
-    }
-
     /**
      * 音频处理的进度, 如果你要调整每个AudioSource对象在不同时段内的各种状态,则可以在这个进度中, 判断时间戳来调整.
      * 比如静音,比如增大音量
@@ -253,8 +244,6 @@ public class DrawPadVideoExecute2 {
      * 可以利用这个时间戳来做一些变化,比如在几秒处缩放, 在几秒处平移等等.从而实现一些动画效果.
      * <p>
      * (注意, 这个进度回调, 是经过Handler异步调用, 工作在主线程的. 如果你要严格按照时间来,则需要用setDrawPadThreadProgressListener)
-     *
-     * @param currentTimeUs 当前DrawPad处理画面的时间戳.,单位微秒.
      */
     public void setDrawPadProgressListener(onDrawPadProgressListener listener) {
         if (renderer != null) {
@@ -331,8 +320,7 @@ public class DrawPadVideoExecute2 {
 
     /**
      * 把当前图层放到DrawPad的最底部. DrawPad运行后,有效.
-     *
-     * @param pen
+     * @param layer
      */
     public void bringToBack(Layer layer) {
         if (renderer != null && renderer.isRunning()) {
@@ -662,7 +650,7 @@ public class DrawPadVideoExecute2 {
      * TwoVideoLayer 或MVLayer;
      *
      * @param videoPath  视频的完整路径;
-     * @param filter视频滤镜 ,如果不增加滤镜,则赋值为null
+     * @param filter 视频滤镜 ,如果不增加滤镜,则赋值为null
      * @return
      */
     public VideoLayer2 addVideoLayer2(String videoPath, GPUImageFilter filter) {

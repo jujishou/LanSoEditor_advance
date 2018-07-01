@@ -204,10 +204,16 @@ public class MediaInfo {
                         str += "视频信息-----:\n";
                         str += "宽度:" + info.vWidth + "\n";
                         str += "高度:" + info.vHeight + "\n";
+                        str += "编码宽度:" + info.vCodecWidth + "\n";
+                        str += "编码高度:" + info.vCodecHeight + "\n";
                         str += "时长:" + info.vDuration + "\n";
                         str += "帧率:" + info.vFrameRate + "\n";
                         str += "码率:" + info.vBitRate + "\n";
+                        str += "总帧数:" + info.vTotalFrames + "\n";
                         str += "旋转角度:" + info.vRotateAngle + "\n";
+                        str += "编码器名字:" + info.vCodecName + "\n";
+                        str += "是否有B帧:" + info.vHasBFrame + "\n";
+                        str += "像素格式:" + info.vPixelFmt + "\n";
                     } else {
                         str += "<无视频信息>\n";
                     }
@@ -267,8 +273,7 @@ public class MediaInfo {
     }
 
     /**
-     * [新增] 获取当前视频在显示的时候, 图像的宽度;
-     * <p>
+     * 获取当前视频在显示的时候, 图像的宽度;
      * 因为有些视频是90度或270度旋转显示的, 旋转的话, 就宽高对调了
      *
      * @return
@@ -285,8 +290,6 @@ public class MediaInfo {
     }
 
     /**
-     * [新增]
-     * <p>
      * 获取当前视频在显示的时候, 图像的高度; 因为有些视频是90度或270度旋转显示的, 旋转的话, 就宽高对调了
      *
      * @return

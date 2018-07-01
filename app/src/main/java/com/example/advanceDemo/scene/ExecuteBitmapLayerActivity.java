@@ -9,8 +9,8 @@ import android.view.View.OnClickListener;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.advanceDemo.DemoUtil;
 import com.example.advanceDemo.VideoPlayerActivity;
+import com.example.advanceDemo.utils.DemoUtil;
 import com.lansoeditor.advanceDemo.R;
 import com.lansosdk.box.BitmapLayer;
 import com.lansosdk.box.DrawPad;

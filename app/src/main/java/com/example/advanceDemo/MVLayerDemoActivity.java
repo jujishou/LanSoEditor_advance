@@ -25,10 +25,9 @@ import com.lansosdk.box.onLayerAvailableListener;
 import com.lansosdk.videoeditor.CopyDefaultVideoAsyncTask;
 import com.lansosdk.videoeditor.DrawPadView;
 import com.lansosdk.videoeditor.DrawPadView.onViewAvailable;
+import com.lansosdk.videoeditor.LanSongMergeAV;
 import com.lansosdk.videoeditor.MediaInfo;
-import com.lansosdk.videoeditor.SDKDir;
 import com.lansosdk.videoeditor.SDKFileUtils;
-import com.lansosdk.videoeditor.VideoEditor;
 
 import java.io.IOException;
 
@@ -73,7 +72,7 @@ public class MVLayerDemoActivity extends Activity {
                 // TODO Auto-generated method stub
                 startPlayVideo();
             }
-        },300);
+        }, 300);
     }
 
     @Override
@@ -154,15 +153,14 @@ public class MVLayerDemoActivity extends Activity {
         // 设置使能 实时录制, 即把正在DrawPad中呈现的画面实时的保存下来,实现所见即所得的模式
         mDrawPadView.setRealEncodeEnable(480, 480, 1000000,
                 (int) mInfo.vFrameRate, editTmpPath);
-        mDrawPadView
-                .setOnDrawPadProgressListener(new onDrawPadProgressListener() {
+        mDrawPadView.setOnDrawPadProgressListener(new onDrawPadProgressListener() {
 
-                    @Override
-                    public void onProgress(DrawPad v, long currentTimeUs) {
-                        // TODO Auto-generated method stub
-                        // Log.i(TAG,"MV当前时间戳是"+currentTimeUs);
-                    }
-                });
+            @Override
+            public void onProgress(DrawPad v, long currentTimeUs) {
+                // TODO Auto-generated method stub
+                // Log.i(TAG,"MV当前时间戳是"+currentTimeUs);
+            }
+        });
 
         // 设置当前DrawPad的宽度和高度,并把宽度自动缩放到父view的宽度,然后等比例调整高度.
         mDrawPadView.setDrawPadSize(480, 480, new onDrawPadSizeChangedListener() {
@@ -215,10 +213,10 @@ public class MVLayerDemoActivity extends Activity {
                 }
             });
 
-            // 设置它为满屏.
-            float scaleW = (float) mvLayer.getPadWidth() / (float) mvLayer.getLayerWidth();
-            float scaleH = mvLayer.getPadHeight() / (float) mvLayer.getLayerHeight();
-            mvLayer.setScale(scaleW, scaleH);
+//            // 设置它为满屏.
+//            float scaleW = (float) mvLayer.getPadWidth() / (float) mvLayer.getLayerWidth();
+//            float scaleH = mvLayer.getPadHeight() / (float) mvLayer.getLayerHeight();
+//            mvLayer.setScale(scaleW, scaleH);
 
             // 可以设置当前的MV是否要录制到
             // mvLayer.setVisibility(Layer.VISIBLE_ONLY_PREVIEW);
@@ -236,15 +234,8 @@ public class MVLayerDemoActivity extends Activity {
             mDrawPadView.stopDrawPad();
             toastStop();
             if (SDKFileUtils.fileExist(editTmpPath)) {
-                boolean ret = VideoEditor.encoderAddAudio(mVideoPath,
-                        editTmpPath, SDKDir.TMP_DIR, dstPath);
-                if (!ret) {
-                    dstPath = editTmpPath;
-                } else {
-                    SDKFileUtils.deleteFile(editTmpPath);
-                }
-                findViewById(R.id.id_mvlayer_saveplay).setVisibility(
-                        View.VISIBLE);
+                dstPath= LanSongMergeAV.mergeAVDirectly(mVideoPath, editTmpPath,true);
+                findViewById(R.id.id_mvlayer_saveplay).setVisibility(View.VISIBLE);
             } else {
                 Log.e(TAG, " player completion, but file:" + editTmpPath
                         + " is not exist!!!");
@@ -258,7 +249,6 @@ public class MVLayerDemoActivity extends Activity {
 
                     @Override
                     public void onClick(View v) {
-                        // TODO Auto-generated method stub
                         if (SDKFileUtils.fileExist(dstPath)) {
                             Intent intent = new Intent(
                                     MVLayerDemoActivity.this,

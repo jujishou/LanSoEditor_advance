@@ -187,9 +187,9 @@ public class DrawPadCameraView extends FrameLayout {
         mTextureRenderView.setDispalyRatio(AR_ASPECT_FIT_PARENT);
 
         View renderUIView = mTextureRenderView.getView();
-        FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(
-                FrameLayout.LayoutParams.WRAP_CONTENT,
-                FrameLayout.LayoutParams.WRAP_CONTENT, Gravity.CENTER);
+        LayoutParams lp = new LayoutParams(
+                LayoutParams.WRAP_CONTENT,
+                LayoutParams.WRAP_CONTENT, Gravity.CENTER);
         renderUIView.setLayoutParams(lp);
         addView(renderUIView);
         mTextureRenderView.setVideoRotation(mVideoRotationDegree);

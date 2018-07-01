@@ -35,10 +35,9 @@ import com.lansosdk.box.ViewLayerRelativeLayout;
 import com.lansosdk.box.onDrawPadProgressListener;
 import com.lansosdk.box.onDrawPadSizeChangedListener;
 import com.lansosdk.videoeditor.DrawPadView;
+import com.lansosdk.videoeditor.LanSongMergeAV;
 import com.lansosdk.videoeditor.MediaInfo;
-import com.lansosdk.videoeditor.SDKDir;
 import com.lansosdk.videoeditor.SDKFileUtils;
-import com.lansosdk.videoeditor.VideoEditor;
 
 import java.io.IOException;
 
@@ -188,12 +187,7 @@ public class ViewLayerDemoActivity extends Activity implements OnClickListener {
             toastStop();
 
             if (SDKFileUtils.fileExist(editTmpPath)) {
-                boolean ret = VideoEditor.encoderAddAudio(mVideoPath,
-                        editTmpPath, SDKDir.TMP_DIR, dstPath);
-                if (!ret) {
-                    dstPath = editTmpPath;
-                } else
-                    SDKFileUtils.deleteFile(editTmpPath);
+                dstPath = LanSongMergeAV.mergeAVDirectly(mVideoPath, editTmpPath, true);
                 findViewById(R.id.id_vview_realtime_saveplay).setVisibility(
                         View.VISIBLE);
             }

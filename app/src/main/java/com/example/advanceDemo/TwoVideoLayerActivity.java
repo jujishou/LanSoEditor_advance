@@ -19,10 +19,9 @@ import com.lansosdk.box.TwoVideoLayer;
 import com.lansosdk.box.onDrawPadSizeChangedListener;
 import com.lansosdk.videoeditor.CopyFileFromAssets;
 import com.lansosdk.videoeditor.DrawPadView;
+import com.lansosdk.videoeditor.LanSongMergeAV;
 import com.lansosdk.videoeditor.MediaInfo;
-import com.lansosdk.videoeditor.SDKDir;
 import com.lansosdk.videoeditor.SDKFileUtils;
-import com.lansosdk.videoeditor.VideoEditor;
 
 import java.io.IOException;
 
@@ -248,14 +247,11 @@ public class TwoVideoLayerActivity extends Activity {
 
             // 增加音频
             if (SDKFileUtils.fileExist(editTmpPath)) {
-                boolean ret = VideoEditor.encoderAddAudio(mVideoPath,
-                        editTmpPath, SDKDir.TMP_DIR, dstPath);
-                if (!ret) {
-                    dstPath = editTmpPath;
-                } else {
-                    SDKFileUtils.deleteFile(editTmpPath);
-                }
+
+                dstPath= LanSongMergeAV.mergeAVDirectly(mVideoPath, editTmpPath, true);
                 playVideo.setVisibility(View.VISIBLE);
+
+
             } else {
                 Log.e(TAG, " player completion, but file:" + editTmpPath
                         + " is not exist!!!");

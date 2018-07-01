@@ -13,7 +13,7 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
           <com.lansosdk.videoeditor.DrawPadView
-            android:id="@+id/DrawPad_view"
+            android:id="@+id/id_drawpad_drawpadview"
             android:layout_width="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_margin="10dip"
@@ -63,28 +63,4 @@
              </LinearLayout>
              </ScrollView>
     </LinearLayout>
-    
-      
-      <LinearLayout 
-          android:id="@+id/id_DrawPad_saveplay"
-        android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:background="@drawable/corners_btn_orange_bg"
-          android:layout_centerHorizontal="true"
-          android:layout_marginTop="50dip"
-          android:orientation="vertical">
-		  	  
-           <TextView 
-              android:layout_width="wrap_content"
-              android:layout_height="wrap_content"
-              android:text="视频已经为您实时生成, 请点击预览"
-              android:layout_margin="5dip"
-              android:textColor="@color/red"
-              />
-          <ImageView 
-              android:layout_width="wrap_content"
-              android:layout_height="wrap_content"
-              android:layout_gravity="center"
-              android:src="@drawable/play2"/>
-      </LinearLayout>
 </RelativeLayout>

@@ -11,7 +11,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.Surface;
 import android.view.TextureView.SurfaceTextureListener;
 import android.view.View;
@@ -25,7 +24,6 @@ import com.lansoeditor.advanceDemo.R;
 import com.lansosdk.videoeditor.EditModeVideo;
 import com.lansosdk.videoeditor.IRenderView;
 import com.lansosdk.videoeditor.MediaInfo;
-import com.lansosdk.videoeditor.SDKFileUtils;
 import com.lansosdk.videoeditor.TextureRenderView;
 import com.warkiz.widget.IndicatorSeekBar;
 

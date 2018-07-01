@@ -22,47 +22,66 @@ public class LanSongMergeAV extends VideoEditor {
     protected ArrayList<String> deleteArray = new ArrayList<String>();
 
     /**
-     * 直接混合
-     * 内部不做时长判断,不做mp3,aac判断,不做是否有音频的判断;
+     *
+     *
      * @param audio
      * @param video
      * @param dstMp4
      * @return
      */
-    public static int mergeAVDirectly(String audio, String video, String dstMp4) {
-        MediaInfo aInfo = new MediaInfo(audio, false);
-        MediaInfo vInfo = new MediaInfo(video, false);
+    /**
+     * 给视频增加音频
+     * 内部不做时长判断,不做mp3,aac判断,不做是否有音频的判断;
+     *
+     * @param audio 音频部分
+     * @param video 视频部分
+     * @param deleteVideo  增加视频后,是否要删除原视频文件;
+     * @return 返回增加后音频的视频路径, 如果失败则返回原视频
+     */
+    public static String mergeAVDirectly(String audio, String video,boolean deleteVideo) {
+        MediaInfo info=new MediaInfo(audio,false);
+        if(info.prepare() && info.isHaveAudio()){
+                String retPath= SDKFileUtils.createMp4FileInBox();
 
-        String inputAudio = audio;
-        List<String> cmdList = new ArrayList<String>();
+                String inputAudio = audio;
+                List<String> cmdList = new ArrayList<String>();
 
-        cmdList.add("-i");
-        cmdList.add(inputAudio);
-        cmdList.add("-i");
-        cmdList.add(video);
+                cmdList.add("-i");
+                cmdList.add(inputAudio);
+                cmdList.add("-i");
+                cmdList.add(video);
 
-        cmdList.add("-map");
-        cmdList.add("0:a");
-        cmdList.add("-map");
-        cmdList.add("1:v");
+                cmdList.add("-map");
+                cmdList.add("0:a");
+                cmdList.add("-map");
+                cmdList.add("1:v");
 
-        cmdList.add("-acodec");
-        cmdList.add("copy");
-        cmdList.add("-vcodec");
-        cmdList.add("copy");
+                cmdList.add("-acodec");
+                cmdList.add("copy");
+                cmdList.add("-vcodec");
+                cmdList.add("copy");
 
-        cmdList.add("-absf");
-        cmdList.add("aac_adtstoasc");
+                cmdList.add("-absf");
+                cmdList.add("aac_adtstoasc");
 
-        cmdList.add("-y");
-        cmdList.add(dstMp4);
-        String[] command = new String[cmdList.size()];
-        for (int i = 0; i < cmdList.size(); i++) {
-            command[i] = (String) cmdList.get(i);
+                cmdList.add("-y");
+                cmdList.add(retPath);
+                String[] command = new String[cmdList.size()];
+                for (int i = 0; i < cmdList.size(); i++) {
+                    command[i] = (String) cmdList.get(i);
+                }
+                VideoEditor editor = new VideoEditor();
+                int ret = editor.executeVideoEditor(command);
+                if(ret==0){
+                    if(deleteVideo){
+                        SDKFileUtils.deleteFile(video);
+                    }
+                    return retPath;
+                }else{
+                    return video;
+                }
         }
-        VideoEditor editor = new VideoEditor();
-        int ret = editor.executeVideoEditor(command);
-        return ret;
+        return video;
     }
     /**
      * 合并音视频,  替换背景音乐;
@@ -267,23 +286,23 @@ public class LanSongMergeAV extends VideoEditor {
     }
 
 
-    //-----一下是测试代码
-    public static void test() {
-
-        LanSongMergeAV mergeAV=new LanSongMergeAV();
-//        String audio="/sdcard/hongdou.mp3";
-//        String audio="/sdcard/hongdou10s.mp3";
-
-//        String audio="/sdcard/liang.m4a";
-//        String audio="/sdcard/niu10s.aac";
-
-        String audio="/sdcard/h.wav";
-
-        String video="/sdcard/ping20s.mp4";
-
-        String dstVideo="/sdcard/av12.mp4";
-
-        mergeAV.mergeAudioVideo(audio,video,dstVideo);
-
-    }
+//    //-----一下是测试代码
+//    public static void test() {
+//
+//        LanSongMergeAV mergeAV=new LanSongMergeAV();
+////        String audio="/sdcard/hongdou.mp3";
+////        String audio="/sdcard/hongdou10s.mp3";
+//
+////        String audio="/sdcard/liang.m4a";
+////        String audio="/sdcard/niu10s.aac";
+//
+//        String audio="/sdcard/h.wav";
+//
+//        String video="/sdcard/ping20s.mp4";
+//
+//        String dstVideo="/sdcard/av12.mp4";
+//
+//        mergeAV.mergeAudioVideo(audio,video,dstVideo);
+//
+//    }
 }

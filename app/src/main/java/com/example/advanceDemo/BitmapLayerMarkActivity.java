@@ -19,10 +19,9 @@ import com.example.advanceDemo.view.MarkArrowView;
 import com.lansoeditor.advanceDemo.R;
 import com.lansosdk.box.VideoLayer;
 import com.lansosdk.box.onDrawPadSizeChangedListener;
+import com.lansosdk.videoeditor.LanSongMergeAV;
 import com.lansosdk.videoeditor.MediaInfo;
-import com.lansosdk.videoeditor.SDKDir;
 import com.lansosdk.videoeditor.SDKFileUtils;
-import com.lansosdk.videoeditor.VideoEditor;
 
 import java.io.IOException;
 
@@ -163,12 +162,7 @@ public class BitmapLayerMarkActivity extends Activity {
             toastStop();
 
             if (SDKFileUtils.fileExist(editTmpPath)) {
-                boolean ret = VideoEditor.encoderAddAudio(mVideoPath,
-                        editTmpPath, SDKDir.TMP_DIR, dstPath);
-                if (!ret) {
-                    dstPath = editTmpPath;
-                } else
-                    SDKFileUtils.deleteFile(editTmpPath);
+                dstPath = LanSongMergeAV.mergeAVDirectly(mVideoPath,editTmpPath, true);
                 playVideo.setVisibility(View.VISIBLE);
             }
         }

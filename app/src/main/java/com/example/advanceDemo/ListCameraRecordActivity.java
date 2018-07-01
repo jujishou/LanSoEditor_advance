@@ -11,7 +11,6 @@ import com.example.advanceDemo.camera.CameraLayerFullPortActivity;
 import com.example.advanceDemo.camera.CameraLayerFullPortWithMp3Activity;
 import com.example.advanceDemo.camera.CameraLayerFullSegmentActivity;
 import com.example.advanceDemo.camera.CameraLayerKTVDemoActivity;
-import com.example.advanceDemo.camera.CameraLayerRectActivity;
 import com.example.advanceDemo.camera.CameraSubLayerDemo1Activity;
 import com.example.advanceDemo.camera.CameraSubLayerDemo2Activity;
 import com.lansoeditor.advanceDemo.R;
@@ -28,7 +27,6 @@ public class ListCameraRecordActivity extends Activity implements
         setContentView(R.layout.camera_demo_list_layout);
         videoPath = getIntent().getStringExtra("videopath");
 
-        findViewById(R.id.id_cameralist_cameralayer).setOnClickListener(this);
         findViewById(R.id.id_cameralist_camerafulllayer).setOnClickListener(
                 this);
         findViewById(R.id.id_cameralist_camerafulllayer2).setOnClickListener(
@@ -41,15 +39,11 @@ public class ListCameraRecordActivity extends Activity implements
                 this);
         findViewById(R.id.id_cameralist_sublayer1).setOnClickListener(this);
         findViewById(R.id.id_cameralist_sublayer2).setOnClickListener(this);
-
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.id_cameralist_cameralayer:
-                startDemoActivity(CameraLayerRectActivity.class);
-                break;
             case R.id.id_cameralist_camerafulllayer:
                 startDemoActivity(CameraLayerFullPortActivity.class);
                 break;

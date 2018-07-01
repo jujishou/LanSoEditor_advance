@@ -24,15 +24,13 @@ import com.lansosdk.box.CanvasRunnable;
 import com.lansosdk.box.DataLayer;
 import com.lansosdk.box.DrawPad;
 import com.lansosdk.box.GifLayer;
-import com.lansosdk.box.LayerScaleType;
 import com.lansosdk.box.MVLayer;
-import com.lansosdk.box.VideoLayer;
 import com.lansosdk.box.onDrawPadCompletedListener;
 import com.lansosdk.box.onDrawPadErrorListener;
 import com.lansosdk.box.onDrawPadProgressListener;
 import com.lansosdk.box.onDrawPadThreadProgressListener;
 import com.lansosdk.videoeditor.CopyDefaultVideoAsyncTask;
-import com.lansosdk.videoeditor.DrawPadVideoExecute;
+import com.lansosdk.videoeditor.DrawPadVideoExecute2;
 import com.lansosdk.videoeditor.MediaInfo;
 import com.lansosdk.videoeditor.SDKFileUtils;
 
@@ -50,7 +48,7 @@ import java.nio.IntBuffer;
  */
 public class ExecuteVideoLayerActivity extends Activity {
 
-    private static final String TAG = "ExecuteVideoLayerDemoActivity";
+    private static final String TAG = "ExecuteLayer";
     GifLayer gifLayer;
     private String videoPath = null;
     private ProgressDialog mProgressDialog;
@@ -71,7 +69,7 @@ public class ExecuteVideoLayerActivity extends Activity {
     /**
      * DrawPad, 用来执行图像处理的对象.
      */
-    private DrawPadVideoExecute mDrawPad = null;
+    private DrawPadVideoExecute2 execute2 = null;
     /**
      * 用来显示一个心形.
      */
@@ -113,21 +111,20 @@ public class ExecuteVideoLayerActivity extends Activity {
             return;
 
         isExecuting = true;
-        mDrawPad = new DrawPadVideoExecute(mContext, videoPath, 480, 480,
-                1000 * 1000, null, dstPath);
+        execute2 = new DrawPadVideoExecute2(mContext, videoPath,dstPath);
 
-        mDrawPad.setDrawPadErrorListener(new onDrawPadErrorListener() {
+        execute2.setDrawPadErrorListener(new onDrawPadErrorListener() {
 
             @Override
             public void onError(DrawPad d, int what) {
-                mDrawPad.stopDrawPad();
+                execute2.stopDrawPad();
                 Log.e(TAG, "后台容器线程 运行失败,您请检查下是否码率分辨率设置过大,或者联系我们!...");
             }
         });
         /**
          * 设置DrawPad处理的进度监听, 回传的currentTimeUs单位是微秒.
          */
-        mDrawPad.setDrawPadProgressListener(new onDrawPadProgressListener() {
+        execute2.setDrawPadProgressListener(new onDrawPadProgressListener() {
 
             @Override
             public void onProgress(DrawPad v, long currentTimeUs) {
@@ -142,7 +139,7 @@ public class ExecuteVideoLayerActivity extends Activity {
         /**
          * 设置DrawPad完成后的监听.
          */
-        mDrawPad.setDrawPadCompletedListener(new onDrawPadCompletedListener() {
+        execute2.setDrawPadCompletedListener(new onDrawPadCompletedListener() {
 
             @Override
             public void onCompleted(DrawPad v) {
@@ -153,7 +150,7 @@ public class ExecuteVideoLayerActivity extends Activity {
             }
         });
 
-        mDrawPad.setDrawPadThreadProgressListener(new onDrawPadThreadProgressListener() {
+        execute2.setDrawPadThreadProgressListener(new onDrawPadThreadProgressListener() {
 
             @Override
             public void onThreadProgress(DrawPad v, long currentTimeUs) {
@@ -163,15 +160,11 @@ public class ExecuteVideoLayerActivity extends Activity {
         addOtherAudio();
 
         // 在开启前,先设置为暂停录制,因为要增加一些图层.
-        mDrawPad.pauseRecord();
-        /**
-         * 开始执行这个DrawPad
-         */
-        if (mDrawPad.startDrawPad()) {
+        execute2.pauseRecord();
+        //开始执行这个DrawPad
+        if (execute2.startDrawPad()) {
             // 增加一些图层.
             addLayers();
-            VideoLayer videolayer = mDrawPad.getMainVideoLayer();
-            videolayer.setScaleType(LayerScaleType.SCALETYPE_FULL_CROP);
         } else {
             Log.e(TAG,
                     "后台容器线程  运行失败,您请检查下是否是路径设置有无, 请用MediaInfo.checkFile执行查看下....");
@@ -182,24 +175,17 @@ public class ExecuteVideoLayerActivity extends Activity {
      * 增加各种图层.
      */
     private void addLayers() {
-        if (mDrawPad.isRunning()) {
+        if (execute2.isRunning()) {
 
-            VideoLayer mainLayer = mDrawPad.getMainVideoLayer();
 
-            // if(mainLayer!=null){
-            // //只显示某一部分
-            // mainLayer.setVisibleRect(0.5f, 1.0f,0.4f,1.0f);
-            // //给视频增加一个虚化背景.
-            // mainLayer.setBackgroundBlurFactor(1.5f);
-            // }
             /**
              * 一下是在处理过程中, 增加的几个Layer, 来实现视频在播放过程中叠加别的一些媒体, 像图片, 文字等.
              */
-            bitmapLayer = mDrawPad.addBitmapLayer(BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher));
+            bitmapLayer = execute2.addBitmapLayer(BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher));
             bitmapLayer.setPosition(300, 200);
 
             // 增加一个笑脸, add a bitmap
-            mDrawPad.addBitmapLayer(BitmapFactory.decodeResource(getResources(), R.drawable.xiaolian));
+            execute2.addBitmapLayer(BitmapFactory.decodeResource(getResources(), R.drawable.xiaolian));
 
             // 你可以增加其他图层.
             // addCanvasLayer();
@@ -208,7 +194,7 @@ public class ExecuteVideoLayerActivity extends Activity {
             // addGifLayer();
 
             // 增加完图层, 恢复运行.
-            mDrawPad.resumeRecord();
+            execute2.resumeRecord();
         }
     }
 
@@ -224,8 +210,8 @@ public class ExecuteVideoLayerActivity extends Activity {
         String audio2 = CopyDefaultVideoAsyncTask.copyFile(
                 getApplicationContext(), "hongdou10s.mp3");
 
-        boolean ret1 = mDrawPad.addSubAudio(audio, 300, -1, 1.0f, 1.0f);
-        boolean ret2 = mDrawPad.addSubAudio(audio2, 0, -1, 2.0f);
+        boolean ret1 = execute2.addSubAudio(audio, 300, -1, 1.0f, 1.0f);
+        boolean ret2 = execute2.addSubAudio(audio2, 0, -1, 2.0f);
 
     }
 
@@ -234,14 +220,14 @@ public class ExecuteVideoLayerActivity extends Activity {
         super.onDestroy();
 
         removeGif();
-        if (mDrawPad != null) {
-            mDrawPad.releaseDrawPad();
+        if (execute2 != null) {
+            execute2.releaseDrawPad();
             try {
                 Thread.sleep(100);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            mDrawPad = null;
+            execute2 = null;
         }
         SDKFileUtils.deleteFile(dstPath);
     }
@@ -301,7 +287,7 @@ public class ExecuteVideoLayerActivity extends Activity {
      * 增加一个CanvasLayer,
      */
     private void addCanvasLayer() {
-        mCanvasLayer = mDrawPad.addCanvasLayer();
+        mCanvasLayer = execute2.addCanvasLayer();
         if (mCanvasLayer != null) {
 
             mCanvasLayer.setClearCanvas(false);
@@ -323,13 +309,13 @@ public class ExecuteVideoLayerActivity extends Activity {
         String colorMVPath = CopyDefaultVideoAsyncTask.copyFile(ExecuteVideoLayerActivity.this, "mei.mp4");
         String maskMVPath = CopyDefaultVideoAsyncTask.copyFile(ExecuteVideoLayerActivity.this, "mei_b.mp4");
 
-        mvlayer = mDrawPad.addMVLayer(colorMVPath, maskMVPath, true);
+        mvlayer = execute2.addMVLayer(colorMVPath, maskMVPath, true);
         // mv在播放完后, 有3种模式,消失/停留在最后一帧/循环.默认是循环.
         // layer.setEndMode(MVLayerENDMode.INVISIBLE);
     }
 
     private void addGifLayer() {
-        gifLayer = mDrawPad.addGifLayer(R.drawable.g06);
+        gifLayer = execute2.addGifLayer(R.drawable.g06);
 
         // new Handler().postDelayed(new Runnable() {
         //
@@ -373,14 +359,14 @@ public class ExecuteVideoLayerActivity extends Activity {
             mGLRgbBuffer = IntBuffer.allocate(gifInfo.vWidth * gifInfo.vHeight);
 
             gifInterval = (int) (mInfo.vFrameRate / gifInfo.vFrameRate);
-            dataLayer = mDrawPad.addDataLayer(gifInfo.vWidth, gifInfo.vHeight);
+            dataLayer = execute2.addDataLayer(gifInfo.vWidth, gifInfo.vHeight);
 
             /**
              * 容器中的onDrawPadThreadProgressListener监听,与
              * onDrawPadProgressListener不同的地方在于:
              * 此回调是在DrawPad渲染完一帧后,立即执行这个回调中的代码,不通过Handler传递出去.
              */
-            mDrawPad.setDrawPadThreadProgressListener(new onDrawPadThreadProgressListener() {
+            execute2.setDrawPadThreadProgressListener(new onDrawPadThreadProgressListener() {
 
                 @Override
                 public void onThreadProgress(DrawPad v, long currentTimeUs) {
@@ -405,8 +391,8 @@ public class ExecuteVideoLayerActivity extends Activity {
     }
 
     private void removeGif() {
-        if (mDrawPad != null && dataLayer != null) {
-            mDrawPad.removeLayer(dataLayer);
+        if (execute2 != null && dataLayer != null) {
+            execute2.removeLayer(dataLayer);
             dataLayer = null;
             BoxDecoder.decoderRelease(decoderHandler);
             decoderHandler = 0;

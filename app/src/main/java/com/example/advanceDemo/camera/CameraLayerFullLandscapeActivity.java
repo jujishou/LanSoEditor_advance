@@ -55,6 +55,8 @@ import jp.co.cyberagent.lansongsdk.gpuimage.GPUImageFilter;
  * name="android:windowFullscreen">true</item> <item
  * name="android:windowContentOverlay">@null</item> </style>
  */
+// public class CameraLayerFullLandscapeActivity extends Activity implements
+// OnClickListener{
 public class CameraLayerFullLandscapeActivity extends AppCompatActivity
         implements OnClickListener {
     private static final long RECORD_CAMERA_TIME = 15 * 1000 * 1000; // 定义录制的时间为20s
@@ -141,7 +143,8 @@ public class CameraLayerFullLandscapeActivity extends AppCompatActivity
         super.onResume();
         if (mWakeLock == null) {
             PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
-            mWakeLock = pm.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK,TAG);
+            mWakeLock = pm.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK,
+                    TAG);
             mWakeLock.acquire();
         }
         playVideo.setVisibility(View.GONE);
@@ -164,7 +167,8 @@ public class CameraLayerFullLandscapeActivity extends AppCompatActivity
         int padHeight = 544;
         int bitrate = 3000 * 1024;
         int frameRate = 25;
-        mDrawPadCamera.setRealEncodeEnable(padWidth, padHeight, bitrate,frameRate, dstPath);
+        mDrawPadCamera.setRealEncodeEnable(padWidth, padHeight, bitrate,
+                frameRate, dstPath);
         /**
          * 设置进度回调
          */

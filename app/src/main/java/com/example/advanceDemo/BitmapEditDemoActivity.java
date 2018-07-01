@@ -61,8 +61,7 @@ public class BitmapEditDemoActivity extends Activity implements OnClickListener 
 
         initView();
 
-        String bmpPath = CopyFileFromAssets.copyAssets(getApplicationContext(),
-                "t14.jpg");
+        String bmpPath = CopyFileFromAssets.copyAssets(getApplicationContext(),"t14.jpg");
         srcBmp = BitmapFactory.decodeFile(bmpPath);
     }
 

@@ -4,6 +4,7 @@ import android.graphics.Bitmap;
 import android.media.MediaCodecInfo;
 import android.media.MediaCodecList;
 import android.media.MediaMetadataRetriever;
+import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
@@ -12,7 +13,6 @@ import android.util.Log;
 
 import java.io.File;
 import java.lang.ref.WeakReference;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -20,28 +20,36 @@ import java.util.Locale;
 
 /**
  * 如果您想扩展ffmpeg的命令, 可以继承这个类,然后在其中想我们的各种executeXXX的举例一样来使用,不要直接修改我们的这个文件, 以方便以后的sdk更新升级.
- * <p>
  * 此类的executeXXX的方法，是阻塞性执行， 即调用后，会一直阻塞在这里执行，直到执行完退出后，才执行下一行代码。您可以仿照我们的例子，采用ASynctask的形式或new Thread的形式来做。
- * <p>
- * 提示二:   最简单的调用形式是:(easy demo):
+ *
+ *
+ * 提示二:
+ * 最简单的调用形式是:(easy demo):
  * 在一个线程中,或AsyncTask中执行如下操作:
  * VideoEditor veditor=new VideoEditor();
- * <p>
+ *
  * veditor.setOnProgessListener(XXXXX);
  * mEditor.executeXXXXX();
+ *
  * 提示三:
+ *
  * 这些方法的底层，虽然方法在执行中，处于阻塞状态，但我们已经开启了另一个异步处理线程去执行。
  * 建议不要用多线程操作, 因为没有意义, 需要用到编解码的方法, 因硬件在大部分的手机SoC中就一个编解码器, 多个线程一样要排队执行.
  * 不需要用到编解码器的方法, 耗时很小,基本等于数据拷贝的时间, 也没有意义开多个线程.
- * <p>
- * <p>
  */
 public class VideoEditor {
 
 
     private static final String TAG = "LanSoJni";
 
-    public static final String version="20180508_AutoEncoder";
+    public static final String version="20180528_AutoEncoder";
+    /**
+     * 使用软件编码的列表;
+     */
+    public static String[] useSoftEncoderlist ={"EML-AL00",
+            "EML-AL01",
+            "LON-AL00",
+            "MHA-AL00"};
 
     /**
      * 解析参数失败 返回1
@@ -3122,61 +3130,34 @@ public class VideoEditor {
         Log.w(TAG, "not find nv21 or yuv420p. default return yuv420p");
         return "yuv420p";
     }
-    public int executeAutoSwitch(List<String> cmdList,int bitrate, String dstPath)
-    {
-        int ret=0;
-
-        //先硬编码
-        ret=executeWithEncoder(cmdList, bitrate, dstPath, true);
-        if(ret!=0){
-            //软编码；
-            ret=executeWithEncoder(cmdList, bitrate, dstPath, false);
-        }
-        if(ret!=0) {
-            boolean replace=false;
-            for(int i=0;i<cmdList.size();i++){
-                String cmd=cmdList.get(i);
-                if("lansoh264_dec".equals(cmd)){
-                    cmdList.remove(i);
-                    cmdList.add(i,"h264");
-                    replace=true;
-                }
-            }
-            if(replace){
-                Log.d("LanSoJni","开始使用软解码，软编码执行...just do software decoder and encoder");
-                ret=executeWithEncoder(cmdList, bitrate, dstPath, false);
-            }
-        }
-        return ret;
-    }
-    public static boolean encoderAddAudio(String oldMp4, String newMp4,
-                                          String tmpDir, String dstMp4) {
-        //
-        MediaInfo info = new MediaInfo(oldMp4, false);
-        if (info.prepare()) {
-            String audioPath = null;
-            if (info.aCodecName != null) // 只有在有音频的场合,才增加.
-            {
-                if (info.aCodecName.equalsIgnoreCase("aac")) {
-                    audioPath = SDKFileUtils.createFile(tmpDir, ".aac");
-                } else if (info.aCodecName.equalsIgnoreCase("mp3"))
-                    audioPath = SDKFileUtils.createFile(tmpDir, ".mp3");
-
-                if (audioPath != null) {
-                    VideoEditor veditor = new VideoEditor();
-                    veditor.executeDeleteVideo(oldMp4, audioPath); // 获得音频
-                    veditor.executeVideoMergeAudio(newMp4, audioPath, dstMp4); // 合并到新视频文件中.
-                    SDKFileUtils.deleteFile(audioPath);
-                    return true;
-                }
-            } else {
-                Log.w(TAG, "old mp4 file no audio . do not add audio");
-            }
-        } else {
-            Log.w(TAG, "old mp4 file prepare error!!,do not add audio");
-        }
-        return false;
-    }
+//    public static boolean encoderAddAudio(String oldMp4, String newMp4,
+//                                          String tmpDir, String dstMp4) {
+//        //
+//        MediaInfo info = new MediaInfo(oldMp4, false);
+//        if (info.prepare()) {
+//            String audioPath = null;
+//            if (info.aCodecName != null) // 只有在有音频的场合,才增加.
+//            {
+//                if (info.aCodecName.equalsIgnoreCase("aac")) {
+//                    audioPath = SDKFileUtils.createFile(tmpDir, ".aac");
+//                } else if (info.aCodecName.equalsIgnoreCase("mp3"))
+//                    audioPath = SDKFileUtils.createFile(tmpDir, ".mp3");
+//
+//                if (audioPath != null) {
+//                    VideoEditor veditor = new VideoEditor();
+//                    veditor.executeDeleteVideo(oldMp4, audioPath); // 获得音频
+//                    veditor.executeVideoMergeAudio(newMp4, audioPath, dstMp4); // 合并到新视频文件中.
+//                    SDKFileUtils.deleteFile(audioPath);
+//                    return true;
+//                }
+//            } else {
+//                Log.w(TAG, "old mp4 file no audio . do not add audio");
+//            }
+//        } else {
+//            Log.w(TAG, "old mp4 file prepare error!!,do not add audio");
+//        }
+//        return false;
+//    }
     protected native int ConvertEditMode(String input, int inW, int inH, String dstPath);
     /**
      * 把普通视频转换为 编辑模式的视频;
@@ -3205,6 +3186,51 @@ public class VideoEditor {
         return ret;
     }
     /**
+     * 自动切换视频编码器 的编码执行方法;
+     * 此方法仅仅用在有视频编码的场合;
+     *
+     * 如果仅仅是音频编码或不编码,请不要用调用这个方法, 直接用ffmpeg的命令, demo有演示;
+     *
+     * 如果您有特殊的需求, 可以重载这个方法;
+     * @param cmdList
+     * @param bitrate
+     * @param dstPath
+     * @return
+     */
+    public int executeAutoSwitch(List<String> cmdList,int bitrate, String dstPath)
+    {
+        int ret=0;
+        if(isForceHWEncoder){
+            ret=executeWithEncoder(cmdList, bitrate, dstPath, true);
+        }else if(isForceSoftWareEncoder) {
+            ret = executeWithEncoder(cmdList, bitrate, dstPath, false);
+        }else if(checkSoftEncoder()){
+            ret = executeWithEncoder(cmdList, bitrate, dstPath, false);
+        }else{ //先硬编码, 再软编码;
+            ret=executeWithEncoder(cmdList, bitrate, dstPath, true);
+            if(ret!=0){
+                sendEncoderEnchange();
+                ret=executeWithEncoder(cmdList, bitrate, dstPath, false);
+            }
+        }
+        if(ret!=0) {
+            boolean replace=false;
+            for(int i=0;i<cmdList.size();i++){
+                String cmd=cmdList.get(i);
+                if("lansoh264_dec".equals(cmd)){
+                    cmdList.remove(i);
+                    cmdList.add(i,"h264");
+                    replace=true;
+                }
+            }
+            if(replace){
+                Log.d("LanSoJni","开始使用软解码，软编码执行...just do software decoder and encoder");
+                ret=executeWithEncoder(cmdList, bitrate, dstPath, false);
+            }
+        }
+        return ret;
+    }
+    /**
      * 增加编码器,并开始执行;
      * @param cmdList
      * @param bitrate
@@ -3218,16 +3244,11 @@ public class VideoEditor {
         for(String item: cmdList){
             cmdList2.add(item);
         }
-
         cmdList2.add("-vcodec");
-        if(isForceHWEncoder){
-            Log.d(TAG,"用硬件编码器...");
-            cmdList2.add("lansoh264_enc");
-            cmdList2.add("-pix_fmt");
-            cmdList2.add("yuv420p");
-        }else if(isForceSoftWareEncoder){
 
-            Log.d(TAG,"强制使用软件编码器...");
+        if(isHWEnc){
+            cmdList2.add("lansoh264_enc");
+        }else{
             cmdList2.add("libx264");
 
             cmdList2.add("-profile:v");
@@ -3238,45 +3259,76 @@ public class VideoEditor {
 
             cmdList2.add("-g");
             cmdList2.add("30");
-        }else{
-            if(!isHWEnc){
-                Log.i(TAG,"当前手机的硬件编码器不支持您的设置, 切换为软编码执行,可能有点慢!");
-                sendEncoderEnchange();
-            }else{
-                Log.d(TAG,"先用硬件编码器...");
-            }
 
-            if(isHWEnc){
-                cmdList2.add("lansoh264_enc");
-                cmdList2.add("-pix_fmt");
-                cmdList2.add("yuv420p");
-            }else{
-                cmdList2.add("libx264");
-                cmdList2.add("-profile:v");
-                cmdList2.add("baseline");
-
-                cmdList2.add("-preset");
-                cmdList2.add("ultrafast");
-
-                cmdList2.add("-g");
-                cmdList2.add("30");
-            }
+            cmdList2.add("-bf");
+            cmdList2.add("0");
         }
+        cmdList2.add("-pix_fmt");
+        cmdList2.add("yuv420p");
+
         cmdList2.add("-b:v");
         cmdList2.add(checkBitRate(bitrate));
 
+        cmdList2.add("-movflags");
+        cmdList2.add("faststart");
+
+
         cmdList2.add("-y");
         cmdList2.add(dstPath);
+
+
+
         String[] command = new String[cmdList2.size()];
         for (int i = 0; i < cmdList2.size(); i++) {
             command[i] = (String) cmdList2.get(i);
         }
 
-//        Log.i(TAG,"command is:");
-//        for(String cmd: cmdList2){
-//            Log.i(TAG,cmd);
-//        }
         int ret=executeVideoEditor(command);
         return ret;
     }
+    /**
+     * 检测是否需要软编码;
+     * @return
+     */
+    public boolean checkSoftEncoder()
+    {
+        for(String item: useSoftEncoderlist){
+            if(item.equalsIgnoreCase(Build.MODEL)){
+                isForceSoftWareEncoder=true;
+                return true;
+            }
+        }
+        return false;
+    }
+
+    //--------------------------专业版用到的几个方法----------start
+    /**
+     * 把mp3或m4a格式的音频文件, 转换为pcm的采样点数据,
+     *
+     * @param srcPach 编码的音频文件, 后缀是mp3 或m4a 或aac
+     * @param pcmPath 音频文件解码后的目标文件, 后缀是pcm
+     * @return
+     */
+    @Deprecated
+    public int executeDecodeMp3ToPcm(String srcPach, String pcmPath) {
+        // ffmpeg -i hongdou.mp3 -f s16le -acodec pcm_s16le dan.pcm
+        List<String> cmdList = new ArrayList<String>();
+
+        cmdList.add("-i");
+        cmdList.add(srcPach);
+
+        cmdList.add("-f");
+        cmdList.add("s16le");
+        cmdList.add("-acodec");
+        cmdList.add("pcm_s16le");
+        cmdList.add("-y");
+        cmdList.add(pcmPath);
+
+        String[] command = new String[cmdList.size()];
+        for (int i = 0; i < cmdList.size(); i++) {
+            command[i] = (String) cmdList.get(i);
+        }
+        return executeVideoEditor(command);
+    }
+    //--------------------------专业版用到的几个方法----------end
 }

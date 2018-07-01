@@ -11,7 +11,7 @@ import android.view.View.OnClickListener;
 import com.example.advanceDemo.scene.ExecuteAllDrawpadActivity;
 import com.example.advanceDemo.scene.ExecuteBitmapLayerActivity;
 import com.example.advanceDemo.scene.LayerLayoutDemoActivity;
-import com.example.advanceDemo.scene.PictureSetRealTimeActivity;
+import com.example.advanceDemo.scene.PictureSetActivity;
 import com.example.advanceDemo.scene.Video2LayoutActivity;
 import com.example.advanceDemo.scene.VideoLayerTransformActivity;
 import com.lansoeditor.advanceDemo.R;
@@ -46,7 +46,7 @@ public class ListSceneDemoActivity extends Activity implements OnClickListener {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.id_layer_pictures: // 图片影集
-                startDemoActivity(PictureSetRealTimeActivity.class);
+                startDemoActivity(PictureSetActivity.class);
                 break;
             case R.id.id_layer_pictures_exe: // 图片影集
                 startDemoActivity(ExecuteBitmapLayerActivity.class);

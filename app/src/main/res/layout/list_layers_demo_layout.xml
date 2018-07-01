@@ -61,15 +61,7 @@
 		</RelativeLayout>  
 		
 		  
-			<!-- 后台操作 -->  
-		  <RelativeLayout  android:id="@+id/id_layer_drawpadexecute_filter" style="@style/main_item_reletivelayout">
-          
-           	    <TextView   android:text="后台容器 (滤镜)" 		 android:textColor="@color/blue" 		style="@style/main_item_textview"/>
-				<TextView  style="@style/main_item_arrow"/> 
-		</RelativeLayout>
-	
 
-	
 		<RelativeLayout  android:id="@+id/id_layer_drawpadpictureexecute" style="@style/main_item_reletivelayout">
 	           	<TextView   android:text="后台容器  (多种图层混合) " 	 android:textColor="@color/blue" 			style="@style/main_item_textview"/>
 				<TextView  style="@style/main_item_arrow"/> 

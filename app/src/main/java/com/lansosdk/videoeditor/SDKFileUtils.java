@@ -27,7 +27,8 @@ public class SDKFileUtils {
      * @param suffix ".mp4", 或"mp4",或info.aCodecName/info.vCodecName;
      * @return
      */
-    public static String createFile(String dir, String suffix) {
+    public static synchronized String createFile(String dir, String suffix) {
+
         Calendar c = Calendar.getInstance();
         int hour = c.get(Calendar.HOUR_OF_DAY);
         int minute = c.get(Calendar.MINUTE);

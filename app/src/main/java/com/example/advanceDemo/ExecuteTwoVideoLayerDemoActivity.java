@@ -29,16 +29,15 @@ import com.lansosdk.box.onDrawPadCompletedListener;
 import com.lansosdk.box.onDrawPadProgressListener;
 import com.lansosdk.box.onDrawPadThreadProgressListener;
 import com.lansosdk.videoeditor.CopyDefaultVideoAsyncTask;
+import com.lansosdk.videoeditor.LanSongMergeAV;
 import com.lansosdk.videoeditor.MediaInfo;
-import com.lansosdk.videoeditor.SDKDir;
 import com.lansosdk.videoeditor.SDKFileUtils;
-import com.lansosdk.videoeditor.VideoEditor;
 
 import java.nio.IntBuffer;
 
 public class ExecuteTwoVideoLayerDemoActivity extends Activity {
 
-    private static final String TAG = "ExecuteVideoLayerDemoActivity";
+    private static final String TAG = "ExecuteVideoLayer";
     String videoPath = null;
     ProgressDialog mProgressDialog;
     int videoDuration;
@@ -138,17 +137,13 @@ public class ExecuteTwoVideoLayerDemoActivity extends Activity {
                 isExecuting = false;
 
                 if (SDKFileUtils.fileExist(editTmpPath)) {
-                    boolean ret = VideoEditor.encoderAddAudio(videoPath,
-                            editTmpPath, SDKDir.TMP_DIR, dstPath);
-                    if (ret == false) {
-                        dstPath = editTmpPath;
-                    }
+                    dstPath= LanSongMergeAV.mergeAVDirectly(videoPath, editTmpPath, true);
+                    findViewById(R.id.id_video_edit_btn2).setEnabled(true);
                 }
-                findViewById(R.id.id_video_edit_btn2).setEnabled(true);
+
             }
         });
         // vDrawPad.setUseMainVideoPts(true);
-
         mDrawPad.pauseRecordDrawPad();
         /**
          * 开始执行这个DrawPad

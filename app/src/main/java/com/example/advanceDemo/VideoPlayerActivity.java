@@ -12,14 +12,12 @@ import android.os.Handler;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Surface;
-import android.view.TextureView.SurfaceTextureListener;
+import android.view.TextureView;
 import android.widget.SeekBar;
-import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.lansoeditor.advanceDemo.R;
-import com.lansosdk.box.VideoConcat;
 import com.lansosdk.videoeditor.IRenderView;
 import com.lansosdk.videoeditor.MediaInfo;
 import com.lansosdk.videoeditor.TextureRenderView;
@@ -97,7 +95,6 @@ public class VideoPlayerActivity extends Activity {
 
         mInfo = new MediaInfo(videoPath, false);
 
-        Log.i(TAG, "视频第一帧是否是I 帧:" + VideoConcat.checkFirstFrameIsKey(videoPath));
         if (mInfo.prepare() == false) {
             showHintDialog();
             isSupport = false;
@@ -115,7 +112,7 @@ public class VideoPlayerActivity extends Activity {
             tvVideoDuration.setText(str);
         }
 
-        textureView.setSurfaceTextureListener(new SurfaceTextureListener() {
+        textureView.setSurfaceTextureListener(new TextureView.SurfaceTextureListener() {
 
             @Override
             public void onSurfaceTextureUpdated(SurfaceTexture surface) {
@@ -144,7 +141,7 @@ public class VideoPlayerActivity extends Activity {
         });
 
         SeekBar skbar = (SeekBar) findViewById(R.id.id_player_skbar);
-        skbar.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
+        skbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
@@ -176,8 +173,6 @@ public class VideoPlayerActivity extends Activity {
 
             }
         });
-
-
     }
 
     private void showHintDialog() {
@@ -216,6 +211,7 @@ public class VideoPlayerActivity extends Activity {
             mediaPlayer.setDataSource(videoPath);
             mediaPlayer.setSurface(surface);
             mediaPlayer.prepare();
+            mediaPlayer.setLooping(true);
             // 因为是竖屏.宽度小于高度.
             if (screenWidth > mInfo.vWidth) {
                 tvSizeHint.setText(R.string.origal_width);

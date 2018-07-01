@@ -19,15 +19,13 @@ import android.widget.Toast;
 
 import com.lansoeditor.advanceDemo.R;
 import com.lansosdk.box.BitmapLayer;
-import com.lansosdk.box.DrawPadUpdateMode;
 import com.lansosdk.box.Layer;
 import com.lansosdk.box.VideoLayer2;
 import com.lansosdk.box.onDrawPadSizeChangedListener;
 import com.lansosdk.videoeditor.DrawPadView;
+import com.lansosdk.videoeditor.LanSongMergeAV;
 import com.lansosdk.videoeditor.MediaInfo;
-import com.lansosdk.videoeditor.SDKDir;
 import com.lansosdk.videoeditor.SDKFileUtils;
-import com.lansosdk.videoeditor.VideoEditor;
 
 import java.io.IOException;
 
@@ -64,7 +62,8 @@ public class Demo2LayerMothedActivity extends Activity implements
         setContentView(R.layout.demo2_layer_layout);
         initView();
 
-        mVideoPath = getIntent().getStringExtra("videopath");
+         mVideoPath = getIntent().getStringExtra("videopath");
+
         drawPadView = (DrawPadView) findViewById(R.id.id_mothed2_drawpadview);
 
         /**
@@ -79,7 +78,7 @@ public class Demo2LayerMothedActivity extends Activity implements
             public void run() {
                 startPlayVideo();
             }
-        }, 300);
+        }, 100);
     }
 
     private void startPlayVideo() {
@@ -118,21 +117,20 @@ public class Demo2LayerMothedActivity extends Activity implements
     private void initDrawPad(MediaPlayer mp) {
         mInfo = new MediaInfo(mVideoPath, false);
         if (mInfo.prepare()) {
-            drawPadView.setUpdateMode(DrawPadUpdateMode.ALL_VIDEO_READY, 25);
-            drawPadView.setRealEncodeEnable(480, 480, 1000000,
-                    (int) mInfo.vFrameRate, editTmpPath);
+            int width=mInfo.getWidth();
+            int height=mInfo.getHeight();
+            drawPadView.setRealEncodeEnable(width, height,  (int)(mInfo.vBitRate*1.5f),(int) mInfo.vFrameRate, editTmpPath);
 
             /**
              * 设置当前DrawPad的宽度和高度,并把宽度自动缩放到父view的宽度,然后等比例调整高度.
              */
-            drawPadView.setDrawPadSize(480, 480,
-                    new onDrawPadSizeChangedListener() {
+            drawPadView.setDrawPadSize(width, height,new onDrawPadSizeChangedListener() {
 
-                        @Override
-                        public void onSizeChanged(int viewWidth, int viewHeight) {
-                            startDrawPad();
-                        }
-                    });
+                @Override
+                public void onSizeChanged(int viewWidth, int viewHeight) {
+                    startDrawPad();
+                }
+            });
         }
     }
 
@@ -140,24 +138,22 @@ public class Demo2LayerMothedActivity extends Activity implements
      * Step2: start DrawPad 开始运行这个容器.
      */
     private void startDrawPad() {
-        /**
-         * 开始DrawPad的渲染线程.
-         */
         if (drawPadView.startDrawPad()) {
             /**
              * 增加一个背景, 用来说明裁剪掉的一部分是透明的
              */
-            BitmapLayer layer = drawPadView.addBitmapLayer(BitmapFactory
-                    .decodeResource(getResources(), R.drawable.videobg));
-
+            BitmapLayer layer = drawPadView.addBitmapLayer(BitmapFactory.decodeResource(getResources(), R.drawable.videobg));
             layer.setScaledValue(layer.getPadWidth(), layer.getPadHeight()); // 填充整个屏幕.
 
-            videoLayer = drawPadView.addVideoLayer2(mplayer.getVideoWidth(),
-                    mplayer.getVideoHeight(), null);
+            /**
+             *  增加视频图层;
+             */
+            videoLayer = drawPadView.addVideoLayer2(mplayer.getVideoWidth(),mplayer.getVideoHeight(), null);
             if (videoLayer != null) {
                 mplayer.setSurface(new Surface(videoLayer.getVideoTexture()));
                 mplayer.start();
             }
+
         }
     }
 
@@ -167,17 +163,10 @@ public class Demo2LayerMothedActivity extends Activity implements
     private void stopDrawPad() {
         if (drawPadView != null && drawPadView.isRunning()) {
             drawPadView.stopDrawPad();
-            Toast.makeText(getApplicationContext(), "录制已停止!!",
-                    Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), "录制已停止!!",Toast.LENGTH_SHORT).show();
 
             if (SDKFileUtils.fileExist(editTmpPath)) {
-                boolean ret = VideoEditor.encoderAddAudio(mVideoPath,
-                        editTmpPath, SDKDir.TMP_DIR, dstPath);
-                if (!ret) {
-                    dstPath = editTmpPath;
-                } else {
-                    SDKFileUtils.deleteFile(editTmpPath);
-                }
+                dstPath=LanSongMergeAV.mergeAVDirectly(mVideoPath,editTmpPath,true);
                 playVideo.setVisibility(View.VISIBLE);
             }
         }
@@ -198,12 +187,8 @@ public class Demo2LayerMothedActivity extends Activity implements
             drawPadView.stopDrawPad();
             drawPadView = null;
         }
-        if (SDKFileUtils.fileExist(dstPath)) {
-            SDKFileUtils.deleteFile(dstPath);
-        }
-        if (SDKFileUtils.fileExist(editTmpPath)) {
-            SDKFileUtils.deleteFile(editTmpPath);
-        }
+        SDKFileUtils.deleteFile(dstPath);
+        SDKFileUtils.deleteFile(editTmpPath);
 
     }
 
@@ -256,8 +241,7 @@ public class Demo2LayerMothedActivity extends Activity implements
                 if (optionLayer != null) {
                     float endX = (float) progress / 100f;
                     float half = endX / 2.0f;
-                    optionLayer
-                            .setVisibleRect(0.5f - half, 0.5f + half, 0.0f, 1.0f);
+                    optionLayer.setVisibleRect(0.5f - half, 0.5f + half, 0.0f, 1.0f);
                 }
                 break;
             case R.id.id_mothed2_skbar_rectxy: // 演示宽度和高度同时缩放

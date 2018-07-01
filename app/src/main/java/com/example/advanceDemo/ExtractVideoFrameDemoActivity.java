@@ -16,10 +16,6 @@ import com.lansosdk.box.onExtractVideoFrameProgressListener;
 import com.lansosdk.videoeditor.AVDecoder;
 import com.lansosdk.videoeditor.MediaInfo;
 
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.nio.IntBuffer;
 
 /**
@@ -65,10 +61,10 @@ public class ExtractVideoFrameDemoActivity extends Activity {
                 Bitmap stitchBmp = Bitmap.createBitmap(info.vWidth,
                         info.vHeight, Bitmap.Config.ARGB_8888);
                 stitchBmp.copyPixelsFromBuffer(mGLRgbBuffer);
-                /**
-                 * 这里是保存到文件, 仅仅用来测试, 实际您可以不用保存到文件.
-                 */
-                savePng(stitchBmp); // 您可以修改下, 然后返回bitmap
+//                /**
+//                 * 这里是保存到文件, 仅仅用来测试, 实际您可以不用保存到文件.
+//                 */
+//                savePng(stitchBmp); // 您可以修改下, 然后返回bitmap
 
                 // 这里得到的图像在mGLRgbBuffer中, 可以用来返回一张图片.
                 decoderHandler = 0;
@@ -78,24 +74,7 @@ public class ExtractVideoFrameDemoActivity extends Activity {
         }
     }
 
-    private static void savePng(Bitmap bmp) {
-        File dir = new File("/sdcard/extract/");
-        if (dir.exists() == false) {
-            dir.mkdirs();
-        }
-        try {
-            BufferedOutputStream bos;
-            String name = "/sdcard/extract/b" + bmtcnt++ + ".png";
-            Log.i(TAG, "name:" + name);
 
-            bos = new BufferedOutputStream(new FileOutputStream(name));
-            bmp.compress(Bitmap.CompressFormat.PNG, 90, bos);
-            bos.close();
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

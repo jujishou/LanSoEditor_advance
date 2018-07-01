@@ -29,6 +29,8 @@ public class LanSongUtil {
     public static boolean checkRecordPermission(Context ctx) {
         boolean ret1 = LanSoEditorBox.cameraIsCanUse();
         boolean ret2 = LanSoEditorBox.checkMicPermission(ctx);
+        Log.i("utrl","testpermission cameraIsCanUse:"+ ret1+ " checkMicPermission:"+ ret2);
+
         return ret1 && ret2;
     }
 

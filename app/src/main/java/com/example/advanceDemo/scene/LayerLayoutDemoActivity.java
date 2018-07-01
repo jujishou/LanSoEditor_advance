@@ -26,10 +26,9 @@ import com.lansosdk.box.VideoLayer;
 import com.lansosdk.box.onDrawPadProgressListener;
 import com.lansosdk.box.onDrawPadSizeChangedListener;
 import com.lansosdk.videoeditor.DrawPadView;
+import com.lansosdk.videoeditor.LanSongMergeAV;
 import com.lansosdk.videoeditor.MediaInfo;
-import com.lansosdk.videoeditor.SDKDir;
 import com.lansosdk.videoeditor.SDKFileUtils;
-import com.lansosdk.videoeditor.VideoEditor;
 
 /**
  * 演示: 使用DrawPad来实现 视频和图片的实时叠加.
@@ -42,7 +41,7 @@ import com.lansosdk.videoeditor.VideoEditor;
  */
 
 public class LayerLayoutDemoActivity extends Activity {
-    private static final String TAG = "LayerLayout";
+    private static final String TAG = "Demo1LayerMothedActivity";
 
     private String videoPath;
 
@@ -112,9 +111,6 @@ public class LayerLayoutDemoActivity extends Activity {
         }
     }
 
-    /**
-     * 第一步: init DrawPad 初始化容器
-     */
     private void initDrawPad() {
         int padWidth = 480;
         int padHeight = 480;
@@ -153,7 +149,8 @@ public class LayerLayoutDemoActivity extends Activity {
                     .decodeResource(getResources(), R.drawable.videobg));
             layer.setScaledValue(layer.getPadWidth(), layer.getPadHeight()); // 填充整个屏幕.
 
-            videoLayer = drawPadView.addMainVideoLayer(mplayer.getVideoWidth(),mplayer.getVideoHeight(), null);
+            videoLayer = drawPadView.addMainVideoLayer(mplayer.getVideoWidth(),
+                    mplayer.getVideoHeight(), null);
             if (videoLayer != null) {
                 mplayer.setSurface(new Surface(videoLayer.getVideoTexture()));
                 mplayer.start();
@@ -242,13 +239,7 @@ public class LayerLayoutDemoActivity extends Activity {
             toastStop();
 
             if (SDKFileUtils.fileExist(editTmpPath)) {
-                boolean ret = VideoEditor.encoderAddAudio(videoPath,
-                        editTmpPath, SDKDir.TMP_DIR, dstPath);
-                if (!ret) {
-                    dstPath = editTmpPath;
-                } else {
-                    SDKFileUtils.deleteFile(editTmpPath);
-                }
+                dstPath= LanSongMergeAV.mergeAVDirectly(videoPath, editTmpPath, true);
                 playVideo.setVisibility(View.VISIBLE);
             } else {
                 Log.e(TAG, " player completion, but file:" + editTmpPath

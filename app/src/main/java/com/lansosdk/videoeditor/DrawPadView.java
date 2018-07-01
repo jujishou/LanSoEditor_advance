@@ -188,9 +188,9 @@ public class DrawPadView extends FrameLayout {
         mTextureRenderView.setDispalyRatio(AR_ASPECT_FIT_PARENT);
 
         View renderUIView = mTextureRenderView.getView();
-        FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(
-                FrameLayout.LayoutParams.WRAP_CONTENT,
-                FrameLayout.LayoutParams.WRAP_CONTENT, Gravity.CENTER);
+        LayoutParams lp = new LayoutParams(
+                LayoutParams.WRAP_CONTENT,
+                LayoutParams.WRAP_CONTENT, Gravity.CENTER);
         renderUIView.setLayoutParams(lp);
         addView(renderUIView);
         mTextureRenderView.setVideoRotation(mVideoRotationDegree);
@@ -259,6 +259,9 @@ public class DrawPadView extends FrameLayout {
         return drawPadHeight;
     }
 
+    public boolean isTextureAvailable(){
+        return mSurfaceTexture!=null && isDrawPadSizeChanged;
+    }
     /**
      * 此回调仅仅是作为演示: 当跳入到别的Activity后的返回时,会再次预览当前画面的功能.
      * 你完全可以重新按照你的界面需求来修改这个DrawPadView类.
@@ -286,7 +289,6 @@ public class DrawPadView extends FrameLayout {
      * @param encBr   录制视频的bitrate,
      * @param encFr   录制视频的 帧率
      * @param outPath 录制视频的保存路径. 注意:这个路径在分段录制功能时,无效.即调用
-     *                {@link #segmentStart(String)}时.
      */
     public void setRealEncodeEnable(int encW, int encH, int encBr, int encFr,
                                     String outPath) {
@@ -296,35 +298,34 @@ public class DrawPadView extends FrameLayout {
             encBitRate = encBr;
             encFrameRate = encFr;
             encodeOutput = outPath;
+            if(renderer!=null){
+                renderer.setEncoderEnable(encWidth,encHeight,encBitRate,encFrameRate,encodeOutput);
+            }
         } else {
             Log.w(TAG, "enable real encode is error");
         }
     }
 
-    public void setRealEncodeEnable(int encW, int encH, int encFr,
-                                    String outPath) {
+    public void setRealEncodeEnable(int encW, int encH, int encFr,String outPath) {
         if (encW > 0 && encH > 0 && encFr > 0) {
             encWidth = encW;
             encHeight = encH;
-            encBitRate = 0;
+            encBitRate = LanSongUtil.checkSuggestBitRate(encHeight* encWidth, encBitRate);
             encFrameRate = encFr;
             encodeOutput = outPath;
+            if(renderer!=null){
+                renderer.setEncoderEnable(encWidth,encHeight,encBitRate,encFrameRate,encodeOutput);
+            }
         } else {
             Log.w(TAG, "enable real encode is error");
         }
     }
-
+    boolean isDrawPadSizeChanged=false;
     /**
      * 设置当前DrawPad的宽度和高度,并把宽度自动缩放到父view的宽度,然后等比例调整高度.
      * <p>
-     * 如果在父view中已经预设好了希望的宽高,则可以不调用这个方法,直接
-     * {@link #startDrawPad(onDrawPadProgressListener, onDrawPadCompletedListener)}
-     * 可以通过 {@link #getViewHeight()} 和 {@link #getViewWidth()}来得到当前view的宽度和高度.
-     * <p>
-     * <p>
      * 注意: 这里的宽度和高度,会根据手机屏幕的宽度来做调整,默认是宽度对齐到手机的左右两边, 然后调整高度,
      * 把调整后的高度作为DrawPad渲染线程的真正宽度和高度. 注意: 此方法需要在
-     * {@link #startDrawPad(onDrawPadProgressListener, onDrawPadCompletedListener)}
      * 前调用. 比如设置的宽度和高度是480,480,
      * 而父view的宽度是等于手机分辨率是1080x1920,则DrawPad默认对齐到手机宽度1080,然后把高度也按照比例缩放到1080.
      *
@@ -336,6 +337,7 @@ public class DrawPadView extends FrameLayout {
     public void setDrawPadSize(int width, int height,
                                onDrawPadSizeChangedListener cb) {
 
+        isDrawPadSizeChanged=true;
         if (width != 0 && height != 0 && cb != null) {
             float setAcpect = (float) width / (float) height;
 
@@ -504,9 +506,7 @@ public class DrawPadView extends FrameLayout {
     }
 
     // ---------------
-
-    public void setOnDrawPadCompletedListener(
-            onDrawPadCompletedListener listener) {
+    public void setOnDrawPadCompletedListener(onDrawPadCompletedListener listener) {
         if (renderer != null) {
             renderer.setDrawPadCompletedListener(listener);
         }
@@ -575,6 +575,10 @@ public class DrawPadView extends FrameLayout {
      */
     public boolean startDrawPad(boolean pauseRecord) {
         boolean ret = false;
+        if(renderer!=null){
+            renderer.stopDrawPad();
+            renderer=null;
+        }
         if (mSurfaceTexture != null && renderer == null && drawPadWidth > 0
                 && drawPadHeight > 0) {
             renderer = new DrawPadViewRender(getContext(), drawPadWidth,drawPadHeight);
@@ -591,8 +595,10 @@ public class DrawPadView extends FrameLayout {
                     encBitRate = LanSongUtil.checkSuggestBitRate(encHeight
                             * encWidth, encBitRate);
                 }
-                renderer.setEncoderEnable(encWidth, encHeight, encBitRate,
-                        encFrameRate, encodeOutput);
+                if(encWidth>0 && encHeight>0 && encodeOutput!=null){
+                    renderer.setEncoderEnable(encWidth, encHeight, encBitRate,
+                            encFrameRate, encodeOutput);
+                }
                 if (isEditModeVideo) {
                     renderer.setEditModeVideo(isEditModeVideo);
                 }
@@ -615,8 +621,7 @@ public class DrawPadView extends FrameLayout {
                 if (isRecordMic) {
                     renderer.setRecordMic(isRecordMic);
                 } else if (isRecordExtPcm) {
-                    renderer.setRecordExtraPcm(isRecordExtPcm, pcmChannels,
-                            pcmSampleRate, pcmBitRate);
+                    renderer.setRecordExtraPcm(isRecordExtPcm, pcmChannels,pcmSampleRate, pcmBitRate);
                 }
 
                 if (pauseRecord || isPauseRecord) {
@@ -635,6 +640,8 @@ public class DrawPadView extends FrameLayout {
                     Log.e(TAG,
                             "开启 DrawPad 失败, 或许是您之前的DrawPad没有Stop, 或者传递进去的surface对象已经被系统Destory!!,"
                                     + "请检测您 的代码或参考本文件中的SurfaceCallback 这个类中的注释;\n");
+                }else {
+                    Log.i(TAG,"Drawpad is running..."+ret);
                 }
             }
         } else {
@@ -1053,7 +1060,7 @@ public class DrawPadView extends FrameLayout {
     }
 
     /**
-     * 获取一个VideoLayer,从中获取surface {@link VideoLayer#getSurface()}来设置到视频播放器中,
+     * 获取一个VideoLayer,从中获取surface,来设置到视频播放器中,
      * 用视频播放器提供的画面,来作为DrawPad的画面输入源.
      * <p>
      * 注意:此方法一定在 startDrawPad之后,在stopDrawPad之前调用.
@@ -1318,8 +1325,8 @@ public class DrawPadView extends FrameLayout {
     }
 
     /**
-     * 获得一个 CanvasLayer 注意:此方法一定在 startDrawPad之后,在stopDrawPad之前调用.
-     *
+     * 获得一个 CanvasLayer
+     * 在 startDrawPad之后,在stopDrawPad之前调用.
      * @return
      */
     public CanvasLayer addCanvasLayer() {
@@ -1352,8 +1359,7 @@ public class DrawPadView extends FrameLayout {
 
     /**
      * 从渲染线程列表中移除并销毁这个Layer; 注意:此方法一定在 startDrawPad之后,在stopDrawPad之前调用.
-     *
-     * @param Layer
+     * @param layer
      */
     public void removeLayer(Layer layer) {
         if (layer != null) {
@@ -1369,7 +1375,7 @@ public class DrawPadView extends FrameLayout {
      * [不再使用,请使用每个图层的switchFilterTo方法] 为已经创建好的图层对象切换滤镜效果 注意: 这里内部会在切换的时候, 会销毁
      * 之前的滤镜对象, 然后重新增加, 故您不可以把同一个滤镜对象再次放到进来, 您如果还想使用之前的滤镜,则应该重新创建一个对象.
      *
-     * @param Layer  已经创建好的Layer对象
+     * @param layer  已经创建好的Layer对象
      * @param filter 要切换到的滤镜对象.
      * @return 切换成功, 返回true; 失败返回false
      */
@@ -1441,6 +1447,7 @@ public class DrawPadView extends FrameLayout {
             mSurfaceTexture = surface;
             drawPadHeight = height;
             drawPadWidth = width;
+            Log.i(TAG,"LSTODO ------onSurfaceTextureAvailable---onview available");
             if (mViewAvailable != null) {
                 mViewAvailable.viewAvailable(null);
             }
@@ -1475,18 +1482,13 @@ public class DrawPadView extends FrameLayout {
             mSurfaceTexture = null;
             // drawPadHeight=0;
             // drawPadWidth=0;
+            Log.i(TAG,"LSTODO ------onSurfaceTextureDestroyed--");
 
             stopDrawPad(); // 可以在这里增加以下. 这样当Texture销毁的时候, 停止DrawPad
 
+
             return false;
         }
-
-        /**
-         * Invoked when the specified {@link SurfaceTexture} is updated through
-         * {@link SurfaceTexture#updateTexImage()}.
-         * <p>
-         * 每帧视频如果更新了, 则会调用这个!!!!
-         */
         @Override
         public void onSurfaceTextureUpdated(SurfaceTexture surface) {
         }

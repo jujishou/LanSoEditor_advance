@@ -1,6 +1,5 @@
 package com.example.advanceDemo.view;
 
-import android.graphics.BlurMaskFilter;
 import android.graphics.BlurMaskFilter.Blur;
 import android.graphics.Color;
 
@@ -13,7 +12,7 @@ public class PaintConstants {
     public static int PEN_SIZE = 16;
     public static int PEN_COLOR = Color.RED;
     public static int ERASE_SIZE = 4;
-    public static Blur BLUR_TYPE = BlurMaskFilter.Blur.NORMAL;
+    public static Blur BLUR_TYPE = Blur.NORMAL;
     public static int TRANSPARENT = 15;
 
     // 画透明度的大小

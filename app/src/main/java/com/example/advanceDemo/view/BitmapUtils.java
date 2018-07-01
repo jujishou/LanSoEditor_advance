@@ -87,7 +87,7 @@ public class BitmapUtils {
     public static Bitmap decodeFromResource(Context context, int id) {
         Resources res = context.getResources();
         Bitmap bitmap = BitmapFactory.decodeResource(res, id).copy(
-                Bitmap.Config.ARGB_8888, true);
+                Config.ARGB_8888, true);
         return bitmap;
     }
 
@@ -185,16 +185,4 @@ public class BitmapUtils {
 
         return array;
     }
-
-    /**
-     * 字节码转bitmap
-     */
-    public static Bitmap byteArrayToBitmap(byte[] array) {
-        if (null == array) {
-            return null;
-        }
-
-        return BitmapFactory.decodeByteArray(array, 0, array.length);
-    }
-
 }

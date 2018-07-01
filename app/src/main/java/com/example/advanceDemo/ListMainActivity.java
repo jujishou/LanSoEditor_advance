@@ -1,16 +1,10 @@
 package com.example.advanceDemo;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
-import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.content.PermissionChecker;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
@@ -20,14 +14,14 @@ import android.widget.Toast;
 
 import com.anthonycr.grant.PermissionsManager;
 import com.anthonycr.grant.PermissionsResultAction;
-import com.lansosdk.box.DrawPad;
-import com.lansosdk.box.onDrawPadProgressListener;
-import com.lansosdk.videoeditor.DrawPadVideoExecute;
-import com.lansosdk.videoeditor.EditModeVideoDialog;
+import com.example.advanceDemo.aeDemo.AERecordFileHintActivity;
+import com.example.advanceDemo.utils.DemoUtil;
+import com.example.advanceDemo.utils.FileExplorerActivity;
 import com.lansoeditor.advanceDemo.R;
 import com.lansosdk.box.LanSoEditorBox;
 import com.lansosdk.videoeditor.CopyDefaultVideoAsyncTask;
 import com.lansosdk.videoeditor.EditModeVideo;
+import com.lansosdk.videoeditor.EditModeVideoDialog;
 import com.lansosdk.videoeditor.LanSoEditor;
 import com.lansosdk.videoeditor.MediaInfo;
 import com.lansosdk.videoeditor.SDKDir;
@@ -50,7 +44,7 @@ public class ListMainActivity extends Activity implements OnClickListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-		Thread.setDefaultUncaughtExceptionHandler(new LanSoSdkCrashHandler());
+//		Thread.setDefaultUncaughtExceptionHandler(new LanSoSdkCrashHandler());
         setContentView(R.layout.activity_main);
         /**
          * 初始化SDK
@@ -62,8 +56,8 @@ public class ListMainActivity extends Activity implements OnClickListener {
         testPermission();
 
         initView();
-         showVersionDialog();
-        testFile();
+
+        showVersionDialog();
     }
 
     @Override
@@ -92,8 +86,11 @@ public class ListMainActivity extends Activity implements OnClickListener {
                 case R.id.id_mainlist_changjing:
                     startDemoActivity(ListSceneDemoActivity.class);
                     break;
-                case R.id.id_mainlist_xuanku:
-                    startDemoActivity(ListCoolDemoActivity.class);
+                case R.id.id_mainlist_douyin:
+                    startDemoActivity(DouYinDemoActivity.class);
+                    break;
+                case R.id.id_mainlist_weishang:
+                    startDemoActivity(AERecordFileHintActivity.class);
                     break;
                 case R.id.id_mainlist_videoonedo:
                     startDemoActivity(VideoOneDODemoActivity.class);
@@ -119,7 +116,8 @@ public class ListMainActivity extends Activity implements OnClickListener {
         findViewById(R.id.id_mainlist_camerarecord).setOnClickListener(this);
         findViewById(R.id.id_mainlist_somelayer).setOnClickListener(this);
         findViewById(R.id.id_mainlist_changjing).setOnClickListener(this);
-        findViewById(R.id.id_mainlist_xuanku).setOnClickListener(this);
+        findViewById(R.id.id_mainlist_douyin).setOnClickListener(this);
+        findViewById(R.id.id_mainlist_weishang).setOnClickListener(this);
         findViewById(R.id.id_mainlist_videoonedo).setOnClickListener(this);
         findViewById(R.id.id_mainlist_bitmaps).setOnClickListener(this);
         findViewById(R.id.id_mainlist_videoplay).setOnClickListener(this);
@@ -173,7 +171,6 @@ public class ListMainActivity extends Activity implements OnClickListener {
             } else {
                 MediaInfo info = new MediaInfo(path, false);
                 boolean ret = info.prepare();
-                Log.i(TAG, "info:" + info.toString() + " is EditModeVideo:" + EditModeVideo.checkEditModeVideo(path));
                 return ret;
             }
         }
@@ -251,9 +248,5 @@ public class ListMainActivity extends Activity implements OnClickListener {
                     }
                 })
                 .show();
-    }
-    // --------------------------------
-    private void testFile() {
-            Log.i(TAG,"是否支持"+MediaInfo.isSupport("/sdcard/support.mp4"));
     }
 }

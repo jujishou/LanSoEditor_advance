@@ -28,7 +28,7 @@ import jp.co.cyberagent.lansongsdk.gpuimage.GPUImageSepiaFilter;
 
 public class TextureLayerDemoActivity extends Activity {
     public static final int NO_TEXTURE = -1;
-    private static final String TAG = "TextureLayerDemoActivity";
+    private static final String TAG = "TextureLayerDemo";
     private DrawPadView drawPadView;
     private TextureLayer textureLayer = null;
 
@@ -41,7 +41,6 @@ public class TextureLayerDemoActivity extends Activity {
 
         findViewById(R.id.id_texturelayer_testbutton).setOnClickListener(
                 new OnClickListener() {
-
                     @Override
                     public void onClick(View v) {
                         selectFilter();

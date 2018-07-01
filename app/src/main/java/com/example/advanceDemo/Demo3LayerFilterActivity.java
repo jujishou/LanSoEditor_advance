@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
@@ -32,6 +33,7 @@ import com.lansosdk.box.onDrawPadSizeChangedListener;
 import com.lansosdk.box.onGetFiltersOutFrameListener;
 import com.lansosdk.videoeditor.AVDecoder;
 import com.lansosdk.videoeditor.DrawPadView;
+import com.lansosdk.videoeditor.EditModeVideoDialog;
 import com.lansosdk.videoeditor.FilterLibrary;
 import com.lansosdk.videoeditor.FilterLibrary.FilterAdjuster;
 import com.lansosdk.videoeditor.FilterLibrary.FilterType;
@@ -48,8 +50,12 @@ import java.nio.IntBuffer;
 
 import jp.co.cyberagent.lansongsdk.gpuimage.GPUImageFilter;
 
+/**
+ * 滤镜的操作
+ *
+ */
 public class Demo3LayerFilterActivity extends Activity {
-    private static final String TAG = "Demo3LayerFilterActivity";
+    private static final String TAG = "Demo3Filter";
     boolean isDestorying = false; // 是否正在销毁, 因为销毁会停止DrawPad
     private String mVideoPath;
     private DrawPadView drawPadView;
@@ -88,7 +94,6 @@ public class Demo3LayerFilterActivity extends Activity {
 
         if (mInfo.prepare()) {
             new GetBitmapFiltersTask(mVideoPath).execute();
-
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
@@ -351,8 +356,7 @@ public class Demo3LayerFilterActivity extends Activity {
         GPUImageFilter filter = FilterLibrary.getFilterList().getFilter(
                 getApplicationContext(), currrentFilterName);
         videoOneDo.setFilter(filter);
-        videoOneDo
-                .setOnVideoOneDoProgressListener(new onVideoOneDoProgressListener() {
+        videoOneDo.setOnVideoOneDoProgressListener(new onVideoOneDoProgressListener() {
 
                     @Override
                     public void onProgress(VideoOneDo v, float percent) {
@@ -375,6 +379,7 @@ public class Demo3LayerFilterActivity extends Activity {
                 dstPath = dstVideo;
                 videoOneDo.release();
                 videoOneDo = null;
+                preview();
             }
         });
         if (videoOneDo.start()) {
@@ -423,6 +428,13 @@ public class Demo3LayerFilterActivity extends Activity {
                 listFilterView.setAdapter(listAdapter);
             }
         }
+    }
+
+    private void preview()
+    {
+        Intent intent = new Intent(Demo3LayerFilterActivity.this,VideoPlayerActivity.class);
+        intent.putExtra("videopath", dstPath);
+        startActivity(intent);
     }
 
 }

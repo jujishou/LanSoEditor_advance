@@ -29,8 +29,6 @@ public class ListLayerDemoActivity extends Activity implements OnClickListener {
         findViewById(R.id.id_layer_mvlayerdemo).setOnClickListener(this);
         findViewById(R.id.id_layer_viewremark).setOnClickListener(this);
         findViewById(R.id.id_layer_twovideolayer).setOnClickListener(this);
-        findViewById(R.id.id_layer_drawpadexecute_filter).setOnClickListener(
-                this);
         findViewById(R.id.id_layer_drawpadpictureexecute).setOnClickListener(
                 this);
     }
@@ -64,9 +62,6 @@ public class ListLayerDemoActivity extends Activity implements OnClickListener {
                 break;
             case R.id.id_layer_twovideolayer:
                 startDemoActivity(TwoVideoLayerActivity.class);
-                break;
-            case R.id.id_layer_drawpadexecute_filter:
-                startDemoActivity(ExecuteFilterDemoActivity.class);
                 break;
             case R.id.id_layer_drawpadpictureexecute:
                 startDemoActivity(ExecuteVideoLayerActivity.class);

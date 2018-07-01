@@ -6,12 +6,6 @@ import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.TextView;
 
-import com.lansosdk.videoeditor.EditModeVideo;
-import com.lansosdk.videoeditor.MediaInfo;
-import com.lansosdk.videoeditor.SDKFileUtils;
-import com.lansosdk.videoeditor.VideoEditor;
-import com.lansosdk.videoeditor.onVideoEditorProgressListener;
-
 /**
  * 封装一下 编辑模式, 在转换的时候, 有提示;
  */
