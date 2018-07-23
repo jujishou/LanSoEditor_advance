@@ -34,6 +34,4 @@ dependencies {
     implementation files('libs/PermissionsManager.jar')
     implementation files('libs/textsurface.jar')
     implementation 'com.github.warkiz.widget:indicatorseekbar:1.2.9'
-
-
 }

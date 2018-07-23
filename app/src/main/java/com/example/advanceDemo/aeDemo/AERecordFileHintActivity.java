@@ -25,6 +25,4 @@ public class AERecordFileHintActivity  extends Activity{
     private  void startPlay(){
         startActivity(new Intent(AERecordFileHintActivity.this,PlayerAEDemoActivity.class));
     }
-
-
 }

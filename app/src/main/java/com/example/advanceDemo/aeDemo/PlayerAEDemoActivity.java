@@ -19,10 +19,7 @@ public class PlayerAEDemoActivity  extends Activity{
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-
         setContentView(R.layout.ae_play_aedemofile_layout);
-
         TextureView textureView=(TextureView)findViewById(R.id.id_aedemo_textureview);
         textureView.setSurfaceTextureListener(new TextureView.SurfaceTextureListener() {
             @Override
