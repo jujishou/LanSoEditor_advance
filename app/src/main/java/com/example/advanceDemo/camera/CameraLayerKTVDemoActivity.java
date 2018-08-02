@@ -75,7 +75,6 @@ public class CameraLayerKTVDemoActivity extends Activity implements
     private LanSongAlphaPixelFilter alphaPixelFilter;
     private MediaPlayer mediaplayer = null;
     private VideoLayer videoLayer = null;
-    private String srcVideoPath;
     // -------------------------------------------一下是UI界面和控制部分.---------------------------------------------------
     private LinearLayout playVideo;
     private TextView tvTime;
@@ -101,7 +100,6 @@ public class CameraLayerKTVDemoActivity extends Activity implements
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        srcVideoPath = getIntent().getStringExtra("videopath");
         LanSongUtil.hideBottomUIMenu(this);
 
         setContentView(R.layout.cameralayer_ktv_demo_layout);
@@ -117,8 +115,8 @@ public class CameraLayerKTVDemoActivity extends Activity implements
 
         initView();
         initDrawPad();
-        DemoUtil.showHintDialog(CameraLayerKTVDemoActivity.this,
-                "此功能 需要对着绿背景拍摄,类似演员在绿幕前表演,共3个图层, 最底层是场景视频,中间层是摄像机,上层是UI");
+//        DemoUtil.showHintDialog(CameraLayerKTVDemoActivity.this,
+//                "此功能 需要对着绿背景拍摄,类似演员在绿幕前表演,共3个图层, 最底层是场景视频,中间层是摄像机,上层是UI");
     }
 
     @Override
@@ -176,8 +174,6 @@ public class CameraLayerKTVDemoActivity extends Activity implements
         if (drawPadCamera.setupDrawpad()) {
             cameraLayer = drawPadCamera.getCameraLayer();
             addVideoLayer();
-
-            addViewLayer();
             drawPadCamera.startPreview();
             drawPadCamera.startRecord();
         }
@@ -189,7 +185,7 @@ public class CameraLayerKTVDemoActivity extends Activity implements
     private void stopDrawPad() {
         if (drawPadCamera != null && drawPadCamera.isRunning()) {
             drawPadCamera.stopDrawPad();
-            Log.i(TAG, "onViewAvaiable  drawPad停止工作.");
+            Log.i(TAG, "drawPad停止工作.");
             toastStop();
             cameraLayer = null;
 
@@ -250,13 +246,11 @@ public class CameraLayerKTVDemoActivity extends Activity implements
      */
     private void addVideoLayer() {
         String videoBG = CopyFileFromAssets.copyAssets(getApplicationContext(), "bg10s.mp4");
-        if (srcVideoPath != null && drawPadCamera != null
-                && drawPadCamera.isRunning() && videoBG != null) {
+        if (drawPadCamera != null&& drawPadCamera.isRunning() && videoBG != null) {
 
             mediaplayer = new MediaPlayer();
             try {
                 mediaplayer.setDataSource(videoBG);
-
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -276,6 +270,7 @@ public class CameraLayerKTVDemoActivity extends Activity implements
                         mediaplayer.setSurface(new Surface(videoLayer.getVideoTexture()));
                         mediaplayer.start();
                         mediaplayer.setLooping(true);
+                        Log.e(TAG, "onPrepared: start---------------");
 
                         drawPadCamera.changeLayerPosition(videoLayer, 0);
                     }
