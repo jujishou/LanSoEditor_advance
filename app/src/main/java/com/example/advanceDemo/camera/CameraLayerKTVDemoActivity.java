@@ -64,7 +64,7 @@ public class CameraLayerKTVDemoActivity extends Activity implements
     // public class CameraLayerKTVDemoActivity extends AppCompatActivity
     // implements OnClickListener,OnSeekBarChangeListener{
     private static final long RECORD_CAMERA_TIME = 60 * 1000 * 1000; // 300秒.
-    private static final String TAG = "CameraLayerKTVDemoActivity";
+    private static final String TAG = "CameraLayerKTV";
     int zoomCnt = 0;
     private DrawPadCameraView drawPadCamera;
     private CameraLayer cameraLayer = null;
@@ -265,13 +265,10 @@ public class CameraLayerKTVDemoActivity extends Activity implements
                                 mediaplayer.getVideoWidth(),
                                 mediaplayer.getVideoHeight(), null);
 
-                        videoLayer.setScaledValue(videoLayer.getLayerWidth(), videoLayer.getPadHeight() * 2);
-
+                        videoLayer.setScaledValue(videoLayer.getLayerWidth(), videoLayer.getPadHeight() * 4);
                         mediaplayer.setSurface(new Surface(videoLayer.getVideoTexture()));
                         mediaplayer.start();
                         mediaplayer.setLooping(true);
-                        Log.e(TAG, "onPrepared: start---------------");
-
                         drawPadCamera.changeLayerPosition(videoLayer, 0);
                     }
                 }
