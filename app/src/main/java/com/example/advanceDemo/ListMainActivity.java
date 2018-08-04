@@ -44,7 +44,6 @@ public class ListMainActivity extends Activity implements OnClickListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-//		Thread.setDefaultUncaughtExceptionHandler(new LanSoSdkCrashHandler());
         setContentView(R.layout.activity_main);
         /**
          * 初始化SDK
@@ -189,7 +188,7 @@ public class ListMainActivity extends Activity implements OnClickListener {
                 if (requestCode == SELECT_FILE_REQUEST_CODE) {
                     Bundle b = data.getExtras();
                     String seleced = b.getString("SELECT_VIDEO");
-                    checkConvertDialog(seleced);
+                    tvVideoPath.setText(seleced);
                 }
                 break;
             default:
@@ -224,29 +223,5 @@ public class ListMainActivity extends Activity implements OnClickListener {
                         isPermissionOk = false;
                     }
                 });
-    }
-
-    private void checkConvertDialog(final String file)
-    {
-        new AlertDialog.Builder(ListMainActivity.this)
-                .setTitle("提示")
-                .setMessage("是否转换为 编辑模式 [建议转换]!")
-                .setPositiveButton("转换", new DialogInterface.OnClickListener() {
-
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        EditModeVideoDialog editMode=new EditModeVideoDialog(ListMainActivity.this,file,tvVideoPath);
-                        editMode.start();
-                    }
-                })
-                .setNegativeButton("不转", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        if(tvVideoPath!=null){
-                            tvVideoPath.setText(file);
-                        }
-                    }
-                })
-                .show();
     }
 }
