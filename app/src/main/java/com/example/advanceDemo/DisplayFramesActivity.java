@@ -14,9 +14,9 @@ import com.lansoeditor.advanceDemo.R;
 import com.lansosdk.box.ExtractVideoFrame;
 import com.lansosdk.box.onExtractVideoFrameCompletedListener;
 import com.lansosdk.box.onExtractVideoFrameProgressListener;
-import com.lansosdk.videoeditor.BitmapLruCache;
+import com.example.advanceDemo.utils.BitmapLruCache;
 import com.lansosdk.videoeditor.MediaInfo;
-import com.lansosdk.videoeditor.MemoryDiskCache;
+import com.example.advanceDemo.utils.MemoryDiskCache;
 
 /**
  * 快速获取视频的每一帧, 注意: 在运行此类的时候, 请不要同时运行MediaPlayer或我们的DrawPad类,

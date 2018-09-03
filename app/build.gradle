@@ -23,7 +23,6 @@ android {
 }
 
 dependencies {
-    implementation 'com.airbnb.android:lottie:2.5.4'
     implementation 'com.google.code.gson:gson:2.2.4'
     //一下jar均为来自网络的开源库, 仅用作demo的效果演示, 不属于sdk的一部分;
     implementation files('libs/android-support-v7-recyclerview.jar')
@@ -35,4 +34,6 @@ dependencies {
     implementation project(':LanSongSDK')
     //包括我们的jar文件；(把LanSongSDK中的lansongeditor_hx.jar 拷贝到app的libs下)
     implementation files('libs/lansongeditor_hx.jar')
+
+    implementation 'com.android.support:appcompat-v7:27.1.1'
 }

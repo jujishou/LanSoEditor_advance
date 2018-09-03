@@ -38,7 +38,6 @@ public class AudioPadExecute {
     public AudioPadExecute(Context ctx, IAudioSourceInput input) {
         audioPad = new AudioPad(ctx, input);
     }
-
     /**
      * 构造方法,
      *
@@ -47,6 +46,161 @@ public class AudioPadExecute {
      */
     public AudioPadExecute(Context ctx, String dstPath) {
         audioPad = new AudioPad(ctx, dstPath);
+    }
+
+    /**
+     * AudioPad容器处理两种情况的声音: 1, 一整段音乐上增加别的音频, (这里是第一种); 2,设置容器处理的声音总长度,
+     * 然后分别增加不同声音段; 这里是第一种;
+     * <p>
+     * 增加后, AudioPad会以音频的总长度为pad的长度, 其他增加的音频则是和这个音频的某一段混合.
+     * <p>
+     * 返回的AudioSource
+     *
+     * @param mainAudio 音频文件路径, 可以是有音频的视频路径;
+     * @return 返回增加好的这个音频的对象, 可以根据这个来实时调节音量, 禁止声音等
+     */
+    public AudioSource setAudioPadSource(String mainAudio) {
+        if (audioPad != null) {
+            return audioPad.addMainAudio(mainAudio);
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * AudioPad容器处理两种情况的声音: 1, 一整段音乐上增加别的音频 2,设置容器处理的声音总长度, 然后分别增加不同声音段; 这里是第二种;
+     * <p>
+     * 设置 音频处理的总长度.单位秒. 开始线程前调用.
+     * <p>
+     * 如果您只想在 一整段音乐上增加别的音频,可以用{@link #setAudioPadSource(String)}
+     *
+     * @return
+     */
+    public AudioSource setAudioPadLength(float duration) {
+        if (audioPad != null) {
+            return audioPad.addMainAudio(duration);
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * 增加一个音频,
+     *
+     * @param srcPath
+     * @return 返回音频对象.可以设置音量, 是否循环等;
+     */
+    public AudioSource addSubAudio(String srcPath) {
+        if (audioPad != null) {
+            return audioPad.addSubAudio(srcPath);
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * 把音频的 指定时间段, 增加到audiopad音频容器里.
+     * <p>
+     * 如果有循环或其他操作, 可以在获取的AudioSource对象中设置.
+     *
+     * @param srcPath      音频文件路径, 可以是有音频的视频路径;
+     * @param startPadUs   从容器的什么时间开始增加.
+     * @param startAudioUs 该音频的开始时间
+     * @param endAudioUs   该音频的结束时间. 如果要增加到文件尾,则可以直接填入-1;
+     * @return
+     */
+    public AudioSource addSubAudio(String srcPath, long startPadUs,
+                                   long startAudioUs, long endAudioUs) {
+        if (audioPad != null) {
+            return audioPad.addSubAudio(srcPath, startPadUs, startAudioUs,
+                    endAudioUs);
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * 设置监听当前audioPad的处理进度.
+     * 此监听是通过handler机制,传递到UI线程的, 你可以在里面增加ui的代码. 因为经过了handler机制,
+     * 可能会进度比正在处理延迟一些,不完全等于当前处理的帧时间戳.
+     *
+     * @param listener
+     */
+    public void setAudioPadProgressListener(onAudioPadProgressListener listener) {
+        if (audioPad != null) {
+            audioPad.setAudioPadProgressListener(listener);
+        }
+    }
+
+    /**
+     * 设置监听当前audioPad的处理进度. 一个音频帧处理完毕后, 直接执行您listener中的代码.
+     * 在audioPad线程中执行,不能在里面增加UI代码.
+     * <p>
+     * 建议使用这个.
+     * <p>
+     * 如果您声音在40s一下,建议使用这个, 因为音频本身很短,处理时间很快.
+     *
+     * @param listener
+     */
+    public void setAudioPadThreadProgressListener(
+            onAudioPadThreadProgressListener listener) {
+        if (audioPad != null) {
+            audioPad.setAudioPadThreadProgressListener(listener);
+        }
+    }
+
+    /**
+     * 完成监听. 经过handler传递到主线程, 可以在里面增加UI代码.
+     *
+     * @param listener
+     */
+    public void setAudioPadCompletedListener(
+            onAudioPadCompletedListener listener) {
+        if (audioPad != null) {
+            audioPad.setAudioPadCompletedListener(listener);
+        }
+    }
+
+    /**
+     * 开启另一个线程, 并开始音频处理
+     *
+     * @return
+     */
+    public boolean start() {
+        if (audioPad != null) {
+            return audioPad.start();
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * 等待执行完毕;适合在音频较短,为了代码的整洁, 不想设置listener回调的场合; 注意:这里设置后,
+     * 当前线程将停止在这个方法处,直到音频执行完毕退出为止.建议放到另一个线程中执行. 可选使用.
+     */
+    public void waitComplete() {
+        if (audioPad != null) {
+            audioPad.joinSampleEnd();
+        }
+    }
+
+    /**
+     * 停止当前audioPad的处理;
+     */
+    public void stop() {
+        if (audioPad != null) {
+            audioPad.stop();
+        }
+    }
+
+    /**
+     * 释放AudioPad容器;
+     */
+    public void release() {
+        if (audioPad != null) {
+            audioPad.release();
+            audioPad = null;
+        }
     }
 
     // ----------------------------一下为测试代码-------------------------------------------
@@ -168,159 +322,5 @@ public class AudioPadExecute {
         audioPad.release();
     }
 
-    /**
-     * AudioPad容器处理两种情况的声音: 1, 一整段音乐上增加别的音频, (这里是第一种); 2,设置容器处理的声音总长度,
-     * 然后分别增加不同声音段; 这里是第一种;
-     * <p>
-     * 增加后, AudioPad会以音频的总长度为pad的长度, 其他增加的音频则是和这个音频的某一段混合.
-     * <p>
-     * 返回的AudioSource
-     *
-     * @param mainAudio 音频文件路径, 可以是有音频的视频路径;
-     * @return 返回增加好的这个音频的对象, 可以根据这个来实时调节音量, 禁止声音等
-     */
-    public AudioSource setAudioPadSource(String mainAudio) {
-        if (audioPad != null) {
-            return audioPad.addMainAudio(mainAudio);
-        } else {
-            return null;
-        }
-    }
 
-    /**
-     * AudioPad容器处理两种情况的声音: 1, 一整段音乐上增加别的音频 2,设置容器处理的声音总长度, 然后分别增加不同声音段; 这里是第二种;
-     * <p>
-     * 设置 音频处理的总长度.单位秒. 开始线程前调用.
-     * <p>
-     * 如果您只想在 一整段音乐上增加别的音频,可以用{@link #setAudioPadSource(String)}
-     *
-     * @return
-     */
-    public AudioSource setAudioPadLength(float duration) {
-        if (audioPad != null) {
-            return audioPad.addMainAudio(duration);
-        } else {
-            return null;
-        }
-    }
-
-    /**
-     * 增加一个音频,
-     *
-     * @param srcPath
-     * @return 返回音频对象.可以设置音量, 是否循环等;
-     */
-    public AudioSource addSubAudio(String srcPath) {
-        if (audioPad != null) {
-            return audioPad.addSubAudio(srcPath);
-        } else {
-            return null;
-        }
-    }
-
-    /**
-     * 把音频的 指定时间段, 增加到audiopad音频容器里.
-     * <p>
-     * 如果有循环或其他操作, 可以在获取的AudioSource对象中设置.
-     *
-     * @param srcPath      音频文件路径, 可以是有音频的视频路径;
-     * @param startPadUs   从容器的什么时间开始增加.
-     * @param startAudioUs 该音频的开始时间
-     * @param endAudioUs   该音频的结束时间. 如果要增加到文件尾,则可以直接填入-1;
-     * @return
-     */
-    public AudioSource addSubAudio(String srcPath, long startPadUs,
-                                   long startAudioUs, long endAudioUs) {
-        if (audioPad != null) {
-            return audioPad.addSubAudio(srcPath, startPadUs, startAudioUs,
-                    endAudioUs);
-        } else {
-            return null;
-        }
-    }
-
-    /**
-     * 设置监听当前audioPad的处理进度.
-     * <p>
-     * 此监听是通过handler机制,传递到UI线程的, 你可以在里面增加ui的代码. 因为经过了handler机制,
-     * 可能会进度比正在处理延迟一些,不完全等于当前处理的帧时间戳.
-     *
-     * @param listener
-     */
-    public void setAudioPadProgressListener(onAudioPadProgressListener listener) {
-        if (audioPad != null) {
-            audioPad.setAudioPadProgressListener(listener);
-        }
-    }
-
-    /**
-     * 设置监听当前audioPad的处理进度. 一个音频帧处理完毕后, 直接执行您listener中的代码.
-     * 在audioPad线程中执行,不能在里面增加UI代码.
-     * <p>
-     * 建议使用这个.
-     * <p>
-     * 如果您声音在40s一下,建议使用这个, 因为音频本身很短,处理时间很快.
-     *
-     * @param listener
-     */
-    public void setAudioPadThreadProgressListener(
-            onAudioPadThreadProgressListener listener) {
-        if (audioPad != null) {
-            audioPad.setAudioPadThreadProgressListener(listener);
-        }
-    }
-
-    /**
-     * 完成监听. 经过handler传递到主线程, 可以在里面增加UI代码.
-     *
-     * @param listener
-     */
-    public void setAudioPadCompletedListener(
-            onAudioPadCompletedListener listener) {
-        if (audioPad != null) {
-            audioPad.setAudioPadCompletedListener(listener);
-        }
-    }
-
-    /**
-     * 开启另一个线程, 并开始音频处理
-     *
-     * @return
-     */
-    public boolean start() {
-        if (audioPad != null) {
-            return audioPad.start();
-        } else {
-            return false;
-        }
-    }
-
-    /**
-     * 等待执行完毕;适合在音频较短,为了代码的整洁, 不想设置listener回调的场合; 注意:这里设置后,
-     * 当前线程将停止在这个方法处,直到音频执行完毕退出为止.建议放到另一个线程中执行. 可选使用.
-     */
-    public void waitComplete() {
-        if (audioPad != null) {
-            audioPad.joinSampleEnd();
-        }
-    }
-
-    /**
-     * 停止当前audioPad的处理;
-     */
-    public void stop() {
-        if (audioPad != null) {
-            audioPad.stop();
-        }
-    }
-
-    /**
-     * 释放AudioPad容器;
-     */
-    public void release() {
-        if (audioPad != null) {
-            audioPad.release();
-            audioPad = null;
-        }
-    }
 }
