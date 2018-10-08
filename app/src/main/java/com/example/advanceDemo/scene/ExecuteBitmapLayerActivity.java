@@ -9,8 +9,8 @@ import android.view.View.OnClickListener;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.advanceDemo.VideoPlayerActivity;
 import com.example.advanceDemo.utils.DemoUtil;
+import com.example.advanceDemo.VideoPlayerActivity;
 import com.lansoeditor.advanceDemo.R;
 import com.lansosdk.box.BitmapLayer;
 import com.lansosdk.box.DrawPad;
@@ -20,7 +20,7 @@ import com.lansosdk.box.onDrawPadCompletedListener;
 import com.lansosdk.box.onDrawPadProgressListener;
 import com.lansosdk.videoeditor.CopyFileFromAssets;
 import com.lansosdk.videoeditor.DrawPadPictureExecute;
-import com.lansosdk.videoeditor.SDKFileUtils;
+import com.lansosdk.videoeditor.LanSongFileUtil;
 import com.lansosdk.videoeditor.VideoEditor;
 
 /**
@@ -77,7 +77,7 @@ public class ExecuteBitmapLayerActivity extends Activity {
 
                     @Override
                     public void onClick(View v) {
-                        if (SDKFileUtils.fileExist(dstPath)) {
+                        if (LanSongFileUtil.fileExist(dstPath)) {
                             Intent intent = new Intent(
                                     ExecuteBitmapLayerActivity.this,
                                     VideoPlayerActivity.class);
@@ -93,7 +93,7 @@ public class ExecuteBitmapLayerActivity extends Activity {
         picBackGround = CopyFileFromAssets.copyAssets(getApplicationContext(), "pic720x720.jpg");
 
         // 在手机的默认路径下创建一个文件名,用来保存生成的视频文件,(在onDestroy中删除)
-        dstPath = SDKFileUtils.newMp4PathInBox();
+        dstPath = LanSongFileUtil.newMp4PathInBox();
     }
 
     @Override
@@ -104,7 +104,7 @@ public class ExecuteBitmapLayerActivity extends Activity {
             mDrawPad.release();
             mDrawPad = null;
         }
-        SDKFileUtils.deleteFile(dstPath);
+        LanSongFileUtil.deleteFile(dstPath);
     }
 
     private void testDrawPadExecute() {
@@ -139,7 +139,7 @@ public class ExecuteBitmapLayerActivity extends Activity {
             public void onCompleted(DrawPad v) {
                 tvProgressHint.setText("DrawPadExecute Completed!!!");
                 isExecuting = false;
-                if (SDKFileUtils.fileExist(dstPath)) {
+                if (LanSongFileUtil.fileExist(dstPath)) {
                     findViewById(R.id.id_video_edit_btn2).setEnabled(true);
                 }
             }

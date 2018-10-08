@@ -61,8 +61,7 @@ public class LanSongLoveText {
     public static void play(Context ctx, TextSurface textSurface,
                             AssetManager assetManager, IEndListener endListener) {
 
-        final Typeface robotoBlack = Typeface.createFromAsset(assetManager,
-                "fonts/Roboto-Black.ttf");
+        final Typeface robotoBlack = Typeface.createFromAsset(assetManager,"fonts/Roboto-Black.ttf");
         Paint paint = new Paint();
         paint.setAntiAlias(true);
         paint.setTypeface(robotoBlack);

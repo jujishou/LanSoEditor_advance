@@ -4,6 +4,9 @@ import android.app.Application;
 import android.content.Context;
 import android.content.res.Resources;
 
+import com.lansosdk.videoeditor.CopyFileFromAssets;
+import com.lansosdk.videoeditor.MediaInfo;
+
 public class DemoApplication extends Application {
 
     private static DemoApplication instance;

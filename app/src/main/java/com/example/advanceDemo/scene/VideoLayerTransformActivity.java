@@ -31,12 +31,14 @@ import com.lansosdk.box.Layer;
 import com.lansosdk.box.MoveAnimation;
 import com.lansosdk.box.ScaleAnimation;
 import com.lansosdk.box.VideoLayer;
+import com.lansosdk.box.VideoLayer2;
 import com.lansosdk.box.onDrawPadProgressListener;
 import com.lansosdk.box.onDrawPadSizeChangedListener;
 import com.lansosdk.videoeditor.CopyFileFromAssets;
 import com.lansosdk.videoeditor.DrawPadView;
+import com.lansosdk.videoeditor.LanSongMergeAV;
 import com.lansosdk.videoeditor.MediaInfo;
-import com.lansosdk.videoeditor.SDKFileUtils;
+import com.lansosdk.videoeditor.LanSongFileUtil;
 import com.lansosdk.videoeditor.VideoEditor;
 
 import java.io.IOException;
@@ -47,7 +49,7 @@ import jp.co.cyberagent.lansongsdk.gpuimage.GPUImageSwirlFilter;
  * 采用自动刷新模式 前台转场. 先播放一个视频, 然后在10秒后,插入另一个视频.并增加进入动画.
  */
 public class VideoLayerTransformActivity extends Activity {
-    private static final String TAG = "VideoLayerTransformActivity";
+    private static final String TAG = "VideoLayerTransform";
 
     private String mVideoPath;
     private String videoPath2;
@@ -61,7 +63,7 @@ public class VideoLayerTransformActivity extends Activity {
     private BitmapLayer bmpLayer = null;
     private CanvasLayer canvasLayer = null;
     private VideoLayer videoLayer1 = null;
-    private VideoLayer videoLayer2 = null;
+    private VideoLayer2 videoLayer2 = null;
     private MediaInfo mInfo = null;
     private LinearLayout playVideo;
     private String dstPath = null;
@@ -83,7 +85,7 @@ public class VideoLayerTransformActivity extends Activity {
         mDrawPad = (DrawPadView) findViewById(R.id.id_videolayer_drawpad);
 
         // 在手机的默认路径下创建一个文件名,用来保存生成的视频文件,(在onDestroy中删除)
-        dstPath = SDKFileUtils.newMp4PathInBox();
+        dstPath = LanSongFileUtil.newMp4PathInBox();
 
         audioPath = CopyFileFromAssets.copyAssets(mContext, "bgMusic20s.m4a");
         new Handler().postDelayed(new Runnable() {
@@ -106,7 +108,7 @@ public class VideoLayerTransformActivity extends Activity {
 
     private void startPlayVideo() {
 
-        mInfo = new MediaInfo(mVideoPath, false);
+        mInfo = new MediaInfo(mVideoPath);
         if (mInfo.prepare()) {
 
             mplayer = new MediaPlayer();
@@ -137,11 +139,11 @@ public class VideoLayerTransformActivity extends Activity {
         /**
          * 设置录制的参数.
          */
-        mDrawPad.setRealEncodeEnable(480, 480, 1000000, (int) 25, dstPath);
+        mDrawPad.setRealEncodeEnable(640, 640, (int)(1.5f*1024*1024), (int) 25, dstPath);
 
         mDrawPad.setUpdateMode(DrawPadUpdateMode.AUTO_FLUSH, 25);// 25是帧率.
 
-        mDrawPad.setDrawPadSize(480, 480, new onDrawPadSizeChangedListener() {
+        mDrawPad.setDrawPadSize(640, 640, new onDrawPadSizeChangedListener() {
 
             @Override
             public void onSizeChanged(int viewWidth, int viewHeight) {
@@ -176,8 +178,7 @@ public class VideoLayerTransformActivity extends Activity {
     private void startDrawPad() {
         if (mDrawPad.startDrawPad()) {
             // 增加一个背景
-            BitmapLayer layer = mDrawPad.addBitmapLayer(BitmapFactory
-                    .decodeResource(getResources(), R.drawable.pad_bg));
+            BitmapLayer layer = mDrawPad.addBitmapLayer(BitmapFactory.decodeResource(getResources(), R.drawable.pad_bg));
             layer.setScaledValue(layer.getPadWidth(), layer.getPadHeight()); // 让背景铺满整个容器.
 
             videoLayer1 = mDrawPad.addMainVideoLayer(mplayer.getVideoWidth(),
@@ -200,7 +201,7 @@ public class VideoLayerTransformActivity extends Activity {
             mDrawPad.stopDrawPad();
             toastStop();
 
-            if (SDKFileUtils.fileExist(dstPath)) {
+            if (LanSongFileUtil.fileExist(dstPath)) {
                 playVideo.setVisibility(View.VISIBLE);
             }
             if (audioPlay != null) {
@@ -354,7 +355,7 @@ public class VideoLayerTransformActivity extends Activity {
             @Override
             public void onPrepared(MediaPlayer mp) {
                 if (mDrawPad != null && mDrawPad.isRunning()) {
-                    videoLayer2 = mDrawPad.addVideoLayer(
+                    videoLayer2 = mDrawPad.addVideoLayer2(
                             mplayer2.getVideoWidth(),
                             mplayer2.getVideoHeight(), null);
                     if (videoLayer2 != null) {
@@ -396,12 +397,10 @@ public class VideoLayerTransformActivity extends Activity {
 
             @Override
             public void onClick(View v) {
-                if (SDKFileUtils.fileExist(dstPath)) {
+                if (LanSongFileUtil.fileExist(dstPath)) {
                     Intent intent = new Intent(
-                            VideoLayerTransformActivity.this,
-                            VideoPlayerActivity.class);
-                    String str = VideoEditor.mp4AddAudio(dstPath, audioPath);
-                    intent.putExtra("videopath", str);
+                            VideoLayerTransformActivity.this,VideoPlayerActivity.class);
+                    intent.putExtra("videopath", LanSongMergeAV.mergeAVDirectly(audioPath,dstPath,false));
                     startActivity(intent);
                 } else {
                     Toast.makeText(VideoLayerTransformActivity.this, "目标文件不存在",
@@ -439,6 +438,6 @@ public class VideoLayerTransformActivity extends Activity {
             audioPlay.release();
             audioPlay = null;
         }
-        SDKFileUtils.deleteFile(dstPath);
+        LanSongFileUtil.deleteFile(dstPath);
     }
 }

@@ -2,6 +2,8 @@ package com.lansosdk.videoeditor;
 
 import android.util.Log;
 
+import com.lansosdk.box.LSLog;
+
 import java.io.File;
 
 /**
@@ -15,7 +17,7 @@ import java.io.File;
  * <p>
  * 使用方法是:创建对象, 执行prepare, 使用结果. 可以在任意线程中执行如下:
  * <p>
- * MediaInfo info=new MediaInfo(videoPath);
+ * MediaInfo info=new MediaInfo(inputPath);
  * <p>
  * if(info.prepare()){ //<==============主要是这里, 需要执行以下,
  * <p>
@@ -30,7 +32,7 @@ import java.io.File;
 public class MediaInfo {
     //
 
-    private static final String TAG = "MediaInfo";
+    private static final String TAG = LSLog.TAG;
     private static final boolean VERBOSE = true;
     public final String filePath;
     public final String fileName; // 视频的文件名, 路径的最后一个/后的字符串.
@@ -119,13 +121,6 @@ public class MediaInfo {
     private boolean getSuccess = false;
 
     /**
-     * 是否检测 硬件解码器,不检测会执行的快一些,默认为检测(如果您不是很明白,建议使用默认值,毕竟也只是慢30ms一下的事情.).
-     * <p>
-     * 一般在不需要解码的场合,可以设置为false,比如文件浏览器选择音视频文件, 音视频分离剪切的场合.
-     */
-    private boolean isCheckCodec = true; // 是否检测
-
-    /**
      * 构造方法, 输入文件路径; 注意: 创建对象后, 需要执行 {@link #prepare()}后才可以使用.
      *
      * @param path
@@ -134,18 +129,13 @@ public class MediaInfo {
         filePath = path;
         fileName = getFileNameFromPath(path);
         fileSuffix = getFileSuffix(path);
-        isCheckCodec = true;
     }
 
-    /**
-     * @param path
-     * @param checkCodec 默认是true,即检测解码器. 如不想检测解码器,则设置为false;这样执行prepare会快一些.
-     */
+    @Deprecated
     public MediaInfo(String path, boolean checkCodec) {
         filePath = path;
         fileName = getFileNameFromPath(path);
         fileSuffix = getFileSuffix(path);
-        isCheckCodec = checkCodec;
     }
 
     /**
@@ -156,8 +146,17 @@ public class MediaInfo {
      */
     public static boolean isSupport(String videoPath) {
         if (fileExist(videoPath)) {
-            MediaInfo info = new MediaInfo(videoPath, false);
-            return info.prepare();
+            MediaInfo info = new MediaInfo(videoPath);
+            return info.prepare() ;
+        } else {
+            return false;
+        }
+    }
+
+    public static boolean isHaveVideo(String videoPath) {
+        if (fileExist(videoPath)) {
+            MediaInfo info = new MediaInfo(videoPath);
+            return info.prepare() && info.isHaveVideo();
         } else {
             if (VERBOSE)
                 Log.i(TAG, "video:" + videoPath + " not support");
@@ -165,14 +164,7 @@ public class MediaInfo {
         }
     }
 
-    /**
-     * 如果在调试中遇到问题了, 首先应该执行这里, 这样可以检查出60%以上的错误信息. 在出错代码的上一行增加： 2018年1月4日20:54:07:
-     * 新增, 在内部直接打印, 外部无效增加Log
-     *
-     * @param videoPath
-     * @return
-     */
-    public static String checkFile(String videoPath) {
+    public static String checkFile(String videoPath,boolean noPrint) {
         String ret = " ";
         if (videoPath == null) {
             ret = "文件名为空指针, null";
@@ -185,7 +177,7 @@ public class MediaInfo {
             } else if (file.length() == 0) {
                 ret = "文件存在,但文件的大小为0字节(可能您只创建文件,但没有进行各种调用设置导致的.)." + videoPath;
             } else {
-                MediaInfo info = new MediaInfo(videoPath, false);
+                MediaInfo info = new MediaInfo(videoPath);
                 if (info.fileSuffix.equals("pcm")
                         || info.fileSuffix.equals("yuv")) {
                     String str = "文件路径:" + info.filePath + "\n";
@@ -224,6 +216,7 @@ public class MediaInfo {
                         str += "通道数:" + info.aChannels + "\n";
                         str += "码率:" + info.aBitRate + "\n";
                         str += "时长:" + info.aDuration + "\n";
+                        str += "编码器:" + info.aCodecName + "\n";
                     } else {
                         str += "<无音频信息>\n";
                     }
@@ -234,8 +227,20 @@ public class MediaInfo {
                 }
             }
         }
-        Log.i(TAG, "当前文件的音视频信息是:" + ret);
+        if(noPrint==false){
+            Log.i(TAG, "当前文件的音视频信息是:" + ret);
+        }
         return ret;
+    }
+    /**
+     * 如果在调试中遇到问题了, 首先应该执行这里, 这样可以检查出60%以上的错误信息. 在出错代码的上一行增加： 2018年1月4日20:54:07:
+     * 新增, 在内部直接打印, 外部无效增加Log
+     *
+     * @param videoPath
+     * @return
+     */
+    public static String checkFile(String videoPath) {
+        return checkFile(videoPath,false);
     }
 
     private static boolean fileExist(String absolutePath) {
@@ -254,7 +259,7 @@ public class MediaInfo {
     public boolean prepare() {
         int ret = 0;
         if (fileExist(filePath)) { // 这里检测下mfilePath是否是多媒体后缀.
-            ret = nativePrepare(filePath, isCheckCodec);
+            ret = nativePrepare(filePath, false);
             if (ret >= 0) {
                 getSuccess = true;
                 return isSupport();
@@ -306,7 +311,6 @@ public class MediaInfo {
     }
 
     public void release() {
-        // TODO nothing
         getSuccess = false;
     }
 
@@ -381,10 +385,10 @@ public class MediaInfo {
         String info = "file name:" + filePath + "\n";
         info += "fileName:" + fileName + "\n";
         info += "fileSuffix:" + fileSuffix + "\n";
-        info += "vHeight:" + vHeight + "\n";
         info += "vWidth:" + vWidth + "\n";
-        info += "vCodecHeight:" + vCodecHeight + "\n";
+        info += "vHeight:" + vHeight + "\n";
         info += "vCodecWidth:" + vCodecWidth + "\n";
+        info += "vCodecHeight:" + vCodecHeight + "\n";
         info += "vBitRate:" + vBitRate + "\n";
         info += "vTotalFrames:" + vTotalFrames + "\n";
         info += "vDuration:" + vDuration + "\n";

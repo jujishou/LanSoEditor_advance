@@ -21,8 +21,10 @@ import com.lansoeditor.advanceDemo.R;
 import com.lansosdk.box.AudioLine;
 import com.lansosdk.box.CameraLayer;
 import com.lansosdk.box.DrawPad;
+import com.lansosdk.box.LSLog;
 import com.lansosdk.box.VideoConcat;
 import com.lansosdk.box.onDrawPadProgressListener;
+import com.lansosdk.box.onDrawPadRecordCompletedListener;
 import com.lansosdk.videoeditor.BeautyManager;
 import com.lansosdk.videoeditor.CopyFileFromAssets;
 import com.lansosdk.videoeditor.DrawPadCameraView;
@@ -30,7 +32,8 @@ import com.lansosdk.videoeditor.DrawPadCameraView.onViewAvailable;
 import com.lansosdk.videoeditor.FilterLibrary;
 import com.lansosdk.videoeditor.FilterLibrary.OnGpuImageFilterChosenListener;
 import com.lansosdk.videoeditor.LanSongUtil;
-import com.lansosdk.videoeditor.SDKFileUtils;
+import com.lansosdk.videoeditor.LanSongFileUtil;
+import com.lansosdk.videoeditor.MediaInfo;
 import com.lansosdk.videoeditor.VideoEditor;
 
 import java.util.ArrayList;
@@ -45,7 +48,7 @@ public class CameraLayerFullSegmentActivity extends Activity implements
 
     public static final long MIN_RECORD_TIME = 2 * 1000 * 1000; // 录制的最小时间
 
-    private static final String TAG = "CameraLayerFullSegmentActivity";
+    private static final String TAG = LSLog.TAG;
     VideoFocusView focusView;
     private DrawPadCameraView drawPadCamera;
     private CameraLayer mCameraLayer = null;
@@ -61,7 +64,8 @@ public class CameraLayerFullSegmentActivity extends Activity implements
     private long beforeSegDuration; // 正在录制的这一段前的总时间. 单位US
     private ArrayList<String> segmentArray = new ArrayList<String>();
     /**
-     * 录制音乐,和录制MIC的外音不同; 录制音乐,则为了保持音乐的完整性, 先单独编码, 然后等视频拼接好后, 再把音频和拼接后的视频合并在一起,
+     * 录制音乐,和录制MIC的外音不同; 录制音乐,则为了保持音乐的完整性, 先单独编码,
+     * 然后等视频拼接好后, 再把音频和拼接后的视频合并在一起,
      * 内部已经做了音视频的同步处理;
      */
     private boolean isRecordMp3 = true; // 是否分段录制的是mp3;
@@ -129,7 +133,7 @@ public class CameraLayerFullSegmentActivity extends Activity implements
             }
         });
 
-        dstPath = SDKFileUtils.newMp4PathInBox();
+        dstPath = LanSongFileUtil.newMp4PathInBox();
         initDrawPad(); // 开始录制.
     }
 
@@ -177,11 +181,17 @@ public class CameraLayerFullSegmentActivity extends Activity implements
         int bitrate = 3000 * 1024;
         // 设置录制
         drawPadCamera.setRealEncodeEnable(padWidth, padHeight, bitrate,
-                (int) 25, SDKFileUtils.newMp4PathInBox());
-        drawPadCamera.setCameraParam(false, null, false);
+                (int) 25, LanSongFileUtil.newMp4PathInBox());
+        drawPadCamera.setCameraParam(false, null);
         // 设置处理进度监听.
         drawPadCamera.setOnDrawPadProgressListener(drawPadProgressListener);
 
+        drawPadCamera.setOnDrawPadRecordProgressListener(new onDrawPadRecordCompletedListener() {
+            @Override
+            public void onRecordCompleted(DrawPad v, String path) {
+                segmentArray.add(path);
+            }
+        });
         drawPadCamera.setOnViewAvailable(new onViewAvailable() {
 
             @Override
@@ -206,19 +216,16 @@ public class CameraLayerFullSegmentActivity extends Activity implements
      */
     private void stopDrawPad() {
         // 如果是屏幕比例大于16:9,则需要重新设置编码参数, 从而画面不变形
-        if (LanSongUtil.isFullScreenRatio(drawPadCamera.getViewWidth(),
-                drawPadCamera.getViewHeight())) {
-            drawPadCamera.setRealEncodeEnable(544, 1088, 3500 * 1024, (int) 25,
-                    dstPath);
+        if (LanSongUtil.isFullScreenRatio(drawPadCamera.getViewWidth(),drawPadCamera.getViewHeight())) {
+            drawPadCamera.setRealEncodeEnable(544, 1088, 3500 * 1024, (int) 25,dstPath);
         }
+
         if (drawPadCamera != null && drawPadCamera.isRunning()) {
             /**
              * 如果正在录制,则把最后一段增加进来.
              */
             if (drawPadCamera.isRecording()) {
-                String segmentPath = drawPadCamera.segmentStop();
-                segmentArray.add(segmentPath);
-
+               drawPadCamera.segmentStopAsync();
             }
             String musicPath = null;
             if (isRecordMp3) {
@@ -242,15 +249,15 @@ public class CameraLayerFullSegmentActivity extends Activity implements
                 }
                 // 把多段拼接起来
                 if (musicPath != null) { // 录制的是MP3;
-                    String tmpVideo = SDKFileUtils.createMp4FileInBox();
+                    String tmpVideo = LanSongFileUtil.createMp4FileInBox();
                     // editor.executeConcatMP4(segments, tmpVideo);
 
                     VideoConcat concat = new VideoConcat();
                     concat.concatVideo(segmentArray, tmpVideo);
 
                     //如果视频变速了,但音频没有变速,则合成后的音频将变短.
-                    editor.executeVideoMergeAudio(tmpVideo, musicPath, dstPath);
-                    SDKFileUtils.deleteFile(tmpVideo);
+                    dstPath=editor.executeVideoMergeAudio(tmpVideo, musicPath);
+                    LanSongFileUtil.deleteFile(tmpVideo);
                 } else {
                     VideoConcat concat = new VideoConcat();
                     concat.concatVideo(segmentArray, dstPath);
@@ -259,7 +266,7 @@ public class CameraLayerFullSegmentActivity extends Activity implements
             /**
              * 开始播放.
              */
-            if (SDKFileUtils.fileExist(dstPath)) {
+            if (LanSongFileUtil.fileExist(dstPath)) {
                 Intent intent = new Intent(CameraLayerFullSegmentActivity.this,
                         VideoPlayerActivity.class);
                 intent.putExtra("videopath", dstPath);
@@ -293,16 +300,15 @@ public class CameraLayerFullSegmentActivity extends Activity implements
      */
     private void segmentStop() {
         if (drawPadCamera.isRecording()) {
-            String segmentPath = drawPadCamera.segmentStop(true);
-            progressView.setCurrentState(VideoProgressView.State.PAUSE);
+            
+            Log.i("LSTODO", "------stop async : ");
+            drawPadCamera.segmentStopAsync(true);
 
+            
+            progressView.setCurrentState(VideoProgressView.State.PAUSE);
             int timeMS = (int) (currentSegDuration / 1000); // 转换为毫秒.
             progressView.putTimeList(timeMS);
-
             beforeSegDuration += currentSegDuration;
-
-            segmentArray.add(segmentPath); // 把一段录制好的,增加到数组里.
-
             cancelBtn.setVisibility(View.VISIBLE);
         }
     }
@@ -375,8 +381,7 @@ public class CameraLayerFullSegmentActivity extends Activity implements
                 if (segmentArray.size() == 0) {
                     isDeleteState = false;
                     progressView.setCurrentState(VideoProgressView.State.DELETE);
-                    cancelBtn
-                            .setBackgroundResource(R.drawable.video_record_backspace);
+                    cancelBtn.setBackgroundResource(R.drawable.video_record_backspace);
                     break;
                 }
                 if (isDeleteState) { // 在按一下, 删除.
@@ -427,7 +432,7 @@ public class CameraLayerFullSegmentActivity extends Activity implements
 
             String filePath = segmentArray.get(segmentArray.size() - 1); // 拿到最后一个.
 
-            SDKFileUtils.deleteFile(filePath);
+            LanSongFileUtil.deleteFile(filePath);
             segmentArray.remove(segmentArray.size() - 1);
 
             beforeSegDuration -= progressView.getLastTime() * 1000;

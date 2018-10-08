@@ -1,24 +1,31 @@
 package com.example.advanceDemo.utils;
 
+import android.graphics.BitmapFactory;
 import android.media.MediaPlayer;
+import android.util.Log;
 import android.view.Surface;
+import android.view.View;
+import android.widget.Toast;
 
+import com.lansoeditor.advanceDemo.R;
+import com.lansosdk.box.BitmapLayer;
+import com.lansosdk.box.LSLog;
 import com.lansosdk.box.VideoLayer2;
 import com.lansosdk.box.onDrawPadSizeChangedListener;
 import com.lansosdk.videoeditor.DrawPadView;
+import com.lansosdk.videoeditor.LanSongMergeAV;
 import com.lansosdk.videoeditor.MediaInfo;
-import com.lansosdk.videoeditor.SDKFileUtils;
+import com.lansosdk.videoeditor.LanSongFileUtil;
 
 import java.io.IOException;
 
 /**
  * 把公共的代码放到整理来;
  *
- * 暂时不使用 LSTODO 没有完全测试;
  */
 @Deprecated
 public class DrawPadViewWapper {
-    public final  static  String TAG="DrawPadViewWapper";
+    public final  static  String TAG= LSLog.TAG;
     DrawPadView drawPadView;
     String videopath;
     public MediaPlayer mediaPlayer;
@@ -33,7 +40,7 @@ public class DrawPadViewWapper {
     public void setup(String video, onDrawPadViewSetupedListener listener) {
         videopath = video;
         setupedListener = listener;
-        mediaInfo = new MediaInfo(videopath, false);
+        mediaInfo = new MediaInfo(videopath);
         if (mediaInfo.prepare()) {
             mediaPlayer = new MediaPlayer();
             try {
@@ -64,7 +71,7 @@ public class DrawPadViewWapper {
 
             int width=mediaInfo.getWidth();
             int height=mediaInfo.getHeight();
-            editTmpPath= SDKFileUtils.createMp4FileInBox();
+            editTmpPath=LanSongFileUtil.createMp4FileInBox();
 
             drawPadView.setRealEncodeEnable(width, height,  (int)(mediaInfo.vBitRate*1.5f),(int) mediaInfo.vFrameRate, editTmpPath);
             drawPadView.setDrawPadSize(width, height,new onDrawPadSizeChangedListener() {

@@ -8,12 +8,10 @@ import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Surface;
 import android.view.TextureView;
-import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -41,30 +39,10 @@ public class VideoPlayerActivity extends Activity {
     private VPlayer vplayer = null;
     private boolean isSupport = false;
     private int screenWidth, screenHeight;
-    private MediaInfo mInfo;
+    private MediaInfo mediaInfo;
 
-    private TextView tvSizeHint;
     private TextView tvVideoDuration;
     private TextView tvPlayWidget;
-    // --------------------------------实时获取当前播放器的播放位置-----测试使用.
-    private boolean isPaused = false;
-    private Handler loopHandle = new Handler();
-    private Runnable loopRunnable = new Runnable() {
-        @Override
-        public void run() {
-
-            // if(mediaPlayer!=null){
-            // Log.i(TAG,"系统原生播放器MediaPlayer 当前位置是:"+mediaPlayer.getCurrentPosition()+
-            // " 毫秒");
-            // }else if(vplayer!=null){
-            // Log.i(TAG,"SDK自带的VideoPlayer 当前位置是:"+vplayer.getCurrentPosition()+
-            // " 毫秒"+ " origin:"+vplayer.getCurrentFramePosition());
-            // }
-            // if(loopHandle!=null && !isPaused){
-            // loopHandle.postDelayed(loopRunnable,100);
-            // }
-        }
-    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,37 +56,35 @@ public class VideoPlayerActivity extends Activity {
         TextView tvVideoRatio = (TextView) findViewById(R.id.id_palyer_videoRatio);
         tvVideoDuration = (TextView) findViewById(R.id.id_palyer_videoduration);
 
-        tvSizeHint = (TextView) findViewById(R.id.id_palyer_videosizehint);
-
         tvPlayWidget = (TextView) findViewById(R.id.id_palyer_widget);
 
-        DisplayMetrics dm = new DisplayMetrics();// 获取屏幕密度（方法2）
+        DisplayMetrics dm = new DisplayMetrics();
         dm = getResources().getDisplayMetrics();
         screenWidth = dm.widthPixels;
         screenHeight = dm.heightPixels;
 
-        String str = "当前屏幕分辨率：";
+        String str = "屏幕分辨率：";
         str += String.valueOf(screenWidth);
         str += "x";
         str += String.valueOf(screenHeight);
         tvScreen.setText(str);
 
-        mInfo = new MediaInfo(videoPath, false);
+        mediaInfo = new MediaInfo(videoPath);
 
-        if (mInfo.prepare() == false) {
+        if (mediaInfo.prepare() == false) {
             showHintDialog();
             isSupport = false;
         } else {
-            Log.i(TAG, "info:" + mInfo.toString());
+            Log.i(TAG, "info:" + mediaInfo.toString());
             isSupport = true;
-            str = "当前视频分辨率：";
-            str += String.valueOf(mInfo.vWidth);
+            str = "视频分辨率：";
+            str += String.valueOf(mediaInfo.getWidth());
             str += "x";
-            str += String.valueOf(mInfo.vHeight);
+            str += String.valueOf(mediaInfo.getHeight());
             tvVideoRatio.setText(str);
 
-            str = "当前视频时长:";
-            str += String.valueOf(mInfo.vDuration);
+            str = "视频时长:";
+            str += String.valueOf(mediaInfo.vDuration);
             tvVideoDuration.setText(str);
         }
 
@@ -139,40 +115,6 @@ public class VideoPlayerActivity extends Activity {
                 }
             }
         });
-
-        SeekBar skbar = (SeekBar) findViewById(R.id.id_player_skbar);
-        skbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-                // TODO Auto-generated method stub
-
-            }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-                // TODO Auto-generated method stub
-
-            }
-
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int progress,
-                                          boolean fromUser) {
-
-                int timeMs = (int) ((progress / 100f) * mInfo.vDuration * 1000);
-                Log.i(TAG, "seek 到的时间是:" + timeMs);
-
-                if (vplayer != null) {
-                    vplayer.seekTo(timeMs);
-                }
-
-                if (mediaPlayer != null) {
-                    mediaPlayer.seekTo(timeMs);
-                    mediaPlayer.start();
-                }
-
-            }
-        });
     }
 
     private void showHintDialog() {
@@ -193,7 +135,7 @@ public class VideoPlayerActivity extends Activity {
         if (videoPath == null)
             return;
 
-        tvPlayWidget.setText("播放控件是: 原生MediaPlayer");
+        tvPlayWidget.setText("播放控件: MediaPlayer");
         mediaPlayer = new MediaPlayer();
         mediaPlayer.reset();
 
@@ -212,15 +154,7 @@ public class VideoPlayerActivity extends Activity {
             mediaPlayer.setSurface(surface);
             mediaPlayer.prepare();
             mediaPlayer.setLooping(true);
-            // 因为是竖屏.宽度小于高度.
-            if (screenWidth > mInfo.vWidth) {
-                tvSizeHint.setText(R.string.origal_width);
-                textureView.setDispalyRatio(IRenderView.AR_ASPECT_WRAP_CONTENT);
-
-            } else { // 大于屏幕的宽度
-                tvSizeHint.setText(R.string.fix_width);
-                textureView.setDispalyRatio(IRenderView.AR_ASPECT_FIT_PARENT);
-            }
+            textureView.setDispalyRatio(IRenderView.AR_ASPECT_FIT_PARENT);
 
             textureView.setVideoSize(mediaPlayer.getVideoWidth(),
                     mediaPlayer.getVideoHeight());
@@ -234,23 +168,16 @@ public class VideoPlayerActivity extends Activity {
     private void startVPlayer(final Surface surface) {
         vplayer = new VPlayer(this);
         vplayer.setVideoPath(videoPath);
-        tvPlayWidget.setText("播放控件是: SDK提供的VPlayer");
+        tvPlayWidget.setText("播放控件是:SDK提供的VPlayer");
         vplayer.setOnPreparedListener(new OnPlayerPreparedListener() {
 
             @Override
             public void onPrepared(VideoPlayer mp) {
                 vplayer.setSurface(surface);
 
-                // 因为是竖屏.宽度小于高度.
-                if (screenWidth > mInfo.vWidth) {
-                    tvSizeHint.setText(R.string.origal_width);
-                    textureView.setDispalyRatio(IRenderView.AR_ASPECT_WRAP_CONTENT);
-                } else { // 大于屏幕的宽度
-                    tvSizeHint.setText(R.string.fix_width);
-                    textureView.setDispalyRatio(IRenderView.AR_ASPECT_FIT_PARENT);
-                }
+                textureView.setDispalyRatio(IRenderView.AR_ASPECT_FIT_PARENT);
 
-                textureView.setVideoSize(mp.getVideoWidth(), mp.getVideoHeight());
+                textureView.setVideoSize(mediaInfo.getWidth(), mediaInfo.getHeight());
                 textureView.requestLayout();
                 vplayer.start();
                 vplayer.setLooping(true);
@@ -260,7 +187,6 @@ public class VideoPlayerActivity extends Activity {
 
             @Override
             public void onCompletion(VideoPlayer mp) {
-                isPaused = true;
                 Toast.makeText(VideoPlayerActivity.this, "视频播放完成", Toast.LENGTH_SHORT).show();
             }
         });
@@ -270,7 +196,6 @@ public class VideoPlayerActivity extends Activity {
     @Override
     protected void onPause() {
         super.onPause();
-        isPaused = true;
         if (mediaPlayer != null) {
             mediaPlayer.stop();
             mediaPlayer.release();

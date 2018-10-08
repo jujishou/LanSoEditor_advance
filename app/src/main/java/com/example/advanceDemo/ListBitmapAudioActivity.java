@@ -6,6 +6,9 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 
+import com.example.advanceDemo.bitmapAudio.BitmapEditDemoActivity;
+import com.example.advanceDemo.bitmapAudio.DisplayFramesActivity;
+import com.example.advanceDemo.bitmapAudio.ExtractVideoFrameDemoActivity;
 import com.lansoeditor.advanceDemo.R;
 
 public class ListBitmapAudioActivity extends Activity implements

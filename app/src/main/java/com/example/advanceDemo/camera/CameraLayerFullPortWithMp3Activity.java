@@ -31,7 +31,7 @@ import com.lansosdk.videoeditor.FilterLibrary;
 import com.lansosdk.videoeditor.FilterLibrary.OnGpuImageFilterChosenListener;
 import com.lansosdk.videoeditor.LanSongUtil;
 import com.lansosdk.videoeditor.MediaInfo;
-import com.lansosdk.videoeditor.SDKFileUtils;
+import com.lansosdk.videoeditor.LanSongFileUtil;
 
 import jp.co.cyberagent.lansongsdk.gpuimage.GPUImageFilter;
 
@@ -118,7 +118,7 @@ public class CameraLayerFullPortWithMp3Activity extends Activity implements
             }
         });
 
-        dstPath = SDKFileUtils.newMp4PathInBox();
+        dstPath = LanSongFileUtil.newMp4PathInBox();
         initDrawPad(); // 开始录制.
     }
 
@@ -248,7 +248,7 @@ public class CameraLayerFullPortWithMp3Activity extends Activity implements
         super.onDestroy();
         stopDrawPad();
 
-        SDKFileUtils.deleteFile(dstPath);
+        LanSongFileUtil.deleteFile(dstPath);
         dstPath = null;
     }
 
@@ -307,7 +307,7 @@ public class CameraLayerFullPortWithMp3Activity extends Activity implements
 
     private void playVideo() {
         Log.e(TAG, "playVideo" + MediaInfo.checkFile(dstPath));
-        if (SDKFileUtils.fileExist(dstPath)) {
+        if (LanSongFileUtil.fileExist(dstPath)) {
             Intent intent = new Intent(this, VideoPlayerActivity.class);
             intent.putExtra("videopath", dstPath);
             startActivity(intent);

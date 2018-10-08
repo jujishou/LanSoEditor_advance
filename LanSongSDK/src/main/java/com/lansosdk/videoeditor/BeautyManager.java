@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory;
 import android.util.Log;
 
 import com.lansosdk.box.CameraLayer;
+import com.lansosdk.box.LSLog;
 
 import java.util.ArrayList;
 
@@ -15,7 +16,7 @@ import jp.co.cyberagent.lansongsdk.gpuimage.LanSongBeautyTuneFilter;
 import jp.co.cyberagent.lansongsdk.gpuimage.LanSongBeautyWhiteFilter;
 
 public class BeautyManager {
-    private static final String TAG = "BeautyManager";
+    private static final String TAG = LSLog.TAG;
     private boolean isTuneBeauting;
     private GPUImageLookupFilter mlookupFilter;
     private LanSongBeautyTuneFilter beautyTuneFilter;

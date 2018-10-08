@@ -12,7 +12,6 @@ import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
-import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,7 +26,6 @@ import com.lansosdk.box.MVLayer;
 import com.lansosdk.box.onDrawPadErrorListener;
 import com.lansosdk.box.onDrawPadProgressListener;
 import com.lansosdk.videoeditor.BeautyManager;
-import com.lansosdk.videoeditor.CopyDefaultVideoAsyncTask;
 import com.lansosdk.videoeditor.CopyFileFromAssets;
 import com.lansosdk.videoeditor.DrawPadCameraView;
 import com.lansosdk.videoeditor.DrawPadCameraView.doFousEventListener;
@@ -35,7 +33,7 @@ import com.lansosdk.videoeditor.DrawPadCameraView.onViewAvailable;
 import com.lansosdk.videoeditor.FilterLibrary;
 import com.lansosdk.videoeditor.FilterLibrary.OnGpuImageFilterChosenListener;
 import com.lansosdk.videoeditor.LanSongUtil;
-import com.lansosdk.videoeditor.SDKFileUtils;
+import com.lansosdk.videoeditor.LanSongFileUtil;
 
 import jp.co.cyberagent.lansongsdk.gpuimage.GPUImageFilter;
 
@@ -49,9 +47,8 @@ public class CameraLayerFullPortActivity extends Activity implements
 
     private static final String TAG = "CameraFullRecord";
     // ------------------------------------------一下是UI界面和控制部分.---------------------------------------------------
-    SeekBar testSeekBar;
-    private DrawPadCameraView mDrawPadCamera;
-    private CameraLayer mCamLayer = null;
+    private DrawPadCameraView drawPadCamera;
+    private CameraLayer cameraLayer = null;
     private String dstPath = null; // 用于录制完成后的目标视频路径.
     private FocusImageView focusView;
     private PowerManager.WakeLock mWakeLock;
@@ -97,7 +94,6 @@ public class CameraLayerFullPortActivity extends Activity implements
         // 全屏模式下, 隐藏底部的虚拟按键.
         LanSongUtil.hideBottomUIMenu(this);
         mContext = getApplicationContext();
-
         if (LanSongUtil.checkRecordPermission(getBaseContext()) == false) {
             Toast.makeText(getApplicationContext(), "当前无权限,请打开权限后,重试!!!",
                     Toast.LENGTH_LONG).show();
@@ -106,31 +102,31 @@ public class CameraLayerFullPortActivity extends Activity implements
 
         setContentView(R.layout.camera_full_record_layout);
 
-        mDrawPadCamera = (DrawPadCameraView) findViewById(R.id.id_fullrecord_padview);
+        drawPadCamera = (DrawPadCameraView) findViewById(R.id.id_fullrecord_padview);
 
         initView();
         initBeautyView();
         mProgressBar.setMaxProgress(RECORD_CAMERA_MAX / 1000);
-        mProgressBar
-                .setOnProgressTouchListener(new CameraProgressBar.OnProgressTouchListener() {
+        mProgressBar.setOnProgressTouchListener(new CameraProgressBar.OnProgressTouchListener() {
                     @Override
                     public void onClick(CameraProgressBar progressBar) {
 
-                        if (mDrawPadCamera != null) {
+                        if (drawPadCamera != null) {
                             /**
                              * 这里只是暂停和恢复录制, 可以录制多段,但不可以删除录制好的每一段,
                              *
                              * 如果你要分段录制,并支持回删,则可以采用SegmentStart和SegmentStop;
                              */
-                            if (mDrawPadCamera.isRecording()) {
-                                mDrawPadCamera.pauseRecord(); // 暂停录制,如果要停止录制
+                            if (drawPadCamera.isRecording()) {
+                                drawPadCamera.pauseRecord();
                             } else {
-                                mDrawPadCamera.startRecord();
+                                drawPadCamera.startRecord();
                             }
                         }
                     }
                 });
-        dstPath = SDKFileUtils.newMp4PathInBox();
+
+        dstPath = LanSongFileUtil.newMp4PathInBox();
         initDrawPad(); // 开始录制.
     }
 
@@ -157,41 +153,30 @@ public class CameraLayerFullPortActivity extends Activity implements
         /**
          * 设置录制时的一些参数.
          */
-        mDrawPadCamera.setRealEncodeEnable(padWidth, padHeight, bitrate, (int) 25, dstPath);
+        drawPadCamera.setRealEncodeEnable(padWidth, padHeight, bitrate, (int) 25, dstPath);
         /**
          * 设置录制处理进度监听.
          */
-        mDrawPadCamera.setOnDrawPadProgressListener(drawPadProgressListener);
+        drawPadCamera.setOnDrawPadProgressListener(drawPadProgressListener);
 
 
-
-        /**
-         * 相机前后置.是否设置滤镜.
-         */
-        mDrawPadCamera.setCameraParam(true, null, true);
-        /**
-         * 当手动聚焦的时候, 返回聚焦点的位置,让focusView去显示一个聚焦的动画.
-         */
-        mDrawPadCamera.setCameraFocusListener(new doFousEventListener() {
+        drawPadCamera.setCameraParam(true, null);
+        drawPadCamera.setCameraFocusListener(new doFousEventListener() {
 
             @Override
             public void onFocus(int x, int y) {
                 focusView.startFocus(x, y);
             }
         });
-        mDrawPadCamera.setRecordMic(true);
-        /**
-         *
-         * UI界面有效后, 开始开启DrawPad线程, 来预览画面.
-         */
-        mDrawPadCamera.setOnViewAvailable(new onViewAvailable() {
+        drawPadCamera.setRecordMic(true);
+        drawPadCamera.setOnViewAvailable(new onViewAvailable() {
 
             @Override
             public void viewAvailable(DrawPadCameraView v) {
                 startDrawPad();
             }
         });
-        mDrawPadCamera.setOnDrawPadErrorListener(new onDrawPadErrorListener() {
+        drawPadCamera.setOnDrawPadErrorListener(new onDrawPadErrorListener() {
 
             @Override
             public void onError(DrawPad d, int what) {
@@ -205,14 +190,14 @@ public class CameraLayerFullPortActivity extends Activity implements
      */
     private void startDrawPad() {
         // 如果是屏幕比例大于16:9,则需要重新设置编码参数, 从而画面不变形
-        if (LanSongUtil.isFullScreenRatio(mDrawPadCamera.getViewWidth(), mDrawPadCamera.getViewHeight())) {
-            mDrawPadCamera.setRealEncodeEnable(544, 1088, 3500 * 1024, (int) 25, dstPath);
+        if (LanSongUtil.isFullScreenRatio(drawPadCamera.getViewWidth(), drawPadCamera.getViewHeight())) {
+            drawPadCamera.setRealEncodeEnable(544, 1088, 3500 * 1024, (int) 25, dstPath);
         }
-        if (mDrawPadCamera.setupDrawpad()) // 建立图层.
+        if (drawPadCamera.setupDrawpad()) // 建立图层.
         {
-            mCamLayer = mDrawPadCamera.getCameraLayer(); // 临时
-            if (mCamLayer != null) {
-                mDrawPadCamera.startPreview();
+            cameraLayer = drawPadCamera.getCameraLayer(); // 临时
+            if (cameraLayer != null) {
+                drawPadCamera.startPreview();
             }
         } else {
             Log.i(TAG, "建立drawpad线程失败.");
@@ -223,9 +208,9 @@ public class CameraLayerFullPortActivity extends Activity implements
      * Step3: 停止容器, 停止后,为新的视频文件增加上音频部分.
      */
     private void stopDrawPad() {
-        if (mDrawPadCamera != null && mDrawPadCamera.isRunning()) {
-            mDrawPadCamera.stopDrawPad();
-            mCamLayer = null;
+        if (drawPadCamera != null && drawPadCamera.isRunning()) {
+            drawPadCamera.stopDrawPad();
+            cameraLayer = null;
         }
     }
 
@@ -233,15 +218,15 @@ public class CameraLayerFullPortActivity extends Activity implements
      * 选择滤镜效果,
      */
     private void selectFilter() {
-        if (mDrawPadCamera != null && mDrawPadCamera.isRunning()) {
+        if (drawPadCamera != null && drawPadCamera.isRunning()) {
             FilterLibrary.showDialog(this,
                     new OnGpuImageFilterChosenListener() {
 
                         @Override
                         public void onGpuImageFilterChosenListener(
                                 final GPUImageFilter filter, String name) {
-                            if (mCamLayer != null) {
-                                mCamLayer.switchFilterTo(filter);
+                            if (cameraLayer != null) {
+                                cameraLayer.switchFilterTo(filter);
                             }
                         }
                     });
@@ -251,8 +236,8 @@ public class CameraLayerFullPortActivity extends Activity implements
     @Override
     protected void onPause() {
         super.onPause();
-        if (mDrawPadCamera != null) {
-            mDrawPadCamera.stopDrawPad();
+        if (drawPadCamera != null) {
+            drawPadCamera.stopDrawPad();
         }
         if (mWakeLock != null) {
             mWakeLock.release();
@@ -270,10 +255,10 @@ public class CameraLayerFullPortActivity extends Activity implements
      * 增加一个图片图层;
      */
     private void addBitmapLayer() {
-        if (mDrawPadCamera != null && mDrawPadCamera.isRunning()) {
+        if (drawPadCamera != null && drawPadCamera.isRunning()) {
             String bitmapPath = CopyFileFromAssets.copyAssets(getApplicationContext(), "small.png");
 
-            bmpLayer = mDrawPadCamera.addBitmapLayer(BitmapFactory.decodeFile(bitmapPath));
+            bmpLayer = drawPadCamera.addBitmapLayer(BitmapFactory.decodeFile(bitmapPath));
             // 把位置放到中间的右侧, 因为获取的高度是中心点的高度.
             bmpLayer.setPosition(
                     bmpLayer.getPadWidth() - bmpLayer.getLayerWidth() / 2,
@@ -286,20 +271,19 @@ public class CameraLayerFullPortActivity extends Activity implements
      */
     private void addMVLayer() {
         if (mvLayer != null) {
-            mDrawPadCamera.removeLayer(mvLayer);
+            drawPadCamera.removeLayer(mvLayer);
             mvLayer = null;
         }
-        String colorMVPath = CopyDefaultVideoAsyncTask.copyFile(
+        String colorMVPath = CopyFileFromAssets.copyAssets(
                 CameraLayerFullPortActivity.this, "mei.mp4");
-        String maskMVPath = CopyDefaultVideoAsyncTask.copyFile(
+        String maskMVPath = CopyFileFromAssets.copyAssets(
                 CameraLayerFullPortActivity.this, "mei_b.mp4");
 
-        mvLayer = mDrawPadCamera.addMVLayer(colorMVPath, maskMVPath); // <-----增加MVLayer
+        mvLayer = drawPadCamera.addMVLayer(colorMVPath, maskMVPath); // <-----增加MVLayer
         /**
          * mv在播放完后, 有3种模式,消失/停留在最后一帧/循环.默认是循环.
          * 	mvLayer.setEndMode(MVLayerENDMode.INVISIBLE);
          */
-
     }
 
 //    /**
@@ -313,14 +297,14 @@ public class CameraLayerFullPortActivity extends Activity implements
 //            /**
 //             * 从摄像头图层获取一个surface, 作为视频的输出窗口
 //             */
-//            mplayer2.setSurface(new Surface(mCamLayer.getVideoTexture2()));
+//            mplayer2.setSurface(new Surface(cameraLayer.getVideoTexture2()));
 //            mplayer2.start();
 //
 //            /**
 //             * 把视频的滤镜 设置到摄像头图层中. 当然您也可以用switchFilterList来增加多个滤镜对象.比如先美颜,
 //             * 最后增加效果视频.
 //             */
-//            mCamLayer.switchFilterTo(mCamLayer.getEffectFilter());
+//            cameraLayer.switchFilterTo(cameraLayer.getEffectFilter());
 //
 //        } catch (IOException e) {
 //            e.printStackTrace();
@@ -352,7 +336,7 @@ public class CameraLayerFullPortActivity extends Activity implements
                     public void onClick(View v) {
 
                         if (beautyLevel == 0.0f) {  //美颜加美颜;
-                            mBeautyMng.addBeauty(mDrawPadCamera
+                            mBeautyMng.addBeauty(drawPadCamera
                                     .getCameraLayer());
                             beautyLevel += 0.22f;
                         } else {
@@ -361,7 +345,7 @@ public class CameraLayerFullPortActivity extends Activity implements
                             Log.i(TAG, "调色, 数值是:" + beautyLevel);
 
                             if (beautyLevel >= 1.0f) {
-                                mBeautyMng.deleteBeauty(mDrawPadCamera.getCameraLayer());
+                                mBeautyMng.deleteBeauty(drawPadCamera.getCameraLayer());
                                 beautyLevel = 0.0f;
                             }
                         }
@@ -372,7 +356,7 @@ public class CameraLayerFullPortActivity extends Activity implements
 
                     @Override
                     public void onClick(View v) {
-                        mBeautyMng.increaseBrightness(mDrawPadCamera.getCameraLayer());
+                        mBeautyMng.increaseBrightness(drawPadCamera.getCameraLayer());
                     }
                 });
         findViewById(R.id.id_camerabeaty_brightsub_btn).setOnClickListener(
@@ -380,13 +364,13 @@ public class CameraLayerFullPortActivity extends Activity implements
 
                     @Override
                     public void onClick(View v) {
-                        mBeautyMng.discreaseBrightness(mDrawPadCamera.getCameraLayer());
+                        mBeautyMng.discreaseBrightness(drawPadCamera.getCameraLayer());
                     }
                 });
     }
 
     private void playVideo() {
-        if (SDKFileUtils.fileExist(dstPath)) {
+        if (LanSongFileUtil.fileExist(dstPath)) {
             Intent intent = new Intent(this, VideoPlayerActivity.class);
             intent.putExtra("videopath", dstPath);
             startActivity(intent);
@@ -407,18 +391,18 @@ public class CameraLayerFullPortActivity extends Activity implements
                 playVideo();
                 break;
             case R.id.id_fullrecord_frontcamera:
-                if (mCamLayer != null) {
-                    if (mDrawPadCamera.isRunning() && CameraLayer.isSupportFrontCamera()) {
+                if (cameraLayer != null) {
+                    if (drawPadCamera.isRunning() && CameraLayer.isSupportFrontCamera()) {
                         // 先把DrawPad暂停运行.
-                        mDrawPadCamera.pausePreview();
-                        mCamLayer.changeCamera();
-                        mDrawPadCamera.resumePreview(); // 再次开启.
+                        drawPadCamera.pausePreview();
+                        cameraLayer.changeCamera();
+                        drawPadCamera.resumePreview(); // 再次开启.
                     }
                 }
                 break;
             case R.id.id_fullrecord_flashlight:
-                if (mCamLayer != null) {
-                    mCamLayer.changeFlash();
+                if (cameraLayer != null) {
+                    cameraLayer.changeFlash();
                 }
                 break;
             case R.id.id_fullrecord_filter:

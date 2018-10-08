@@ -128,31 +128,6 @@ public class LanSongUtil {
     }
 
     /**
-     * 把图片保存到文件, 这里只是用来调试程序使用.
-     *
-     * @param bmp
-     */
-    public static void savePng(Bitmap bmp) {
-        if (bmp != null) {
-            File dir = new File("/sdcard/extract/");
-            if (dir.exists() == false) {
-                dir.mkdirs();
-            }
-            try {
-                BufferedOutputStream bos;
-                String name = "/sdcard/extract/de" + bmtcnt++ + ".png";
-                Log.i("savePng", "name:" + name);
-
-                bos = new BufferedOutputStream(new FileOutputStream(name));
-                bmp.compress(Bitmap.CompressFormat.PNG, 90, bos);
-                bos.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    /**
      * 获取到当前Activity的角度, [只是放到这里, 暂时没有测试] //TODO
      *
      * @param ctx

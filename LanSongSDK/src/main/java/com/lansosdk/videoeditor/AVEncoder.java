@@ -2,12 +2,14 @@ package com.lansosdk.videoeditor;
 
 import android.util.Log;
 
+import com.lansosdk.box.LSLog;
+
 import java.io.FileInputStream;
 import java.io.IOException;
 
 public class AVEncoder {
 
-    private static final String TAG = "AVEncoder";
+    private static final String TAG = LSLog.TAG;
     /**
      * 在视频录制完成后, 对合成后的视频旋转角度.
      */

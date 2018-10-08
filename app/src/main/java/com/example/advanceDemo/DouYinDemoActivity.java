@@ -17,6 +17,7 @@ import com.example.advanceDemo.utils.DemoUtil;
 import com.lansoeditor.advanceDemo.R;
 import com.lansosdk.box.DrawPad;
 import com.lansosdk.box.DrawPadUpdateMode;
+import com.lansosdk.box.LSLog;
 import com.lansosdk.box.Layer;
 import com.lansosdk.box.SubLayer;
 import com.lansosdk.box.VideoLayer2;
@@ -25,16 +26,17 @@ import com.lansosdk.box.onDrawPadThreadProgressListener;
 import com.lansosdk.videoeditor.DrawPadView;
 import com.lansosdk.videoeditor.LanSongMergeAV;
 import com.lansosdk.videoeditor.MediaInfo;
-import com.lansosdk.videoeditor.SDKFileUtils;
+import com.lansosdk.videoeditor.LanSongFileUtil;
 
 import jp.co.cyberagent.lansongsdk.gpuimage.GPUImageColorInvertFilter;
 import jp.co.cyberagent.lansongsdk.gpuimage.GPUImageLaplacianFilter;
 import jp.co.cyberagent.lansongsdk.gpuimage.GPUImageToonFilter;
 import jp.co.cyberagent.lansongsdk.gpuimage.LanSongBlurFilter;
 import jp.co.cyberagent.lansongsdk.gpuimage.LanSongColorEdgeFilter;
+import jp.co.cyberagent.lansongsdk.gpuimage.LanSongMirrorFilter;
 
 public class DouYinDemoActivity extends Activity implements OnClickListener {
-    private static final String TAG = "DouYinDemoActivity";
+    private static final String TAG = LSLog.TAG;
     private static final int ONESCALE_FRAMES = 6;
     private static final int SCALE_STATUS_NONE = 0;
     private static final int SCALE_STATUS_ADD = 1;
@@ -67,7 +69,7 @@ public class DouYinDemoActivity extends Activity implements OnClickListener {
 
         videoPath = getIntent().getStringExtra("videopath");
 
-        mInfo = new MediaInfo(videoPath, false);
+        mInfo = new MediaInfo(videoPath);
         if (mInfo.prepare() == false) {
             Toast.makeText(this, "传递过来的视频文件错误", Toast.LENGTH_SHORT).show();
             this.finish();
@@ -77,8 +79,8 @@ public class DouYinDemoActivity extends Activity implements OnClickListener {
         initView();
 
         // 在手机的默认路径下创建一个文件名,用来保存生成的视频文件,(在onDestroy中删除)
-        editTmpPath = SDKFileUtils.newMp4PathInBox();
-        dstPath = SDKFileUtils.newMp4PathInBox();
+        editTmpPath = LanSongFileUtil.newMp4PathInBox();
+        dstPath = LanSongFileUtil.newMp4PathInBox();
 
         new Handler().postDelayed(new Runnable() {
             @Override
@@ -169,7 +171,7 @@ public class DouYinDemoActivity extends Activity implements OnClickListener {
             drawPadView.stopDrawPad();
             DemoUtil.showToast(getApplicationContext(), "录制已停止!!");
 
-            if (SDKFileUtils.fileExist(editTmpPath)) {
+            if (LanSongFileUtil.fileExist(editTmpPath)) {
                 dstPath=LanSongMergeAV.mergeAVDirectly(videoPath, editTmpPath,true);
                 playVideo.setVisibility(View.VISIBLE);
             } else {
@@ -225,20 +227,21 @@ public class DouYinDemoActivity extends Activity implements OnClickListener {
      */
     private void videoEffectMirror() {
         if (videoLayer != null) {
-            videoLayer.setScale(0.5f);
-            videoLayer.setPosition(videoLayer.getScaleX() / 2, videoLayer.getPositionY());
+            videoLayer.switchFilterTo(new LanSongMirrorFilter());
 
 
-            SubLayer layer = videoLayer.addSubLayer();  //子图层默认缩小一倍,以方便参考.
-            layer.setScale(0.5f);
-            layer.setPosition(videoLayer.getPositionX() + videoLayer.getScaleX(), videoLayer.getPositionY());
-            layer.setLayerMirror(true, false);
+            //一下代码是把视频左边一个画面;右边一个画面;
+//            videoLayer.setScale(0.5f);
+//            videoLayer.setPosition(videoLayer.getScaleX() / 2, videoLayer.getPositionY());
+//            SubLayer layer = videoLayer.addSubLayer();  //子图层默认缩小一倍,以方便参考.
+//            layer.setScale(0.5f);
+//            layer.setPosition(videoLayer.getPositionX() + videoLayer.getScaleX(), videoLayer.getPositionY());
+//            layer.setLayerMirror(true, false);  //把右侧的画面左右镜像;
         }
     }
 
     private void videoBackGroundBlur() {
         if (videoLayer != null) {
-
             videoLayer.setScaledValue(videoLayer.getPadWidth(), videoLayer.getPadHeight());
             videoLayer.switchFilterTo(new LanSongBlurFilter());
 
@@ -439,8 +442,8 @@ public class DouYinDemoActivity extends Activity implements OnClickListener {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        SDKFileUtils.deleteFile(dstPath);
-        SDKFileUtils.deleteFile(editTmpPath);
+        LanSongFileUtil.deleteFile(dstPath);
+        LanSongFileUtil.deleteFile(editTmpPath);
     }
 
     private void initView() {

@@ -23,16 +23,19 @@ import com.lansosdk.box.CanvasLayer;
 import com.lansosdk.box.DataLayer;
 import com.lansosdk.box.DrawPadCameraRunnable;
 import com.lansosdk.box.GifLayer;
+import com.lansosdk.box.LSLog;
 import com.lansosdk.box.Layer;
 import com.lansosdk.box.MVLayer;
 import com.lansosdk.box.MicLine;
 import com.lansosdk.box.VideoLayer;
+import com.lansosdk.box.VideoLayer2;
 import com.lansosdk.box.ViewLayer;
 import com.lansosdk.box.YUVLayer;
 import com.lansosdk.box.onDrawPadCompletedListener;
 import com.lansosdk.box.onDrawPadErrorListener;
 import com.lansosdk.box.onDrawPadOutFrameListener;
 import com.lansosdk.box.onDrawPadProgressListener;
+import com.lansosdk.box.onDrawPadRecordCompletedListener;
 import com.lansosdk.box.onDrawPadRunTimeListener;
 import com.lansosdk.box.onDrawPadSizeChangedListener;
 import com.lansosdk.box.onDrawPadSnapShotListener;
@@ -75,7 +78,7 @@ public class DrawPadCameraView extends FrameLayout {
      * 把画面的宽度等于父view的宽度, 高度按照4:3的形式显示.
      */
     static final int AR_4_3_FIT_PARENT = 5;
-    private static final String TAG = "DrawPadCameraView";
+    private static final String TAG = LSLog.TAG;
     private static final boolean VERBOSE = false;
     private static boolean isCameraOpened = false;
     private int mVideoRotationDegree;
@@ -93,14 +96,9 @@ public class DrawPadCameraView extends FrameLayout {
      */
     private boolean isFrontCam = false;
     /**
-     * 是否在相机录制过程中,使用到美颜滤镜.
-     */
-    private boolean maybeBeauful = true;
-    /**
      * 初始化CameraLayer的时候, 是否需要设置滤镜. 当然您也可以在后面实时切换为别的滤镜.
      */
     private GPUImageFilter initFilter = null;
-    private int camWidth, camHeight;
     private float encodeSpeed = 1.0f;
     // private FocusImageView focusView;
     // /**
@@ -117,6 +115,7 @@ public class DrawPadCameraView extends FrameLayout {
     private onDrawPadRunTimeListener drawpadRunTimeListener = null;
     // ----------------------------
     private onDrawPadProgressListener drawpadProgressListener = null;
+    private onDrawPadRecordCompletedListener drawPadRecordCompletedListener=null;
     private onDrawPadThreadProgressListener drawPadThreadProgressListener = null;
     private onDrawPadSnapShotListener drawpadSnapShotListener = null;
     private onDrawPadOutFrameListener drawPadOutFrameListener = null;
@@ -187,20 +186,18 @@ public class DrawPadCameraView extends FrameLayout {
         mTextureRenderView.setDispalyRatio(AR_ASPECT_FIT_PARENT);
 
         View renderUIView = mTextureRenderView.getView();
-        LayoutParams lp = new LayoutParams(
-                LayoutParams.WRAP_CONTENT,
-                LayoutParams.WRAP_CONTENT, Gravity.CENTER);
+        FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(
+                FrameLayout.LayoutParams.WRAP_CONTENT,
+                FrameLayout.LayoutParams.WRAP_CONTENT, Gravity.CENTER);
         renderUIView.setLayoutParams(lp);
         addView(renderUIView);
         mTextureRenderView.setVideoRotation(mVideoRotationDegree);
 
         // 增加touch事件.
-
         mTextureRenderView.setOnTouchListener(new OnTouchListener() {
 
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                // TODO Auto-generated method stub
                 return onTouchEvent(event);
             }
         });
@@ -245,43 +242,23 @@ public class DrawPadCameraView extends FrameLayout {
         mViewAvailable = listener;
     }
 
-    /**
-     * 设置CameraLayer是否使用前置相机, 是否在刚开始增加滤镜.
-     *
-     * @param front   是否是前置 您可以用 {@link CameraLayer#isSupportFrontCamera()}
-     *                来查看是否支持前置.
-     * @param filter  是否增加滤镜.
-     * @param beauful 是否在录制的过程中,有没有可能用到美颜滤镜, 如果有的话, 则这里设置为true, 完全不可能用到,则设置为false;
-     */
-    public void setCameraParam(boolean front, GPUImageFilter filter,
-                               boolean beauful) {
+    @Deprecated
+    public void setCameraParam(boolean front, GPUImageFilter filter,boolean beauful) {
         isFrontCam = front;
         initFilter = filter;
-        maybeBeauful = beauful;
     }
 
     /**
-     * 预设摄像头的分辨率, 采用这个预设宽高来作为获取分辨率的参考.
-     * 当前仅仅使用在 容器大小和 摄像头分辨率需要分开设置的场合;
-     * 摄像头画面没有居中占满整个容器, 可通过如下设置;
-     * mCameraLayer.setPosition(mCameraLayer.getPreviewHeight()/2, mCameraLayer.getPreviewWidth()/2);
-     * mCameraLayer.setScaledValue(mCameraLayer.getPadWidth(), mCameraLayer.getPadHeight());
-     *
+     * 设置摄像头图层的餐宿, 是否前置, 是否设置滤镜,如不设置滤镜,填入null
      * @param front
      * @param filter
-     * @param width
-     * @param height
      */
-    public void setCameraParam(boolean front, GPUImageFilter filter,
-                               int width, int height) {
+    public void setCameraParam(boolean front, GPUImageFilter filter) {
         isFrontCam = front;
         initFilter = filter;
-        camWidth = width;
-        camHeight = height;
     }
-
     /**
-     * 调整在录制时的速度, 比如你想预览的时候是正常的, 录制好后, 一部分要快进或慢放,则可以在这里设置 支持在任意时刻来变速;
+     * 调整在录制时的速度, 比如你想预览的时候是正常的, 录制好后, 一部分要快进或慢放,则可以在这里设置 支持在任意时刻变速;
      * 甚至你可以设置一个按钮, 长按下的时候, 加快或放慢, 松开时正常. 当前暂时不支持音频, 只是视频的加减速, 请注意!!!
      * <p>
      * 1,如果不录制外部音频(麦克风), 则速度建议; 建议5个等级: 0.25f,0.5f,1.0f,1.5f,2.0f; 其中 0.25是放慢2倍;
@@ -357,28 +334,33 @@ public class DrawPadCameraView extends FrameLayout {
                                onDrawPadSizeChangedListener cb) {
 
         if (width != 0 && height != 0 && cb != null) {
-            float setAcpect = (float) width / (float) height;
 
-            float setViewacpect = (float) padWidth / (float) padHeight;
-
-            Log.i(TAG, "setAcpect=" + setAcpect + " setViewacpect:"
-                    + setViewacpect + "set width:" + width + "x" + height
-                    + " view width:" + padWidth + "x" + padHeight);
-
-            if (setAcpect == setViewacpect) { // 如果比例已经相等,不需要再调整,则直接显示.
-                if (cb != null)
-                    cb.onSizeChanged(width, height);
-
-            } else if (mTextureRenderView != null) {
-
+            if(padWidth==0 || padHeight==0){  //直接重新布局UI
                 mTextureRenderView.setVideoSize(width, height);
                 mTextureRenderView.setVideoSampleAspectRatio(1, 1);
                 mSizeChangedCB = cb;
+                requestLayout();
+            }else{
+                float setAcpect = (float) width / (float) height;
+                float setViewacpect = (float) padWidth / (float) padHeight;
+
+                if (setAcpect == setViewacpect) { // 如果比例已经相等,不需要再调整,则直接显示.
+                    if (cb != null) {
+                        cb.onSizeChanged(width, height);
+                    }
+                } else if (Math.abs(setAcpect - setViewacpect) * 1000 < 16.0f) {
+                    if (cb != null) {
+                        cb.onSizeChanged(width, height);
+                    }
+                } else if (mTextureRenderView != null) {
+                    mTextureRenderView.setVideoSize(width, height);
+                    mTextureRenderView.setVideoSampleAspectRatio(1, 1);
+                    mSizeChangedCB = cb;
+                }
+                requestLayout();
             }
-            requestLayout();
         }
     }
-
     /**
      * 当前drawpad容器运行了多长时间, 仅供参考使用. 没有特别的意义. 内部每渲染一帧, 则会回调这里.
      * 仅仅作为drawpad容器运行时间的参考, 如果你要看当前视频图层的运行时间,则应设置图层的监听,而不是容器运行时间的监听, 可以通过
@@ -401,12 +383,8 @@ public class DrawPadCameraView extends FrameLayout {
 
     /**
      * 录制执行的回调.
-     * <p>
-     * DrawPad每录制完一帧画面,会调用这个Listener,返回的timeUs是当前录制画面的时间戳(微妙),
-     * 可以利用这个时间戳来做一些变化,比如在几秒处缩放, 在几秒处平移等等.从而实现一些动画效果.
-     * <p>
-     * 此回调中 {@link onDrawPadProgressListener #onProgress(DrawPad, long)}
-     * 中的long是当前即将编码的时间戳, 单位是US微秒.
+     * DrawPad每录制完一帧画面,会通过Handler机制,回传调用这个Listener,返回的timeUs是当前录制画面的时间戳(微妙),
+     *
      */
     public void setOnDrawPadProgressListener(onDrawPadProgressListener listener) {
         if (renderer != null) {
@@ -414,15 +392,23 @@ public class DrawPadCameraView extends FrameLayout {
         }
         drawpadProgressListener = listener;
     }
+    public void setOnDrawPadRecordProgressListener(onDrawPadRecordCompletedListener listener){
+        if (renderer != null) {
+            renderer.setDrawPadRecordCompletedListener(listener);
+        }
+        drawPadRecordCompletedListener=listener;
+    }
+
 
     /**
      * 方法与 onDrawPadProgressListener不同的地方在于: 即将开始一帧渲染的时候,
-     * 直接执行这个回调中的代码,不通过Handler传递出去,你可以精确的执行一些这一帧的如何操作. 故不能在回调 内增加各种UI相关的代码
+     *
+     *
+     * 直接执行这个回调中的代码,不通过Handler传递出去,你可以精确的执行一些这一帧的如何操作.
+     *
+     * 不能在回调 内增加各种UI相关的代码
+     *
      * 不要在代码中增加过多的耗时的代码, 以造成内部处理线程的阻塞.
-     * <p>
-     * 此回调中
-     * {@link onDrawPadThreadProgressListener #onThreadProgress(DrawPad, long)}
-     * 中的long是当前即将预览和编码的时间戳, 单位是US微秒.
      *
      * @param listener
      */
@@ -474,7 +460,10 @@ public class DrawPadCameraView extends FrameLayout {
     }
 
     /**
-     * 设置setOnDrawPadOutFrameListener后, 你可以设置这个方法来让listener是否运行在Drawpad线程中.
+     * 设置setOnDrawPadOutFrameListener后,
+     *
+     * 可以设置这个方法来让listener是否运行在Drawpad线程中.
+     *
      * 如果你要直接使用里面的数据, 则不用设置, 如果你要开启另一个线程, 把listener传递过来的数据送过去,则建议设置为true;
      *
      * @param en
@@ -516,8 +505,7 @@ public class DrawPadCameraView extends FrameLayout {
      *
      * @param listener
      */
-    public void setOnDrawPadCompletedListener(
-            onDrawPadCompletedListener listener) {
+    public void setOnDrawPadCompletedListener(onDrawPadCompletedListener listener) {
         if (renderer != null) {
             renderer.setDrawPadCompletedListener(listener);
         }
@@ -536,15 +524,6 @@ public class DrawPadCameraView extends FrameLayout {
         drawPadErrorListener = listener;
     }
 
-    /**
-     * 是否使用外面的 "继承的CameraLayer"对象.
-     *
-     * @param layer
-     */
-    public void setExtCameraLayer(CameraLayer layer) {
-        extCameraLayer = layer;
-    }
-
     public void setEditModeVideo(boolean is) {
         if (renderer != null) {
             renderer.setEditModeVideo(is);
@@ -554,8 +533,11 @@ public class DrawPadCameraView extends FrameLayout {
     }
 
     /**
-     * 建立drawPad (类似UI中的创建一个Layout, 或Word中的A4纸张) 建立视频处理的线程,也是建立一个容器,
-     * 容器的大小是您设置的DrawPad的size(如果是全屏,则是布局的大小) 建立后, 里面是没有图层,也不会显示和编码,您需要
+     * 建立一个容器,
+     *
+     * 容器的大小是您设置的DrawPad的size(如果是全屏,则是布局的大小)
+     *
+     * 建立后, 里面自动增加Camera图层, 您需要startPreview则开始预览;
      *
      * @return
      */
@@ -600,11 +582,8 @@ public class DrawPadCameraView extends FrameLayout {
             renderer = new DrawPadCameraRunnable(getContext(), padWidth,
                     padHeight); // <----从这里去建立DrawPad线程.
 
-            if (camWidth > 0 && camHeight > 0) {
-                renderer.setCameraParam(isFrontCam, initFilter, camWidth, camHeight);
-            } else {
-                renderer.setCameraParam(isFrontCam, initFilter, maybeBeauful);
-            }
+
+            renderer.setCameraParam(isFrontCam, initFilter);
 
             DisplayMetrics dm = getResources().getDisplayMetrics();
 
@@ -632,13 +611,13 @@ public class DrawPadCameraView extends FrameLayout {
                 }
                 // 设置DrawPad处理的进度监听, 回传的currentTimeUs单位是微秒.
                 renderer.setDrawpadSnapShotListener(drawpadSnapShotListener);
-                renderer.setDrawpadOutFrameListener(outFrameWidth,
-                        outFrameHeight, outFrameType, drawPadOutFrameListener);
+                renderer.setDrawpadOutFrameListener(outFrameWidth,outFrameHeight, outFrameType, drawPadOutFrameListener);
                 renderer.setDrawPadProgressListener(drawpadProgressListener);
                 renderer.setDrawPadCompletedListener(drawpadCompletedListener);
                 renderer.setDrawPadThreadProgressListener(drawPadThreadProgressListener);
                 renderer.setOutFrameInDrawPad(frameListenerInDrawPad);
                 renderer.setDrawPadRunTimeListener(drawpadRunTimeListener);
+                renderer.setDrawPadRecordCompletedListener(drawPadRecordCompletedListener);
 
                 renderer.setDrawPadErrorListener(drawPadErrorListener);
                 if (isRecordMic) {
@@ -669,8 +648,7 @@ public class DrawPadCameraView extends FrameLayout {
 
                 isCameraOpened = ret;
                 if (ret == false) { // 用中文注释.
-                    Log.e(TAG,
-                            "开启 DrawPad 失败, 或许是您之前的DrawPad没有Stop, 或者传递进去的surface对象已经被系统Destory!!,"
+                    Log.e(TAG,"开启 DrawPad 失败, 或许是您之前的DrawPad没有Stop, 或者传递进去的surface对象已经被系统Destory!!,"
                                     + "请检测您 的代码或直接拷贝我们的代码过去,在我们代码基础上修改参数;\n");
                 } else {
                     renderer.setDisplaySurface(mTextureRenderView, new Surface(
@@ -836,9 +814,10 @@ public class DrawPadCameraView extends FrameLayout {
 
     /**
      * 使用外部的mp3文件, 作为录制视频的音频部分. 容器建立后, 在startRecord前调用.
-     * <p>
-     * 此方法增加后, 会一边播放音频, 一边录制. 我们会内部经过处理, 从而使录制的音频和视频画面 同步. 适合用在 舞蹈等随着音乐节拍而舞动的画面.
-     * <p>
+     *
+     * 此方法增加后, 会一边播放音频, 一边录制. 我们会内部经过处理, 从而使录制的音频和视频画面 同步.
+     * 适合用在 舞蹈等随着音乐节拍而舞动的画面.
+     *
      * 在开始录制前调用, 您可以让用户选择几个曲子, 然后用MediaPlayer播放, 当真正开始录制时候, 在startRecord前调用这里.
      *
      * @param mp3Path mp3文件, 当前仅支持44100的采样率,2通道
@@ -863,7 +842,7 @@ public class DrawPadCameraView extends FrameLayout {
 
     /**
      * 使用外部的mp3文件, 作为录制视频的音频部分. 容器建立后, 在startRecord前调用.
-     * <p>
+     *
      * 有些场景,比如:对口型之类,或模仿人说话等场合, 人的实际说话, 会比mp3慢一点, 这里在录制的时候, 设置一个偏移量, 让他对准;
      * encodeOffsetUs 是指: 在编码的时候, 是否把当前画面提前一些, 或滞后一些; 比如提前100ms, 则这里是 设置为
      * -100*1000(负数) 如果要滞后1秒,则是设置为1000*1000(正数);
@@ -933,11 +912,13 @@ public class DrawPadCameraView extends FrameLayout {
         }
     }
 
-    /**
-     * 此代码只是用在分段录制的Camera的过程中, 其他地方不建议使用. 录制完成后, 返回当前录制这一段的文件完整路径名, 因为这里会等待
-     * 编码和音频采集模块处理完毕释放后才返回, 故有一定的阻塞时间(在低端手机上大概100ms), 建议用Handler的
-     * HandlerMessage的形式来处理
-     */
+    public void segmentStopAsync(){
+        if(renderer!=null){
+            renderer.segmentStopAsync();
+        }
+    }
+
+    @Deprecated
     public String segmentStop() {
         if (renderer != null) {
             return renderer.segmentStop();
@@ -952,6 +933,12 @@ public class DrawPadCameraView extends FrameLayout {
      * @param pauseMp3 是否mp3只是暂停;
      * @return
      */
+    public void segmentStopAsync(boolean pauseMp3) {
+        if (renderer != null) {
+           renderer.segmentStopAsync(pauseMp3);
+        }
+    }
+
     public String segmentStop(boolean pauseMp3) {
         if (renderer != null) {
             return renderer.segmentStop(pauseMp3);
@@ -960,15 +947,17 @@ public class DrawPadCameraView extends FrameLayout {
         }
     }
 
+
     /**
      * 当前是否正在录制.
      *
      * @return
      */
     public boolean isRecording() {
-        if (renderer != null)
-            return renderer.isRecording();
-        else
+        if (renderer != null){
+            boolean ret=renderer.isRecording();
+            return ret;
+        } else
             return false;
     }
 
@@ -1143,17 +1132,7 @@ public class DrawPadCameraView extends FrameLayout {
         }
     }
 
-    /**
-     * 获取一个VideoLayer,从中获取surface 来设置到播放器中,
-     * 用播放器提供的画面,来作为DrawPad的画面输入源.
-     * <p>
-     * 注意:此方法一定在 startDrawPad之后,在stopDrawPad之前调用.
-     *
-     * @param width  的宽度
-     * @param height 的高度
-     * @return VideoLayer对象
-     */
-    public VideoLayer addVideoLayer(int width, int height, GPUImageFilter filter) {
+    public VideoLayer2 addVideoLayer(int width, int height, GPUImageFilter filter) {
         if (renderer != null)
             return renderer.addVideoLayer(width, height, filter);
         else {
@@ -1161,7 +1140,6 @@ public class DrawPadCameraView extends FrameLayout {
             return null;
         }
     }
-
     /**
      * 获取一个BitmapLayer 注意:此方法一定在 startDrawPad之后,在stopDrawPad之前调用.
      *

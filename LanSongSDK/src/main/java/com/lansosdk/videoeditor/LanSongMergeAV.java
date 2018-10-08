@@ -1,6 +1,9 @@
 package com.lansosdk.videoeditor;
 
+import android.media.MediaPlayer;
 import android.util.Log;
+
+import com.lansosdk.box.LSLog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,30 +21,22 @@ import java.util.List;
 
 public class LanSongMergeAV extends VideoEditor {
 
-    private static final String TAG = "LanSongMergeAV";
+    private static final String TAG = LSLog.TAG;
     protected ArrayList<String> deleteArray = new ArrayList<String>();
 
-    /**
-     *
-     *
-     * @param audio
-     * @param video
-     * @param dstMp4
-     * @return
-     */
     /**
      * 给视频增加音频
      * 内部不做时长判断,不做mp3,aac判断,不做是否有音频的判断;
      *
      * @param audio 音频部分
      * @param video 视频部分
-     * @param deleteVideo  增加视频后,是否要删除原视频文件;
+     * @param deleteVideo  增加视频后,是否要删除video这个文件;
      * @return 返回增加后音频的视频路径, 如果失败则返回原视频
      */
     public static String mergeAVDirectly(String audio, String video,boolean deleteVideo) {
-        MediaInfo info=new MediaInfo(audio,false);
+        MediaInfo info=new MediaInfo(audio);
         if(info.prepare() && info.isHaveAudio()){
-                String retPath= SDKFileUtils.createMp4FileInBox();
+                String retPath=LanSongFileUtil.createMp4FileInBox();
 
                 String inputAudio = audio;
                 List<String> cmdList = new ArrayList<String>();
@@ -74,7 +69,7 @@ public class LanSongMergeAV extends VideoEditor {
                 int ret = editor.executeVideoEditor(command);
                 if(ret==0){
                     if(deleteVideo){
-                        SDKFileUtils.deleteFile(video);
+                        LanSongFileUtil.deleteFile(video);
                     }
                     return retPath;
                 }else{
@@ -92,8 +87,8 @@ public class LanSongMergeAV extends VideoEditor {
      * @return
      */
     public int mergeAudioVideo(String audio, String video, String dstMp4) {
-        MediaInfo aInfo = new MediaInfo(audio, false);
-        MediaInfo vInfo = new MediaInfo(video, false);
+        MediaInfo aInfo = new MediaInfo(audio);
+        MediaInfo vInfo = new MediaInfo(video);
 
         if (aInfo.prepare() && aInfo.isHaveAudio() && vInfo.prepare() && vInfo.isHaveVideo()) {
 
@@ -105,7 +100,7 @@ public class LanSongMergeAV extends VideoEditor {
                     cmdList.add("-t");
                     cmdList.add(String.valueOf(vInfo.vDuration));
                 } else{
-                    String aac= SDKFileUtils.createAACFileInBox();
+                    String aac= LanSongFileUtil.createAACFileInBox();
                     deleteArray.add(aac);
 
                     convertAudioToAAC(inputAudio,vInfo.vDuration,aac);
@@ -146,7 +141,7 @@ public class LanSongMergeAV extends VideoEditor {
             int ret = editor.executeVideoEditor(command);
 
             for (String item : deleteArray) {
-                SDKFileUtils.deleteFile(item);
+                LanSongFileUtil.deleteFile(item);
             }
             return ret;
         } else {
@@ -167,7 +162,7 @@ public class LanSongMergeAV extends VideoEditor {
         //先把mp3转换aac,再拼接aac
         if ("mp3".equals(input.aCodecName)) {
 
-            String aacAudio = SDKFileUtils.createAACFileInBox();
+            String aacAudio = LanSongFileUtil.createAACFileInBox();
             deleteArray.add(aacAudio);
 
             convertAudioToAAC(input.filePath,0,aacAudio);
@@ -175,7 +170,7 @@ public class LanSongMergeAV extends VideoEditor {
         }
 
         if(input.fileSuffix.equalsIgnoreCase("m4a")){
-            String aacAudio = SDKFileUtils.createAACFileInBox();
+            String aacAudio = LanSongFileUtil.createAACFileInBox();
             deleteArray.add(aacAudio);
 
             convertM4aToAAC(input.filePath,aacAudio);
@@ -183,7 +178,6 @@ public class LanSongMergeAV extends VideoEditor {
             audioPath = aacAudio;
         }
 
-        //LSTODO 这里拼接算法有问题, 会超过视频的时长;
         int num = (int) (vDuration / input.aDuration + 1.0f);
         String[] array = new String[num];
 
@@ -191,7 +185,7 @@ public class LanSongMergeAV extends VideoEditor {
             array[i] = audioPath;
         }
 
-        String m4aAudio = SDKFileUtils.createAACFileInBox();
+        String m4aAudio = LanSongFileUtil.createAACFileInBox();
         deleteArray.add(m4aAudio);
 
         concatAudio(array, m4aAudio); //拼接好.
@@ -207,7 +201,7 @@ public class LanSongMergeAV extends VideoEditor {
      * @return
      */
     private int concatAudio(String[] tsArray, String dstFile) {
-        if (SDKFileUtils.filesExist(tsArray)) {
+        if (LanSongFileUtil.filesExist(tsArray)) {
             String concat = "concat:";
             for (int i = 0; i < tsArray.length - 1; i++) {
                 concat += tsArray[i];

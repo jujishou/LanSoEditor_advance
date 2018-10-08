@@ -28,7 +28,8 @@ import com.lansosdk.box.onDrawPadSizeChangedListener;
 import com.lansosdk.videoeditor.DrawPadView;
 import com.lansosdk.videoeditor.LanSongMergeAV;
 import com.lansosdk.videoeditor.MediaInfo;
-import com.lansosdk.videoeditor.SDKFileUtils;
+import com.lansosdk.videoeditor.LanSongFileUtil;
+import com.lansosdk.videoeditor.VideoEditor;
 
 /**
  * 演示: 使用DrawPad来实现 视频和图片的实时叠加.
@@ -41,7 +42,7 @@ import com.lansosdk.videoeditor.SDKFileUtils;
  */
 
 public class LayerLayoutDemoActivity extends Activity {
-    private static final String TAG = "Demo1LayerMothedActivity";
+    private static final String TAG = "LayerLayoutDemo";
 
     private String videoPath;
 
@@ -62,7 +63,7 @@ public class LayerLayoutDemoActivity extends Activity {
         setContentView(R.layout.videopicture_layout);
 
         videoPath = getIntent().getStringExtra("videopath");
-        mInfo = new MediaInfo(videoPath, false);
+        mInfo = new MediaInfo(videoPath);
         if (mInfo.prepare() == false) {
             Toast.makeText(this, "传递过来的视频文件错误", Toast.LENGTH_SHORT).show();
             this.finish();
@@ -72,8 +73,8 @@ public class LayerLayoutDemoActivity extends Activity {
         initView();
 
         // 在手机的默认路径下创建一个文件名,用来保存生成的视频文件,(在onDestroy中删除)
-        editTmpPath = SDKFileUtils.newMp4PathInBox();
-        dstPath = SDKFileUtils.newMp4PathInBox();
+        editTmpPath = LanSongFileUtil.newMp4PathInBox();
+        dstPath = LanSongFileUtil.newMp4PathInBox();
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -150,7 +151,7 @@ public class LayerLayoutDemoActivity extends Activity {
             layer.setScaledValue(layer.getPadWidth(), layer.getPadHeight()); // 填充整个屏幕.
 
             videoLayer = drawPadView.addMainVideoLayer(mplayer.getVideoWidth(),
-                    mplayer.getVideoHeight(), null);
+                    mplayer.getVideoHeight(),null);
             if (videoLayer != null) {
                 mplayer.setSurface(new Surface(videoLayer.getVideoTexture()));
                 mplayer.start();
@@ -238,7 +239,7 @@ public class LayerLayoutDemoActivity extends Activity {
             drawPadView.stopDrawPad();
             toastStop();
 
-            if (SDKFileUtils.fileExist(editTmpPath)) {
+            if (LanSongFileUtil.fileExist(editTmpPath)) {
                 dstPath= LanSongMergeAV.mergeAVDirectly(videoPath, editTmpPath, true);
                 playVideo.setVisibility(View.VISIBLE);
             } else {
@@ -264,8 +265,8 @@ public class LayerLayoutDemoActivity extends Activity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        SDKFileUtils.deleteFile(dstPath);
-        SDKFileUtils.deleteFile(editTmpPath);
+        LanSongFileUtil.deleteFile(dstPath);
+        LanSongFileUtil.deleteFile(editTmpPath);
     }
 
     private void initView() {
@@ -277,7 +278,7 @@ public class LayerLayoutDemoActivity extends Activity {
 
             @Override
             public void onClick(View v) {
-                if (SDKFileUtils.fileExist(dstPath)) {
+                if (LanSongFileUtil.fileExist(dstPath)) {
                     Intent intent = new Intent(LayerLayoutDemoActivity.this, VideoPlayerActivity.class);
                     intent.putExtra("videopath", dstPath);
                     startActivity(intent);

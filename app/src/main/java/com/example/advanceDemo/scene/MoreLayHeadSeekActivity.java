@@ -27,13 +27,14 @@ import com.lansosdk.box.DrawPadUpdateMode;
 import com.lansosdk.box.Layer;
 import com.lansosdk.box.ScaleAnimation;
 import com.lansosdk.box.VideoLayer;
+import com.lansosdk.box.VideoLayer2;
 import com.lansosdk.box.onDrawPadProgressListener;
 import com.lansosdk.box.onDrawPadRunTimeListener;
 import com.lansosdk.box.onDrawPadSizeChangedListener;
 import com.lansosdk.videoeditor.CopyFileFromAssets;
 import com.lansosdk.videoeditor.DrawPadView;
 import com.lansosdk.videoeditor.MediaInfo;
-import com.lansosdk.videoeditor.SDKFileUtils;
+import com.lansosdk.videoeditor.LanSongFileUtil;
 
 import java.io.IOException;
 
@@ -51,8 +52,8 @@ public class MoreLayHeadSeekActivity extends Activity {
     private MediaPlayer mplayer = null;
     private MediaPlayer mplayer2 = null;
     private BitmapLayer bmpLayer = null;
-    private VideoLayer videoLayer1 = null;
-    private VideoLayer videoLayer2 = null;
+    private VideoLayer2 videoLayer1 = null;
+    private VideoLayer2 videoLayer2 = null;
     private MediaInfo firstInfo = null;
     private MediaInfo secondInfo;
     private LinearLayout btnPlay;
@@ -77,9 +78,9 @@ public class MoreLayHeadSeekActivity extends Activity {
         mVideoPath = getIntent().getStringExtra("videopath");
         drawPadView = (DrawPadView) findViewById(R.id.id_videolayer_drawpad);
 
-        dstPath = SDKFileUtils.newMp4PathInBox();
+        dstPath = LanSongFileUtil.newMp4PathInBox();
 
-        firstInfo = new MediaInfo(mVideoPath, false);
+        firstInfo = new MediaInfo(mVideoPath);
         if (firstInfo.prepare() == false) {
             finish();
         }
@@ -104,7 +105,7 @@ public class MoreLayHeadSeekActivity extends Activity {
         }
         joinCopySecondVideo();
 
-        secondInfo = new MediaInfo(videoPath2, false);
+        secondInfo = new MediaInfo(videoPath2);
         secondInfo.prepare();
 
         bmpLayerStartTime = (long) (firstInfo.vDuration * 1000 * 1000);
@@ -127,11 +128,11 @@ public class MoreLayHeadSeekActivity extends Activity {
         drawPadView.setOnDrawPadRunTimeListener(new onDrawPadRunTimeListener() {
 
             @Override
-            public void onRunTime(DrawPad v, long curerntTimeUs) {
+            public void onRunTime(DrawPad v, long currentTimeUs) {
 
-                playVideo1(curerntTimeUs);
-                playVideo2(curerntTimeUs);
-                playPicture(curerntTimeUs);
+                playVideo1(currentTimeUs);
+                playVideo2(currentTimeUs);
+                playPicture(currentTimeUs);
             }
         });
         drawPadView
@@ -162,7 +163,7 @@ public class MoreLayHeadSeekActivity extends Activity {
                 public void onPrepared(MediaPlayer mp) {
 
                     // 增加一个图层,但先不显示.
-                    videoLayer1 = drawPadView.addVideoLayer(
+                    videoLayer1 = drawPadView.addVideoLayer2(
                             mplayer.getVideoWidth(), mplayer.getVideoHeight(),
                             null);
                     videoLayer1.setVisibility(Layer.INVISIBLE);
@@ -201,7 +202,7 @@ public class MoreLayHeadSeekActivity extends Activity {
                 @Override
                 public void onPrepared(MediaPlayer mp) {
                     // 增加一个图层, 先不显示.
-                    videoLayer2 = drawPadView.addVideoLayer(
+                    videoLayer2 = drawPadView.addVideoLayer2(
                             mplayer2.getVideoWidth(),
                             mplayer2.getVideoHeight(), null);
                     videoLayer2.setVisibility(Layer.INVISIBLE);
@@ -274,7 +275,7 @@ public class MoreLayHeadSeekActivity extends Activity {
             drawPadView.stopDrawPad();
             toastStop();
 
-            if (SDKFileUtils.fileExist(dstPath)) {
+            if (LanSongFileUtil.fileExist(dstPath)) {
                 btnPlay.setVisibility(View.VISIBLE);
             }
             if (mplayer != null) {
@@ -403,6 +404,6 @@ public class MoreLayHeadSeekActivity extends Activity {
             drawPadView.stopDrawPad();
             drawPadView = null;
         }
-        SDKFileUtils.deleteFile(dstPath);
+        LanSongFileUtil.deleteFile(dstPath);
     }
 }

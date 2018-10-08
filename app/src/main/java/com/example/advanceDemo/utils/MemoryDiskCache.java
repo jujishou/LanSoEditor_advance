@@ -11,7 +11,7 @@ import android.support.v4.util.LruCache;
 import android.util.Log;
 
 import com.example.advanceDemo.utils.DiskLruCache.Snapshot;
-import com.lansosdk.videoeditor.SDKFileUtils;
+import com.lansosdk.videoeditor.LanSongFileUtil;
 
 import java.io.File;
 import java.io.IOException;
@@ -137,7 +137,7 @@ public class MemoryDiskCache {
             }
         }
 
-        SDKFileUtils.deleteDir(cacheFile);
+        LanSongFileUtil.deleteDir(cacheFile);
 
     }
 

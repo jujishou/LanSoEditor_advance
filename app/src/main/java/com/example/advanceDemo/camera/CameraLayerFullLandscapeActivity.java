@@ -33,7 +33,7 @@ import com.lansosdk.videoeditor.DrawPadCameraView.onViewAvailable;
 import com.lansosdk.videoeditor.FilterLibrary;
 import com.lansosdk.videoeditor.FilterLibrary.OnGpuImageFilterChosenListener;
 import com.lansosdk.videoeditor.LanSongUtil;
-import com.lansosdk.videoeditor.SDKFileUtils;
+import com.lansosdk.videoeditor.LanSongFileUtil;
 
 import jp.co.cyberagent.lansongsdk.gpuimage.GPUImageFilter;
 
@@ -131,7 +131,7 @@ public class CameraLayerFullLandscapeActivity extends AppCompatActivity
         }
 
         mDrawPadCamera = (DrawPadCameraView) findViewById(R.id.id_fullscreen_padview);
-        dstPath = SDKFileUtils.newMp4PathInBox();
+        dstPath = LanSongFileUtil.newMp4PathInBox();
 
         initView();
         initBeautyView();
@@ -271,7 +271,7 @@ public class CameraLayerFullLandscapeActivity extends AppCompatActivity
 
             // VHeaderConcat scale=new VHeaderConcat();
             // scale.start(getApplicationContext(), "/sdcard/video_start.mp4",
-            // dstPath);
+            // drawpadDstPath);
         }
         playVideo.setVisibility(View.VISIBLE);
     }
@@ -293,8 +293,8 @@ public class CameraLayerFullLandscapeActivity extends AppCompatActivity
     protected void onDestroy() {
         // TODO Auto-generated method stub
         super.onDestroy();
-        if (SDKFileUtils.fileExist(dstPath)) {
-            SDKFileUtils.deleteFile(dstPath);
+        if (LanSongFileUtil.fileExist(dstPath)) {
+            LanSongFileUtil.deleteFile(dstPath);
             dstPath = null;
         }
     }
@@ -425,7 +425,7 @@ public class CameraLayerFullLandscapeActivity extends AppCompatActivity
 
             @Override
             public void onClick(View v) {
-                if (SDKFileUtils.fileExist(dstPath)) {
+                if (LanSongFileUtil.fileExist(dstPath)) {
                     Intent intent = new Intent(
                             CameraLayerFullLandscapeActivity.this,
                             VideoPlayerActivity.class);

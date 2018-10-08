@@ -175,18 +175,18 @@ public class HorizontalListView extends AdapterView<ListAdapter> {
 
     @Override
     public void setOnItemSelectedListener(
-            OnItemSelectedListener listener) {
+            AdapterView.OnItemSelectedListener listener) {
         mOnItemSelected = listener;
     }
 
     @Override
-    public void setOnItemClickListener(OnItemClickListener listener) {
+    public void setOnItemClickListener(AdapterView.OnItemClickListener listener) {
         mOnItemClicked = listener;
     }
 
     @Override
     public void setOnItemLongClickListener(
-            OnItemLongClickListener listener) {
+            AdapterView.OnItemLongClickListener listener) {
         mOnItemLongClicked = listener;
     }
 

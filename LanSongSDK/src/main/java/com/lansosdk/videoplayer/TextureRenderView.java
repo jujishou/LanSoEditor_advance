@@ -9,6 +9,8 @@ import android.view.View;
 import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
 
+import com.lansosdk.box.LSLog;
+
 @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
 public class TextureRenderView extends TextureView {
 
@@ -19,7 +21,7 @@ public class TextureRenderView extends TextureView {
     public static final int AR_16_9_FIT_PARENT = 4;
     public static final int AR_4_3_FIT_PARENT = 5;
 
-    private static final String TAG = "TextureRenderView";
+    private static final String TAG = LSLog.TAG;
     private MeasureHelper mMeasureHelper;
 
     public TextureRenderView(Context context) {

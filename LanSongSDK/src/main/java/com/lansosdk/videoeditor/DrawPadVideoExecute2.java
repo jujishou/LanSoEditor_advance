@@ -8,9 +8,11 @@ import com.lansosdk.box.AudioSource;
 import com.lansosdk.box.BitmapLayer;
 import com.lansosdk.box.CanvasLayer;
 import com.lansosdk.box.DataLayer;
+import com.lansosdk.box.DrawPadUpdateMode;
 import com.lansosdk.box.DrawPadVideoRunnable2;
 import com.lansosdk.box.FileParameter;
 import com.lansosdk.box.GifLayer;
+import com.lansosdk.box.LSLog;
 import com.lansosdk.box.Layer;
 import com.lansosdk.box.MVLayer;
 import com.lansosdk.box.TimeRange;
@@ -27,32 +29,82 @@ import java.util.List;
 
 import jp.co.cyberagent.lansongsdk.gpuimage.GPUImageFilter;
 
+//LSTODO:整理构造方法;
 public class DrawPadVideoExecute2 {
 
-    private static final String TAG = "DrawpadVideoExecute2";
+    private static final String TAG = LSLog.TAG;
     protected boolean isCheckBitRate = true;
     protected boolean isCheckPadSize = true;
     private DrawPadVideoRunnable2 renderer = null;
     private int padWidth, padHeight;
     private boolean mPauseRecord = false;
+    public MediaInfo mediaInfo;
 
 
+    /**
+     * 构造方法
+     * @param ctx
+     * @param srcPath
+     * @param dstPath  <----注意:这里设置目标文件字符串;
+     */
     public DrawPadVideoExecute2(Context ctx, String srcPath,String dstPath) {
         this.init(ctx,srcPath,0,dstPath);
     }
     /**
+     * 设置容器的宽高
      *
-     * 单位为微秒 1s=1000*1000微秒; 注意!!!
-     *
-     * @param ctx
-     * @param srcPath     视频的完整路径.
-     * @param startTimeUs 开始时间.
-     * @param dstPath     处理后保存的目标文件.
+     * 设置后, 视频的宽高会缩放到容器中;
+     * 容器的宽高, 就是录制后的视频的宽高;
+     * @param width
+     * @param height
      */
+    public void setDrawPadSize(int width,int height){
+        if( renderer!=null && width>0 && height>0){
+            renderer.setScaleValue(width,height);
+            this.padWidth = width;
+            this.padHeight = height;
+        }
+    }
+    /**
+     * 设置编码码率
+     * @param bitrate
+     */
+    public void setRecordBitrate(int bitrate){
+        if(bitrate>0 &&renderer!=null){
+            renderer.setEncoderBitrate(bitrate);
+        }
+    }
+
+    /**
+     * 设置开始时间;
+     * @param timeUs
+     */
+    public void setStartTimeUs(long timeUs){
+        if(timeUs>0 &&renderer!=null){
+            renderer.setStartTimeUs(timeUs);
+        }
+    }
+    public void setDurationTimeUs(long timeUs){
+        if(timeUs>0 &&renderer!=null){
+            renderer.setDurationTimeUs(timeUs);
+        }
+    }
+    /**
+     * 给视频设置一个全局滤镜;
+     * 注意:滤镜应该是新创建的;
+     * @param filter
+     */
+    public void setVideoFilter(GPUImageFilter filter){
+        if(filter!=null &&renderer!=null){
+            renderer.setVideoFilter(filter);
+        }
+    }
+
+    @Deprecated
     public DrawPadVideoExecute2(Context ctx, String srcPath, long startTimeUs,String dstPath) {
         this.init(ctx,srcPath,startTimeUs,dstPath);
     }
-
+    @Deprecated
     public DrawPadVideoExecute2(Context ctx, String srcPath, int padwidth,
                                 int padheight, int bitrate, GPUImageFilter filter, String dstPath) {
         if (renderer == null) {
@@ -62,19 +114,9 @@ public class DrawPadVideoExecute2 {
         this.padWidth = padwidth;
         this.padHeight = padheight;
     }
-
-    /**
-     * 只比上面少了一个码率的设置.
-     *
-     * @param ctx
-     * @param srcPath
-     * @param padwidth
-     * @param padheight
-     * @param filter
-     * @param dstPath
-     */
+    @Deprecated
     public DrawPadVideoExecute2(Context ctx, String srcPath, int padwidth,
-                                int padheight, GPUImageFilter filter, String dstPath) {
+                                  int padheight, GPUImageFilter filter, String dstPath) {
         if (renderer == null) {
             renderer = new DrawPadVideoRunnable2(ctx, srcPath, padwidth,
                     padheight, 0, filter, dstPath);
@@ -82,21 +124,7 @@ public class DrawPadVideoExecute2 {
         this.padWidth = padwidth;
         this.padHeight = padheight;
     }
-
-    /**
-     * Drawpad后台执行, 可以指定开始时间. 因视频编码原理, 会定位到 [指定时间]前面最近的一个IDR刷新帧,
-     * 然后解码到[指定时间],容器才开始渲染视频,中间或许有一些延迟.
-     *
-     * @param ctx
-     * @param srcPath     主视频的完整路径.
-     * @param startTimeUs 开始时间. 单位为微秒 1s=1000*1000微秒; 注意!!!
-     * @param padwidth    容器宽度.
-     * @param padheight   容器高度.
-     * @param bitrate     容器编码的码率
-     * @param filter      为这视频设置一个滤镜, 如果您要增加多个滤镜,则用
-     *                    {@link #switchFilterList(Layer, ArrayList)}
-     * @param dstPath     处理后保存的目标文件.
-     */
+    @Deprecated
     public DrawPadVideoExecute2(Context ctx, String srcPath, long startTimeUs,
                                 int padwidth, int padheight, int bitrate, GPUImageFilter filter,
                                 String dstPath) {
@@ -107,17 +135,7 @@ public class DrawPadVideoExecute2 {
         this.padWidth = padwidth;
         this.padHeight = padheight;
     }
-    /**
-     * 相对于上面,只是少了码率.
-     *
-     * @param ctx
-     * @param srcPath
-     * @param startTimeUs 单位为微秒 1s=1000*1000微秒; 注意!!!
-     * @param padwidth
-     * @param padheight
-     * @param filter
-     * @param dstPath
-     */
+    @Deprecated
     public DrawPadVideoExecute2(Context ctx, String srcPath, long startTimeUs,
                                 int padwidth, int padheight, GPUImageFilter filter, String dstPath) {
         if (renderer == null) {
@@ -127,73 +145,21 @@ public class DrawPadVideoExecute2 {
         this.padWidth = padwidth;
         this.padHeight = padheight;
     }
+
+
     private void init(Context ctx, String srcPath, long startTimeUs,String dstPath)
     {
-        MediaInfo info=new MediaInfo(srcPath,false);
-        if (renderer == null && info.prepare()) {
-            int padW=info.getWidth();
-            int padH=info.getHeight();
+        mediaInfo=new MediaInfo(srcPath);
+        if (renderer == null && mediaInfo.prepare()) {
+            int padW=mediaInfo.getWidth();
+            int padH=mediaInfo.getHeight();
 
-            int bitrate=(int)(info.vBitRate*1.5f);
+            int bitrate=VideoEditor.getSuggestBitRate(padH *padW);
             renderer = new DrawPadVideoRunnable2(ctx, srcPath, startTimeUs, padW,padH,bitrate, null, dstPath);
-
             this.padWidth = padW;
             this.padHeight = padH;
         }
     }
-    /**
-     * 增加了FileParameter类, 其中FileParameter的配置是:
-     * <p>
-     * FileParameter param=new FileParameter();
-     * if(param.setDataSoure(mVideoPath)){
-     * <p>
-     * 设置当前需要显示的区域 ,以左上角为0,0坐标.
-     *
-     * @param startX    开始的X坐标, 即从宽度的什么位置开始
-     * @param startY    开始的Y坐标, 即从高度的什么位置开始
-     * @param cropW     需要显示的宽度
-     * @param cropH     需要显示的高度. param.setShowRect(0, 0, 300, 200);
-     *                  param.setStartTimeUs(5*1000*1000); //从5秒处开始处理, 当前仅在后台处理时有效.
-     *                  videoMainLayer=mDrawPadView.addMainVideoLayer(param,new
-     *                  GPUImageSepiaFilter()); }
-     *                  ------------------------------------------------------
-     * @param ctx
-     * @param filebox
-     * @param padwidth
-     * @param padheight
-     * @param filter
-     * @param dstPath
-     */
-    public DrawPadVideoExecute2(Context ctx, FileParameter fileParam,
-                                int padwidth, int padheight, GPUImageFilter filter, String dstPath) {
-        if (renderer == null) {
-            renderer = new DrawPadVideoRunnable2(ctx, fileParam, padwidth,
-                    padheight, 0, filter, dstPath);
-        }
-        this.padWidth = padwidth;
-        this.padHeight = padheight;
-    }
-
-    public DrawPadVideoExecute2(Context ctx, FileParameter fileParam,
-                                int padwidth, int padheight, int bitrate, GPUImageFilter filter,
-                                String dstPath) {
-        if (renderer == null) {
-            renderer = new DrawPadVideoRunnable2(ctx, fileParam, padwidth,
-                    padheight, bitrate, filter, dstPath);
-        }
-        this.padWidth = padwidth;
-        this.padHeight = padheight;
-    }
-
-    /**
-     * 在处理中, 忽略音频部分;默认不忽略;
-     */
-    public void setIngoreAudio() {
-        if (renderer != null) {
-            renderer.setIngoreAudio();
-        }
-    }
-
     public void setLanSongVideoMode(boolean is) {
         if (renderer != null) {
             renderer.setEditModeVideo(is);
@@ -217,16 +183,6 @@ public class DrawPadVideoExecute2 {
             renderer.stopDrawPad();
         }
     }
-
-    /**
-     * 代码不再使用, 请用 {@link #addTimeStretch(float, long, long)}
-     */
-    @Deprecated
-    public void adjustEncodeSpeed(float speed) {
-        if (renderer != null) {
-            renderer.adjustEncodeSpeed(speed);
-        }
-    }
     /**
      * 音频处理的进度, 如果你要调整每个AudioSource对象在不同时段内的各种状态,则可以在这个进度中, 判断时间戳来调整.
      * 比如静音,比如增大音量
@@ -238,11 +194,11 @@ public class DrawPadVideoExecute2 {
             renderer.setAudioProgressListener(li);
         }
     }
-
     /**
-     * DrawPad每执行完一帧画面,会调用这个Listener,返回的timeUs是当前画面的时间戳(微妙),
+     * DrawPad
+     * 每执行完一帧画面,会调用这个Listener,返回的timeUs是当前画面的时间戳(微妙),
      * 可以利用这个时间戳来做一些变化,比如在几秒处缩放, 在几秒处平移等等.从而实现一些动画效果.
-     * <p>
+     *
      * (注意, 这个进度回调, 是经过Handler异步调用, 工作在主线程的. 如果你要严格按照时间来,则需要用setDrawPadThreadProgressListener)
      */
     public void setDrawPadProgressListener(onDrawPadProgressListener listener) {
@@ -396,51 +352,6 @@ public class DrawPadVideoExecute2 {
             return null;
         }
     }
-
-    /**
-     * 在DrawPad线程开始前增加;
-     *
-     * @param srcPath
-     * @param startFromPadTimeUs
-     * @param durationUs
-     * @param volume
-     * @return
-     */
-    @Deprecated
-    public boolean addSubAudio(String srcPath, long startFromPadTimeUs,
-                               long durationUs, float volume) {
-        if (renderer != null && renderer.isRunning() == false) {
-            AudioSource audio = renderer.addSubAudio(srcPath,
-                    startFromPadTimeUs, 0, durationUs);
-            if (audio != null) {
-                audio.setVolume(volume);
-            }
-            return audio != null;
-        } else {
-            return false;
-        }
-    }
-
-    /**
-     * 不再使用. 在DrawPad线程开始前增加;
-     *
-     * @return
-     */
-    @Deprecated
-    public boolean addSubAudio(String srcPath, long startTimeMs,
-                               long durationMs, float mainvolume, float volume) {
-        if (renderer != null && renderer.isRunning() == false) {
-            AudioSource audio = renderer.addSubAudio(srcPath, startTimeMs,
-                    durationMs);
-            if (audio != null) {
-                audio.setVolume(volume);
-            }
-            return audio != null;
-        } else {
-            return false;
-        }
-    }
-
     /**
      * 增加音频, 在DrawPad线程开始前增加;
      *
@@ -459,12 +370,12 @@ public class DrawPadVideoExecute2 {
      * 增加其他声音; 在DrawPad线程开始前增加;
      *
      * @param srcPath
-     * @param startFromPadTime 从主音频的什么时间开始增加
+     * @param startFromPadTimeUs 从主音频的什么时间开始增加
      * @return
      */
-    public AudioSource addSubAudio(String srcPath, long startFromPadTime) {
+    public AudioSource addSubAudio(String srcPath, long startFromPadTimeUs) {
         if (renderer != null && renderer.isRunning() == false) {
-            return renderer.addSubAudio(srcPath, startFromPadTime, -1);
+            return renderer.addSubAudio(srcPath, startFromPadTimeUs, -1);
         } else {
             return null;
         }
@@ -491,14 +402,12 @@ public class DrawPadVideoExecute2 {
 
     /**
      * 如果要调节音量, 则增加拿到对象后, 开始调节.
-     * <p>
      * 在DrawPad线程开始前增加;
      *
      * @param srcPath
      * @param startFromPadUs   从容器的什么位置开始增加
      * @param startAudioTimeUs 把当前声音的开始时间增加进去.
      * @param durationUs       增加多少, 时长.
-     * @param isLoop           是否循环.
      * @return
      */
     public AudioSource addSubAudio(String srcPath, long startFromPadUs,
@@ -584,7 +493,6 @@ public class DrawPadVideoExecute2 {
 
     /**
      * 时间冻结
-     * <p>
      * 在DrawPad容器开始前调用
      *
      * @param list
@@ -599,7 +507,6 @@ public class DrawPadVideoExecute2 {
 
     /**
      * 时间重复.
-     * <p>
      * 在DrawPad容器开始前调用
      *
      * @param list
@@ -614,7 +521,6 @@ public class DrawPadVideoExecute2 {
 
     /**
      * 增加图片图层.
-     * <p>
      * 在DrawPad容器开始后调用;
      *
      * @param bmp

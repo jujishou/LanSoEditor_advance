@@ -25,23 +25,23 @@ import com.lansosdk.box.ViewLayerRelativeLayout;
 import com.lansosdk.box.onDrawPadSizeChangedListener;
 import com.lansosdk.videoeditor.DrawPadView;
 import com.lansosdk.videoeditor.MediaInfo;
-import com.lansosdk.videoeditor.SDKFileUtils;
+import com.lansosdk.videoeditor.LanSongFileUtil;
 
 import java.io.IOException;
 
 /**
- * 采用自动刷新模式 增加视频VideoLayer 到DrawPad中.
+ * 采用自动刷新模式 增加视频图层到容器中;
  */
 public class VideoLayerAutoUpdateActivity extends Activity {
-    private static final String TAG = "VideoLayerAutoUpdateDemoActivity";
+    private static final String TAG = "VideoLayerAutoUpdate";
 
     private String mVideoPath;
 
-    private DrawPadView mDrawPad;
+    private DrawPadView drawPadView;
 
     private MediaPlayer mplayer = null;
 
-    private VideoLayer mLayerMain = null;
+    private VideoLayer mainVideoLayer = null;
     private ViewLayer mViewLayer = null;
 
     private LinearLayout playVideo;
@@ -57,10 +57,10 @@ public class VideoLayerAutoUpdateActivity extends Activity {
         initView();
 
         mVideoPath = getIntent().getStringExtra("videopath");
-        mDrawPad = (DrawPadView) findViewById(R.id.id_vauto_demo_drawpad_view);
+        drawPadView = (DrawPadView) findViewById(R.id.id_vauto_demo_drawpad_view);
 
         // 在手机的默认路径下创建一个文件名,用来保存生成的视频文件,(在onDestroy中删除)
-        dstPath = SDKFileUtils.newMp4PathInBox();
+        dstPath = LanSongFileUtil.newMp4PathInBox();
 
         // 演示例子用到的.
         PaintConstants.SELECTOR.COLORING = true;
@@ -81,9 +81,7 @@ public class VideoLayerAutoUpdateActivity extends Activity {
             mplayer = new MediaPlayer();
             try {
                 mplayer.setDataSource(mVideoPath);
-
             } catch (IOException e) {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
             }
             mplayer.setOnPreparedListener(new OnPreparedListener() {
@@ -110,22 +108,18 @@ public class VideoLayerAutoUpdateActivity extends Activity {
 
     // Step1: 设置DrawPad 容器的尺寸.并设置是否实时录制容器上的内容.
     private void initDrawPad() {
-        MediaInfo info = new MediaInfo(mVideoPath, false);
+        MediaInfo info = new MediaInfo(mVideoPath);
         if (info.prepare()) {
+            drawPadView.setRealEncodeEnable(480, 480, 1000000, (int) info.vFrameRate, dstPath);
+            drawPadView.setUpdateMode(DrawPadUpdateMode.AUTO_FLUSH, 25);// 25是帧率.
 
-            mDrawPad.setRealEncodeEnable(480, 480, 1000000,
-                    (int) info.vFrameRate, dstPath);
+            drawPadView.setDrawPadSize(480, 480, new onDrawPadSizeChangedListener() {
 
-            mDrawPad.setUpdateMode(DrawPadUpdateMode.AUTO_FLUSH, 25);// 25是帧率.
-
-            mDrawPad.setDrawPadSize(480, 480,
-                    new onDrawPadSizeChangedListener() {
-
-                        @Override
-                        public void onSizeChanged(int viewWidth, int viewHeight) {
-                            startDrawPad();
-                        }
-                    });
+                @Override
+                public void onSizeChanged(int viewWidth, int viewHeight) {
+                    startDrawPad();
+                }
+            });
         }
     }
 
@@ -133,43 +127,41 @@ public class VideoLayerAutoUpdateActivity extends Activity {
      * Step2: Drawpad设置好后, 开始容器线程运行,并增加一个ViewLayer图层
      */
     private void startDrawPad() {
-        mDrawPad.startDrawPad();
+        if(drawPadView.startDrawPad())
+        {
+            mainVideoLayer = drawPadView.addMainVideoLayer(mplayer.getVideoWidth(), mplayer.getVideoHeight(), null);
+            if (mainVideoLayer != null) {
+                mplayer.setSurface(new Surface(mainVideoLayer.getVideoTexture()));
+            }
+            mplayer.start();
 
-        mLayerMain = mDrawPad.addMainVideoLayer(mplayer.getVideoWidth(),
-                mplayer.getVideoHeight(), null);
-        if (mLayerMain != null) {
-            mplayer.setSurface(new Surface(mLayerMain.getVideoTexture()));
+            addViewLayer();
         }
-        mplayer.start();
-
-        addViewLayer();
     }
 
     /**
      * Step3: 做好后, 停止容器, 因为容器里没有声音, 这里增加上原来的声音.
      */
     private void stopDrawPad() {
-        if (mDrawPad != null && mDrawPad.isRunning()) {
-            mDrawPad.stopDrawPad();
+        if (drawPadView != null && drawPadView.isRunning()) {
+            drawPadView.stopDrawPad();
             toastStop();
 
-            if (SDKFileUtils.fileExist(dstPath)) {
+            if (LanSongFileUtil.fileExist(dstPath)) {
                 playVideo.setVisibility(View.VISIBLE);
             }
         }
     }
 
     private void addViewLayer() {
-        if (mDrawPad != null && mDrawPad.isRunning()) {
-            mViewLayer = mDrawPad.addViewLayer();
+        if (drawPadView != null && drawPadView.isRunning()) {
+            mViewLayer = drawPadView.addViewLayer();
             mLayerRelativeLayout.bindViewLayer(mViewLayer);
             mLayerRelativeLayout.invalidate();
 
-            ViewGroup.LayoutParams params = mLayerRelativeLayout
-                    .getLayoutParams();
+            ViewGroup.LayoutParams params = mLayerRelativeLayout.getLayoutParams();
             params.height = mViewLayer.getPadHeight(); // 因为布局时, 宽度一致,
             // 这里调整高度,让他们一致.
-
             mLayerRelativeLayout.setLayoutParams(params);
         }
     }
@@ -181,7 +173,7 @@ public class VideoLayerAutoUpdateActivity extends Activity {
 
             @Override
             public void onClick(View v) {
-                if (SDKFileUtils.fileExist(dstPath)) {
+                if (LanSongFileUtil.fileExist(dstPath)) {
                     Intent intent = new Intent(
                             VideoLayerAutoUpdateActivity.this,
                             VideoPlayerActivity.class);
@@ -233,12 +225,12 @@ public class VideoLayerAutoUpdateActivity extends Activity {
             mplayer = null;
         }
 
-        if (mDrawPad != null) {
-            mDrawPad.stopDrawPad();
-            mDrawPad = null;
+        if (drawPadView != null) {
+            drawPadView.stopDrawPad();
+            drawPadView = null;
         }
-        if (SDKFileUtils.fileExist(dstPath)) {
-            SDKFileUtils.deleteFile(dstPath);
+        if (LanSongFileUtil.fileExist(dstPath)) {
+            LanSongFileUtil.deleteFile(dstPath);
         }
     }
 }

@@ -20,6 +20,8 @@ import android.util.Log;
 import android.view.Surface;
 import android.view.SurfaceHolder;
 
+import com.lansosdk.box.LSLog;
+
 import java.io.FileDescriptor;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -33,7 +35,7 @@ import java.util.Map;
  * 
  */
 public class VideoPlayer  {
-    private final static String TAG = "VideoPlayer";
+    private final static String TAG = LSLog.TAG;
 
     int MEDIA_INFO_UNKNOWN = 1;
     static int MEDIA_INFO_STARTED_AS_NEXT = 2;
@@ -606,10 +608,18 @@ public class VideoPlayer  {
 
     private native void _setStreamSelected(int stream, boolean select);
 
+    /**
+     * 如果视频旋转90或270度,这里等于高度;
+     * @return
+     */
     public int getVideoWidth() {
         return mVideoWidth;
     }
 
+    /**
+     * 如果视频旋转90或270度,这里等于
+     * @return
+     */
     public int getVideoHeight() {
         return mVideoHeight;
     }

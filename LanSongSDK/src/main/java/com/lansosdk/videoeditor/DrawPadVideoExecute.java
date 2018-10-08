@@ -12,6 +12,7 @@ import com.lansosdk.box.DrawPadUpdateMode;
 import com.lansosdk.box.DrawPadVideoRunnable;
 import com.lansosdk.box.FileParameter;
 import com.lansosdk.box.GifLayer;
+import com.lansosdk.box.LSLog;
 import com.lansosdk.box.Layer;
 import com.lansosdk.box.MVLayer;
 import com.lansosdk.box.TimeRange;
@@ -30,7 +31,7 @@ import jp.co.cyberagent.lansongsdk.gpuimage.GPUImageFilter;
 
 public class DrawPadVideoExecute {
 
-    private static final String TAG = "DrawpadVideoExecute";
+    private static final String TAG = LSLog.TAG;
     protected boolean isCheckBitRate = true;
     protected boolean isCheckPadSize = true;
     private DrawPadVideoRunnable renderer = null;
@@ -123,29 +124,6 @@ public class DrawPadVideoExecute {
         this.padHeight = padheight;
     }
 
-    /**
-     * 增加了FileParameter类, 其中FileParameter的配置是:
-     * <p>
-     * FileParameter param=new FileParameter();
-     * if(param.setDataSoure(mVideoPath)){
-     * <p>
-     * 设置当前需要显示的区域 ,以左上角为0,0坐标.
-     *
-     * @param startX    开始的X坐标, 即从宽度的什么位置开始
-     * @param startY    开始的Y坐标, 即从高度的什么位置开始
-     * @param cropW     需要显示的宽度
-     * @param cropH     需要显示的高度. param.setShowRect(0, 0, 300, 200);
-     *                  param.setStartTimeUs(5*1000*1000); //从5秒处开始处理, 当前仅在后台处理时有效.
-     *                  videoMainLayer=mDrawPadView.addMainVideoLayer(param,new
-     *                  GPUImageSepiaFilter()); }
-     *                  ------------------------------------------------------
-     * @param ctx
-     * @param filebox
-     * @param padwidth
-     * @param padheight
-     * @param filter
-     * @param dstPath
-     */
     public DrawPadVideoExecute(Context ctx, FileParameter fileParam,
                                int padwidth, int padheight, GPUImageFilter filter, String dstPath) {
         if (renderer == null) {
@@ -258,15 +236,12 @@ public class DrawPadVideoExecute {
      * 可以利用这个时间戳来做一些变化,比如在几秒处缩放, 在几秒处平移等等.从而实现一些动画效果.
      * <p>
      * (注意, 这个进度回调, 是经过Handler异步调用, 工作在主线程的. 如果你要严格按照时间来,则需要用setDrawPadThreadProgressListener)
-     *
-     * @param currentTimeUs 当前DrawPad处理画面的时间戳.,单位微秒.
      */
     public void setDrawPadProgressListener(onDrawPadProgressListener listener) {
         if (renderer != null) {
             renderer.setDrawPadProgressListener(listener);
         }
     }
-
     /**
      * 方法与 onDrawPadProgressListener不同的地方在于: 即将开始一帧渲染的时候,
      * 直接执行这个回调中的代码,不通过Handler传递出去,你可以精确的执行一些这一帧的如何操作. 故不能在回调 内增加各种UI相关的代码.
@@ -336,8 +311,7 @@ public class DrawPadVideoExecute {
 
     /**
      * 把当前图层放到DrawPad的最底部. DrawPad运行后,有效.
-     *
-     * @param pen
+     * @param layer
      */
     public void bringToBack(Layer layer) {
         if (renderer != null && renderer.isRunning()) {
@@ -515,7 +489,6 @@ public class DrawPadVideoExecute {
      * @param startFromPadUs   从容器的什么位置开始增加
      * @param startAudioTimeUs 把当前声音的开始时间增加进去.
      * @param durationUs       增加多少, 时长.
-     * @param isLoop           是否循环.
      * @return
      */
     public AudioSource addSubAudio(String srcPath, long startFromPadUs,
@@ -686,7 +659,7 @@ public class DrawPadVideoExecute {
      * TwoVideoLayer 或MVLayer;
      *
      * @param videoPath  视频的完整路径;
-     * @param filter视频滤镜 ,如果不增加滤镜,则赋值为null
+     * @param filter 视频滤镜 ,如果不增加滤镜,则赋值为null
      * @return
      */
     public VideoLayer addVideoLayer(String videoPath, GPUImageFilter filter) {

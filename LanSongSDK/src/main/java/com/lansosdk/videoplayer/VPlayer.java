@@ -7,6 +7,8 @@ import android.net.Uri;
 import android.util.Log;
 import android.view.Surface;
 
+import com.lansosdk.box.LSLog;
+
 import java.io.IOException;
 
 
@@ -19,7 +21,7 @@ import java.io.IOException;
  *
  */
 public class VPlayer {
-    private String TAG = "VPlayer";
+    private String TAG = LSLog.TAG;
     private Uri mUri;
 
     // all possible internal states

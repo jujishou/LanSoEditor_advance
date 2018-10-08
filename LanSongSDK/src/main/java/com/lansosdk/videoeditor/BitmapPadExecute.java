@@ -6,6 +6,7 @@ import android.util.Log;
 
 import com.lansosdk.box.BitmapLayer;
 import com.lansosdk.box.DrawPad;
+import com.lansosdk.box.LSLog;
 import com.lansosdk.box.onDrawPadOutFrameListener;
 
 import java.util.List;
@@ -30,7 +31,7 @@ import jp.co.cyberagent.lansongsdk.gpuimage.LanSongScreenBlendFilter;
  * release(); 使用完毕后, release掉.
  */
 public class BitmapPadExecute {
-    private static final String TAG = "BitmapPadExecute";
+    private static final String TAG = LSLog.TAG;
     private final Object mLock = new Object();
     protected DrawPadPictureExecute mDrawPad = null;
     private Bitmap OutBmp;
@@ -198,11 +199,11 @@ public class BitmapPadExecute {
      * bendBmp; bendBmp=new BitmapPad(getApplicationContext());
      *
      * if(bendBmp.init(bmp1.getWidth()/2,bmp1.getHeight()/2)) { Bitmap
-     * bmp=bendBmp.getBlendBitmap(bmp1, bmp2); TestFrames.savePng(bmp);
+     * bmp=bendBmp.getBlendBitmap(bmp1, bmp2); TestFrames.saveBitmap(bmp);
      *
      * bmp=bendBmp.getFilterBitmap(bmp1, new GPUImageSwirlFilter());
-     * TestFrames.savePng(bmp); bmp=bendBmp.getFilterBitmap(bmp1, new
-     * GPUImageSepiaFilter()); TestFrames.savePng(bmp); } bendBmp.release(); } }
+     * TestFrames.saveBitmap(bmp); bmp=bendBmp.getFilterBitmap(bmp1, new
+     * GPUImageSepiaFilter()); TestFrames.saveBitmap(bmp); } bendBmp.release(); } }
      */
     /**
      * 给一个图片, 增加多个滤镜的方法演示. private void testFile() {
@@ -230,6 +231,6 @@ public class BitmapPadExecute {
      * @Override public void onOutFrame(BitmapGetFilters v, Object obj) { //
      *           TODO Auto-generated method stub Bitmap bmp2=(Bitmap)obj;
      *           Log.i(TAG,"DrawPad is:"+bmp2.getWidth()+ bmp2.getHeight());
-     *           TestFrames.savePng(bmp2); } }); getFilter.start(); }
+     *           TestFrames.saveBitmap(bmp2); } }); getFilter.start(); }
      */
 }

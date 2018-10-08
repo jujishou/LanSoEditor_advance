@@ -1,106 +1,162 @@
 package com.lansosdk.videoeditor;
 
 import android.content.Context;
-import android.media.MediaPlayer;
 import android.util.Log;
 
 import com.lansosdk.box.AudioPad;
 import com.lansosdk.box.AudioSource;
-import com.lansosdk.box.IAudioSourceInput;
+import com.lansosdk.box.LSLog;
 import com.lansosdk.box.onAudioPadCompletedListener;
 import com.lansosdk.box.onAudioPadProgressListener;
 import com.lansosdk.box.onAudioPadThreadProgressListener;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
- * 音频图层后的后台处理. 此类是用来在后台做音频混合处理使用.
- * <p>
- * 使用在两种场景中: 场景一: 给一段完整的音频上:增加别的声音, 如搞笑声,闪电声等等.生成的文件和源声音一样的长度,只是内容根据您的设置而变化了.
- * <p>
- * 场景二: 先设置整体的音频长度, 然后在分别增加声音.比如创建一段20s的声音, 1--4秒一种; 3--5秒一种,可以交叉的;最后生成您设置长度的声音.
- * <p>
- * <p>
- * 当前处理后的音频编码成aac格式, 采样率是44100, 双通道, 64000码率.
- * <p>
- * 如果您仅仅用来做音频拼接, 可以采用 {@link AudioConcat}来做. 当前的音频格式支持 MP3,WAV, AAC(m4a后缀),
- * 采样率为44100, 通道数为2,其他格式暂不支持,请注意 当前的音频格式支持 MP3,WAV, AAC(m4a后缀), 采样率为44100,
- * 通道数为2,其他格式暂不支持,请注意 当前的音频格式支持 MP3,WAV, AAC(m4a后缀), 采样率为44100,
- * 通道数为2,其他格式暂不支持,请注意 当前的音频格式支持 MP3,WAV, AAC(m4a后缀), 采样率为44100,
- * 通道数为2,其他格式暂不支持,请注意
+ * 音频容器;
+ *
+ *  使用1:
+ *      给视频增加其他声音,并设置各自的音量,循环,快慢,变声等.
+ *      视频可以有声音,或无声音.
+ *
+ *  使用2:
+ *      设置容器的固定时长, 分别在指定的时间点增加上声音.
+ *
+ *
+ * 当前的音频格式支持 MP3,WAV, AAC(m4a后缀)
  */
 public class AudioPadExecute {
 
-    private static final String TAG = "AudioPadExecute";
-    // //举例3: 先设置AudioPad的总长度, 然后在不同的时间点增加几段声音.处理成同一个.
+    private static final String TAG = LSLog.TAG;
     static AudioSource audioSrc1;
     static long starttime = 0;
     AudioPad audioPad;
+    private  String audioPadSavePath;
+    private  MediaInfo mediaInfo;
+    private AudioSource mainSource;
+    private  String inputPath;
+    private  onAudioPadExecuteCompletedListener monAudioPadExecuteCompletedListener;
+    private  ArrayList<String> deleteArray=new ArrayList<>();
 
-    public AudioPadExecute(Context ctx, IAudioSourceInput input) {
-        audioPad = new AudioPad(ctx, input);
+    public interface onAudioPadExecuteCompletedListener {
+        void onCompleted(String path);
     }
     /**
-     * 构造方法,
+     * 构造方法
+     * @param ctx
+     * @param input  输入如是音频则返回的是m4a的音频文件; 如是视频 则返回的是mp4的视频文件
+     */
+    public AudioPadExecute(Context ctx, String input) {
+        mediaInfo=new MediaInfo(input);
+
+        if(mediaInfo.prepare()){
+            audioPadSavePath = LanSongFileUtil.createM4AFileInBox();
+            inputPath=input;
+            audioPad = new AudioPad(ctx, audioPadSavePath);
+
+            if(mediaInfo.isHaveAudio()){
+                mainSource=audioPad.addMainAudio(input);
+            }else{
+                mainSource=audioPad.addMainAudio(mediaInfo.vDuration,44100);
+            }
+        }else{
+            LSLog.e("您输入的视频不正常, 请检查您的视频, 信息是:"+mediaInfo);
+        }
+    }
+
+    /**
+     * 构造方法
+     * @param ctx
+     * @param input  输入如是音频则返回的是m4a的音频文件; 如是视频 则返回的是mp4的视频文件
+     * @param isMute 如果是视频的话,则视频中的声音是否会静音;
+     */
+    public AudioPadExecute(Context ctx, String input, boolean isMute) {
+        mediaInfo=new MediaInfo(input);
+        if(mediaInfo.prepare()){
+            audioPadSavePath = LanSongFileUtil.createM4AFileInBox();
+
+            inputPath=input;
+            audioPad = new AudioPad(ctx, audioPadSavePath);
+
+            if(mediaInfo.isHaveAudio()){
+                if(isMute) {
+                    audioPad.addMainAudio(mediaInfo.aDuration, mediaInfo.aSampleRate);
+                }else {
+                    mainSource = audioPad.addMainAudio(input);
+                }
+            }else{
+                mainSource=audioPad.addMainAudio(mediaInfo.vDuration,44100);
+            }
+        }else{
+            LSLog.e("您输入的视频不正常, 请检查您的视频, 信息是:"+mediaInfo);
+        }
+    }
+
+    /**
+     * 构造方法.
+     * 先设置音频容器的总时长, 然后一一增加各种声音;
      *
      * @param ctx
-     * @param dstPath 因编码后的为aac格式, 故此路径的文件后缀需m4a或aac; 比如 "/sdcard/testAudioPad.m4a"
+     * @param durationS  生成音频的总时长, 单位秒;
      */
-    public AudioPadExecute(Context ctx, String dstPath) {
-        audioPad = new AudioPad(ctx, dstPath);
+    public AudioPadExecute(Context ctx, float durationS) {
+        if(durationS>0){
+            audioPadSavePath = LanSongFileUtil.createM4AFileInBox();
+            audioPad = new AudioPad(ctx, audioPadSavePath);
+            mainSource=audioPad.addMainAudio(durationS,44100);
+        }else{
+            LSLog.e("AudioPadExecute错误, 时间为0;");
+        }
     }
-
     /**
-     * AudioPad容器处理两种情况的声音: 1, 一整段音乐上增加别的音频, (这里是第一种); 2,设置容器处理的声音总长度,
-     * 然后分别增加不同声音段; 这里是第一种;
-     * <p>
-     * 增加后, AudioPad会以音频的总长度为pad的长度, 其他增加的音频则是和这个音频的某一段混合.
-     * <p>
-     * 返回的AudioSource
      *
-     * @param mainAudio 音频文件路径, 可以是有音频的视频路径;
-     * @return 返回增加好的这个音频的对象, 可以根据这个来实时调节音量, 禁止声音等
+     * @param ctx
+     * @param durationS 生成音频的总时长, 单位秒;
+     * @param sampleRate 生成音频的采样率;默认44100
      */
-    public AudioSource setAudioPadSource(String mainAudio) {
-        if (audioPad != null) {
-            return audioPad.addMainAudio(mainAudio);
-        } else {
-            return null;
+    public AudioPadExecute(Context ctx, float durationS,int sampleRate) {
+        if(durationS>0 && sampleRate>0){
+            audioPadSavePath = LanSongFileUtil.createM4AFileInBox();
+            audioPad = new AudioPad(ctx, audioPadSavePath);
+            mainSource=audioPad.addMainAudio(durationS,sampleRate);
+        }else{
+            LSLog.e("AudioPadExecute错误, 时间为0;");
         }
     }
 
     /**
-     * AudioPad容器处理两种情况的声音: 1, 一整段音乐上增加别的音频 2,设置容器处理的声音总长度, 然后分别增加不同声音段; 这里是第二种;
-     * <p>
-     * 设置 音频处理的总长度.单位秒. 开始线程前调用.
-     * <p>
-     * 如果您只想在 一整段音乐上增加别的音频,可以用{@link #setAudioPadSource(String)}
+     * 在构造方法设置后, 会生成一个主音频的AudioSource,
      *
+     * 拿到这个AudioSource,从而对音频做调节;
      * @return
      */
-    public AudioSource setAudioPadLength(float duration) {
-        if (audioPad != null) {
-            return audioPad.addMainAudio(duration);
-        } else {
-            return null;
-        }
+    public AudioSource getMainSource() {
+        return mainSource;
     }
 
     /**
-     * 增加一个音频,
+     * 支持mp4,wav,mp3,m4a文件;
+     *
+     * 音频参数仅支持采样率为44100,双通道.
+     * 如果不是,先用 AudioEditor中的executeConvertToWav转换后填入;
      *
      * @param srcPath
-     * @return 返回音频对象.可以设置音量, 是否循环等;
+     * @param isLoop  是否循环;
+     * @return
      */
-    public AudioSource addSubAudio(String srcPath) {
-        if (audioPad != null) {
-            return audioPad.addSubAudio(srcPath);
-        } else {
-            return null;
-        }
+    public AudioSource addSubAudio(String srcPath,boolean  isLoop) {
+            AudioSource ret= audioPad.addSubAudio(srcPath);
+            if(ret!=null){
+                ret.setLooping(isLoop);
+            }
+            return ret;
     }
 
     /**
      * 把音频的 指定时间段, 增加到audiopad音频容器里.
-     * <p>
+     *
+     *
      * 如果有循环或其他操作, 可以在获取的AudioSource对象中设置.
      *
      * @param srcPath      音频文件路径, 可以是有音频的视频路径;
@@ -118,15 +174,41 @@ public class AudioPadExecute {
             return null;
         }
     }
+    /**
+     * 静态类, 转换为主视频/音频的参数,
+     *
+     * (主视频或音频可以用MediaInfo获取);
+     *
+     * @param path
+     * @param mainSampleRate
+     * @return
+     */
+    public static String checkAudioParam(String path,int mainSampleRate){
+        MediaInfo info=new MediaInfo(path);
+        if (info.prepare() && info.isHaveAudio()) {
+            String audio = path;
+            if (info.aSampleRate != mainSampleRate || info.aChannels != 2) {
+
+                LSLog.w("警告:  addSubAudio参数不同, 开始转换.info.aSampleRate:"+info.aSampleRate+" padSampleRate:"+mainSampleRate
+                        + "channels:"+ info.aChannels);
+                AudioEditor editor = new AudioEditor();
+                audio = editor.executeConvertToWav(path, mainSampleRate);
+            }
+            return audio;
+        }else{
+            return null;
+        }
+    }
 
     /**
      * 设置监听当前audioPad的处理进度.
+     * <p>
      * 此监听是通过handler机制,传递到UI线程的, 你可以在里面增加ui的代码. 因为经过了handler机制,
      * 可能会进度比正在处理延迟一些,不完全等于当前处理的帧时间戳.
      *
      * @param listener
      */
-    public void setAudioPadProgressListener(onAudioPadProgressListener listener) {
+    public void setOnAudioPadProgressListener(onAudioPadProgressListener listener) {
         if (audioPad != null) {
             audioPad.setAudioPadProgressListener(listener);
         }
@@ -142,23 +224,21 @@ public class AudioPadExecute {
      *
      * @param listener
      */
-    public void setAudioPadThreadProgressListener(
+    public void setOnAudioPadThreadProgressListener(
             onAudioPadThreadProgressListener listener) {
         if (audioPad != null) {
             audioPad.setAudioPadThreadProgressListener(listener);
         }
     }
 
+
     /**
      * 完成监听. 经过handler传递到主线程, 可以在里面增加UI代码.
-     *
      * @param listener
      */
-    public void setAudioPadCompletedListener(
-            onAudioPadCompletedListener listener) {
-        if (audioPad != null) {
-            audioPad.setAudioPadCompletedListener(listener);
-        }
+    public void setOnAudioPadCompletedListener(
+            onAudioPadExecuteCompletedListener listener) {
+        monAudioPadExecuteCompletedListener=listener;
     }
 
     /**
@@ -168,6 +248,13 @@ public class AudioPadExecute {
      */
     public boolean start() {
         if (audioPad != null) {
+                audioPad.setAudioPadCompletedListener(new onAudioPadCompletedListener() {
+                    public void onCompleted(AudioPad v) {
+                        if(monAudioPadExecuteCompletedListener!=null){
+                            monAudioPadExecuteCompletedListener.onCompleted(fileCompleted());
+                        }
+                    }
+                });
             return audioPad.start();
         } else {
             return false;
@@ -175,21 +262,27 @@ public class AudioPadExecute {
     }
 
     /**
-     * 等待执行完毕;适合在音频较短,为了代码的整洁, 不想设置listener回调的场合; 注意:这里设置后,
+     * 等待执行完毕;[大部分情况下不需要调用]
+     *
+     * 适合在音频较短,为了代码的整洁, 不想设置listener回调的场合;
+     *
+     * 注意:这里设置后,
      * 当前线程将停止在这个方法处,直到音频执行完毕退出为止.建议放到另一个线程中执行. 可选使用.
      */
-    public void waitComplete() {
+    public String waitComplete() {
         if (audioPad != null) {
             audioPad.joinSampleEnd();
+            return fileCompleted();
         }
+        return null;
     }
-
     /**
      * 停止当前audioPad的处理;
      */
     public void stop() {
         if (audioPad != null) {
             audioPad.stop();
+            LanSongFileUtil.deleteFile(audioPadSavePath);
         }
     }
 
@@ -201,126 +294,89 @@ public class AudioPadExecute {
             audioPad.release();
             audioPad = null;
         }
+        if(mediaInfo!=null){
+            mediaInfo.release();
+            mediaInfo=null;
+        }
     }
+    private String fileCompleted()
+    {
+        for (String item : deleteArray){
+            LanSongFileUtil.deleteFile(item);
+        }
+
+        if(mediaInfo!=null){
+            if(mediaInfo.isHaveVideo()){
+                return mergeAudioVideo(inputPath, audioPadSavePath,true);
+            }else{
+                return audioPadSavePath;
+            }
+        }else{
+            return audioPadSavePath;
+        }
+    }
+    private  String mergeAudioVideo(String video, String audio,boolean deleteAudio) {
+                 String retPath=LanSongFileUtil.createMp4FileInBox();
+                    List<String> cmdList = new ArrayList<String>();
+
+                    cmdList.add("-i");
+                    cmdList.add(audio);
+                    cmdList.add("-i");
+                    cmdList.add(video);
+
+                    cmdList.add("-map");
+                    cmdList.add("0:a");
+                    cmdList.add("-map");
+                    cmdList.add("1:v");
+
+                    cmdList.add("-acodec");
+                    cmdList.add("copy");
+                    cmdList.add("-vcodec");
+                    cmdList.add("copy");
+
+                    cmdList.add("-absf");
+                    cmdList.add("aac_adtstoasc");
+
+                    cmdList.add("-y");
+                    cmdList.add(retPath);
+                    String[] command = new String[cmdList.size()];
+                    for (int i = 0; i < cmdList.size(); i++) {
+                        command[i] = (String) cmdList.get(i);
+                    }
+                    VideoEditor editor = new VideoEditor();
+                    int ret = editor.executeVideoEditor(command);
+                    if (ret == 0) {
+                        if(deleteAudio){
+                            LanSongFileUtil.deleteFile(audio);
+                        }
+                        return retPath;
+                    } else {
+                        return video;
+                    }
+    }
+
 
     // ----------------------------一下为测试代码-------------------------------------------
-    // 向一段音频中,增加另一段音频.
-    public static void test1(Context ctx) {
-        AudioPadExecute audioPad = new AudioPadExecute(ctx, "/sdcard/i19.m4a");
-        AudioSource asource = audioPad
-                .setAudioPadSource("/sdcard/audioPadTest/niu30s_44100_2.m4a");
 
-        asource.setVolume(0.2f);
-
-        AudioSource asource2 = audioPad.addSubAudio(
-                "/sdcard/audioPadTest/hongdou10s_44100_2.mp3", 3 * 1000 * 1000,
-                0, -1); // 中间3秒增加一段
-
-        asource2.setVolume(2.5f);
-
-        audioPad.start();
-        audioPad.waitComplete();
-        audioPad.release();
-    }
-
-    // 举例2:创建一段静音的音频.
-    public static void test2(Context ctx) {
-        starttime = System.currentTimeMillis();
-        AudioPadExecute audioPad = new AudioPadExecute(ctx, "/sdcard/i6.m4a");
-        audioPad.setAudioPadLength(60.0f);
-        audioPad.start();
-        audioPad.waitComplete();
-        audioPad.release();
-        Log.i(TAG, "已经执行完毕了....耗时:" + (System.currentTimeMillis() - starttime));
-    }
-
-    public static void test3(Context ctx) {
-        AudioPadExecute audioPad = new AudioPadExecute(ctx, "/sdcard/i8.m4a");
-
-        audioPad.setAudioPadLength(60.0f); // 定义生成一段15秒的声音./或者你可以把某一个音频作为一个主音频
-
-        audioPad.addSubAudio("/sdcard/audioPadTest/du15s_44100_2.mp3", 0, 0,
-                3 * 1000 * 1000); // 在这15内, 的前3秒增加一个声音
-
-
-        audioSrc1 = audioPad.addSubAudio(
-                "/sdcard/audioPadTest/hongdou10s_44100_2.mp3", 3 * 1000 * 1000,
-                0, 3 * 1000 * 1000); // 中间3秒增加一段
-        audioPad.addSubAudio("/sdcard/audioPadTest/niu30s_44100_2.m4a",
-                10 * 1000 * 1000, 0, -1); // 最后3秒增加一段.
-
-        audioPad.setAudioPadCompletedListener(new onAudioPadCompletedListener() {
-
-            @Override
-            public void onCompleted(AudioPad v) {
-                Log.i(TAG, "已经执行完毕了....耗时:"
-                        + (System.currentTimeMillis() - starttime));
-
-                v.release(); // 释放(内部会检测是否执行完, 如没有,则等待执行完毕).
-                MediaPlayer player = new MediaPlayer(); // 测试后, 开始播放.
-                try {
-                    player.setDataSource("/sdcard/i8.m4a");
-                    player.prepare();
-                    player.start();
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-        audioPad.setAudioPadProgressListener(new onAudioPadProgressListener() {
-
-            @Override
-            public void onProgress(AudioPad v, long currentTimeUs) {
-                // Log.i(TAG,"当前progess的进度是:"+currentTimeUs);
-            }
-        });
-        audioPad.setAudioPadThreadProgressListener(new onAudioPadThreadProgressListener() {
-
-            @Override
-            public void onProgress(AudioPad v, long currentTimeUs) {
-                // Log.i(TAG,"当前Thread progess的进度是:"+currentTimeUs);
-                if (audioSrc1 != null) {
-
-                    if (currentTimeUs > 5000 * 1000) {
-                        audioSrc1.setVolume(0.2f);
-                    } else if (currentTimeUs > 3500 * 1000) {
-                        audioSrc1.setVolume(3.0f);
-                    }
-                }
-            }
-        });
-        starttime = System.currentTimeMillis();
-        audioPad.start(); // 开始运行 ,另开一个线程,异步执行.
-    }
-
-    /**
-     * 举例4:时间拉伸演示
-     *
-     * @param ctx
-     */
-    public static void test4(Context ctx) {
-        AudioPadExecute audioPad = new AudioPadExecute(ctx, "/sdcard/i10.m4a");
-        AudioSource source = audioPad
-                .setAudioPadSource("/sdcard/audioPadTest/niu30s_44100_2.m4a");
-        // 增加一个时间拉伸, 声音快慢播放, 用拉伸请形象一些; 请注意一定要在开始前调用;请注意一定要在开始前调用;请注意一定要在开始前调用
-        // 参数分别是:
-        // 1,拉伸系数, 最小是0.5倍;最大是2.0倍; 1.0f为默认值.
-        // 2,原音频的开始时间:单位微秒;
-        // 3,原音频的结束时间:单位微秒;
-        source.addTimeStretch(5 * 1000 * 1000, 10 * 1000 * 1000, 0.5f);
-        source.addTimeStretch(15 * 1000 * 1000, 20 * 1000 * 1000, 1.5f);
-        source.addTimeStretch(23 * 1000 * 1000, 27 * 1000 * 1000, 2.0f);
-
-        AudioSource audioSource = audioPad.addSubAudio(
-                "/sdcard/audioPadTest/hongdou10s_44100_2.mp3", 3 * 1000 * 1000,
-                0, 6 * 1000 * 1000); // 中间3秒增加一段
-        audioSource.setVolume(6.0f);
-
-        audioPad.start();
-        audioPad.waitComplete();
-        audioPad.release();
-    }
-
-
+//          AudioPadExecute execute = new AudioPadExecute(getApplicationContext(), "/sdcard/d1.mp4");
+//        execute.setOnAudioPadCompletedListener(new AudioPadExecute.onAudioPadExecuteCompletedListener() {
+//            @Override
+//            public void onCompleted(String path) {
+//                MediaInfo.checkFile(path);
+//            }
+//        });
+//        //增加一个音频
+//        AudioSource source = execute.addSubAudio("/sdcard/huo48000.wav", 0, 110 * 1000 * 1000, -1);
+//        if (source != null) {
+//            source.setVolume(0.2f);
+//        }
+//        //增加另一个音频
+//        execute.addSubAudio("/sdcard/Rear_Right.wav", true);
+//
+//        //主音频禁止;
+//        AudioSource audioSource = execute.getMainSource();
+//        if (audioSource != null) {
+//            audioSource.setMute(true);
+//        }
+//        execute.start();
 }

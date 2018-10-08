@@ -28,7 +28,7 @@ import com.lansosdk.videoeditor.CopyFileFromAssets;
 import com.lansosdk.videoeditor.FilterLibrary;
 import com.lansosdk.videoeditor.FilterLibrary.OnGpuImageFilterChosenListener;
 import com.lansosdk.videoeditor.MediaInfo;
-import com.lansosdk.videoeditor.SDKFileUtils;
+import com.lansosdk.videoeditor.LanSongFileUtil;
 import com.lansosdk.videoeditor.VideoOneDo;
 import com.lansosdk.videoeditor.onVideoOneDoCompletedListener;
 import com.lansosdk.videoeditor.onVideoOneDoProgressListener;
@@ -101,28 +101,26 @@ public class VideoOneDODemoActivity extends Activity implements
         }
         videoOneDo = new VideoOneDo(getApplicationContext(), videoPath);
 
-        videoOneDo
-                .setOnVideoOneDoProgressListener(new onVideoOneDoProgressListener() {
+        videoOneDo.setOnVideoOneDoProgressListener(new onVideoOneDoProgressListener() {
 
-                    @Override
-                    public void onProgress(VideoOneDo v, float percent) {
-                        if (progressDialog != null) {
-                            progressDialog.setMessage("正在处理中..."
-                                    + String.valueOf(percent * 100) + "%");
-                        }
-                    }
-                });
-        videoOneDo
-                .setOnVideoOneDoCompletedListener(new onVideoOneDoCompletedListener() {
+            @Override
+            public void onProgress(VideoOneDo v, float percent) {
+                if (progressDialog != null) {
+                    progressDialog.setMessage("正在处理中..."
+                            + String.valueOf(percent * 100) + "%");
+                }
+            }
+        });
+        videoOneDo.setOnVideoOneDoCompletedListener(new onVideoOneDoCompletedListener() {
 
-                    @Override
-                    public void onCompleted(VideoOneDo v, String dstVideo) {
-                        dstPath = dstVideo;
-                        isRunning = false;
-                        cancelProgressDialog();
-                        showHintDialog("视频执行完毕, 点击开始预览结果.", true);
-                    }
-                });
+            @Override
+            public void onCompleted(VideoOneDo v, String dstVideo) {
+                dstPath = dstVideo;
+                isRunning = false;
+                cancelProgressDialog();
+                showHintDialog("视频执行完毕, 点击开始预览结果.", true);
+            }
+        });
 
         if (isMusicEnable) { // 增加音乐
             String music = CopyFileFromAssets.copyAssets(mContext,
@@ -134,11 +132,6 @@ public class VideoOneDODemoActivity extends Activity implements
             videoOneDo.setScaleWidth((int) (mInfo.getWidth() * scaleFactor),
                     (int) (mInfo.getHeight() * scaleFactor));
         }
-
-        if (isCompressEnable) { // 是否压缩
-            videoOneDo.setCompressPercent(compressFactor);
-        }
-
         if (isCutDurationEnable) // 是否时长剪切
         {
             videoOneDo.setStartPostion(startTimeUs);
@@ -338,8 +331,6 @@ public class VideoOneDODemoActivity extends Activity implements
     public void onProgressChanged(SeekBar seekBar, int progress,
                                   boolean fromUser) {
         if (seekBar == scaleSeek) {
-            Log.i(TAG, "scaleSeek:" + progress);
-
             scaleFactor = (float) progress / 100f;
             tvScale.setText("宽高缩放:" + scaleFactor);
             if (scaleFactor < 0.2f) {
@@ -380,7 +371,7 @@ public class VideoOneDODemoActivity extends Activity implements
     }
 
     private void playVideo() {
-        if (SDKFileUtils.fileExist(dstPath)) {
+        if (LanSongFileUtil.fileExist(dstPath)) {
             Intent intent = new Intent(this, VideoPlayerActivity.class);
             intent.putExtra("videopath", dstPath);
             startActivity(intent);

@@ -26,7 +26,7 @@ import com.lansosdk.videoeditor.DrawPadCameraView;
 import com.lansosdk.videoeditor.DrawPadCameraView.doFousEventListener;
 import com.lansosdk.videoeditor.DrawPadCameraView.onViewAvailable;
 import com.lansosdk.videoeditor.LanSongUtil;
-import com.lansosdk.videoeditor.SDKFileUtils;
+import com.lansosdk.videoeditor.LanSongFileUtil;
 
 import jp.co.cyberagent.lansongsdk.gpuimage.IF1977Filter;
 import jp.co.cyberagent.lansongsdk.gpuimage.IFAmaroFilter;
@@ -124,7 +124,7 @@ public class CameraSubLayerDemo1Activity extends Activity implements
                         }
                     }
                 });
-        dstPath = SDKFileUtils.newMp4PathInBox();
+        dstPath = LanSongFileUtil.newMp4PathInBox();
         initDrawPad(); // 开始录制.
     }
 
@@ -166,7 +166,7 @@ public class CameraSubLayerDemo1Activity extends Activity implements
         /**
          * 相机前后置.是否设置滤镜.
          */
-        mDrawPadCamera.setCameraParam(false, null, true);
+        mDrawPadCamera.setCameraParam(false, null);
 
         /**
          * 当手动聚焦的时候, 返回聚焦点的位置,让focusView去显示一个聚焦的动画.
@@ -316,8 +316,8 @@ public class CameraSubLayerDemo1Activity extends Activity implements
         super.onDestroy();
         stopDrawPad();
 
-        if (SDKFileUtils.fileExist(dstPath)) {
-            SDKFileUtils.deleteFile(dstPath);
+        if (LanSongFileUtil.fileExist(dstPath)) {
+            LanSongFileUtil.deleteFile(dstPath);
             dstPath = null;
         }
     }
@@ -343,7 +343,7 @@ public class CameraSubLayerDemo1Activity extends Activity implements
     }
 
     private void playVideo() {
-        if (SDKFileUtils.fileExist(dstPath)) {
+        if (LanSongFileUtil.fileExist(dstPath)) {
             Intent intent = new Intent(this, VideoPlayerActivity.class);
             intent.putExtra("videopath", dstPath);
             startActivity(intent);

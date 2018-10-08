@@ -5,7 +5,9 @@ import android.graphics.Bitmap;
 import android.util.Log;
 
 import com.lansosdk.box.FrameInfo;
+import com.lansosdk.box.LSLog;
 
+import java.io.FileNotFoundException;
 import java.nio.IntBuffer;
 import java.util.ArrayList;
 
@@ -24,7 +26,7 @@ import java.util.ArrayList;
  */
 public class EditModeVideo {
 
-    private static final String TAG = "EditModeVideo";
+    private static final String TAG = LSLog.TAG;
     protected String inputPath;
     protected MediaInfo inputInfo;
     protected VideoOneDo oneDo;
@@ -45,7 +47,7 @@ public class EditModeVideo {
     public EditModeVideo(Context ctx, String input) {
         inputPath = input;
         this.ctx = ctx;
-        inputInfo = new MediaInfo(inputPath, false);
+        inputInfo = new MediaInfo(inputPath);
         inputInfo.prepare();
         isInputEditMode = checkEditModeVideo(inputPath);
 
@@ -60,16 +62,14 @@ public class EditModeVideo {
      * @return
      */
     public static boolean checkEditModeVideo(String path) {
-        boolean ret = false;
-        ret = FrameInfo.isLanSongVideo2(path);
-        return ret;
+        return FrameInfo.isLanSongVideo2(path);
     }
     /**
      * 获取
      * @return
      */
     public String getEditModeVideoPath() {
-        if (SDKFileUtils.fileExist(editVideoPath)) {
+        if (LanSongFileUtil.fileExist(editVideoPath)) {
             return editVideoPath;
         } else {
             Log.e(TAG, "获取蓝松视频失败,因为:"
@@ -147,7 +147,7 @@ public class EditModeVideo {
      * @return
      */
     public ArrayList<Bitmap> getVideoFrames(int count) {
-        if (SDKFileUtils.fileExist(editVideoPath) && count > 0) {
+        if (LanSongFileUtil.fileExist(editVideoPath) && count > 0) {
             ArrayList<Bitmap> bitmapArray = new ArrayList<>();
             long decoderHandler;
             IntBuffer mGLRgbBuffer;
@@ -184,7 +184,7 @@ public class EditModeVideo {
      * @return
      */
     public Bitmap getVideoFrame(long ptsUs) {
-        if (SDKFileUtils.fileExist(editVideoPath) == false) {
+        if (LanSongFileUtil.fileExist(editVideoPath) == false) {
             Log.e(TAG, "EditModeVideo 视频还没有准备好");
             return null;
         }

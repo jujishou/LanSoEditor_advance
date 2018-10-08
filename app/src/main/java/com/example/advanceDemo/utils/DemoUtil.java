@@ -4,9 +4,13 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.util.Log;
 import android.widget.Toast;
+
+import com.example.advanceDemo.ListMainActivity;
+import com.example.advanceDemo.VideoPlayerActivity;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -50,7 +54,7 @@ public class DemoUtil {
             try {
                 BufferedOutputStream bos;
                 String name = "/sdcard/extractf/tt" + bmtcnt++ + ".png";
-                Log.i("savePng", "name:" + name);
+                Log.i("saveBitmap", "name:" + name);
 
                 bos = new BufferedOutputStream(new FileOutputStream(name));
                 bmp.compress(Bitmap.CompressFormat.PNG, 90, bos);
@@ -60,7 +64,7 @@ public class DemoUtil {
                 e.printStackTrace();
             }
         } else {
-            Log.i("savePng", "error  bmp  is null");
+            Log.i("saveBitmap", "error  bmp  is null");
         }
     }
 
@@ -106,6 +110,15 @@ public class DemoUtil {
         for (Bitmap bmp : bmpLists) {
             savePng(bmp);
         }
+    }
+
+    /**
+     * 开始播放目标文件
+     */
+    public static void startPlayDstVideo(Activity act,String videoPath){
+        Intent intent = new Intent(act, VideoPlayerActivity.class);
+        intent.putExtra("videopath", videoPath);
+        act.startActivity(intent);
     }
     // mhandler.sendMessageDelayed(mhandler.obtainMessage(23),10); //别地方调用
     // private HandlerLoop mhandler=new HandlerLoop();

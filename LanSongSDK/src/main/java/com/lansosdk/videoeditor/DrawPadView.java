@@ -23,6 +23,7 @@ import com.lansosdk.box.DrawPadUpdateMode;
 import com.lansosdk.box.DrawPadViewRender;
 import com.lansosdk.box.FileParameter;
 import com.lansosdk.box.GifLayer;
+import com.lansosdk.box.LSLog;
 import com.lansosdk.box.Layer;
 import com.lansosdk.box.MVLayer;
 import com.lansosdk.box.TextureLayer;
@@ -81,7 +82,7 @@ public class DrawPadView extends FrameLayout {
      * 把画面的宽度等于父view的宽度, 高度按照4:3的形式显示.
      */
     static final int AR_4_3_FIT_PARENT = 5;
-    private static final String TAG = "DrawPadView";
+    private static final String TAG = LSLog.TAG;
     private static final boolean VERBOSE = false;
     private int mVideoRotationDegree;
     private TextureRenderView mTextureRenderView;
@@ -119,7 +120,6 @@ public class DrawPadView extends FrameLayout {
      * 内增加各种UI相关的代码.
      */
     private onDrawPadThreadProgressListener drawPadThreadProgressListener = null;
-    private boolean isThreadProgressInRecording = false;
     private onDrawPadSnapShotListener drawpadSnapShotListener = null;
     private onDrawPadOutFrameListener drawPadPreviewFrameListener = null;
     private int previewFrameWidth;
@@ -182,15 +182,12 @@ public class DrawPadView extends FrameLayout {
         mTextureRenderView = new TextureRenderView(getContext());
         mTextureRenderView.setSurfaceTextureListener(new SurfaceCallback());
 
-        /**
-         * 注意： 此
-         */
         mTextureRenderView.setDispalyRatio(AR_ASPECT_FIT_PARENT);
 
         View renderUIView = mTextureRenderView.getView();
-        LayoutParams lp = new LayoutParams(
-                LayoutParams.WRAP_CONTENT,
-                LayoutParams.WRAP_CONTENT, Gravity.CENTER);
+        FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(
+                FrameLayout.LayoutParams.WRAP_CONTENT,
+                FrameLayout.LayoutParams.WRAP_CONTENT, Gravity.CENTER);
         renderUIView.setLayoutParams(lp);
         addView(renderUIView);
         mTextureRenderView.setVideoRotation(mVideoRotationDegree);
@@ -204,12 +201,10 @@ public class DrawPadView extends FrameLayout {
      */
     public void setUpdateMode(DrawPadUpdateMode mode, int autofps) {
         mAutoFlushFps = autofps;
-
         mUpdateMode = mode;
-
-        if (renderer != null) {
-            renderer.setUpdateMode(mUpdateMode, mAutoFlushFps);
-        }
+//        if (renderer != null) {
+//            renderer.setUpdateMode(mUpdateMode, mAutoFlushFps);
+//        }
     }
 
     /**
@@ -271,24 +266,14 @@ public class DrawPadView extends FrameLayout {
     }
 
     /**
-     * 设置使能 实时保存, 即把正在DrawPad中呈现的画面实时的保存下来,实现所见即所得的模式, 您可以设置哪些图层需要录制, 哪些图层不需要录制
-     * 。比如增加一个Logo，您只需要录制成视频有Logo，但录制中的画面没有这个Logo，则可以设置为只在录制中显示。
-     * <p>
-     * 如果实时保存的宽高和原视频的宽高不成比例,则会先等比例缩放原视频,然后在多出的部分出增加黑边的形式呈现,比如原视频是16:9,
-     * 设置的宽高是480x480,则会先把原视频按照宽度进行16:9的比例缩放. 在缩放后,在视频的上下增加黑边的形式来实现480x480,
-     * 从而不会让视频变形.
-     * <p>
-     * 如果视频在拍摄时有角度, 比如手机相机拍照,会有90度或270, 则会自动的识别拍摄的角度,并在缩放时,自动判断应该左右加黑边还是上下加黑边.
-     * <p>
-     * 因有缩放的特性, 您可以直接向DrawPad中投入一个视频,然后把宽高比设置一致,这样可实现一个视频压缩的功能;您也可以把宽高比设置一下,
-     * 这样可实现视频加黑边的压缩功能. 或者您完全不进行缩放, 仅仅想把视频码率减低一下, 也可以把其他参数设置为和源视频一致,
-     * 仅仅调试encBr这个参数,来实现视频压缩的功能.
+     * 设置使能 实时保存, 即把正在DrawPad中呈现的画面实时的保存下来,实现所见即所得的模式,
+     * 您可以设置哪些图层需要录制, 哪些图层不需要录制
      *
      * @param encW    录制视频的宽度
      * @param encH    录制视频的高度
      * @param encBr   录制视频的bitrate,
      * @param encFr   录制视频的 帧率
-     * @param outPath 录制视频的保存路径. 注意:这个路径在分段录制功能时,无效.即调用
+     * @param outPath 录制视频的保存路径.
      */
     public void setRealEncodeEnable(int encW, int encH, int encBr, int encFr,
                                     String outPath) {
@@ -420,12 +405,6 @@ public class DrawPadView extends FrameLayout {
         drawPadThreadProgressListener = listener;
     }
 
-    public void setThreadProgressInRecording(boolean is) {
-        if (renderer != null) {
-            renderer.setThreadProgressInRecording(is);
-        }
-        isThreadProgressInRecording = is;
-    }
 
     /**
      * 设置 获取当前DrawPad这一帧的画面的监听, 设置截图监听,当截图完成后, 返回当前图片的btimap格式的图片. 此方法工作在主线程.
@@ -613,7 +592,6 @@ public class DrawPadView extends FrameLayout {
 
                 renderer.setDrawPadProgressListener(drawpadProgressListener);
                 renderer.setDrawPadCompletedListener(drawpadCompletedListener);
-                renderer.setThreadProgressInRecording(isThreadProgressInRecording);
                 renderer.setDrawPadThreadProgressListener(drawPadThreadProgressListener);
                 renderer.setDrawPadErrorListener(drawPadErrorListener);
                 renderer.setDrawPadRunTimeListener(drawpadRunTimeListener);
@@ -760,10 +738,6 @@ public class DrawPadView extends FrameLayout {
 
     /**
      * 是否在录制画面的同时,录制外面的push进去的音频数据 .
-     * <p>
-     * 适用在需要实时录制的视频, 如果您仅仅是对视频增加背景音乐等, 可以使用
-     * {@link VideoEditor#executeVideoMergeAudio(String, String, String)} 来做处理.
-     * <p>
      * 注意:当设置了录制外部的pcm数据后, 当前容器上录制的视频帧,就以音频的帧率为参考时间戳,从而保证音视频同步进行. 故您在投递音频的时候,
      * 需要严格按照音频播放的速度投递.
      * <p>
@@ -996,45 +970,8 @@ public class DrawPadView extends FrameLayout {
     public VideoLayer addMainVideoLayer(int width, int height,
                                         GPUImageFilter filter) {
         VideoLayer ret = null;
-
         if (renderer != null)
             ret = renderer.addMainVideoLayer(width, height, filter);
-        else {
-            Log.e(TAG, "setMainVideoLayer error render is not avalid");
-        }
-        return ret;
-    }
-
-    /**
-     * 增加主视频VideoLayer; 主视频的意思是: 对一个完整的视频做操作, 从视频的0秒一直运行到视频的最后一帧, 比如对一个视频做滤镜,
-     * 增加图片图层, 增加mv图层等等.
-     * <p>
-     * 如果你要先把一个视频add进来, 后面再增加另一个视频,则用 addVideoLayer(),不能用这个方法.
-     * <p>
-     * 其中FileParameter的配置是:
-     * <p>
-     * FileParameter param=new FileParameter();
-     * if(param.setDataSoure(mVideoPath)){
-     * <p>
-     * 设置当前需要显示的区域 ,以左上角为0,0坐标.
-     *
-     * @param startX 开始的X坐标, 即从宽度的什么位置开始
-     * @param startY 开始的Y坐标, 即从高度的什么位置开始
-     * @param cropW  需要显示的宽度
-     * @param cropH  需要显示的高度. param.setShowRect(0, 0, 300, 200);
-     *               videoMainLayer=mDrawPadView.addMainVideoLayer(param,new
-     *               GPUImageSepiaFilter()); }
-     * @param param  这个参数, 您可以设置视频的区域, 因为预览是外界提供的播放,
-     *               如果你要从某个位置开始,则需要把外面的播放器seek到某个位置即可.
-     * @param filter 给这个视频增加的滤镜.
-     * @return
-     */
-    public VideoLayer addMainVideoLayer(FileParameter param,
-                                        GPUImageFilter filter) {
-        VideoLayer ret = null;
-
-        if (renderer != null)
-            ret = renderer.addMainVideoLayer(param, filter);
         else {
             Log.e(TAG, "setMainVideoLayer error render is not avalid");
         }
@@ -1059,51 +996,15 @@ public class DrawPadView extends FrameLayout {
         return ret;
     }
 
-    /**
-     * 获取一个VideoLayer,从中获取surface,来设置到视频播放器中,
-     * 用视频播放器提供的画面,来作为DrawPad的画面输入源.
-     * <p>
-     * 注意:此方法一定在 startDrawPad之后,在stopDrawPad之前调用.
-     *
-     * @param width  视频的宽度
-     * @param height 视频的高度
-     * @return VideoLayer对象
-     */
-    public VideoLayer addVideoLayer(int width, int height, GPUImageFilter filter) {
-        if (renderer != null)
-            return renderer.addVideoLayer(width, height, filter);
-        else {
-            Log.e(TAG, "addVideoLayer error render is not avalid");
-            return null;
-        }
-    }
+//    public VideoLayer addVideoLayer(int width, int height, GPUImageFilter filter) {
+//        if (renderer != null)
+//            return renderer.addVideoLayer(width, height, filter);
+//        else {
+//            Log.e(TAG, "addVideoLayer error render is not avalid");
+//            return null;
+//        }
+//    }
 
-    /**
-     * 增加一个视频图层, 视频可以设置显示区域. 其中FileParameter的配置是:
-     * <p>
-     * FileParameter param=new FileParameter();
-     * if(param.setDataSoure(mVideoPath)){
-     * <p>
-     * 设置当前需要显示的区域 ,以左上角为0,0坐标.
-     *
-     * @param startX 开始的X坐标, 即从宽度的什么位置开始
-     * @param startY 开始的Y坐标, 即从高度的什么位置开始
-     * @param cropW  需要显示的宽度
-     * @param cropH  需要显示的高度. param.setShowRect(0, 0, 300, 200);
-     *               videoMainLayer=mDrawPadView.addMainVideoLayer(param,new
-     *               GPUImageSepiaFilter()); }
-     * @param param
-     * @param filter
-     * @return
-     */
-    public VideoLayer addVideoLayer(FileParameter param, GPUImageFilter filter) {
-        if (renderer != null)
-            return renderer.addVideoLayer(param, filter);
-        else {
-            Log.e(TAG, "addVideoLayer error render is not avalid");
-            return null;
-        }
-    }
 
     /**
      * 2.8.5版本后新增的,是经过优化后的VideoLayer, 取名字叫VideoLayer2;
@@ -1371,6 +1272,12 @@ public class DrawPadView extends FrameLayout {
         }
     }
 
+    public void removeAllLayer(){
+        if(renderer!=null){
+            renderer.removeAllLayer();
+        }
+    }
+
     /**
      * [不再使用,请使用每个图层的switchFilterTo方法] 为已经创建好的图层对象切换滤镜效果 注意: 这里内部会在切换的时候, 会销毁
      * 之前的滤镜对象, 然后重新增加, 故您不可以把同一个滤镜对象再次放到进来, 您如果还想使用之前的滤镜,则应该重新创建一个对象.
@@ -1432,35 +1339,17 @@ public class DrawPadView extends FrameLayout {
 
     private class SurfaceCallback implements SurfaceTextureListener {
 
-        /**
-         * Invoked when a {@link TextureView}'s SurfaceTexture is ready for use.
-         * 当画面呈现出来的时候, 会调用这个回调.
-         * <p>
-         * 当Activity跳入到别的界面后,这时会调用
-         * {@link #onSurfaceTextureDestroyed(SurfaceTexture)} 销毁这个Texture,
-         * 如果您想在再次返回到当前Activity时,再次显示预览画面, 可以在这个方法里重新设置一遍DrawPad,并再次startDrawPad
-         */
-
         @Override
         public void onSurfaceTextureAvailable(SurfaceTexture surface,
                                               int width, int height) {
             mSurfaceTexture = surface;
             drawPadHeight = height;
             drawPadWidth = width;
-            Log.i(TAG,"LSTODO ------onSurfaceTextureAvailable---onview available");
             if (mViewAvailable != null) {
                 mViewAvailable.viewAvailable(null);
             }
         }
 
-        /**
-         * Invoked when the {@link SurfaceTexture}'s buffers size changed.
-         * 当创建的TextureView的大小改变后, 会调用回调.
-         * <p>
-         * 当您本来设置的大小是480x480,而DrawPad会自动的缩放到父view的宽度时,会调用这个回调,提示大小已经改变,
-         * 这时您可以开始startDrawPad 如果你设置的大小更好等于当前Texture的大小,则不会调用这个, 详细的注释见
-         * {@link DrawPadView#startDrawPad(onDrawPadProgressListener, onDrawPadCompletedListener)}
-         */
         @Override
         public void onSurfaceTextureSizeChanged(SurfaceTexture surface,
                                                 int width, int height) {
@@ -1471,18 +1360,11 @@ public class DrawPadView extends FrameLayout {
                 mSizeChangedCB.onSizeChanged(width, height);
         }
 
-        /**
-         * Invoked when the specified {@link SurfaceTexture} is about to be
-         * destroyed.
-         * <p>
-         * 当您跳入到别的Activity的时候, 会调用这个,销毁当前Texture;
-         */
         @Override
         public boolean onSurfaceTextureDestroyed(SurfaceTexture surface) {
             mSurfaceTexture = null;
             // drawPadHeight=0;
             // drawPadWidth=0;
-            Log.i(TAG,"LSTODO ------onSurfaceTextureDestroyed--");
 
             stopDrawPad(); // 可以在这里增加以下. 这样当Texture销毁的时候, 停止DrawPad
 

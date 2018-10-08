@@ -1,4 +1,4 @@
-package com.lansosdk.VideoEditor;
+package com.lansosdk.videoeditor;
 
 import org.junit.Test;
 

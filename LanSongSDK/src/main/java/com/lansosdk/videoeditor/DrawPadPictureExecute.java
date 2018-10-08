@@ -9,6 +9,7 @@ import com.lansosdk.box.CanvasLayer;
 import com.lansosdk.box.DataLayer;
 import com.lansosdk.box.DrawPadBitmapRunnable;
 import com.lansosdk.box.GifLayer;
+import com.lansosdk.box.LSLog;
 import com.lansosdk.box.Layer;
 import com.lansosdk.box.MVLayer;
 import com.lansosdk.box.onDrawPadCompletedListener;
@@ -23,7 +24,7 @@ import jp.co.cyberagent.lansongsdk.gpuimage.GPUImageFilter;
 
 public class DrawPadPictureExecute {
 
-    private static final String TAG = "DrawPadPictureExecute";
+    private static final String TAG = LSLog.TAG;
     DrawPadBitmapRunnable renderer;
     private int padWidth, padHeight;
     private boolean mPauseRecord = false;
@@ -229,8 +230,6 @@ public class DrawPadPictureExecute {
     /**
      * DrawPad每执行完一帧画面,会调用这个Listener,返回的timeUs是当前画面的时间戳(微妙),
      * 可以利用这个时间戳来做一些变化,比如在几秒处缩放, 在几秒处平移等等.从而实现一些动画效果.
-     *
-     * @param currentTimeUs 当前DrawPad处理画面的时间戳.,单位微秒.
      */
     public void setDrawPadProgressListener(onDrawPadProgressListener listener) {
         if (renderer != null) {

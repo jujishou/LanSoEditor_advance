@@ -6,10 +6,9 @@
     android:orientation="vertical">
     <TextView
         android:layout_width="match_parent"
-        android:text="此功能暂时不公共开放\n提供演示屏幕录像文件, 可联系我们,索取相关文件"
+        android:text="此功能暂时不公共开放, 可联系我们,索取相关文件"
         android:textColor="@color/red"
         android:layout_margin="@dimen/dp5"
-        android:textSize="20sp"
         android:layout_height="wrap_content" />
     <LinearLayout
         android:layout_width="match_parent"

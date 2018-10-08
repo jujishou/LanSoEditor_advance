@@ -488,8 +488,8 @@ public class FilterLibrary {
                                                     Class<? extends GPUImageTwoInputFilter> filterClass) {
         try {
             GPUImageTwoInputFilter filter = filterClass.newInstance();
-            String var3 = "assets://LSResource/ic_launcher.png";
-            filter.setBitmap(BitmapLoader.load(context, var3, 0, 0)); // 这里用默认图片举例.
+            String var3 = "assets://LSResource/ic_launcher"; //这里只是为了方便,用默认图片;
+            filter.setBitmap(BitmapLoader.load(context, var3, 0, 0));
             return filter;
         } catch (Exception e) {
             e.printStackTrace();

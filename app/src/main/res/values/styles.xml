@@ -39,7 +39,8 @@
         <item name="android:layout_marginTop">20dip</item>
     </style>
     
-        <style name="main_item_reletivelayout2">
+
+    <style name="main_item_reletivelayout2">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">60dip</item>
         <item name="android:gravity">center_vertical</item>

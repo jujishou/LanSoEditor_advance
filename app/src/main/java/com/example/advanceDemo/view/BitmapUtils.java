@@ -87,7 +87,7 @@ public class BitmapUtils {
     public static Bitmap decodeFromResource(Context context, int id) {
         Resources res = context.getResources();
         Bitmap bitmap = BitmapFactory.decodeResource(res, id).copy(
-                Config.ARGB_8888, true);
+                Bitmap.Config.ARGB_8888, true);
         return bitmap;
     }
 

@@ -61,9 +61,7 @@
            	 <TextView   android:text="图层" style="@style/main_item_textview"/>
 			<TextView  style="@style/main_item_arrow"/> 
 	</RelativeLayout>
-     
-     
-        
+
     <RelativeLayout  android:id="@+id/id_mainlist_changjing" style="@style/main_item_reletivelayout2">
            	 <TextView   android:text="场景举例" style="@style/main_item_textview"/>
 			<TextView  style="@style/main_item_arrow"/> 
@@ -71,33 +69,34 @@
 	
          
       <RelativeLayout  android:id="@+id/id_mainlist_douyin" style="@style/main_item_reletivelayout2">
-           	 <TextView   android:text="抖音效果" style="@style/main_item_textview"/>
+           	 <TextView   android:text="抖音  效果" style="@style/main_item_textview"/>
 			<TextView  style="@style/main_item_arrow"/> 
 	</RelativeLayout>
 
 		<RelativeLayout  android:id="@+id/id_mainlist_weishang" style="@style/main_item_reletivelayout2">
-			<TextView   android:text="AE模板,微商小视频" style="@style/main_item_textview"/>
+			<TextView   android:text="AE动效/微商  效果" style="@style/main_item_textview"/>
 			<TextView  style="@style/main_item_arrow"/>
 		</RelativeLayout>
 
-	
-    <RelativeLayout  android:id="@+id/id_mainlist_videoonedo" style="@style/main_item_reletivelayout2">
-           	 <TextView   android:text="视频常见处理" style="@style/main_item_textview"/>
-			<TextView  style="@style/main_item_arrow"/> 
-	</RelativeLayout>
-	
-    <RelativeLayout  android:id="@+id/id_mainlist_bitmaps" style="@style/main_item_reletivelayout2">
-           	 <TextView   android:text="图片/声音/其他类" style="@style/main_item_textview"/>
-			<TextView  style="@style/main_item_arrow"/> 
-	</RelativeLayout>
-	
-        <RelativeLayout  android:id="@+id/id_mainlist_videoplay" style="@style/main_item_reletivelayout2">
-           	 <TextView   android:text="直接播放" style="@style/main_item_textview"/>
-			<TextView  style="@style/main_item_arrow"/> 
-	</RelativeLayout>
+		<RelativeLayout  android:id="@+id/id_mainlist_gamevideo" style="@style/main_item_reletivelayout2">
+			<TextView   android:text="游戏视频  效果" style="@style/main_item_textview"/>
+			<TextView  style="@style/main_item_arrow"/>
+		</RelativeLayout>
 
-  
+		<RelativeLayout  android:id="@+id/id_mainlist_videoonedo" style="@style/main_item_reletivelayout2">
+			<TextView   android:text="常见处理" style="@style/main_item_textview"/>
+			<TextView  style="@style/main_item_arrow"/>
+		</RelativeLayout>
 
+		<RelativeLayout  android:id="@+id/id_mainlist_bitmaps" style="@style/main_item_reletivelayout2">
+				 <TextView   android:text="图片/声音容器" style="@style/main_item_textview"/>
+				<TextView  style="@style/main_item_arrow"/>
+		</RelativeLayout>
+
+		<RelativeLayout  android:id="@+id/id_mainlist_videoplay" style="@style/main_item_reletivelayout2">
+			 <TextView   android:text="直接播放" style="@style/main_item_textview"/>
+			<TextView  style="@style/main_item_arrow"/>
+		</RelativeLayout>
 </LinearLayout>
  
      

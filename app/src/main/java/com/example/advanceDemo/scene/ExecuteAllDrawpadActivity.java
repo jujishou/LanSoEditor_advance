@@ -31,8 +31,9 @@ import com.lansosdk.box.onDrawPadCompletedListener;
 import com.lansosdk.box.onDrawPadErrorListener;
 import com.lansosdk.box.onDrawPadProgressListener;
 import com.lansosdk.videoeditor.CopyFileFromAssets;
+import com.lansosdk.videoeditor.LanSongMergeAV;
 import com.lansosdk.videoeditor.MediaInfo;
-import com.lansosdk.videoeditor.SDKFileUtils;
+import com.lansosdk.videoeditor.LanSongFileUtil;
 import com.lansosdk.videoeditor.VideoEditor;
 
 import jp.co.cyberagent.lansongsdk.gpuimage.GPUImageSwirlFilter;
@@ -42,7 +43,7 @@ import jp.co.cyberagent.lansongsdk.gpuimage.GPUImageSwirlFilter;
  */
 public class ExecuteAllDrawpadActivity extends Activity {
 
-    private static final String TAG = "ExecuteAllDrawpadActivity";
+    private static final String TAG = "ExecuteAll";
     private String videoPath = null;
     private TextView tvProgressHint;
     private TextView tvHint;
@@ -70,12 +71,12 @@ public class ExecuteAllDrawpadActivity extends Activity {
         mContext = getApplicationContext();
         videoPath = getIntent().getStringExtra("videopath");
 
-        mInfo = new MediaInfo(videoPath, false);
+        mInfo = new MediaInfo(videoPath);
 
         initView();
 
         // 在手机的默认路径下创建一个文件名,用来保存生成的视频文件,(在onDestroy中删除)
-        dstPath = SDKFileUtils.newMp4PathInBox();
+        dstPath = LanSongFileUtil.newMp4PathInBox();
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -87,8 +88,7 @@ public class ExecuteAllDrawpadActivity extends Activity {
         if (mInfo.prepare() && mInfo.vDuration > 3.0f) // 为了很快演示, 这里只要前3秒.
         {
             VideoEditor editor = new VideoEditor();
-            video3S = SDKFileUtils.createFileInBox(mInfo.fileSuffix);
-            editor.executeVideoCutOut(videoPath, video3S, 0, 3.0f);
+            video3S=editor.executeCutVideo(videoPath,0,3.0f);
         } else {
             video3S = videoPath;
         }
@@ -113,7 +113,7 @@ public class ExecuteAllDrawpadActivity extends Activity {
          *            生成视频的帧率
          * @param bitrate
          *            生成视频的码率
-         * @param dstPath
+         * @param drawpadDstPath
          *            生成视频保存的完整路径 .mp4结尾.
          */
         mDrawPad = new DrawPadAllExecute(mContext, 480, 480, 25, 1000 * 1000,
@@ -321,8 +321,8 @@ public class ExecuteAllDrawpadActivity extends Activity {
             mDrawPad = null;
         }
 
-        SDKFileUtils.deleteFile(dstPath);
-        SDKFileUtils.deleteFile(video3S);
+        LanSongFileUtil.deleteFile(dstPath);
+        LanSongFileUtil.deleteFile(video3S);
     }
 
     private void initView() {
@@ -346,13 +346,12 @@ public class ExecuteAllDrawpadActivity extends Activity {
 
                     @Override
                     public void onClick(View v) {
-                        if (SDKFileUtils.fileExist(dstPath)) {
+                        if (LanSongFileUtil.fileExist(dstPath)) {
                             Intent intent = new Intent(mContext,
                                     VideoPlayerActivity.class);
                             String audioPath = CopyFileFromAssets.copyAssets(
                                     mContext, "bgMusic20s.m4a");
-                            String ret = VideoEditor.mp4AddAudio(dstPath,
-                                    audioPath);
+                            String ret = LanSongMergeAV.mergeAVDirectly(audioPath,dstPath,false);
                             intent.putExtra("videopath", ret);
                             startActivity(intent);
                         } else {

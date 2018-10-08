@@ -6,6 +6,16 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 
+import com.example.advanceDemo.layerDemo.BitmapLayerMarkActivity;
+import com.example.advanceDemo.layerDemo.CanvasLayerDemoActivity;
+import com.example.advanceDemo.layerDemo.Demo1LayerMothedActivity;
+import com.example.advanceDemo.layerDemo.Demo2LayerMothedActivity;
+import com.example.advanceDemo.layerDemo.Demo3LayerFilterActivity;
+import com.example.advanceDemo.layerDemo.ExecuteVideoLayerActivity;
+import com.example.advanceDemo.layerDemo.MVLayerDemoActivity;
+import com.example.advanceDemo.layerDemo.TwoVideoLayerActivity;
+import com.example.advanceDemo.layerDemo.ViewLayerDemoActivity;
+import com.example.advanceDemo.layerDemo.ViewLayerOnlyActivity;
 import com.lansoeditor.advanceDemo.R;
 
 public class ListLayerDemoActivity extends Activity implements OnClickListener {
