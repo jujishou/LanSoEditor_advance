@@ -26,23 +26,5 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="@color/blue" />
-
-        <TextView
-            android:id="@+id/id_palyer_videoRatio"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textColor="@color/blue" />
-
-        <TextView
-            android:id="@+id/id_palyer_videoduration"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textColor="@color/blue" />
-
-        <TextView
-            android:id="@+id/id_palyer_widget"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textColor="@color/blue" />
     </LinearLayout>
 </RelativeLayout>

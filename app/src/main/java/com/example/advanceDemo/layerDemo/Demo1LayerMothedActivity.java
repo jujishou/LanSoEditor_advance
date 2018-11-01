@@ -5,7 +5,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.view.Surface;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
@@ -14,9 +13,9 @@ import com.example.advanceDemo.utils.DemoUtil;
 import com.example.advanceDemo.utils.YUVLayerDemoData;
 import com.lansoeditor.advanceDemo.R;
 import com.lansosdk.box.BitmapLayer;
+import com.lansosdk.box.DataLayer;
 import com.lansosdk.box.DrawPad;
-import com.lansosdk.box.DrawPadUpdateMode;
-import com.lansosdk.box.VideoLayer2;
+import com.lansosdk.box.VideoLayer;
 import com.lansosdk.box.YUVLayer;
 import com.lansosdk.box.onDrawPadSizeChangedListener;
 import com.lansosdk.box.onDrawPadThreadProgressListener;
@@ -37,7 +36,7 @@ public class Demo1LayerMothedActivity extends Activity implements
     private static final String TAG = "Demo1LayerActivity";
     private String videoPath;
     private DrawPadView drawPadView;
-    private VideoLayer2 videoLayer = null;
+    private VideoLayer videoLayer = null;
     private BitmapLayer bitmapLayer = null;
     private YUVLayer mYuvLayer = null;
     private YUVLayerDemoData mData;
@@ -75,9 +74,6 @@ public class Demo1LayerMothedActivity extends Activity implements
     }
 
     boolean isInitDrawpad=false;
-    /**
-     * 第一步: init DrawPad 初始化
-     */
     private void initDrawPad() {
         if(isInitDrawpad){
             return ;
@@ -94,11 +90,13 @@ public class Demo1LayerMothedActivity extends Activity implements
         drawPadView.pauseDrawPad();
         if (drawPadView.isRunning() == false && drawPadView.startDrawPad()) {
 
-            videoLayer = drawPadView.addVideoLayer2(vPlayer.getVideoWidth(), vPlayer.getVideoHeight(), null);
+            videoLayer = drawPadView.addVideoLayer(vPlayer.getVideoWidth(), vPlayer.getVideoHeight(), null);
             if (videoLayer != null) {
                 vPlayer.setSurface(new Surface(videoLayer.getVideoTexture()));
                 vPlayer.start();
             }
+
+            addDataLayer();
             drawPadView.resumeDrawPad();
         }
     }
@@ -170,8 +168,8 @@ public class Demo1LayerMothedActivity extends Activity implements
             case R.id.id_DrawPad_skbar_moveX:
                 if (videoLayer != null) {
 
+                    //图层从容器的最左边移动到最右边
                     float percent=progress *1.0f/100f;//百分比;
-
                     float posX=(videoLayer.getPadWidth()+videoLayer.getLayerWidth())*percent -videoLayer.getLayerWidth()/2;
                     videoLayer.setPosition((int)posX, videoLayer.getPositionY());
 
@@ -208,6 +206,16 @@ public class Demo1LayerMothedActivity extends Activity implements
     private void addGifLayer() {
         if (drawPadView != null && drawPadView.isRunning()) {
             drawPadView.addGifLayer(R.drawable.g07);
+        }
+    }
+
+    DataLayer dataLayer;
+    private void addDataLayer(){
+        Bitmap bmp=BitmapFactory.decodeResource(getResources(),R.drawable.ic_launcher);
+
+        if(drawPadView!=null && drawPadView.isRunning() && dataLayer==null){
+            DataLayer layer=drawPadView.addDataLayer(bmp.getWidth(),bmp.getHeight());
+            layer.pushBitmapWithCycle(bmp,false);
         }
     }
 

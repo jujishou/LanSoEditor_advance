@@ -22,7 +22,7 @@ import com.lansoeditor.advanceDemo.R;
 import com.lansosdk.box.BitmapLayer;
 import com.lansosdk.box.LSLog;
 import com.lansosdk.box.Layer;
-import com.lansosdk.box.VideoLayer2;
+import com.lansosdk.box.VideoLayer;
 import com.lansosdk.box.onDrawPadSizeChangedListener;
 import com.lansosdk.videoeditor.DrawPadView;
 import com.lansosdk.videoeditor.LanSongMergeAV;
@@ -52,7 +52,7 @@ public class Demo2LayerMothedActivity extends Activity implements
     private String mVideoPath;
     private DrawPadView drawPadView;
     private MediaPlayer mplayer = null;
-    private VideoLayer2 videoLayer = null;
+    private VideoLayer videoLayer = null;
     private String editTmpPath = null;
     private String dstPath = null;
     private LinearLayout playVideo;
@@ -150,7 +150,7 @@ public class Demo2LayerMothedActivity extends Activity implements
             /**
              *  增加视频图层;
              */
-            videoLayer = drawPadView.addVideoLayer2(mplayer.getVideoWidth(),mplayer.getVideoHeight(), null);
+            videoLayer = drawPadView.addVideoLayer(mplayer.getVideoWidth(),mplayer.getVideoHeight(), null);
             if (videoLayer != null) {
                 mplayer.setSurface(new Surface(videoLayer.getVideoTexture()));
                 mplayer.start();
@@ -281,15 +281,11 @@ public class Demo2LayerMothedActivity extends Activity implements
                     /**
                      * 画面以圆形裁剪 只显示画面圆形的某一个部分.
                      *
-                     * @param radius
-                     *            圆的半径, 范围0--1.0f
-                     * @param center
-                     *            圆的中心点位置, 范围0--1.0f;, 最上角为0,0,右下角为1,1;, 居中则是new
-                     *            PointF(0.5f,0.5f);
+                     * @param radius 圆的半径, 范围0--1.0f
+                     * @param center 圆的中心点位置, 范围0--1.0f;, 最上角为0,0,右下角为1,1;, 居中则是new PointF(0.5f,0.5f);
                      */
                     optionLayer.setVisibleCircle(radius, new PointF(0.5f, 0.5f));
-                    optionLayer.setVisibleCircleeBorder(0.01f, 1.0f, 0.0f, 0.0f,
-                            1.0f);
+                    optionLayer.setVisibleCircleeBorder(0.01f, 1.0f, 0.0f, 0.0f,1.0f);
                 }
                 break;
             case R.id.id_mothed2_skbar_circle_center:

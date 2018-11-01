@@ -3,6 +3,7 @@
 
     <string name="app_name">蓝松视频编辑专业版</string>
 
+
     <string name="message_granted">All permissions have been granted.</string>
     <string name="message_denied">Permission \"%1$s\" has been denied.</string>
 

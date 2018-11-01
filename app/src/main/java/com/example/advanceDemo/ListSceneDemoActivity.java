@@ -12,8 +12,11 @@ import com.example.advanceDemo.layerDemo.VideoSpeedDemoActivity;
 import com.example.advanceDemo.scene.ExecuteAllDrawpadActivity;
 import com.example.advanceDemo.scene.ExecuteBitmapLayerActivity;
 import com.example.advanceDemo.scene.LayerLayoutDemoActivity;
+import com.example.advanceDemo.scene.MoreLayHeadSeekActivity;
+import com.example.advanceDemo.scene.ParticleDemoActivity;
 import com.example.advanceDemo.scene.PicturesSlideDemoActivity;
-import com.example.advanceDemo.scene.Video2LayoutActivity;
+import com.example.advanceDemo.scene.VViewImage3DDemoActivity;
+import com.example.advanceDemo.scene.TwoVideoLayoutActivity;
 import com.example.advanceDemo.scene.VideoLayerTransformActivity;
 import com.example.advanceDemo.scene.VideoSeekActivity;
 import com.lansoeditor.advanceDemo.R;
@@ -45,6 +48,11 @@ public class ListSceneDemoActivity extends Activity implements OnClickListener {
         findViewById(R.id.id_screne_video2_layout).setOnClickListener(this);
 
 
+        //新增;
+        findViewById(R.id.id_mainlist_lizi).setOnClickListener(this);
+        findViewById(R.id.id_mainlist_3d).setOnClickListener(this);
+        findViewById(R.id.id_mainlist_morelay).setOnClickListener(this);
+
     }
 
     @Override
@@ -66,13 +74,24 @@ public class ListSceneDemoActivity extends Activity implements OnClickListener {
                 startDemoActivity(LayerLayoutDemoActivity.class);
                 break;
             case R.id.id_screne_video2_layout:
-                startDemoActivity(Video2LayoutActivity.class);
+                startDemoActivity(TwoVideoLayoutActivity.class);
                 break;
             case R.id.id_screne_videobiansu:
                 startDemoActivity(VideoSpeedDemoActivity.class);
                 break;
             case R.id.id_screne_videoseek:
                 startDemoActivity(VideoSeekActivity.class);
+                break;
+            case  R.id.id_mainlist_lizi:
+                startDemoActivity(ParticleDemoActivity.class);
+                break;
+
+            case  R.id.id_mainlist_3d:
+                startDemoActivity(VViewImage3DDemoActivity.class);
+                break;
+
+            case  R.id.id_mainlist_morelay:
+                startDemoActivity(MoreLayHeadSeekActivity.class);
                 break;
             case R.id.id_screne_videoreverse:
                 showHintDialog("此功能演示在合作后提供");

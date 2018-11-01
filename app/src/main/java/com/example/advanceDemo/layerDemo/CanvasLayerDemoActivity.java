@@ -111,7 +111,6 @@ public class CanvasLayerDemoActivity extends Activity {
             try {
                 mplayer.setDataSource(mVideoPath);
             } catch (IOException e) {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
             }
             mplayer.setOnPreparedListener(new OnPreparedListener() {
@@ -173,16 +172,13 @@ public class CanvasLayerDemoActivity extends Activity {
                         }
                     }
                 });
-        mDrawPadView
-                .setOnDrawPadThreadProgressListener(new onDrawPadThreadProgressListener() {
+        mDrawPadView.setOnDrawPadThreadProgressListener(new onDrawPadThreadProgressListener() {
 
                     @Override
                     public void onThreadProgress(DrawPad v, long currentTimeUs) {
-                        Log.i(TAG, "ThreadProgress 的时间戳是:" + currentTimeUs);
                         frameCnt++;
                     }
                 });
-
     }
 
     /**

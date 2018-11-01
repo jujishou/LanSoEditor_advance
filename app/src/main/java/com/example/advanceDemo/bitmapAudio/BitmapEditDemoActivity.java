@@ -254,7 +254,8 @@ public class BitmapEditDemoActivity extends Activity implements OnClickListener 
             case R.id.id_bmp2bmp_addtext:
                 showInputDialog();
                 break;
-            case R.id.id_bmp2bmp_export_btn:
+
+            case R.id.id_bmp2bmp_export_btn:  //导出图片;
                 stickView.disappearIconBorder();
                 textStickView.disappearIconBorder();
                 drawPadView.setOnDrawPadOutFrameListener(srcBmp.getWidth(),

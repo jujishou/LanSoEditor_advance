@@ -40,9 +40,7 @@ public class VideoPlayerActivity extends Activity {
     private boolean isSupport = false;
     private int screenWidth, screenHeight;
     private MediaInfo mediaInfo;
-
-    private TextView tvVideoDuration;
-    private TextView tvPlayWidget;
+    TextView tvScreen;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,22 +50,17 @@ public class VideoPlayerActivity extends Activity {
 
         videoPath = getIntent().getStringExtra("videopath");
 
-        TextView tvScreen = (TextView) findViewById(R.id.id_palyer_screenhinit);
-        TextView tvVideoRatio = (TextView) findViewById(R.id.id_palyer_videoRatio);
-        tvVideoDuration = (TextView) findViewById(R.id.id_palyer_videoduration);
-
-        tvPlayWidget = (TextView) findViewById(R.id.id_palyer_widget);
+        tvScreen = (TextView) findViewById(R.id.id_palyer_screenhinit);
 
         DisplayMetrics dm = new DisplayMetrics();
         dm = getResources().getDisplayMetrics();
         screenWidth = dm.widthPixels;
         screenHeight = dm.heightPixels;
 
-        String str = "屏幕分辨率：";
-        str += String.valueOf(screenWidth);
-        str += "x";
-        str += String.valueOf(screenHeight);
-        tvScreen.setText(str);
+        String   textInfo = "屏幕：";
+        textInfo += String.valueOf(screenWidth);
+        textInfo += "x";
+        textInfo += String.valueOf(screenHeight);
 
         mediaInfo = new MediaInfo(videoPath);
 
@@ -77,16 +70,15 @@ public class VideoPlayerActivity extends Activity {
         } else {
             Log.i(TAG, "info:" + mediaInfo.toString());
             isSupport = true;
-            str = "视频分辨率：";
-            str += String.valueOf(mediaInfo.getWidth());
-            str += "x";
-            str += String.valueOf(mediaInfo.getHeight());
-            tvVideoRatio.setText(str);
+            textInfo += ";视频：";
+            textInfo += String.valueOf(mediaInfo.getWidth());
+            textInfo += "x";
+            textInfo += String.valueOf(mediaInfo.getHeight());
 
-            str = "视频时长:";
-            str += String.valueOf(mediaInfo.vDuration);
-            tvVideoDuration.setText(str);
+            textInfo += ";时长:";
+            textInfo += String.valueOf(mediaInfo.vDuration);
         }
+        tvScreen.setText(textInfo);
 
         textureView.setSurfaceTextureListener(new TextureView.SurfaceTextureListener() {
 
@@ -135,7 +127,7 @@ public class VideoPlayerActivity extends Activity {
         if (videoPath == null)
             return;
 
-        tvPlayWidget.setText("播放控件: MediaPlayer");
+        tvScreen.setText(tvScreen.getText().toString()+ ";播放:MediaPlayer ");
         mediaPlayer = new MediaPlayer();
         mediaPlayer.reset();
 
@@ -168,7 +160,7 @@ public class VideoPlayerActivity extends Activity {
     private void startVPlayer(final Surface surface) {
         vplayer = new VPlayer(this);
         vplayer.setVideoPath(videoPath);
-        tvPlayWidget.setText("播放控件是:SDK提供的VPlayer");
+        tvScreen.setText(tvScreen.getText().toString()+ ";播放:VPlayer ");
         vplayer.setOnPreparedListener(new OnPlayerPreparedListener() {
 
             @Override

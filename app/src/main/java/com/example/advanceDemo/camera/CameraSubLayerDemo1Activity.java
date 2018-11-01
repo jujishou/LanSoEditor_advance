@@ -40,11 +40,11 @@ public class CameraSubLayerDemo1Activity extends Activity implements
 
     private static final int RECORD_CAMERA_MIN = 2 * 1000 * 1000; // 定义最小2秒
 
-    private static final String TAG = "CameraSubLayerDemo1Activity";
+    private static final String TAG = "SubLayerDemo1";
 
     private DrawPadCameraView mDrawPadCamera;
 
-    private CameraLayer mCamLayer = null;
+    private CameraLayer cameraLayer = null;
 
     private String dstPath = null; // 用于录制完成后的目标视频路径.
 
@@ -90,7 +90,6 @@ public class CameraSubLayerDemo1Activity extends Activity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // 全屏模式下, 隐藏底部的虚拟按键.
         LanSongUtil.hideBottomUIMenu(this);
         mContext = getApplicationContext();
 
@@ -135,8 +134,7 @@ public class CameraSubLayerDemo1Activity extends Activity implements
         super.onResume();
         if (mWakeLock == null) {
             PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
-            mWakeLock = pm.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK,
-                    TAG);
+            mWakeLock = pm.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK,TAG);
             mWakeLock.acquire();
         }
         startDrawPad();
@@ -152,8 +150,7 @@ public class CameraSubLayerDemo1Activity extends Activity implements
         /**
          * 设置录制时的一些参数.
          */
-        mDrawPadCamera.setRealEncodeEnable(padWidth, padHeight, bitrate,
-                (int) 25, dstPath);
+        mDrawPadCamera.setRealEncodeEnable(padWidth, padHeight, bitrate,(int) 25, dstPath);
         /**
          * 录制的同时,录制外面的声音.
          */
@@ -162,20 +159,12 @@ public class CameraSubLayerDemo1Activity extends Activity implements
          * 设置录制处理进度监听.
          */
         mDrawPadCamera.setOnDrawPadProgressListener(drawPadProgressListener);
-
-        /**
-         * 相机前后置.是否设置滤镜.
-         */
         mDrawPadCamera.setCameraParam(false, null);
 
-        /**
-         * 当手动聚焦的时候, 返回聚焦点的位置,让focusView去显示一个聚焦的动画.
-         */
         mDrawPadCamera.setCameraFocusListener(new doFousEventListener() {
 
             @Override
             public void onFocus(int x, int y) {
-                // TODO Auto-generated method stub
                 focusView.startFocus(x, y);
             }
         });
@@ -187,7 +176,6 @@ public class CameraSubLayerDemo1Activity extends Activity implements
 
             @Override
             public void viewAvailable(DrawPadCameraView v) {
-                // TODO Auto-generated method stub
                 startDrawPad();
             }
         });
@@ -195,7 +183,6 @@ public class CameraSubLayerDemo1Activity extends Activity implements
 
             @Override
             public void onError(DrawPad d, int what) {
-                // TODO Auto-generated method stub
                 Log.e(TAG, "DrawPad容器线程运行出错!!!" + what);
             }
         });
@@ -212,14 +199,14 @@ public class CameraSubLayerDemo1Activity extends Activity implements
                     (int) 25, dstPath);
         }
         if (mDrawPadCamera.setupDrawpad()) {
-            mCamLayer = mDrawPadCamera.getCameraLayer();
+            cameraLayer = mDrawPadCamera.getCameraLayer();
             mDrawPadCamera.startPreview(); // 容器开始预览
 
             // 增加一个子图层;
-            SubLayer layer1 = mCamLayer.addSubLayer();
-            SubLayer layer2 = mCamLayer.addSubLayer();
-            SubLayer layer3 = mCamLayer.addSubLayer();
-            SubLayer layer4 = mCamLayer.addSubLayer();
+            SubLayer layer1 = cameraLayer.addSubLayer();
+            SubLayer layer2 = cameraLayer.addSubLayer();
+            SubLayer layer3 = cameraLayer.addSubLayer();
+            SubLayer layer4 = cameraLayer.addSubLayer();
 
             layer1.setScale(0.5f);
             layer2.setScale(0.5f);
@@ -255,6 +242,10 @@ public class CameraSubLayerDemo1Activity extends Activity implements
             layer2.switchFilterTo(new IFAmaroFilter(mContext));
             layer3.switchFilterTo(new IFEarlybirdFilter(mContext));
             layer4.switchFilterTo(new IFNashvilleFilter(mContext));
+
+
+
+
             // 增加滤镜, 应该从当前图层就可以增加滤镜!!!!
         } else {
             Log.i(TAG, "建立drawpad线程失败.");
@@ -267,7 +258,7 @@ public class CameraSubLayerDemo1Activity extends Activity implements
     private void stopDrawPad() {
         if (mDrawPadCamera != null && mDrawPadCamera.isRunning()) {
             mDrawPadCamera.stopDrawPad();
-            mCamLayer = null;
+            cameraLayer = null;
         }
     }
 
@@ -288,9 +279,9 @@ public class CameraSubLayerDemo1Activity extends Activity implements
         // * 通过DrawPad线程去切换 filterLayer的滤镜
         // * 有些Filter是可以调节的,这里为了代码简洁,暂时没有演示, 可以在CameraeLayerDemoActivity中查看.
         // */
-        // if(mCamLayer!=null)
+        // if(cameraLayer!=null)
         // {
-        // mCamLayer.switchFilterTo(filter);
+        // cameraLayer.switchFilterTo(filter);
         // }
         // }
         // });
@@ -365,19 +356,19 @@ public class CameraSubLayerDemo1Activity extends Activity implements
                 playVideo();
                 break;
             case R.id.id_fullrecord_frontcamera:
-                if (mCamLayer != null) {
+                if (cameraLayer != null) {
                     if (mDrawPadCamera.isRunning()
                             && CameraLayer.isSupportFrontCamera()) {
                         // 先把DrawPad暂停运行.
                         mDrawPadCamera.pausePreview();
-                        mCamLayer.changeCamera();
+                        cameraLayer.changeCamera();
                         mDrawPadCamera.resumePreview(); // 再次开启.
                     }
                 }
                 break;
             case R.id.id_fullrecord_flashlight:
-                if (mCamLayer != null) {
-                    mCamLayer.changeFlash();
+                if (cameraLayer != null) {
+                    cameraLayer.changeFlash();
                 }
                 break;
             case R.id.id_fullrecord_filter:

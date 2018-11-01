@@ -5,12 +5,14 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
 import android.media.MediaPlayer.OnPreparedListener;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.Surface;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -26,9 +28,10 @@ import com.example.advanceDemo.view.FilterDemoAdapter;
 import com.example.advanceDemo.view.HorizontalListView;
 import com.lansoeditor.advanceDemo.R;
 import com.lansosdk.box.BitmapGetFilters;
+import com.lansosdk.box.BitmapLoader;
 import com.lansosdk.box.DrawPadUpdateMode;
+import com.lansosdk.box.SubLayer;
 import com.lansosdk.box.VideoLayer;
-import com.lansosdk.box.VideoLayer2;
 import com.lansosdk.box.onDrawPadSizeChangedListener;
 import com.lansosdk.box.onGetFiltersOutFrameListener;
 import com.lansosdk.videoeditor.AVDecoder;
@@ -44,10 +47,36 @@ import com.lansosdk.videoeditor.VideoOneDo;
 import com.lansosdk.videoeditor.onVideoOneDoCompletedListener;
 import com.lansosdk.videoeditor.onVideoOneDoProgressListener;
 
-import java.io.IOException;
-import java.nio.IntBuffer;
+import junit.framework.Test;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.IntBuffer;
+import java.util.ArrayList;
+import java.util.Map;
+
+import jp.co.cyberagent.lansongsdk.gpuimage.GPUImageAddBlendFilter;
 import jp.co.cyberagent.lansongsdk.gpuimage.GPUImageFilter;
+import jp.co.cyberagent.lansongsdk.gpuimage.GPUImageSepiaFilter;
+import jp.co.cyberagent.lansongsdk.gpuimage.GPUImageTwoInputFilter;
+import jp.co.cyberagent.lansongsdk.gpuimage.IF1977Filter;
+import jp.co.cyberagent.lansongsdk.gpuimage.IFAmaroFilter;
+import jp.co.cyberagent.lansongsdk.gpuimage.IFBrannanFilter;
+import jp.co.cyberagent.lansongsdk.gpuimage.IFEarlybirdFilter;
+import jp.co.cyberagent.lansongsdk.gpuimage.IFHefeFilter;
+import jp.co.cyberagent.lansongsdk.gpuimage.IFHudsonFilter;
+import jp.co.cyberagent.lansongsdk.gpuimage.IFInkwellFilter;
+import jp.co.cyberagent.lansongsdk.gpuimage.IFLomofiFilter;
+import jp.co.cyberagent.lansongsdk.gpuimage.IFLordKelvinFilter;
+import jp.co.cyberagent.lansongsdk.gpuimage.IFNashvilleFilter;
+import jp.co.cyberagent.lansongsdk.gpuimage.IFRiseFilter;
+import jp.co.cyberagent.lansongsdk.gpuimage.IFSierraFilter;
+import jp.co.cyberagent.lansongsdk.gpuimage.IFSutroFilter;
+import jp.co.cyberagent.lansongsdk.gpuimage.IFToasterFilter;
+import jp.co.cyberagent.lansongsdk.gpuimage.IFValenciaFilter;
+import jp.co.cyberagent.lansongsdk.gpuimage.IFWaldenFilter;
+import jp.co.cyberagent.lansongsdk.gpuimage.IFXproIIFilter;
+import jp.co.cyberagent.lansongsdk.gpuimage.LanSongBeautyAdvanceFilter;
 
 /**
  * 滤镜的操作
@@ -58,21 +87,42 @@ public class Demo3LayerFilterActivity extends Activity {
     private String mVideoPath;
     private DrawPadView drawPadView;
     private MediaPlayer mediaPlayer = null;
-    private VideoLayer2 videoLayer = null;
+    private VideoLayer videoLayer = null;
     private MediaInfo mediaInfo;
     private SeekBar skbarFilterAdjuster;
     private String dstPath = null;
     private FilterDemoAdapter listAdapter;
     private HorizontalListView listFilterView;
-    private FilterList filterList = new FilterList();
-    /**
-     * 您可以记录下当前操作的滤镜类, 然后在后台执行.
-     */
-    private String currrentFilterName = null;
+    private ArrayList<GPUImageFilter> filters=new ArrayList<>();
+    private  int filterIndex=0;
+
     private FilterAdjuster mFilterAdjuster;
+
     // -------------------------------------------------后台执行.
     private ProgressDialog progressDialog;
     private VideoOneDo videoOneDo;
+    private void createFilters()
+    {
+        filters.add(new GPUImageFilter("无"));
+        filters.add(new LanSongBeautyAdvanceFilter("美颜"));
+        filters.add(new IFAmaroFilter(getApplicationContext(),"1AMARO"));
+        filters.add(new IFRiseFilter(getApplicationContext(),"2RISE"));
+        filters.add(new IFHudsonFilter(getApplicationContext(),"3HUDSON"));
+        filters.add(new IFXproIIFilter(getApplicationContext(),"4XPROII"));
+        filters.add(new IFSierraFilter(getApplicationContext(),"5SIERRA"));
+        filters.add(new IFLomofiFilter(getApplicationContext(),"6LOMOFI"));
+        filters.add(new IFEarlybirdFilter(getApplicationContext(),"7EARLYBIRD"));
+        filters.add(new IFSutroFilter(getApplicationContext(),"8SUTRO"));
+        filters.add(new IFToasterFilter(getApplicationContext(),"9TOASTER"));
+        filters.add(new IFBrannanFilter(getApplicationContext(),"10BRANNAN"));
+        filters.add(new IFInkwellFilter(getApplicationContext(),"11INKWELL"));
+        filters.add(new IFWaldenFilter(getApplicationContext(),"12WALDEN"));
+        filters.add(new IFHefeFilter(getApplicationContext(),"13HEFE"));
+        filters.add(new IFValenciaFilter(getApplicationContext(),"14VALENCIA"));
+        filters.add(new IFNashvilleFilter(getApplicationContext(),"15NASHVILLE"));
+        filters.add(new IFLordKelvinFilter(getApplicationContext(),"16LORDKELVIN"));
+        filters.add(new IF1977Filter(getApplicationContext(),"17if1977"));
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,6 +133,8 @@ public class Demo3LayerFilterActivity extends Activity {
         setContentView(R.layout.filter_layer_demo_layout);
 
         initView();
+
+        createFilters();
 
         mVideoPath = getIntent().getStringExtra("videopath");
         dstPath = LanSongFileUtil.newMp4PathInBox();
@@ -97,6 +149,7 @@ public class Demo3LayerFilterActivity extends Activity {
                 }
             }, 100);
         }
+
     }
 
     @Override
@@ -117,7 +170,6 @@ public class Demo3LayerFilterActivity extends Activity {
         mediaPlayer = new MediaPlayer();
         try {
             mediaPlayer.setDataSource(mVideoPath);
-
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -141,7 +193,7 @@ public class Demo3LayerFilterActivity extends Activity {
     }
 
     /**
-     * Step1:开始 DrawPad 容器
+     * 第一步:初始化容器;
      */
     private void initDrawPad(int w, int h) {
         drawPadView.setUpdateMode(DrawPadUpdateMode.AUTO_FLUSH, 25);
@@ -152,14 +204,13 @@ public class Demo3LayerFilterActivity extends Activity {
             }
         });
     }
-
     /**
-     * Step2: startDrawPad
+     * 第二步:开始运行
      */
     private void startDrawPad() {
-        if (drawPadView.startDrawPad()) {
-            videoLayer = drawPadView.addVideoLayer2(mediaPlayer.getVideoWidth(), mediaPlayer.getVideoHeight(), null);
 
+        if (drawPadView.startDrawPad()) {
+            videoLayer = drawPadView.addVideoLayer(mediaPlayer.getVideoWidth(), mediaPlayer.getVideoHeight(), null);
             if (videoLayer != null) {
                 mediaPlayer.setSurface(new Surface(videoLayer.getVideoTexture()));
                 mediaPlayer.setLooping(true);
@@ -183,17 +234,14 @@ public class Demo3LayerFilterActivity extends Activity {
                         filterExecute();
                     }
                 });
-
         listFilterView = (HorizontalListView) findViewById(R.id.id_filterlayer_filterlist);
         listFilterView.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
                                     long arg3) {
-
-                if (videoLayer != null) {
-                    GPUImageFilter filter = filterList.getFilter(getApplicationContext(), arg2);
-                    currrentFilterName = filterList.getName(arg2);
-                    videoLayer.switchFilterTo(filter);
+                if (videoLayer != null) { //切换滤镜
+                    videoLayer.switchFilterTo(filters.get(arg2));
+                    filterIndex=arg2;
                 }
             }
         });
@@ -239,7 +287,6 @@ public class Demo3LayerFilterActivity extends Activity {
             public void onGpuImageFilterChosenListener(
                     final GPUImageFilter filter, String name) {
                 if (videoLayer != null) {
-                    currrentFilterName = name;
                     videoLayer.switchFilterTo(filter);
                     mFilterAdjuster = new FilterAdjuster(filter);
                     // 如果这个滤镜 可调, 显示可调节进度条.
@@ -264,10 +311,7 @@ public class Demo3LayerFilterActivity extends Activity {
     }
 
     /**
-     * 先获取第一帧, 然后根据第一帧去获取所有滤镜.
-     *
-     * @param src
-     * @return
+     * 获取第一帧, 根据第一帧去获取所有滤镜.
      */
     public boolean getFirstFrame(String src) {
         long decoderHandler = 0;
@@ -280,7 +324,6 @@ public class Demo3LayerFilterActivity extends Activity {
                 mGLRgbBuffer.position(0);
                 AVDecoder.decoderFrame(decoderHandler, -1, mGLRgbBuffer.array());
                 AVDecoder.decoderRelease(decoderHandler);
-
                 // 转换为bitmap
                 Bitmap bmp = Bitmap.createBitmap(info.vWidth, info.vHeight,
                         Bitmap.Config.ARGB_8888);
@@ -296,43 +339,31 @@ public class Demo3LayerFilterActivity extends Activity {
         return false;
     }
 
-    private void getBitmapFilters(Bitmap bmp, float angle) {
-        filterList.addFilter("无", FilterType.NONE);
-        filterList.addFilter("美颜", FilterType.BEAUTIFUL);
-        filterList.addFilter("1AMARO", FilterType.AMARO);
-        filterList.addFilter("2RISE", FilterType.RISE);
-        filterList.addFilter("3HUDSON", FilterType.HUDSON);
-        filterList.addFilter("4XPROII", FilterType.XPROII);
-        filterList.addFilter("5SIERRA", FilterType.SIERRA);
-        filterList.addFilter("6LOMOFI", FilterType.LOMOFI);
-        filterList.addFilter("7EARLYBIRD", FilterType.EARLYBIRD);
-        filterList.addFilter("8SUTRO", FilterType.SUTRO);
-        filterList.addFilter("9TOASTER", FilterType.TOASTER);
-        filterList.addFilter("10BRANNAN", FilterType.BRANNAN);
-        filterList.addFilter("11INKWELL", FilterType.INKWELL);
-        filterList.addFilter("12WALDEN", FilterType.WALDEN);
-        filterList.addFilter("13HEFE", FilterType.HEFE);
-        filterList.addFilter("14VALENCIA", FilterType.VALENCIA);
-        filterList.addFilter("15NASHVILLE", FilterType.NASHVILLE);
-        filterList.addFilter("16if1977", FilterType.IF1977);
-        filterList.addFilter("17LORDKELVIN", FilterType.LORDKELVIN);
 
-        BitmapGetFilters getFilter = new BitmapGetFilters(
-                getApplicationContext(), bmp,
-                filterList.getFilters(getApplicationContext()));
-        if (bmp.getWidth() * bmp.getHeight() > 480 * 480) { // 如果图片太大了,则把滤镜后的图片缩小一倍输出.
+
+    private int bitmapIndex=0;
+    /**
+     * 获取一张图片的所有滤镜效果;
+     */
+    private void getBitmapFilters(Bitmap bmp, float angle) {
+
+        BitmapGetFilters getFilter = new BitmapGetFilters(getApplicationContext(), bmp,filters);
+
+        // 如果图片太大了,则把滤镜后的图片缩小一倍输出.
+        if (bmp.getWidth() * bmp.getHeight() > 480 * 480) {
             getFilter.setScaleWH(bmp.getWidth() / 2, bmp.getHeight() / 2);
         }
         getFilter.setRorate(angle);
 
-        getFilter
-                .setDrawpadOutFrameListener(new onGetFiltersOutFrameListener() {
+        getFilter.setDrawpadOutFrameListener(new onGetFiltersOutFrameListener() {
                     @Override
                     public void onOutFrame(BitmapGetFilters v, Object obj) {
                         Bitmap bmp2 = (Bitmap) obj;
-                        filterList.addBitmap(bmp2);
+                        bitmaps.add(new NameBitmap(filters.get(bitmapIndex).getFilterName(),bmp2));
+                        bitmapIndex++;
                     }
                 });
+
         getFilter.start();// 开始线程.
         getFilter.waitForFinish();// 等待执行完毕, 您也可以不用等待,用[完成监听]来判断是否结束.
     }
@@ -348,9 +379,7 @@ public class Demo3LayerFilterActivity extends Activity {
 
         videoOneDo = new VideoOneDo(getApplicationContext(), mVideoPath);
 
-        GPUImageFilter filter = FilterLibrary.getFilterList().getFilter(
-                getApplicationContext(), currrentFilterName);
-        videoOneDo.setFilter(filter);
+        videoOneDo.setFilter(filters.get(filterIndex));
         videoOneDo.setOnVideoOneDoProgressListener(new onVideoOneDoProgressListener() {
 
             @Override
@@ -384,10 +413,10 @@ public class Demo3LayerFilterActivity extends Activity {
         if (videoOneDo.start()) {
             progressDialog.show();
         } else {
-            Toast.makeText(getApplicationContext(), "后台运行失败,请查看打印信息",
-                    Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), "后台运行失败,请查看打印信息",Toast.LENGTH_SHORT).show();
         }
     }
+
     public class GetBitmapFiltersTask extends
             AsyncTask<Object, Object, Boolean> {
         private String video;
@@ -410,31 +439,21 @@ public class Demo3LayerFilterActivity extends Activity {
         @Override
         protected void onPostExecute(Boolean result) {
 
-            if (filterList.isAllFilterBitmap()) {
-                listAdapter = new FilterDemoAdapter(Demo3LayerFilterActivity.this, filterList);
+                listAdapter = new FilterDemoAdapter(Demo3LayerFilterActivity.this, bitmaps);
                 listAdapter.notifyDataSetChanged();
                 listFilterView.setAdapter(listAdapter);
-            }
         }
     }
-    private  void showDialog(){
-        new AlertDialog.Builder(Demo3LayerFilterActivity.this)
-                .setTitle("提示")
-                .setMessage("是否开始预览!")
-                .setPositiveButton("转换", new DialogInterface.OnClickListener() {
 
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        //转换为编辑模式对话框.
+    private ArrayList<NameBitmap> bitmaps=new ArrayList<>();
 
-                    }
-                })
-                .setNegativeButton("不转", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                    }
-                })
-                .show();
+    public class NameBitmap{
+
+        public String name;
+        public Bitmap bitmap;
+        public NameBitmap(String name,Bitmap bmp){
+            this.name=name;
+            this.bitmap=bmp;
+        }
     }
-
 }

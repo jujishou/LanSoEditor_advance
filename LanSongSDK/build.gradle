@@ -21,6 +21,6 @@ android {
 }
 
 dependencies {
-    //implementation fileTree(dir: 'libs', include: ['*.jar'])
-     compileOnly files('libs/lansongeditor_hx.jar')
+//    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    compileOnly files('libs/lansongeditor_hx.jar')
 }

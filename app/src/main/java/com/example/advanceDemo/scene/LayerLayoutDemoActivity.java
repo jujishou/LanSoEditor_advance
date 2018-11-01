@@ -29,7 +29,6 @@ import com.lansosdk.videoeditor.DrawPadView;
 import com.lansosdk.videoeditor.LanSongMergeAV;
 import com.lansosdk.videoeditor.MediaInfo;
 import com.lansosdk.videoeditor.LanSongFileUtil;
-import com.lansosdk.videoeditor.VideoEditor;
 
 /**
  * 演示: 使用DrawPad来实现 视频和图片的实时叠加.
@@ -113,8 +112,8 @@ public class LayerLayoutDemoActivity extends Activity {
     }
 
     private void initDrawPad() {
-        int padWidth = 480;
-        int padHeight = 480;
+        int padWidth = 640;
+        int padHeight = 640;
         /**
          * 设置当前DrawPad的宽度和高度,并把宽度自动缩放到父view的宽度,然后等比例调整高度.
          */
@@ -126,12 +125,10 @@ public class LayerLayoutDemoActivity extends Activity {
                     }
                 });
 
-        drawPadView.setRealEncodeEnable(padWidth, padHeight, 1000000,
+        drawPadView.setRealEncodeEnable(padWidth, padHeight, (int)(1.5f*1024*1024),
                 (int) mInfo.vFrameRate, editTmpPath);
 
-        drawPadView
-                .setOnDrawPadProgressListener(new onDrawPadProgressListener() {
-
+        drawPadView.setOnDrawPadProgressListener(new onDrawPadProgressListener() {
                     @Override
                     public void onProgress(DrawPad v, long currentTimeUs) {
 
@@ -150,8 +147,7 @@ public class LayerLayoutDemoActivity extends Activity {
                     .decodeResource(getResources(), R.drawable.videobg));
             layer.setScaledValue(layer.getPadWidth(), layer.getPadHeight()); // 填充整个屏幕.
 
-            videoLayer = drawPadView.addMainVideoLayer(mplayer.getVideoWidth(),
-                    mplayer.getVideoHeight(),null);
+            videoLayer = drawPadView.addMainVideoLayer(mplayer.getVideoWidth(),mplayer.getVideoHeight(), null);
             if (videoLayer != null) {
                 mplayer.setSurface(new Surface(videoLayer.getVideoTexture()));
                 mplayer.start();

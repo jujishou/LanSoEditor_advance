@@ -68,7 +68,7 @@ public class CameraLayerFullSegmentActivity extends Activity implements
      * 然后等视频拼接好后, 再把音频和拼接后的视频合并在一起,
      * 内部已经做了音视频的同步处理;
      */
-    private boolean isRecordMp3 = true; // 是否分段录制的是mp3;
+    private boolean isRecordMp3 = false; // 是否分段录制的是mp3; //LSTODO_MUST一定要增加UI按钮;
     private AudioLine mAudioLine = null;
     /**
      * 视频每处理一帧,则会执行这里的回调, 返回当前处理后的时间戳,单位微秒.
@@ -251,7 +251,6 @@ public class CameraLayerFullSegmentActivity extends Activity implements
                 if (musicPath != null) { // 录制的是MP3;
                     String tmpVideo = LanSongFileUtil.createMp4FileInBox();
                     // editor.executeConcatMP4(segments, tmpVideo);
-
                     VideoConcat concat = new VideoConcat();
                     concat.concatVideo(segmentArray, tmpVideo);
 
@@ -267,8 +266,7 @@ public class CameraLayerFullSegmentActivity extends Activity implements
              * 开始播放.
              */
             if (LanSongFileUtil.fileExist(dstPath)) {
-                Intent intent = new Intent(CameraLayerFullSegmentActivity.this,
-                        VideoPlayerActivity.class);
+                Intent intent = new Intent(CameraLayerFullSegmentActivity.this,VideoPlayerActivity.class);
                 intent.putExtra("videopath", dstPath);
                 startActivity(intent);
             } else {
@@ -300,11 +298,7 @@ public class CameraLayerFullSegmentActivity extends Activity implements
      */
     private void segmentStop() {
         if (drawPadCamera.isRecording()) {
-            
-            Log.i("LSTODO", "------stop async : ");
             drawPadCamera.segmentStopAsync(true);
-
-            
             progressView.setCurrentState(VideoProgressView.State.PAUSE);
             int timeMS = (int) (currentSegDuration / 1000); // 转换为毫秒.
             progressView.putTimeList(timeMS);

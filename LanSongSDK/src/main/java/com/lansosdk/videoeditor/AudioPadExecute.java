@@ -49,12 +49,10 @@ public class AudioPadExecute {
      */
     public AudioPadExecute(Context ctx, String input) {
         mediaInfo=new MediaInfo(input);
-
         if(mediaInfo.prepare()){
             audioPadSavePath = LanSongFileUtil.createM4AFileInBox();
             inputPath=input;
             audioPad = new AudioPad(ctx, audioPadSavePath);
-
             if(mediaInfo.isHaveAudio()){
                 mainSource=audioPad.addMainAudio(input);
             }else{
@@ -82,7 +80,7 @@ public class AudioPadExecute {
             if(mediaInfo.isHaveAudio()){
                 if(isMute) {
                     audioPad.addMainAudio(mediaInfo.aDuration, mediaInfo.aSampleRate);
-                }else {
+                } else {
                     mainSource = audioPad.addMainAudio(input);
                 }
             }else{
@@ -136,10 +134,8 @@ public class AudioPadExecute {
     }
 
     /**
+     * 增加其他音频;
      * 支持mp4,wav,mp3,m4a文件;
-     *
-     * 音频参数仅支持采样率为44100,双通道.
-     * 如果不是,先用 AudioEditor中的executeConvertToWav转换后填入;
      *
      * @param srcPath
      * @param isLoop  是否循环;
@@ -149,10 +145,50 @@ public class AudioPadExecute {
             AudioSource ret= audioPad.addSubAudio(srcPath);
             if(ret!=null){
                 ret.setLooping(isLoop);
+            }else{
+                LSLog.e("AudioPadExecute addSubAudio Error.MediaInfo  is:"+MediaInfo.checkFile(srcPath));
             }
+
             return ret;
     }
 
+    /**
+     * 增加其他音频;
+     * 支持mp4,wav,mp3,m4a文件;
+     *
+     * @param srcPath
+     * @param isLoop
+     * @param valume 音频的音量;
+     * @return
+     */
+    public AudioSource addSubAudio(String srcPath,boolean  isLoop,float valume) {
+        AudioSource ret= audioPad.addSubAudio(srcPath);
+        if(ret!=null){
+            ret.setLooping(isLoop);
+            ret.setVolume(valume);
+        }else{
+            LSLog.e("AudioPadExecute addSubAudio Error.MediaInfo  is:"+MediaInfo.checkFile(srcPath));
+        }
+        return ret;
+    }
+
+    /**
+     * 增加音频容器, 从容器的什么位置开始增加,
+     *
+     * 把srcPath从0位置开始的声音增加进去;
+     *
+     * @param srcPath
+     * @param startPadUs
+     * @return
+     */
+    public AudioSource addSubAudio(String srcPath, long startPadUs) {
+        if (audioPad != null) {
+            return audioPad.addSubAudio(srcPath, startPadUs, 0,-1);
+        } else {
+            LSLog.e("AudioPadExecute addSubAudio Error.MediaInfo  is:"+MediaInfo.checkFile(srcPath));
+            return null;
+        }
+    }
     /**
      * 把音频的 指定时间段, 增加到audiopad音频容器里.
      *
@@ -171,6 +207,7 @@ public class AudioPadExecute {
             return audioPad.addSubAudio(srcPath, startPadUs, startAudioUs,
                     endAudioUs);
         } else {
+            LSLog.e("AudioPadExecute addSubAudio Error.MediaInfo  is:"+MediaInfo.checkFile(srcPath));
             return null;
         }
     }
@@ -189,8 +226,8 @@ public class AudioPadExecute {
             String audio = path;
             if (info.aSampleRate != mainSampleRate || info.aChannels != 2) {
 
-                LSLog.w("警告:  addSubAudio参数不同, 开始转换.info.aSampleRate:"+info.aSampleRate+" padSampleRate:"+mainSampleRate
-                        + "channels:"+ info.aChannels);
+//                LSLog.w("警告:  addSubAudio参数不同, 开始转换.info.aSampleRate:"+info.aSampleRate+" padSampleRate:"+mainSampleRate
+//                        + "channels:"+ info.aChannels);
                 AudioEditor editor = new AudioEditor();
                 audio = editor.executeConvertToWav(path, mainSampleRate);
             }

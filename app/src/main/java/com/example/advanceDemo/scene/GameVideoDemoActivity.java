@@ -1,12 +1,10 @@
 package com.example.advanceDemo.scene;
 
 import android.app.Activity;
-import android.graphics.BitmapFactory;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
 import android.media.MediaPlayer.OnPreparedListener;
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
 import android.view.Surface;
 import android.view.View;
@@ -16,15 +14,10 @@ import android.widget.TextView;
 
 import com.example.advanceDemo.utils.DemoUtil;
 import com.lansoeditor.advanceDemo.R;
-import com.lansosdk.box.BitmapLayer;
 import com.lansosdk.box.DrawPad;
-import com.lansosdk.box.DrawPadUpdateMode;
 import com.lansosdk.box.VideoLayer;
-import com.lansosdk.box.VideoLayer2;
 import com.lansosdk.box.onDrawPadProgressListener;
-import com.lansosdk.box.onDrawPadRunTimeListener;
 import com.lansosdk.box.onDrawPadSizeChangedListener;
-import com.lansosdk.videoeditor.DrawPadView;
 import com.lansosdk.videoeditor.DrawPadView2;
 import com.lansosdk.videoeditor.MediaInfo;
 import com.lansosdk.videoeditor.VideoEditor;
@@ -37,7 +30,7 @@ public class GameVideoDemoActivity extends Activity implements OnClickListener {
     private String srcVideoPath;
     private DrawPadView2 drawPadView;
     private MediaPlayer mplayer = null;
-    private VideoLayer2 mainVideoLayer = null;
+    private VideoLayer mainVideoLayer = null;
     private MediaInfo mediaInfo = null;
     private ArrayList<String> videoList=new ArrayList<>();
 

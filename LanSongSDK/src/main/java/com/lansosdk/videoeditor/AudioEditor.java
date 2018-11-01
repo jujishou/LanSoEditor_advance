@@ -10,6 +10,12 @@ import java.util.Locale;
 
 import static com.lansosdk.videoeditor.LanSongFileUtil.fileExist;
 
+/**
+ * 音频编辑类.
+ *
+ *
+ * 使用方法和VideoEditor一样;
+ */
 public class AudioEditor {
     private VideoEditor editor;
     // ffmpeg -f s16le -ar 44100 -ac 2 -i hongdou_44100_2.pcm -f s16le -ar 48000
@@ -27,8 +33,54 @@ public class AudioEditor {
         });
     }
 
+    public static String mergeAVDirectly(String audio, String video,boolean deleteVideo) {
+        MediaInfo info=new MediaInfo(audio);
+        if(info.prepare() && info.isHaveAudio()){
+            String retPath=LanSongFileUtil.createMp4FileInBox();
+
+            String inputAudio = audio;
+            List<String> cmdList = new ArrayList<String>();
+
+            cmdList.add("-i");
+            cmdList.add(inputAudio);
+            cmdList.add("-i");
+            cmdList.add(video);
+
+            cmdList.add("-map");
+            cmdList.add("0:a");
+            cmdList.add("-map");
+            cmdList.add("1:v");
+
+            cmdList.add("-acodec");
+            cmdList.add("copy");
+            cmdList.add("-vcodec");
+            cmdList.add("copy");
+
+            cmdList.add("-absf");
+            cmdList.add("aac_adtstoasc");
+
+            cmdList.add("-y");
+            cmdList.add(retPath);
+            String[] command = new String[cmdList.size()];
+            for (int i = 0; i < cmdList.size(); i++) {
+                command[i] = (String) cmdList.get(i);
+            }
+            VideoEditor editor = new VideoEditor();
+            int ret = editor.executeVideoEditor(command);
+            if(ret==0){
+                if(deleteVideo){
+                    LanSongFileUtil.deleteFile(video);
+                }
+                return retPath;
+            }else{
+                return video;
+            }
+        }
+        return video;
+    }
+
     /**
-     * //LSTODO增加静音举例.
+     * LSTODO增加静音举例.
      *
      * @param filelength
      * @param channel
@@ -152,6 +204,7 @@ public class AudioEditor {
             return null;
         }
     }
+
 
     /**
      * 把wav格式的音频转换为mp3;

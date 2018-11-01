@@ -98,13 +98,14 @@
 	        android:gravity="center"
 	        android:layout_margin="3dip"
 	        android:background="@drawable/button_btn_bg"/>
-    </LinearLayout>  
-    
-      
-      
-       <TextView 
-           android:layout_below="@id/id_particle_stylelayout"
-    	    android:layout_width="match_parent"
-    	    android:text="滑动画面, 增加粒子\n原理:采用开源粒子库ParticleSystem,在视频中增加粒子的效果,您可以单点发粒子, 炊烟,火焰,烟花等各种效果.这里仅仅举例滑动增加粒子"
-    	    android:layout_height="wrap_content"/>
+    </LinearLayout>
+
+
+
+	<TextView
+		android:layout_below="@id/id_particle_stylelayout"
+		android:layout_width="match_parent"
+		android:text="滑动画面, 增加粒子\n原理:在视频中增加粒子的效果,单点发粒子,炊烟,火焰,烟花等各种效果 \n其实每个粒子是一张张的图片,
+    	    你可以修改图片为烟火\灵气\冷气\星星\气球等,.这里仅仅举例滑动增加粒子"
+		android:layout_height="wrap_content"/>
 </RelativeLayout>

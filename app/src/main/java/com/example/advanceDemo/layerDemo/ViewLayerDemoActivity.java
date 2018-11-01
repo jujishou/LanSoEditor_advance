@@ -3,7 +3,6 @@ package com.example.advanceDemo.layerDemo;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.MediaPlayer;
@@ -21,7 +20,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.advanceDemo.VideoPlayerActivity;
 import com.example.advanceDemo.utils.DemoUtil;
 import com.example.advanceDemo.view.ImageTouchView;
 import com.example.advanceDemo.view.PaintConstants;

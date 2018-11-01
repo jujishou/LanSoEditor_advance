@@ -32,7 +32,7 @@ import com.lansosdk.box.onDrawPadErrorListener;
 import com.lansosdk.box.onDrawPadProgressListener;
 import com.lansosdk.box.onDrawPadThreadProgressListener;
 import com.lansosdk.videoeditor.CopyFileFromAssets;
-import com.lansosdk.videoeditor.DrawPadVideoExecute2;
+import com.lansosdk.videoeditor.DrawPadVideoExecute;
 import com.lansosdk.videoeditor.MediaInfo;
 import com.lansosdk.videoeditor.LanSongFileUtil;
 
@@ -71,7 +71,7 @@ public class ExecuteVideoLayerActivity extends Activity {
     /**
      * DrawPad, 用来执行图像处理的对象.
      */
-    private DrawPadVideoExecute2 execute2 = null;
+    private DrawPadVideoExecute execute2 = null;
     /**
      * 用来显示一个心形.
      */
@@ -113,7 +113,7 @@ public class ExecuteVideoLayerActivity extends Activity {
             return;
 
         isExecuting = true;
-        execute2 = new DrawPadVideoExecute2(mContext, videoPath,dstPath);
+        execute2 = new DrawPadVideoExecute(mContext, videoPath,dstPath);
 
         execute2.setDrawPadErrorListener(new onDrawPadErrorListener() {
 

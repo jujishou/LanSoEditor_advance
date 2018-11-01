@@ -31,10 +31,13 @@ public class LanSongFileUtil {
 
     public static final String TAG = LSLog.TAG;
     public static final boolean VERBOSE = false;
+    private static final Object mLock = new Object();
 
     //可以修改这个路径;
     public static  String DEFAULT_DIR = "/sdcard/lansongBox/";
     public static  String TMP_DIR =DEFAULT_DIR;
+    protected static String mTmpFileSubFix="";  //后缀,
+    protected static String mTmpFilePreFix="";  //前缀;
 
 
     public static void setTempDIR(String dir){
@@ -93,53 +96,59 @@ public class LanSongFileUtil {
      * @return
      */
     public static String createFile(String dir, String suffix) {
-        Calendar c = Calendar.getInstance();
-        int hour = c.get(Calendar.HOUR_OF_DAY);
-        int minute = c.get(Calendar.MINUTE);
-        int year = c.get(Calendar.YEAR);
-        int month = c.get(Calendar.MONTH) + 1;
-        int day = c.get(Calendar.DAY_OF_MONTH);
-        int second = c.get(Calendar.SECOND);
-        int millisecond = c.get(Calendar.MILLISECOND);
-        year = year - 2000;
-        String name = dir;
-        File d = new File(name);
+        synchronized (mLock) {
+            Calendar c = Calendar.getInstance();
+            int hour = c.get(Calendar.HOUR_OF_DAY);
+            int minute = c.get(Calendar.MINUTE);
+            int year = c.get(Calendar.YEAR);
+            int month = c.get(Calendar.MONTH) + 1;
+            int day = c.get(Calendar.DAY_OF_MONTH);
+            int second = c.get(Calendar.SECOND);
+            int millisecond = c.get(Calendar.MILLISECOND);
+            year = year - 2000;
 
-        // 如果目录不中存在，创建这个目录
-        if (!d.exists())
-            d.mkdir();
-        name += "/";
+            String dirPath = dir;
+            File d = new File(dirPath);
+            if (!d.exists())
+                d.mkdirs();
+
+            if (dirPath.endsWith("/") == false) {
+                dirPath += "/";
+            }
+
+            String name=mTmpFilePreFix;
+            name += String.valueOf(year);
+            name += String.valueOf(month);
+            name += String.valueOf(day);
+            name += String.valueOf(hour);
+            name += String.valueOf(minute);
+            name += String.valueOf(second);
+            name += String.valueOf(millisecond);
+            name+=mTmpFileSubFix;
+            if (suffix.startsWith(".") == false) {
+                name += ".";
+            }
+            name += suffix;
 
 
-        name += String.valueOf(year);
-        name += String.valueOf(month);
-        name += String.valueOf(day);
-        name += String.valueOf(hour);
-        name += String.valueOf(minute);
-        name += String.valueOf(second);
-        name += String.valueOf(millisecond);
-        if (suffix.startsWith(".") == false) {
-            name += ".";
-        }
-        name += suffix;
-
-        try {
-            Thread.sleep(1);  //保持文件名的唯一性.
-        } catch (InterruptedException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-
-        File file = new File(name);
-        if (file.exists() == false) {
             try {
-                file.createNewFile();
-            } catch (IOException e) {
+                Thread.sleep(1); // 保持文件名的唯一性.
+            } catch (InterruptedException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
             }
+
+            String retPath=dirPath+name;
+            File file = new File(retPath);
+            if (file.exists() == false) {
+                try {
+                    file.createNewFile();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            return retPath;
         }
-        return name;
     }
 
     /**

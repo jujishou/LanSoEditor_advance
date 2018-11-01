@@ -7,7 +7,7 @@ import com.lansosdk.box.DrawPad;
 import com.lansosdk.box.LayerShader;
 import com.lansosdk.box.onDrawPadCompletedListener;
 import com.lansosdk.box.onDrawPadProgressListener;
-import com.lansosdk.videoeditor.DrawPadVideoExecute2;
+import com.lansosdk.videoeditor.DrawPadVideoExecute;
 import com.lansosdk.videoeditor.MediaInfo;
 import com.lansosdk.videoeditor.LanSongFileUtil;
 
@@ -23,7 +23,7 @@ public class ConvertToEditModeDialog {
     private boolean isRunning;
 
 
-    private  DrawPadVideoExecute2 execute2;
+    private DrawPadVideoExecute execute2;
 
 
     private MediaInfo mediaInfo;
@@ -47,7 +47,7 @@ public class ConvertToEditModeDialog {
         {
             dstPath=LanSongFileUtil.createMp4FileInBox();
 
-            execute2 = new DrawPadVideoExecute2(activity,src,dstPath);
+            execute2 = new DrawPadVideoExecute(activity,src,dstPath);
             LayerShader.setEditMode();
             execute2.setDrawPadProgressListener(new onDrawPadProgressListener() {
 

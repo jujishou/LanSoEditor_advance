@@ -9,19 +9,16 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.Surface;
-import android.view.TextureView;
 import android.view.TextureView.SurfaceTextureListener;
 import android.view.View;
 import android.widget.FrameLayout;
 
 import com.lansosdk.box.AudioLine;
 import com.lansosdk.box.BitmapLayer;
-import com.lansosdk.box.CameraLayer;
 import com.lansosdk.box.CanvasLayer;
 import com.lansosdk.box.DataLayer;
 import com.lansosdk.box.DrawPadUpdateMode;
 import com.lansosdk.box.DrawPadViewRender;
-import com.lansosdk.box.FileParameter;
 import com.lansosdk.box.GifLayer;
 import com.lansosdk.box.LSLog;
 import com.lansosdk.box.Layer;
@@ -29,7 +26,6 @@ import com.lansosdk.box.MVLayer;
 import com.lansosdk.box.TextureLayer;
 import com.lansosdk.box.TwoVideoLayer;
 import com.lansosdk.box.VideoLayer;
-import com.lansosdk.box.VideoLayer2;
 import com.lansosdk.box.ViewLayer;
 import com.lansosdk.box.YUVLayer;
 import com.lansosdk.box.onDrawPadCompletedListener;
@@ -102,23 +98,7 @@ public class DrawPadView extends FrameLayout {
     private onViewAvailable mViewAvailable = null;
     private onDrawPadSizeChangedListener mSizeChangedCB = null;
     private onDrawPadRunTimeListener drawpadRunTimeListener = null;
-    /**
-     * 实时录制的时候的进度回调 实时录制的时候的进度回调 实时录制的时候的进度回调
-     * <p>
-     * 此listener中的long类型是当前时间,单位是微秒, currentTimeUs; 此时间为即将渲染这一帧的时间,
-     * 比如你要在第3秒增加别的图层或调整指定图层的参数 则应该判断时间是否大于或等于3*1000*1000;
-     * <p>
-     * 此方法是在实时录制的时候,每次录制一帧调用这里,返回当前录制帧的时间戳.
-     *
-     * @param currentTimeUs
-     * 当前DrawPad处理画面的时间戳.,单位微秒.
-     */
     private onDrawPadProgressListener drawpadProgressListener = null;
-    /**
-     * 方法与 onDrawPadProgressListener不同的地方在于:
-     * 此回调是在DrawPad渲染完一帧后,立即执行这个回调中的代码,不通过Handler传递出去,你可以精确的执行一些下一帧的如何操作. 故不能在回调
-     * 内增加各种UI相关的代码.
-     */
     private onDrawPadThreadProgressListener drawPadThreadProgressListener = null;
     private onDrawPadSnapShotListener drawpadSnapShotListener = null;
     private onDrawPadOutFrameListener drawPadPreviewFrameListener = null;
@@ -544,13 +524,7 @@ public class DrawPadView extends FrameLayout {
 
     /**
      * 开始DrawPad的渲染线程, 阻塞执行, 直到DrawPad真正开始执行后才退出当前方法. 如果DrawPad设置了录制功能,
-     * 这里可以在开启后暂停录制. 适用在当您开启录制后, 需要先增加一个图层的场合后,在让它开始录制的场合, 可用resume *
-     * {@link #resumeDrawPadRecord()} 来回复录制.
-     *
-     * @param pauseRecord 如果DrawPad设置了录制功能, 这里可以在开启后暂停录制. 适用在当您开启录制后,
-     *                    需要先增加一个图层的场合后,在让它开始录制的场合, 可用resume
-     *                    {@link #resumeDrawPadRecord()} 来回复录制.
-     * @return
+     * 这里可以在开启后暂停录制. 适用在当您开启录制后, 需要先增加一个图层的场合后,在让它开始录制的场合,
      */
     public boolean startDrawPad(boolean pauseRecord) {
         boolean ret = false;
@@ -995,17 +969,6 @@ public class DrawPadView extends FrameLayout {
         }
         return ret;
     }
-
-//    public VideoLayer addVideoLayer(int width, int height, GPUImageFilter filter) {
-//        if (renderer != null)
-//            return renderer.addVideoLayer(width, height, filter);
-//        else {
-//            Log.e(TAG, "addVideoLayer error render is not avalid");
-//            return null;
-//        }
-//    }
-
-
     /**
      * 2.8.5版本后新增的,是经过优化后的VideoLayer, 取名字叫VideoLayer2;
      * 用法和VideoLayer相同,增加子图层功能;
@@ -1015,37 +978,14 @@ public class DrawPadView extends FrameLayout {
      * @param filter 增加滤镜, 如果不需要滤镜,设置为null;
      * @return
      */
-    public VideoLayer2 addVideoLayer2(int width, int height, GPUImageFilter filter) {
+    public VideoLayer addVideoLayer(int width, int height, GPUImageFilter filter) {
         if (renderer != null)
-            return renderer.addVideoLayer2(width, height, filter);
+            return renderer.addVideoLayer(width, height, filter);
         else {
             Log.e(TAG, "addVideoLayer error render is not avalid");
             return null;
         }
     }
-
-
-    /**
-     * 增加一个相机图层. 建议使用 {@link DrawPadCameraView}
-     *
-     * @param isFaceFront 是否使用前置镜头
-     * @param filter      当前使用到的滤镜 ,如果不用, 则设置为null
-     * @return
-     */
-    public CameraLayer addCameraLayer(boolean isFaceFront, GPUImageFilter filter) {
-        CameraLayer ret = null;
-        if (renderer != null)
-            if (filter != null) {
-                ret = renderer.addCameraLayer(isFaceFront, filter);
-            } else {
-                ret = renderer.addCameraLayer(isFaceFront, null);
-            }
-        else {
-            Log.e(TAG, "addCameraLayer error render is not avalid");
-        }
-        return ret;
-    }
-
     /**
      * 因之前有客户自定义一个Camera图层, 我们的Drawpad可以接受外部客户自定义图层.这里填入.
      */
@@ -1085,7 +1025,6 @@ public class DrawPadView extends FrameLayout {
 
     public BitmapLayer addBitmapLayer(Bitmap bmp, GPUImageFilter filter) {
         if (bmp != null) {
-            // Log.i(TAG,"imgBitmapLayer:"+bmp.getWidth()+" height:"+bmp.getHeight());
             if (renderer != null)
                 return renderer.addBitmapLayer(bmp, filter);
             else {

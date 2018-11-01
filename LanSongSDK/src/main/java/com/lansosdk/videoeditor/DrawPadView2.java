@@ -17,7 +17,6 @@ import com.lansosdk.box.BitmapLayer;
 import com.lansosdk.box.CanvasLayer;
 import com.lansosdk.box.DataLayer;
 import com.lansosdk.box.DrawPadUpdateMode;
-import com.lansosdk.box.DrawPadViewRender;
 import com.lansosdk.box.DrawPadViewRender2;
 import com.lansosdk.box.GifLayer;
 import com.lansosdk.box.LSLog;
@@ -26,7 +25,6 @@ import com.lansosdk.box.MVLayer;
 import com.lansosdk.box.TextureLayer;
 import com.lansosdk.box.TwoVideoLayer;
 import com.lansosdk.box.VideoLayer;
-import com.lansosdk.box.VideoLayer2;
 import com.lansosdk.box.ViewLayer;
 import com.lansosdk.box.YUVLayer;
 import com.lansosdk.box.onDrawPadCompletedListener;
@@ -696,8 +694,8 @@ public class DrawPadView2 extends FrameLayout {
      * @param height 主视频的画面高度
      * @return
      */
-    public VideoLayer2 addMainVideoLayer(int width, int height,GPUImageFilter filter) {
-        VideoLayer2 ret = null;
+    public VideoLayer addMainVideoLayer(int width, int height, GPUImageFilter filter) {
+        VideoLayer ret = null;
 
         if (renderer != null)
             ret = renderer.addMainVideoLayer(width, height, filter);
@@ -725,16 +723,10 @@ public class DrawPadView2 extends FrameLayout {
     }
 
     /**
-     * 用法和VideoLayer相同,增加子图层功能;
-     *
-     * @param width  视频的宽度
-     * @param height 视频的高度
-     * @param filter 增加滤镜, 如果不需要滤镜,设置为null;
-     * @return
      */
-    public VideoLayer2 addVideoLayer2(int width, int height, GPUImageFilter filter) {
+    public VideoLayer addVideoLayer(int width, int height, GPUImageFilter filter) {
         if (renderer != null)
-            return renderer.addVideoLayer2(width, height, filter);
+            return renderer.addVideoLayer(width, height, filter);
         else {
             Log.e(TAG, "addVideoLayer error render is not avalid");
             return null;

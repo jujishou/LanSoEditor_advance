@@ -92,7 +92,6 @@ public class CameraSubLayerDemo2Activity extends Activity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // 全屏模式下, 隐藏底部的虚拟按键.
         LanSongUtil.hideBottomUIMenu(this);
         mContext = getApplicationContext();
 

@@ -16,7 +16,7 @@ import com.lansosdk.box.DrawPad;
 import com.lansosdk.box.LSLog;
 import com.lansosdk.box.LayerShader;
 import com.lansosdk.box.TimeRange;
-import com.lansosdk.box.VideoLayer2;
+import com.lansosdk.box.VideoLayer;
 import com.lansosdk.box.onAudioPadProgressListener;
 import com.lansosdk.box.onDrawPadCompletedListener;
 import com.lansosdk.box.onDrawPadErrorListener;
@@ -62,13 +62,13 @@ public class VideoOneDo {
 
     private String drawpadDstPath = null;
 
-    private DrawPadVideoExecute2 drawPad = null;
+    private DrawPadVideoExecute drawPad = null;
     private AudioPadExecute audioPad;
     private String audioPadSavePath = null;
 
     private boolean isExecuting = false;
 
-    private VideoLayer2 videoLayer = null;
+    private VideoLayer videoLayer = null;
     private BitmapLayer logoBmpLayer = null;
     private CanvasLayer canvasLayer = null;
 
@@ -84,6 +84,7 @@ public class VideoOneDo {
     private int logoPosition = LOGO_POSITION_RIGHT_TOP;
     protected int scaleWidth, scaleHeight;
     protected int videoBitRate = 0;
+    protected boolean isCheckBitrate=false;
 
     protected String textAdd = null;
     // -------------------音频参数--------------------
@@ -128,6 +129,7 @@ public class VideoOneDo {
             mediaInfo =null;
         }
     }
+
     /**
      * 增加背景音乐.
      * <p>
@@ -215,6 +217,13 @@ public class VideoOneDo {
             videoBitRate = bitrate;
         }
     }
+    public void setBitrate(int bitrate,boolean check) {
+        if (bitrate > 0 && isEditModeVideo == false) {
+            videoBitRate = bitrate;
+            isCheckBitrate=check;
+        }
+    }
+
 
     /**
      * 设置视频的开始位置,
@@ -228,7 +237,6 @@ public class VideoOneDo {
             startTimeUs = timeUs;
         }
     }
-
     /**
      * 设置结束时间
      *
@@ -275,19 +283,30 @@ public class VideoOneDo {
     /**
      * 设置裁剪画面
      *
-     *
      * 裁剪和缩放无法同时执行;!!! 如同时设置了,以裁剪为主;
      *
      * @param startX 画面的开始横向坐标,
-     * @param startY 画面的结束纵向坐标
+     * @param startY 画面的开始纵向坐标
      * @param cropW  裁剪多少宽度
      * @param cropH  裁剪多少高度
      */
     public void  setCropRect(int startX, int startY, int cropW, int cropH) {
-        this.cropX = startX;
-        this.cropY = startY;
-        cropWidth = cropW;
-        cropHeight = cropH;
+
+        if(mediaInfo!=null && mediaInfo.getWidth()>=(startX + cropW) && mediaInfo.getHeight() >= (startY+ cropH))
+        {
+            this.cropX = startX;
+            this.cropY = startY;
+
+            cropWidth = cropW;
+            cropHeight = cropH;
+            if(cropW%16!=0 || cropH%16!=0){
+                LSLog.w("您要裁剪的宽高不是16的倍数,可能会出现黑边");
+            }
+
+        }else{
+            LSLog.e("VideoOneDo setCropRect error.");
+        }
+
     }
     /**
      * 缩放到的目标宽度和高度.
@@ -455,19 +474,25 @@ public class VideoOneDo {
         }
     }
 
-    private boolean startDrawPad() {
+    protected boolean startDrawPad() {
 
         drawpadDstPath = LanSongFileUtil.createMp4FileInBox();
-        drawPad = new DrawPadVideoExecute2(context, inputPath, drawpadDstPath);
+        drawPad = new DrawPadVideoExecute(context, inputPath, drawpadDstPath);
         drawPad.setStartTimeUs(startTimeUs);
         drawPad.setDurationTimeUs(padDurationUs);
         drawPad.setVideoFilter(videoFilter);
         if (videoBitRate > 0) {
             drawPad.setRecordBitrate(videoBitRate);
+            if(isCheckBitrate==false){
+                drawPad.setNotCheckBitRate();
+            }
         }
 
         if (isEditModeVideo) {
             LayerShader.setEditMode();
+        }
+        if(isNotCheckPadSize){
+            drawPad.setNotCheckDrawPadSize();
         }
 
         if(cropWidth>0 && cropHeight>0){
@@ -545,8 +570,11 @@ public class VideoOneDo {
             addCanvasLayer(); // 增加文字图层.
 
             if(cropWidth>0 && cropHeight>0){
+                if(cropX==0 && isNotCheckPadSize==false &&cropX%16 >=8){
+                        cropX=4;  //LSFIXME
+                }
                 videoLayer.setScaledValue(mediaInfo.getWidth(),mediaInfo.getHeight());
-                videoLayer.setPosition(videoLayer.getScaleWidth()/2-cropX,videoLayer.getScaleHeiht()/2-cropY);
+                videoLayer.setPosition(mediaInfo.getWidth()/2-cropX,mediaInfo.getHeight()/2-cropY);
             }else{
                 videoLayer.setScaledValue(videoLayer.getPadWidth(), videoLayer.getPadHeight());
             }
@@ -557,9 +585,6 @@ public class VideoOneDo {
         }
     }
 
-    /**
-     * 处理完成后的动作.
-     */
     protected void completeDrawPad() {
         if (isExecuting == false) {
             return;
@@ -567,8 +592,7 @@ public class VideoOneDo {
         MediaInfo info = new MediaInfo(drawpadDstPath);
         if (info.prepare()) {
             if (monVideoOneDOCompletedListener != null && isExecuting) {
-                monVideoOneDOCompletedListener.onCompleted(VideoOneDo.this,
-                        drawpadDstPath);
+                monVideoOneDOCompletedListener.onCompleted(VideoOneDo.this,drawpadDstPath);
             }
         } else {
             Log.e(TAG, "VideoOneDo执行错误!!!");
@@ -741,10 +765,8 @@ public class VideoOneDo {
 
     /**
      * 开启音频容器;
-     *
-     * @return
      */
-    private boolean startAudioPad() {
+    protected boolean startAudioPad() {
 
         if (bgMusicInfo != null) {
 
@@ -785,10 +807,10 @@ public class VideoOneDo {
             audioPad.setOnAudioPadCompletedListener(new AudioPadExecute.onAudioPadExecuteCompletedListener() {
                 @Override
                 public void onCompleted(String path) {
-                if (monVideoOneDOCompletedListener != null && isExecuting) {
-                    isExecuting = false;
-                    monVideoOneDOCompletedListener.onCompleted(VideoOneDo.this, path);
-                }
+                    if (monVideoOneDOCompletedListener != null && isExecuting) {
+                        isExecuting = false;
+                        monVideoOneDOCompletedListener.onCompleted(VideoOneDo.this, path);
+                    }
 
                 }
             });
@@ -796,6 +818,10 @@ public class VideoOneDo {
         } else {
             return false;
         }
+    }
+    boolean isNotCheckPadSize=false;
+    public void setNotCheckDrawPadSize(boolean is){
+        isNotCheckPadSize=is;
     }
     /**
      * 举例

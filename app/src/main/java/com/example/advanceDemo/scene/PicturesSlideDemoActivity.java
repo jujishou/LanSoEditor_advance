@@ -20,7 +20,7 @@ import com.lansosdk.box.LSLog;
 import com.lansosdk.box.Layer;
 import com.lansosdk.box.MVLayer;
 import com.lansosdk.box.MoveAnimation;
-import com.lansosdk.box.VideoLayer2;
+import com.lansosdk.box.VideoLayer;
 import com.lansosdk.box.onDrawPadCompletedListener;
 import com.lansosdk.box.onDrawPadProgressListener;
 import com.lansosdk.box.onDrawPadSizeChangedListener;
@@ -151,7 +151,7 @@ public class PicturesSlideDemoActivity extends Activity {
             mediaPlayer.setDataSource(video);
             mediaPlayer.prepare();
             mediaPlayer.setLooping(true);
-            VideoLayer2 layer2=drawPadView.addVideoLayer2(mediaPlayer.getVideoWidth(),mediaPlayer.getVideoHeight(),null);
+            VideoLayer layer2=drawPadView.addVideoLayer(mediaPlayer.getVideoWidth(),mediaPlayer.getVideoHeight(),null);
             layer2.setScaledValue(layer2.getPadWidth(),layer2.getPadHeight());
 
 

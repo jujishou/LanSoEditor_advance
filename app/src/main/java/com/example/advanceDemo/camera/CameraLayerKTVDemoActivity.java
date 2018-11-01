@@ -19,23 +19,21 @@ import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.advanceDemo.utils.DemoUtil;
 import com.example.advanceDemo.VideoPlayerActivity;
+import com.example.advanceDemo.utils.DemoUtil;
 import com.lansoeditor.advanceDemo.R;
 import com.lansosdk.box.CameraLayer;
 import com.lansosdk.box.DrawPad;
-import com.lansosdk.box.LSLog;
 import com.lansosdk.box.LanSongAlphaPixelFilter;
 import com.lansosdk.box.VideoLayer;
-import com.lansosdk.box.VideoLayer2;
 import com.lansosdk.box.ViewLayer;
 import com.lansosdk.box.ViewLayerRelativeLayout;
 import com.lansosdk.box.onDrawPadProgressListener;
 import com.lansosdk.videoeditor.CopyFileFromAssets;
 import com.lansosdk.videoeditor.DrawPadCameraView;
 import com.lansosdk.videoeditor.DrawPadCameraView.onViewAvailable;
-import com.lansosdk.videoeditor.LanSongUtil;
 import com.lansosdk.videoeditor.LanSongFileUtil;
+import com.lansosdk.videoeditor.LanSongUtil;
 
 /**
  * 在部分华为手机上出现前置摄像头, 画面倒置的问题, 解决如下:
@@ -66,7 +64,7 @@ public class CameraLayerKTVDemoActivity extends Activity implements
     // public class CameraLayerKTVDemoActivity extends AppCompatActivity
     // implements OnClickListener,OnSeekBarChangeListener{
     private static final long RECORD_CAMERA_TIME = 60 * 1000 * 1000; // 300秒.
-    private static final String TAG = LSLog.TAG;
+    private static final String TAG = "CameraKTVDemo";
     int zoomCnt = 0;
     private DrawPadCameraView drawPadCamera;
     private CameraLayer cameraLayer = null;
@@ -76,7 +74,7 @@ public class CameraLayerKTVDemoActivity extends Activity implements
     private ViewLayerRelativeLayout mLayerRelativeLayout;
     private LanSongAlphaPixelFilter alphaPixelFilter;
     private MediaPlayer mediaplayer = null;
-    private VideoLayer2 videoLayer = null;
+    private VideoLayer videoLayer = null;
     private String srcVideoPath;
     // -------------------------------------------一下是UI界面和控制部分.---------------------------------------------------
     private LinearLayout playVideo;
@@ -156,7 +154,7 @@ public class CameraLayerKTVDemoActivity extends Activity implements
         drawPadCamera.setRecordMic(true);
 
         alphaPixelFilter = new LanSongAlphaPixelFilter();
-        drawPadCamera.setCameraParam(true, alphaPixelFilter); // 设置是否前置.
+        drawPadCamera.setCameraParam(true, alphaPixelFilter, true); // 设置是否前置.
 
         drawPadCamera.setOnViewAvailable(new onViewAvailable() {
 
@@ -269,16 +267,17 @@ public class CameraLayerKTVDemoActivity extends Activity implements
 
                     if (drawPadCamera != null && drawPadCamera.isRunning()) {
 
-                        videoLayer = drawPadCamera.addVideoLayer(mediaplayer.getVideoWidth(),
+                        videoLayer = drawPadCamera.addVideoLayer(
+                                mediaplayer.getVideoWidth(),
                                 mediaplayer.getVideoHeight(), null);
 
-                        videoLayer.setScaledValue(videoLayer.getPadWidth(), videoLayer.getPadHeight());
+                        videoLayer.setScaledValue(videoLayer.getLayerWidth(), videoLayer.getPadHeight() * 2);
 
                         mediaplayer.setSurface(new Surface(videoLayer.getVideoTexture()));
                         mediaplayer.start();
                         mediaplayer.setLooping(true);
 
-                        drawPadCamera.changeLayerPosition(videoLayer, 0);  //放到最底层
+                        drawPadCamera.changeLayerPosition(videoLayer, 0);
                     }
                 }
             });

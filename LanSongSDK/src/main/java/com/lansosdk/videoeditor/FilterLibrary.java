@@ -23,6 +23,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.PointF;
 
 import com.lansosdk.box.BitmapLoader;
+import com.lansosdk.box.LSLog;
 
 import jp.co.cyberagent.lansongsdk.gpuimage.GPUImage3x3ConvolutionFilter;
 import jp.co.cyberagent.lansongsdk.gpuimage.GPUImage3x3TextureSamplingFilter;
@@ -101,6 +102,8 @@ import jp.co.cyberagent.lansongsdk.gpuimage.IFToasterFilter;
 import jp.co.cyberagent.lansongsdk.gpuimage.IFValenciaFilter;
 import jp.co.cyberagent.lansongsdk.gpuimage.IFWaldenFilter;
 import jp.co.cyberagent.lansongsdk.gpuimage.IFXproIIFilter;
+
+
 import jp.co.cyberagent.lansongsdk.gpuimage.LanSongBeautyAdvanceFilter;
 import jp.co.cyberagent.lansongsdk.gpuimage.LanSongBlackMaskBlendFilter;
 import jp.co.cyberagent.lansongsdk.gpuimage.LanSongBlurFilter;
@@ -108,6 +111,19 @@ import jp.co.cyberagent.lansongsdk.gpuimage.LanSongBulgeDistortionFilter;
 import jp.co.cyberagent.lansongsdk.gpuimage.LanSongDistortionPinchFilter;
 import jp.co.cyberagent.lansongsdk.gpuimage.LanSongDistortionStretchFilter;
 import jp.co.cyberagent.lansongsdk.gpuimage.LanSongMaskBlendFilter;
+
+
+
+
+
+import jp.co.cyberagent.lansongsdk.gpuimage.LanSongEmeraldFilter;
+import jp.co.cyberagent.lansongsdk.gpuimage.LanSongEvergreenFilter;
+import jp.co.cyberagent.lansongsdk.gpuimage.LanSongLatteFilter;
+import jp.co.cyberagent.lansongsdk.gpuimage.LanSongMirrorFilter;
+import jp.co.cyberagent.lansongsdk.gpuimage.LanSongPinkFilter;
+import jp.co.cyberagent.lansongsdk.gpuimage.LanSongRomanceFilter;
+import jp.co.cyberagent.lansongsdk.gpuimage.LanSongSakuraFilter;
+import jp.co.cyberagent.lansongsdk.gpuimage.LanSongSketchFilter;
 
 public class FilterLibrary {
 
@@ -466,7 +482,6 @@ public class FilterLibrary {
             case IF1977:
                 return new IF1977Filter(context);
 
-            /* 2017年8月5日18:11:17新增 */
             case EMBOSS:
                 return new GPUImageEmbossFilter();
             case THREE_X_THREE_CONVOLUTION:
@@ -479,7 +494,9 @@ public class FilterLibrary {
             case TOON:
                 return new GPUImageToonFilter();
             default:
-                throw new IllegalStateException("No filter of that type!");
+                LSLog.w("No filter of that type!, return null");
+                return null;
+//                throw new IllegalStateException("No filter of that type!");
         }
 
     }
@@ -488,7 +505,7 @@ public class FilterLibrary {
                                                     Class<? extends GPUImageTwoInputFilter> filterClass) {
         try {
             GPUImageTwoInputFilter filter = filterClass.newInstance();
-            String var3 = "assets://LSResource/ic_launcher"; //这里只是为了方便,用默认图片;
+            String var3 = "assets://LSResource/blend_demo.png"; //这里只是为了方便,用默认图片;
             filter.setBitmap(BitmapLoader.load(context, var3, 0, 0));
             return filter;
         } catch (Exception e) {

@@ -7,8 +7,11 @@ import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.PowerManager;
 import android.util.Log;
+import android.view.GestureDetector;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
@@ -20,9 +23,12 @@ import com.example.advanceDemo.view.CameraProgressBar;
 import com.example.advanceDemo.view.FocusImageView;
 import com.lansoeditor.advanceDemo.R;
 import com.lansosdk.box.BitmapLayer;
+import com.lansosdk.box.BitmapLoader;
 import com.lansosdk.box.CameraLayer;
 import com.lansosdk.box.DrawPad;
 import com.lansosdk.box.MVLayer;
+import com.lansosdk.box.SubLayer;
+import com.lansosdk.box.onCameraLayerTextureIdListener;
 import com.lansosdk.box.onDrawPadErrorListener;
 import com.lansosdk.box.onDrawPadProgressListener;
 import com.lansosdk.videoeditor.BeautyManager;
@@ -35,7 +41,32 @@ import com.lansosdk.videoeditor.FilterLibrary.OnGpuImageFilterChosenListener;
 import com.lansosdk.videoeditor.LanSongUtil;
 import com.lansosdk.videoeditor.LanSongFileUtil;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import jp.co.cyberagent.lansongsdk.gpuimage.GPUImageAddBlendFilter;
 import jp.co.cyberagent.lansongsdk.gpuimage.GPUImageFilter;
+import jp.co.cyberagent.lansongsdk.gpuimage.GPUImageSepiaFilter;
+import jp.co.cyberagent.lansongsdk.gpuimage.GPUImageSwirlFilter;
+import jp.co.cyberagent.lansongsdk.gpuimage.IF1977Filter;
+import jp.co.cyberagent.lansongsdk.gpuimage.IFAmaroFilter;
+import jp.co.cyberagent.lansongsdk.gpuimage.IFBrannanFilter;
+import jp.co.cyberagent.lansongsdk.gpuimage.IFEarlybirdFilter;
+import jp.co.cyberagent.lansongsdk.gpuimage.IFHefeFilter;
+import jp.co.cyberagent.lansongsdk.gpuimage.IFHudsonFilter;
+import jp.co.cyberagent.lansongsdk.gpuimage.IFInkwellFilter;
+import jp.co.cyberagent.lansongsdk.gpuimage.IFLomofiFilter;
+import jp.co.cyberagent.lansongsdk.gpuimage.IFLordKelvinFilter;
+import jp.co.cyberagent.lansongsdk.gpuimage.IFNashvilleFilter;
+import jp.co.cyberagent.lansongsdk.gpuimage.IFRiseFilter;
+import jp.co.cyberagent.lansongsdk.gpuimage.IFSierraFilter;
+import jp.co.cyberagent.lansongsdk.gpuimage.IFSutroFilter;
+import jp.co.cyberagent.lansongsdk.gpuimage.IFToasterFilter;
+import jp.co.cyberagent.lansongsdk.gpuimage.IFValenciaFilter;
+import jp.co.cyberagent.lansongsdk.gpuimage.IFWaldenFilter;
+import jp.co.cyberagent.lansongsdk.gpuimage.IFXproIIFilter;
+import jp.co.cyberagent.lansongsdk.gpuimage.LanSongBeautyAdvanceFilter;
 
 @SuppressLint("SdCardPath")
 public class CameraLayerFullPortActivity extends Activity implements
@@ -52,6 +83,8 @@ public class CameraLayerFullPortActivity extends Activity implements
     private String dstPath = null; // 用于录制完成后的目标视频路径.
     private FocusImageView focusView;
     private PowerManager.WakeLock mWakeLock;
+
+    private ArrayList<GPUImageFilter> filters = new ArrayList<>();
     private TextView tvTime;
     private Context mContext = null;
     private ImageView btnOk;
@@ -78,7 +111,6 @@ public class CameraLayerFullPortActivity extends Activity implements
             if (mProgressBar != null) {
                 mProgressBar.setProgress((int) (currentTimeUs / 1000));
             }
-
         }
     };
     private BitmapLayer bmpLayer;
@@ -91,40 +123,37 @@ public class CameraLayerFullPortActivity extends Activity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // 全屏模式下, 隐藏底部的虚拟按键.
         LanSongUtil.hideBottomUIMenu(this);
         mContext = getApplicationContext();
         if (LanSongUtil.checkRecordPermission(getBaseContext()) == false) {
-            Toast.makeText(getApplicationContext(), "当前无权限,请打开权限后,重试!!!",
-                    Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), "当前无权限,请打开权限后,重试!!!", Toast.LENGTH_LONG).show();
             finish();
         }
 
         setContentView(R.layout.camera_full_record_layout);
-
         drawPadCamera = (DrawPadCameraView) findViewById(R.id.id_fullrecord_padview);
 
         initView();
         initBeautyView();
         mProgressBar.setMaxProgress(RECORD_CAMERA_MAX / 1000);
         mProgressBar.setOnProgressTouchListener(new CameraProgressBar.OnProgressTouchListener() {
-                    @Override
-                    public void onClick(CameraProgressBar progressBar) {
+            @Override
+            public void onClick(CameraProgressBar progressBar) {
 
-                        if (drawPadCamera != null) {
-                            /**
-                             * 这里只是暂停和恢复录制, 可以录制多段,但不可以删除录制好的每一段,
-                             *
-                             * 如果你要分段录制,并支持回删,则可以采用SegmentStart和SegmentStop;
-                             */
-                            if (drawPadCamera.isRecording()) {
-                                drawPadCamera.pauseRecord();
-                            } else {
-                                drawPadCamera.startRecord();
-                            }
-                        }
+                if (drawPadCamera != null) {
+                    /**
+                     * 这里只是暂停和恢复录制, 可以录制多段,但不可以删除录制好的每一段,
+                     *
+                     * 如果你要分段录制,并支持回删,则可以采用SegmentStart和SegmentStop;
+                     */
+                    if (drawPadCamera.isRecording()) {
+                        drawPadCamera.pauseRecord();
+                    } else {
+                        drawPadCamera.startRecord();
                     }
-                });
+                }
+            }
+        });
 
         dstPath = LanSongFileUtil.newMp4PathInBox();
         initDrawPad(); // 开始录制.
@@ -136,8 +165,7 @@ public class CameraLayerFullPortActivity extends Activity implements
         super.onResume();
         if (mWakeLock == null) {
             PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
-            mWakeLock = pm.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK,
-                    TAG);
+            mWakeLock = pm.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK, TAG);
             mWakeLock.acquire();
         }
         startDrawPad();
@@ -151,12 +179,9 @@ public class CameraLayerFullPortActivity extends Activity implements
         int padHeight = 960;
         int bitrate = 3000 * 1024;
         /**
-         * 设置录制时的一些参数.
+         * 设置录制时的一些监听和参数.
          */
         drawPadCamera.setRealEncodeEnable(padWidth, padHeight, bitrate, (int) 25, dstPath);
-        /**
-         * 设置录制处理进度监听.
-         */
         drawPadCamera.setOnDrawPadProgressListener(drawPadProgressListener);
 
 
@@ -193,16 +218,45 @@ public class CameraLayerFullPortActivity extends Activity implements
         if (LanSongUtil.isFullScreenRatio(drawPadCamera.getViewWidth(), drawPadCamera.getViewHeight())) {
             drawPadCamera.setRealEncodeEnable(544, 1088, 3500 * 1024, (int) 25, dstPath);
         }
-        if (drawPadCamera.setupDrawpad()) // 建立图层.
+        if (drawPadCamera.setupDrawpad()) // 建立容器
         {
-            cameraLayer = drawPadCamera.getCameraLayer(); // 临时
+            cameraLayer = drawPadCamera.getCameraLayer();
             if (cameraLayer != null) {
                 drawPadCamera.startPreview();
+                cameraLayer.setOnCameraLayerTextureIdListener(new onCameraLayerTextureIdListener() {
+                    @Override
+                    public int onCamereaLayerTexture(int id, int width, int height) {
+                        return id;
+                    }
+                });
+                filters.add(new GPUImageFilter("无"));
+                filters.add(new LanSongBeautyAdvanceFilter("美颜"));
+                filters.add(new IFAmaroFilter(getApplicationContext(), "1AMARO"));
+                filters.add(new IFRiseFilter(getApplicationContext(), "2RISE"));
+                filters.add(new IFHudsonFilter(getApplicationContext(), "3HUDSON"));
+                filters.add(new IFXproIIFilter(getApplicationContext(), "4XPROII"));
+                filters.add(new IFSierraFilter(getApplicationContext(), "5SIERRA"));
+                filters.add(new IFLomofiFilter(getApplicationContext(), "6LOMOFI"));
+                filters.add(new IFEarlybirdFilter(getApplicationContext(), "7EARLYBIRD"));
+                filters.add(new IFSutroFilter(getApplicationContext(), "8SUTRO"));
+                filters.add(new IFToasterFilter(getApplicationContext(), "9TOASTER"));
+                filters.add(new IFBrannanFilter(getApplicationContext(), "10BRANNAN"));
+                filters.add(new IFInkwellFilter(getApplicationContext(), "11INKWELL"));
+                filters.add(new IFWaldenFilter(getApplicationContext(), "12WALDEN"));
+                filters.add(new IFHefeFilter(getApplicationContext(), "13HEFE"));
+                filters.add(new IFValenciaFilter(getApplicationContext(), "14VALENCIA"));
+                filters.add(new IFNashvilleFilter(getApplicationContext(), "15NASHVILLE"));
+                filters.add(new IFLordKelvinFilter(getApplicationContext(), "16LORDKELVIN"));
+                filters.add(new IF1977Filter(getApplicationContext(), "17if1977"));
+                cameraLayer.setSlideFilterArray(filters);
             }
         } else {
             Log.i(TAG, "建立drawpad线程失败.");
         }
     }
+
+
+//--------------------
 
     /**
      * Step3: 停止容器, 停止后,为新的视频文件增加上音频部分.
@@ -219,17 +273,16 @@ public class CameraLayerFullPortActivity extends Activity implements
      */
     private void selectFilter() {
         if (drawPadCamera != null && drawPadCamera.isRunning()) {
-            FilterLibrary.showDialog(this,
-                    new OnGpuImageFilterChosenListener() {
+            FilterLibrary.showDialog(this, new OnGpuImageFilterChosenListener() {
 
-                        @Override
-                        public void onGpuImageFilterChosenListener(
-                                final GPUImageFilter filter, String name) {
-                            if (cameraLayer != null) {
-                                cameraLayer.switchFilterTo(filter);
-                            }
-                        }
-                    });
+                @Override
+                public void onGpuImageFilterChosenListener(
+                        final GPUImageFilter filter, String name) {
+                    if (cameraLayer != null) {
+                        cameraLayer.switchFilterTo(filter);
+                    }
+                }
+            });
         }
     }
 
@@ -260,9 +313,7 @@ public class CameraLayerFullPortActivity extends Activity implements
 
             bmpLayer = drawPadCamera.addBitmapLayer(BitmapFactory.decodeFile(bitmapPath));
             // 把位置放到中间的右侧, 因为获取的高度是中心点的高度.
-            bmpLayer.setPosition(
-                    bmpLayer.getPadWidth() - bmpLayer.getLayerWidth() / 2,
-                    bmpLayer.getPositionY());
+            bmpLayer.setPosition(bmpLayer.getPadWidth() - bmpLayer.getLayerWidth() / 2, bmpLayer.getPositionY());
         }
     }
 
@@ -285,7 +336,6 @@ public class CameraLayerFullPortActivity extends Activity implements
          * 	mvLayer.setEndMode(MVLayerENDMode.INVISIBLE);
          */
     }
-
 //    /**
 //     * 增加效果视频
 //     */

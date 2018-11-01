@@ -97,7 +97,6 @@ public class FilterList {
 
     /**
      * 根据 枚举类型获取滤镜对象
-     *
      * @param ctx
      * @param filter
      * @return

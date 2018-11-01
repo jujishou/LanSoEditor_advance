@@ -29,22 +29,11 @@ public class LanSongUtil {
     public static boolean checkRecordPermission(Context ctx) {
         boolean ret1 = LanSoEditorBox.cameraIsCanUse();
         boolean ret2 = LanSoEditorBox.checkMicPermission(ctx);
-        Log.i("utrl","testpermission cameraIsCanUse:"+ ret1+ " checkMicPermission:"+ ret2);
-
         return ret1 && ret2;
     }
 
     /**
      * 隐藏虚拟按键，并且全屏
-     * <p>
-     * 如果不全屏, 用这样的不行: int width=mDrawPadView.getDrawPadWidth(); int
-     * height=mDrawPadView.getDrawPadHeight(); int padWidth=
-     * (padHeight*width)/height;
-     * <p>
-     * padWidth=(int)LanSongUtil.make4Bei((long)padWidth);
-     * <p>
-     * Log.i(TAG,"wwwwwidth:"+width+"height"+height+" pad:"+padHeight+" "+
-     * padWidth);
      */
     public static void hideBottomUIMenu(Activity act) {
         // 隐藏虚拟按键，并且全屏

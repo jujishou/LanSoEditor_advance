@@ -19,7 +19,13 @@ public class CopyFileFromAssets {
      * @return 返回 拷贝文件的目标路径
      */
     public static String copyAssets(Context mContext, String assetsName) {
-        String filePath = LanSongFileUtil.TMP_DIR + "/" + assetsName;
+
+        String filePath;
+        if(LanSongFileUtil.TMP_DIR!=null && LanSongFileUtil.TMP_DIR.endsWith("/")==false){
+            filePath = LanSongFileUtil.TMP_DIR + "/" + assetsName;
+        }else{
+            filePath = LanSongFileUtil.TMP_DIR +  assetsName;
+        }
 
         File dir = new File(LanSongFileUtil.TMP_DIR);
         // 如果目录不中存在，创建这个目录

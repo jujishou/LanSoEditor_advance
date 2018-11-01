@@ -20,7 +20,7 @@ import com.lansosdk.box.DrawPadUpdateMode;
 import com.lansosdk.box.LSLog;
 import com.lansosdk.box.Layer;
 import com.lansosdk.box.SubLayer;
-import com.lansosdk.box.VideoLayer2;
+import com.lansosdk.box.VideoLayer;
 import com.lansosdk.box.onDrawPadSizeChangedListener;
 import com.lansosdk.box.onDrawPadThreadProgressListener;
 import com.lansosdk.videoeditor.DrawPadView;
@@ -47,7 +47,7 @@ public class DouYinDemoActivity extends Activity implements OnClickListener {
     private String videoPath;
     private DrawPadView drawPadView;
     private MediaPlayer mplayer = null;
-    private VideoLayer2 videoLayer = null;
+    private VideoLayer videoLayer = null;
     private String editTmpPath = null;
     private String dstPath = null;
     private LinearLayout playVideo;
@@ -153,7 +153,7 @@ public class DouYinDemoActivity extends Activity implements OnClickListener {
         drawPadView.pauseDrawPad();
 
         if (drawPadView.isRunning() == false && drawPadView.startDrawPad()) {
-            videoLayer = drawPadView.addVideoLayer2(mplayer.getVideoWidth(), mplayer.getVideoHeight(), null);
+            videoLayer = drawPadView.addVideoLayer(mplayer.getVideoWidth(), mplayer.getVideoHeight(), null);
             if (videoLayer != null) {
                 mplayer.setSurface(new Surface(videoLayer.getVideoTexture()));
                 mplayer.start();

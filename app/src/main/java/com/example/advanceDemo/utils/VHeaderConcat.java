@@ -1,7 +1,6 @@
 package com.example.advanceDemo.utils;
 
 import android.content.Context;
-import android.util.Log;
 
 import com.lansosdk.box.DrawPad;
 import com.lansosdk.box.LSLog;

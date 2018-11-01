@@ -1,19 +1,12 @@
 package com.example.advanceDemo.utils;
 
-import android.graphics.BitmapFactory;
 import android.media.MediaPlayer;
-import android.util.Log;
 import android.view.Surface;
-import android.view.View;
-import android.widget.Toast;
 
-import com.lansoeditor.advanceDemo.R;
-import com.lansosdk.box.BitmapLayer;
 import com.lansosdk.box.LSLog;
-import com.lansosdk.box.VideoLayer2;
+import com.lansosdk.box.VideoLayer;
 import com.lansosdk.box.onDrawPadSizeChangedListener;
 import com.lansosdk.videoeditor.DrawPadView;
-import com.lansosdk.videoeditor.LanSongMergeAV;
 import com.lansosdk.videoeditor.MediaInfo;
 import com.lansosdk.videoeditor.LanSongFileUtil;
 
@@ -93,7 +86,7 @@ public class DrawPadViewWapper {
             /**
              *  增加视频图层;
              */
-            VideoLayer2 videoLayer = drawPadView.addVideoLayer2(mediaPlayer.getVideoWidth(),mediaPlayer.getVideoHeight(), null);
+            VideoLayer videoLayer = drawPadView.addVideoLayer(mediaPlayer.getVideoWidth(),mediaPlayer.getVideoHeight(), null);
             if (videoLayer != null) {
                 mediaPlayer.setSurface(new Surface(videoLayer.getVideoTexture()));
             }

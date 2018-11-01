@@ -28,8 +28,14 @@ import static com.lansosdk.videoeditor.LanSongFileUtil.fileExist;
 
 /**
  * 最简单的调用方法:
+ *  //step1. 放在主线程中执行;
  * VideoEditor veditor=new VideoEditor();
- * veditor.executeXXXXX();  //阻塞执行, 要放到AsyncTask或Thread中执行;
+ * veditor.setOnProgessListener(xxx)进度;
+ *
+ * //step2.
+ * 然后在AsyncTask或Thread中执行如下;
+ * veditor.executeXXXXX();
+ *
  *
  * 杭州蓝松科技有限公司
  * www.lansongtech.com
@@ -257,6 +263,53 @@ public class VideoEditor {
      * @param outData
      */
     public static native void createWavHeader(int filelength, int channel, int sampleRate, int bitperSample, byte[] outData);
+
+  //-----------------
+  public static String mergeAVDirectly(String audio, String video,boolean deleteVideo) {
+      MediaInfo info=new MediaInfo(audio);
+      if(info.prepare() && info.isHaveAudio()){
+          String retPath=LanSongFileUtil.createMp4FileInBox();
+
+          String inputAudio = audio;
+          List<String> cmdList = new ArrayList<String>();
+
+          cmdList.add("-i");
+          cmdList.add(inputAudio);
+          cmdList.add("-i");
+          cmdList.add(video);
+
+          cmdList.add("-map");
+          cmdList.add("0:a");
+          cmdList.add("-map");
+          cmdList.add("1:v");
+
+          cmdList.add("-acodec");
+          cmdList.add("copy");
+          cmdList.add("-vcodec");
+          cmdList.add("copy");
+
+          cmdList.add("-absf");
+          cmdList.add("aac_adtstoasc");
+
+          cmdList.add("-y");
+          cmdList.add(retPath);
+          String[] command = new String[cmdList.size()];
+          for (int i = 0; i < cmdList.size(); i++) {
+              command[i] = (String) cmdList.get(i);
+          }
+          VideoEditor editor = new VideoEditor();
+          int ret = editor.executeVideoEditor(command);
+          if(ret==0){
+              if(deleteVideo){
+                  LanSongFileUtil.deleteFile(video);
+              }
+              return retPath;
+          }else{
+              return video;
+          }
+      }
+      return video;
+  }
     /**
      * 把一张图片变成视频
      *
@@ -537,6 +590,7 @@ public class VideoEditor {
             MediaInfo info = new MediaInfo(srcPath);
             if (info.prepare()) {
 
+                setEncodeBitRate((int)(info.vBitRate *percent));
                 List<String> cmdList = new ArrayList<String>();
 
 
@@ -2567,7 +2621,7 @@ public class VideoEditor {
             cmdList2.add("-g");
             cmdList2.add("30");
             if(bitrate==0){
-                bitrate=(int)(2.5f*1024*1024); //LSTODO
+                bitrate=(int)(2.5f*1024*1024); //LSFIXME
             }
             cmdList2.add("-b:v");
             cmdList2.add(String.valueOf(bitrate));

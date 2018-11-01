@@ -28,7 +28,6 @@ import com.lansosdk.box.Layer;
 import com.lansosdk.box.MVLayer;
 import com.lansosdk.box.MicLine;
 import com.lansosdk.box.VideoLayer;
-import com.lansosdk.box.VideoLayer2;
 import com.lansosdk.box.ViewLayer;
 import com.lansosdk.box.YUVLayer;
 import com.lansosdk.box.onDrawPadCompletedListener;
@@ -41,7 +40,7 @@ import com.lansosdk.box.onDrawPadSizeChangedListener;
 import com.lansosdk.box.onDrawPadSnapShotListener;
 import com.lansosdk.box.onDrawPadThreadProgressListener;
 
-import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import jp.co.cyberagent.lansongsdk.gpuimage.GPUImageFilter;
@@ -144,6 +143,8 @@ public class DrawPadCameraView extends FrameLayout {
      * 放大缩小画面
      */
     private boolean isZoomEvent = false;
+    private boolean isSlideEvent = false;
+    private boolean isSlideToRight = false;
     private float pointering; // 两个手指按下.
     private doFousEventListener mDoFocusListener;
     // ----------------------------------------------
@@ -193,7 +194,6 @@ public class DrawPadCameraView extends FrameLayout {
         addView(renderUIView);
         mTextureRenderView.setVideoRotation(mVideoRotationDegree);
 
-        // 增加touch事件.
         mTextureRenderView.setOnTouchListener(new OnTouchListener() {
 
             @Override
@@ -651,6 +651,11 @@ public class DrawPadCameraView extends FrameLayout {
                     Log.e(TAG,"开启 DrawPad 失败, 或许是您之前的DrawPad没有Stop, 或者传递进去的surface对象已经被系统Destory!!,"
                                     + "请检测您 的代码或直接拷贝我们的代码过去,在我们代码基础上修改参数;\n");
                 } else {
+
+//                    if(slideFilterArray!=null){
+//                        renderer.getCameraLayer().setSlideFilterArray(slideFilterArray);
+//                    }
+
                     renderer.setDisplaySurface(mTextureRenderView, new Surface(
                             mSurfaceTexture));
                 }
@@ -1132,7 +1137,7 @@ public class DrawPadCameraView extends FrameLayout {
         }
     }
 
-    public VideoLayer2 addVideoLayer(int width, int height, GPUImageFilter filter) {
+    public VideoLayer addVideoLayer(int width, int height, GPUImageFilter filter) {
         if (renderer != null)
             return renderer.addVideoLayer(width, height, filter);
         else {
@@ -1294,37 +1299,35 @@ public class DrawPadCameraView extends FrameLayout {
         }
     }
 
-    /**
-     * 不再使用, 请在每个图层对象中直接使用 switchFilterList
-     */
-    @Deprecated
-    public void switchFilterList(Layer layer, ArrayList<GPUImageFilter> filters) {
-        if (renderer != null && renderer.isRunning()) {
-            renderer.switchFilterList(layer, filters);
+    private List<GPUImageFilter> slideFilterArray;
+    public void setSlideFilterArray(List<GPUImageFilter> filters){
+        if(renderer!=null && getCameraLayer()!=null){
+            getCameraLayer().setSlideFilterArray(filters);
         }
+        slideFilterArray=filters;
     }
 
-    /**
-     * 不再使用, 请在每个图层对象中直接使用switchFilterTo
-     */
-    @Deprecated
-    public boolean switchFilterTo(Layer layer, GPUImageFilter filter) {
-        if (renderer != null && renderer.isRunning()) {
-            return renderer.switchFilterTo(layer, filter);
-        } else {
-            return false;
-        }
-    }
+    float x1 = 0;
+    float x2 = 0;
+    float y1 = 0;
+    float y2 = 0;
+    float slideFilterPercent;
+
 
     public boolean onTouchEvent(MotionEvent event) {
 
         if (isEnableTouch == false) { // 如果禁止了touch事件,则直接返回false;
             return false;
         }
+        if(getCameraLayer()==null){
+            return false;
+        }
         switch (event.getAction() & MotionEvent.ACTION_MASK) {
             // 手指压下屏幕
             case MotionEvent.ACTION_DOWN:
                 isZoomEvent = false;
+                x1 = event.getX();
+                y1 = event.getY();
                 break;
             case MotionEvent.ACTION_POINTER_DOWN:
                 // 计算两个手指间的距离
@@ -1347,26 +1350,62 @@ public class DrawPadCameraView extends FrameLayout {
                         }
                     }
                 }
+                else if(getCameraLayer().isSlideFilterEnable() ){
+
+
+                    x2 = event.getX();
+                    y2 = event.getY();
+                    if(Math.abs(x2-x1)>10){
+                        isSlideEvent=true;
+                        float percent=x2*1.0f  / (float) getWidth();
+                        if(percent>1.0f){
+                            percent=1.0f;
+                        }
+                        slideFilterPercent=percent;
+                        if(x2>x1){ //向右滑动;
+                            isSlideToRight=true;
+                            getCameraLayer().slideFilterToRight(percent);
+                        }else{  //向左滑动;
+                            isSlideToRight=false;
+                            getCameraLayer().slideFilterToLeft(percent);
+                        }
+                    }
+                }
                 break;
             // 手指离开屏幕
             case MotionEvent.ACTION_UP:
-                if (isZoomEvent == false && isRunning()) {
-                    CameraLayer layer = getCameraLayer();
-                    if (layer != null) {
-                        float x = event.getX();
-                        float y = event.getY();
-                        if (renderer != null) {
-                            x = renderer.getTouchX(x);
-                            y = renderer.getTouchY(y);
-                        }
-                        layer.doFocus((int) x, (int) y);
+                if(isRunning()){
+                    if(isSlideEvent){
 
-                        if (mDoFocusListener != null) {
-                            mDoFocusListener.onFocus((int) x, (int) y);
+                        if(isSlideToRight && slideFilterPercent>0.7f){
+                            getCameraLayer().didSlideFilter();
+                        }else if(isSlideToRight==false && slideFilterPercent<0.3f) {
+                            getCameraLayer().didSlideFilter();
+                        }else {
+                            getCameraLayer().cancelSlideFilter();
+                        }
+
+                        slideFilterPercent=0;
+
+                    }else if (isZoomEvent == false) {
+                        CameraLayer layer = getCameraLayer();
+                        if (layer != null) {
+                            float x = event.getX();
+                            float y = event.getY();
+                            if (renderer != null) {
+                                x = renderer.getTouchX(x);
+                                y = renderer.getTouchY(y);
+                            }
+                            layer.doFocus((int) x, (int) y);
+
+                            if (mDoFocusListener != null) {
+                                mDoFocusListener.onFocus((int) x, (int) y);
+                            }
                         }
                     }
                 }
                 isZoomEvent = false;
+                isSlideEvent=false;
                 break;
         }
         return true;
@@ -1489,5 +1528,7 @@ public class DrawPadCameraView extends FrameLayout {
         public void onSurfaceTextureUpdated(SurfaceTexture surface) {
         }
     }
+
+
 
 }

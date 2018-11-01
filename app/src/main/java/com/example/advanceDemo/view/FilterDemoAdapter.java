@@ -9,25 +9,27 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.advanceDemo.layerDemo.Demo3LayerFilterActivity.NameBitmap;
 import com.lansoeditor.advanceDemo.R;
 import com.lansosdk.videoeditor.FilterList;
 
+import java.util.ArrayList;
+import java.util.Map;
+
 public class FilterDemoAdapter extends BaseAdapter {
 
-    FilterList bmpList;
+    ArrayList<NameBitmap>  bmpList=new ArrayList<>();
     private LayoutInflater mInflater;
 
-    public FilterDemoAdapter(Context con, FilterList bmpList) {
-        // mInflater=LayoutInflater.from(con);
-        this.bmpList = bmpList;
-        mInflater = (LayoutInflater) con
-                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);// LayoutInflater.from(mContext);
+    public FilterDemoAdapter(Context con, ArrayList<NameBitmap> list) {
+        this.bmpList = list;
+        mInflater = (LayoutInflater) con.getSystemService(Context.LAYOUT_INFLATER_SERVICE);// LayoutInflater.from(mContext);
     }
 
     @Override
     public int getCount() {
         if (bmpList != null) {
-            return bmpList.getBitmapSize();
+            return bmpList.size();
         } else {
             return 0;
         }
@@ -47,24 +49,24 @@ public class FilterDemoAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder viewHolder;
         if (convertView == null) {
+
             viewHolder = new ViewHolder();
             convertView = mInflater.inflate(R.layout.filter_item, null);
-            viewHolder.ivImage = (ImageView) convertView
-                    .findViewById(R.id.id_filter_item_iv);
-            viewHolder.tvName = (TextView) convertView
-                    .findViewById(R.id.id_filter_item_tv);
+            viewHolder.ivImage = (ImageView) convertView.findViewById(R.id.id_filter_item_iv);
+            viewHolder.tvName = (TextView) convertView.findViewById(R.id.id_filter_item_tv);
             convertView.setTag(viewHolder);
+
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
         }
 
-        if (position < bmpList.getBitmapSize()) {
-            Bitmap bmp = bmpList.getBitmap(position);
+        if (position < bmpList.size()) {
+            NameBitmap bmp = bmpList.get(position);
             if (bmp != null) {
-                viewHolder.ivImage.setImageBitmap(bmp);
+                viewHolder.ivImage.setImageBitmap(bmp.bitmap);
+                viewHolder.tvName.setText(bmp.name);
             }
         }
-        viewHolder.tvName.setText(bmpList.getName(position));
         return convertView;
     }
 

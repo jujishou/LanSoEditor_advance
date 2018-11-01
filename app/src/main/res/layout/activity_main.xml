@@ -50,7 +50,8 @@
     android:layout_height="wrap_content"
     android:background="#FFA500"
     android:orientation="vertical" >
- 
+
+
      <RelativeLayout  android:id="@+id/id_mainlist_camerarecord" style="@style/main_item_reletivelayout2">
            	 <TextView   android:text="摄像头录制" style="@style/main_item_textview"/>
 			<TextView  style="@style/main_item_arrow"/> 

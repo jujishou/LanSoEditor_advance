@@ -6,9 +6,10 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
@@ -18,11 +19,14 @@ import android.widget.Toast;
 
 import com.anthonycr.grant.PermissionsManager;
 import com.anthonycr.grant.PermissionsResultAction;
+//import com.example.advanceDemo.aeDemo.AEListActivity;
 import com.example.advanceDemo.aeDemo.AERecordFileHintActivity;
 import com.example.advanceDemo.scene.GameVideoDemoActivity;
 import com.example.advanceDemo.utils.ConvertToEditModeDialog;
 import com.example.advanceDemo.utils.DemoUtil;
 import com.example.advanceDemo.utils.FileExplorerActivity;
+import com.lansosdk.box.AudioSource;
+import com.lansosdk.videoeditor.AudioPadExecute;
 import com.lansosdk.videoeditor.CopyFileFromAssets;
 import com.lansoeditor.advanceDemo.R;
 import com.lansosdk.box.LanSoEditorBox;
@@ -34,13 +38,10 @@ import com.lansosdk.videoeditor.VideoEditor;
 
 import java.io.File;
 import java.util.Calendar;
-import java.util.Map;
-
-import static com.lansosdk.videoeditor.CopyFileFromAssets.copyAssets;
 
 public class ListMainActivity extends Activity implements OnClickListener {
 
-    private static final String TAG = "MainActivity";
+    private static final String TAG = "ListMainActivity";
     private static final boolean VERBOSE = false;
     private final static int SELECT_FILE_REQUEST_CODE = 10;
     int permissionCnt = 0;
@@ -64,7 +65,6 @@ public class ListMainActivity extends Activity implements OnClickListener {
         initView();
 
         showVersionDialog();
-        testFile();
     }
 
     @Override
@@ -121,11 +121,9 @@ public class ListMainActivity extends Activity implements OnClickListener {
             }
         }
     }
-
     // -----------------------------
     private void initView() {
         tvVideoPath = (TextView) findViewById(R.id.id_main_tvvideo);
-
         findViewById(R.id.id_mainlist_camerarecord).setOnClickListener(this);
         findViewById(R.id.id_mainlist_somelayer).setOnClickListener(this);
         findViewById(R.id.id_mainlist_changjing).setOnClickListener(this);
@@ -135,6 +133,9 @@ public class ListMainActivity extends Activity implements OnClickListener {
         findViewById(R.id.id_mainlist_bitmaps).setOnClickListener(this);
         findViewById(R.id.id_mainlist_videoplay).setOnClickListener(this);
         findViewById(R.id.id_mainlist_gamevideo).setOnClickListener(this);
+
+
+
 
         //---------------------
         findViewById(R.id.id_main_select_video).setOnClickListener(new OnClickListener() {
@@ -281,7 +282,6 @@ public class ListMainActivity extends Activity implements OnClickListener {
         private Context mContext = null;
         private TextView tvHint;
         private String fileName;
-
         /**
          * @param ctx
          * @param tvhint 拷贝后, 把拷贝到的目标完整路径显示到这个TextView上.
@@ -329,10 +329,5 @@ public class ListMainActivity extends Activity implements OnClickListener {
                         Toast.LENGTH_SHORT).show();
             }
         }
-    }
-
-    public void testFile() {
-//        tvVideoPath.setText("/sdcard/d1.mp4");
-//        startDemoActivity(AEInputActivity.class);
     }
 }

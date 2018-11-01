@@ -160,8 +160,8 @@ public class VideoOneDODemoActivity extends Activity implements
         }
 
         if (isAddLogoEnable) { // 增加logo
-            Bitmap bmp = BitmapFactory.decodeResource(getResources(),
-                    R.drawable.ic_launcher);
+
+            Bitmap bmp = BitmapFactory.decodeResource(getResources(),R.drawable.ls_logo);
             videoOneDo.setLogo(bmp, VideoOneDo.LOGO_POSITION_RIGHT_TOP);
         }
 

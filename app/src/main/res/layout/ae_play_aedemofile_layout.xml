@@ -1,16 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/black">
+
     <TextView
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="正在演示AE特效模板..."/>
+        android:text="此为录像文件, 正在播放演示效果"
+        android:textColor="@color/red"
+        android:textSize="20sp"/>
     <TextureView
         android:id="@+id/id_aedemo_textureview"
+        android:layout_margin="@dimen/dp30"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_margin="@dimen/dp20"
         />
-
 </RelativeLayout>
