@@ -16,6 +16,8 @@ import com.example.advanceDemo.VideoPlayerActivity;
 import com.example.advanceDemo.view.CameraProgressBar;
 import com.example.advanceDemo.view.FocusImageView;
 import com.lansoeditor.advanceDemo.R;
+import com.lansosdk.LanSongFilter.LanSongBlurFilter;
+import com.lansosdk.LanSongFilter.LanSongFilter;
 import com.lansosdk.box.CameraLayer;
 import com.lansosdk.box.DrawPad;
 import com.lansosdk.box.SubLayer;
@@ -25,14 +27,11 @@ import com.lansosdk.videoeditor.DrawPadCameraView;
 import com.lansosdk.videoeditor.DrawPadCameraView.doFousEventListener;
 import com.lansosdk.videoeditor.DrawPadCameraView.onViewAvailable;
 import com.lansosdk.videoeditor.FilterLibrary;
-import com.lansosdk.videoeditor.FilterLibrary.OnGpuImageFilterChosenListener;
+import com.lansosdk.videoeditor.FilterLibrary.OnLanSongFilterChosenListener;
 import com.lansosdk.videoeditor.LanSongUtil;
 import com.lansosdk.videoeditor.LanSongFileUtil;
 
 import java.util.ArrayList;
-
-import jp.co.cyberagent.lansongsdk.gpuimage.GPUImageFilter;
-import jp.co.cyberagent.lansongsdk.gpuimage.LanSongBlurFilter;
 
 public class CameraSubLayerDemo2Activity extends Activity implements
         OnClickListener {
@@ -41,7 +40,7 @@ public class CameraSubLayerDemo2Activity extends Activity implements
 
     private static final int RECORD_CAMERA_MIN = 2 * 1000 * 1000; // 定义最小2秒
 
-    private static final String TAG = "CameraSubLayerDemo2Activity";
+    private static final String TAG = "CameraSubLayer";
 
     private DrawPadCameraView mDrawPadCamera;
 
@@ -136,8 +135,7 @@ public class CameraSubLayerDemo2Activity extends Activity implements
         super.onResume();
         if (mWakeLock == null) {
             PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
-            mWakeLock = pm.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK,
-                    TAG);
+            mWakeLock = pm.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK,TAG);
             mWakeLock.acquire();
         }
         startDrawPad();
@@ -234,11 +232,9 @@ public class CameraSubLayerDemo2Activity extends Activity implements
     private void selectFilter() {
         if (mDrawPadCamera != null && mDrawPadCamera.isRunning()) {
             FilterLibrary.showDialog(this,
-                    new OnGpuImageFilterChosenListener() {
-
+                    new OnLanSongFilterChosenListener() {
                         @Override
-                        public void onGpuImageFilterChosenListener(
-                                final GPUImageFilter filter, String name) {
+                        public void onLanSongFilterChosenListener(LanSongFilter filter, String name) {
                             if (mCamLayer != null) {
                                 mCamLayer.switchFilterTo(filter);
                             }

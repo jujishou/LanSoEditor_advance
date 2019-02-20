@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 26
-    buildToolsVersion '28.0.2'
+    buildToolsVersion '28.0.3'
 
     defaultConfig {
         applicationId "com.lansoeditor.advanceDemo"
@@ -27,7 +27,6 @@ dependencies {
 
     implementation 'com.android.support:appcompat-v7:27.1.1'
 
-    implementation files('libs/lansongeditor_hx.jar')
     implementation project(':LanSongSDK')
 
 

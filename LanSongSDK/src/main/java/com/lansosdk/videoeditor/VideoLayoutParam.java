@@ -4,15 +4,12 @@ package com.lansosdk.videoeditor;
  *
  * 杭州蓝松科技有限公司
  * www.lansongtech.com
- *
- *
- *
  */
 
 public class VideoLayoutParam {
 
     /**
-     * 完整的视频路径
+     * 完整的视频或图片的路径
      */
     public String video;
 

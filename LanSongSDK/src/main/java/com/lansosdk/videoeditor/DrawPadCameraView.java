@@ -43,7 +43,7 @@ import com.lansosdk.box.onDrawPadThreadProgressListener;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import jp.co.cyberagent.lansongsdk.gpuimage.GPUImageFilter;
+import com.lansosdk.LanSongFilter.LanSongFilter;
 
 /**
  * 处理预览和实时保存的View, 继承自FrameLayout.
@@ -52,27 +52,6 @@ import jp.co.cyberagent.lansongsdk.gpuimage.GPUImageFilter;
  */
 public class DrawPadCameraView extends FrameLayout {
 
-    /**
-     * 画面显示模式：不裁剪直接和父view匹配， 这样如果画面超出父view的尺寸，将会只显示画面的
-     * 一部分，您可以使用这个来平铺画面，通过手动拖拽的形式来截取画面的一部分。类似画面区域裁剪的功能。
-     */
-    static final int AR_ASPECT_FIT_PARENT = 0; // without clip
-    /**
-     * 画面显示模式:裁剪和父view匹配, 当画面超过父view大小时,不会缩放,会只显示画面的一部分. 超出部分不予显示.
-     */
-    static final int AR_ASPECT_FILL_PARENT = 1; // may clip
-    /**
-     * 画面显示模式: 自适应大小.当小于画面尺寸时,自动显示.当大于尺寸时,缩放显示.
-     */
-    static final int AR_ASPECT_WRAP_CONTENT = 2;
-    /**
-     * 画面显示模式:和父view的尺寸对其.完全填充满父view的尺寸
-     */
-    static final int AR_MATCH_PARENT = 3;
-    /**
-     * 把画面的宽度等于父view的宽度, 高度按照16:9的形式显示. 大部分的网络推荐用这种方式显示.
-     */
-    static final int AR_16_9_FIT_PARENT = 4;
     /**
      * 把画面的宽度等于父view的宽度, 高度按照4:3的形式显示.
      */
@@ -97,7 +76,7 @@ public class DrawPadCameraView extends FrameLayout {
     /**
      * 初始化CameraLayer的时候, 是否需要设置滤镜. 当然您也可以在后面实时切换为别的滤镜.
      */
-    private GPUImageFilter initFilter = null;
+    private LanSongFilter initFilter = null;
     private float encodeSpeed = 1.0f;
     // private FocusImageView focusView;
     // /**
@@ -184,7 +163,7 @@ public class DrawPadCameraView extends FrameLayout {
         mTextureRenderView = new TextureRenderView(getContext());
         mTextureRenderView.setSurfaceTextureListener(new SurfaceCallback());
 
-        mTextureRenderView.setDispalyRatio(AR_ASPECT_FIT_PARENT);
+        mTextureRenderView.setDispalyRatio(0);
 
         View renderUIView = mTextureRenderView.getView();
         FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(
@@ -239,11 +218,14 @@ public class DrawPadCameraView extends FrameLayout {
      * 你完全可以重新按照你的界面需求来修改这个DrawPadView类.
      */
     public void setOnViewAvailable(onViewAvailable listener) {
-        mViewAvailable = listener;
+        mViewAvailable = listener;  //LSTODO查看下为什么这里在onCreate中不能执行;
+        if(mSurfaceTexture!=null){
+            mViewAvailable.viewAvailable(this);
+        }
     }
 
     @Deprecated
-    public void setCameraParam(boolean front, GPUImageFilter filter,boolean beauful) {
+    public void setCameraParam(boolean front, LanSongFilter filter,boolean beauful) {
         isFrontCam = front;
         initFilter = filter;
     }
@@ -253,7 +235,7 @@ public class DrawPadCameraView extends FrameLayout {
      * @param front
      * @param filter
      */
-    public void setCameraParam(boolean front, GPUImageFilter filter) {
+    public void setCameraParam(boolean front, LanSongFilter filter) {
         isFrontCam = front;
         initFilter = filter;
     }
@@ -298,6 +280,9 @@ public class DrawPadCameraView extends FrameLayout {
         } else {
             Log.w(TAG, "enable real encode is error");
         }
+    }
+    public void setExtCameraLayer(CameraLayer layer){
+        extCameraLayer=layer;
     }
 
     public void setRealEncodeEnable(int encW, int encH, int encFr,
@@ -797,12 +782,11 @@ public class DrawPadCameraView extends FrameLayout {
      *
      * @param record 如果要设置mic录制,请务必设置为true;只是为了兼容老版本才保留这个boolean
      */
-    public MicLine setRecordMic(boolean record) {
+    public void setRecordMic(boolean record) {
         if (renderer != null) {
-            return renderer.setRecordMic(record);
+            renderer.setRecordMic(record);
         }
         isRecordMic = record;
-        return null;
     }
 
     public void setRecordExtraPcm(boolean isrecord, int channels,
@@ -878,6 +862,10 @@ public class DrawPadCameraView extends FrameLayout {
         return null;
     }
 
+    /**
+     * 在开始预览后有效.
+     * @return
+     */
     public MicLine getMicLine() {
         if (renderer != null) {
             return renderer.getMicLine();
@@ -923,7 +911,6 @@ public class DrawPadCameraView extends FrameLayout {
         }
     }
 
-    @Deprecated
     public String segmentStop() {
         if (renderer != null) {
             return renderer.segmentStop();
@@ -1137,7 +1124,7 @@ public class DrawPadCameraView extends FrameLayout {
         }
     }
 
-    public VideoLayer addVideoLayer(int width, int height, GPUImageFilter filter) {
+    public VideoLayer addVideoLayer(int width, int height, LanSongFilter filter) {
         if (renderer != null)
             return renderer.addVideoLayer(width, height, filter);
         else {
@@ -1299,8 +1286,8 @@ public class DrawPadCameraView extends FrameLayout {
         }
     }
 
-    private List<GPUImageFilter> slideFilterArray;
-    public void setSlideFilterArray(List<GPUImageFilter> filters){
+    private List<LanSongFilter> slideFilterArray;
+    public void setSlideFilterArray(List<LanSongFilter> filters){
         if(renderer!=null && getCameraLayer()!=null){
             getCameraLayer().setSlideFilterArray(filters);
         }
@@ -1512,9 +1499,7 @@ public class DrawPadCameraView extends FrameLayout {
             mSurfaceTexture = null;
             padHeight = 0;
             padWidth = 0;
-
             stopDrawPad(); // 可以在这里增加以下. 这样当Texture销毁的时候, 停止DrawPad
-
             return false;
         }
 

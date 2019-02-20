@@ -36,7 +36,7 @@ import com.lansosdk.box.onDrawPadSizeChangedListener;
 import com.lansosdk.box.onDrawPadSnapShotListener;
 import com.lansosdk.box.onDrawPadThreadProgressListener;
 
-import jp.co.cyberagent.lansongsdk.gpuimage.GPUImageFilter;
+import com.lansosdk.LanSongFilter.LanSongFilter;
 
 public class DrawPadView2 extends FrameLayout {
 
@@ -694,7 +694,7 @@ public class DrawPadView2 extends FrameLayout {
      * @param height 主视频的画面高度
      * @return
      */
-    public VideoLayer addMainVideoLayer(int width, int height, GPUImageFilter filter) {
+    public VideoLayer addMainVideoLayer(int width, int height, LanSongFilter filter) {
         VideoLayer ret = null;
 
         if (renderer != null)
@@ -724,7 +724,7 @@ public class DrawPadView2 extends FrameLayout {
 
     /**
      */
-    public VideoLayer addVideoLayer(int width, int height, GPUImageFilter filter) {
+    public VideoLayer addVideoLayer(int width, int height, LanSongFilter filter) {
         if (renderer != null)
             return renderer.addVideoLayer(width, height, filter);
         else {
@@ -760,7 +760,7 @@ public class DrawPadView2 extends FrameLayout {
      * @param filter
      * @return
      */
-    public BitmapLayer addBitmapLayer(Bitmap bmp, GPUImageFilter filter) {
+    public BitmapLayer addBitmapLayer(Bitmap bmp, LanSongFilter filter) {
         if (bmp != null) {
             if (renderer != null)
                 return renderer.addBitmapLayer(bmp, filter);
@@ -784,7 +784,7 @@ public class DrawPadView2 extends FrameLayout {
      * @return
      */
     public TextureLayer addTextureLayer(int texid, int width, int height,
-                                        GPUImageFilter filter) {
+                                        LanSongFilter filter) {
         if (texid != -1) {
             if (renderer != null && renderer.isRunning())
                 return renderer.addTextureLayer(texid, width, height, filter);

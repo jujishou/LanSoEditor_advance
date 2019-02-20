@@ -39,48 +39,13 @@ import com.lansosdk.box.onDrawPadThreadProgressListener;
 
 import java.util.ArrayList;
 
-import jp.co.cyberagent.lansongsdk.gpuimage.GPUImageFilter;
+import com.lansosdk.LanSongFilter.LanSongFilter;
 
-/**
- * 对各种图层的画面做处理, 可以预览,最终生成视频.
- * <p>
- * 如果仅仅是对一个完整的视频做处理,则处理完毕后, 是没有音频文件的,需要在外部另行增加,可参照我们的各种Activity来操作.
- * <p>
- * <p>
- * 适用在增加到UI界面中, 一边预览,一边实时保存的场合.
- * <p>
- * 此代码由我们来维护, 请不要修改其中代码,您可以继承该方法,在继承的类中增加您想要的代码.
- */
 public class DrawPadView extends FrameLayout {
 
-    /**
-     * 视频画面显示模式：不裁剪直接和父view匹配， 这样如果画面超出父view的尺寸，将会只显示视频画面的
-     * 一部分，您可以使用这个来平铺视频画面，通过手动拖拽的形式来截取画面的一部分。类似视频画面区域裁剪的功能。
-     */
     static final int AR_ASPECT_FIT_PARENT = 0; // without clip
-    /**
-     * 视频画面显示模式:裁剪和父view匹配, 当视频画面超过父view大小时,不会缩放,会只显示视频画面的一部分. 超出部分不予显示.
-     */
-    static final int AR_ASPECT_FILL_PARENT = 1; // may clip
-    /**
-     * 视频画面显示模式: 自适应大小.当小于画面尺寸时,自动显示.当大于尺寸时,缩放显示.
-     */
-    static final int AR_ASPECT_WRAP_CONTENT = 2;
-    /**
-     * 视频画面显示模式:和父view的尺寸对其.完全填充满父view的尺寸
-     */
-    static final int AR_MATCH_PARENT = 3;
-    /**
-     * 把画面的宽度等于父view的宽度, 高度按照16:9的形式显示. 大部分的网络视频推荐用这种方式显示.
-     */
-    static final int AR_16_9_FIT_PARENT = 4;
-    /**
-     * 把画面的宽度等于父view的宽度, 高度按照4:3的形式显示.
-     */
-    static final int AR_4_3_FIT_PARENT = 5;
     private static final String TAG = LSLog.TAG;
     private static final boolean VERBOSE = false;
-    private int mVideoRotationDegree;
     private TextureRenderView mTextureRenderView;
     private DrawPadViewRender renderer;
     private SurfaceTexture mSurfaceTexture = null;
@@ -88,9 +53,6 @@ public class DrawPadView extends FrameLayout {
     private int encWidth, encHeight, encFrameRate;
     private int encBitRate = 0;
     private float encodeSpeed = 1.0f;
-    /**
-     * 经过宽度对齐到手机的边缘后, 缩放后的宽高,作为drawpad(容器)的宽高.
-     */
     private int drawPadWidth, drawPadHeight;
     private String encodeOutput = null; // 编码输出路径
     private DrawPadUpdateMode mUpdateMode = DrawPadUpdateMode.ALL_VIDEO_READY;
@@ -170,7 +132,7 @@ public class DrawPadView extends FrameLayout {
                 FrameLayout.LayoutParams.WRAP_CONTENT, Gravity.CENTER);
         renderUIView.setLayoutParams(lp);
         addView(renderUIView);
-        mTextureRenderView.setVideoRotation(mVideoRotationDegree);
+        mTextureRenderView.setVideoRotation(0);
     }
 
     /**
@@ -182,9 +144,6 @@ public class DrawPadView extends FrameLayout {
     public void setUpdateMode(DrawPadUpdateMode mode, int autofps) {
         mAutoFlushFps = autofps;
         mUpdateMode = mode;
-//        if (renderer != null) {
-//            renderer.setUpdateMode(mUpdateMode, mAutoFlushFps);
-//        }
     }
 
     /**
@@ -626,7 +585,6 @@ public class DrawPadView extends FrameLayout {
 
     /**
      * 恢复之前暂停的DrawPad,让其继续画面刷新. 与{@link #pauseDrawPad()}配对使用.
-     * <p>
      * 此方法是对DrawPad线程 暂停和恢复的, 不能用在一个Activity的onPause和onResume中.
      * 如果您要跳入到别的Activity, 则应该这里 {@link #stopDrawPad()} 在回到当前Activity的时候, 调用
      * {@link #startDrawPad()}
@@ -942,7 +900,7 @@ public class DrawPadView extends FrameLayout {
      * @return
      */
     public VideoLayer addMainVideoLayer(int width, int height,
-                                        GPUImageFilter filter) {
+                                        LanSongFilter filter) {
         VideoLayer ret = null;
         if (renderer != null)
             ret = renderer.addMainVideoLayer(width, height, filter);
@@ -978,7 +936,7 @@ public class DrawPadView extends FrameLayout {
      * @param filter 增加滤镜, 如果不需要滤镜,设置为null;
      * @return
      */
-    public VideoLayer addVideoLayer(int width, int height, GPUImageFilter filter) {
+    public VideoLayer addVideoLayer(int width, int height, LanSongFilter filter) {
         if (renderer != null)
             return renderer.addVideoLayer(width, height, filter);
         else {
@@ -989,7 +947,7 @@ public class DrawPadView extends FrameLayout {
     /**
      * 因之前有客户自定义一个Camera图层, 我们的Drawpad可以接受外部客户自定义图层.这里填入.
      */
-    // public Layer addCustemLayer()
+    // public AeLayer addCustemLayer()
     // {
     // CameraLayer ret=null;
     // if(renderer!=null){
@@ -1023,7 +981,7 @@ public class DrawPadView extends FrameLayout {
         }
     }
 
-    public BitmapLayer addBitmapLayer(Bitmap bmp, GPUImageFilter filter) {
+    public BitmapLayer addBitmapLayer(Bitmap bmp, LanSongFilter filter) {
         if (bmp != null) {
             if (renderer != null)
                 return renderer.addBitmapLayer(bmp, filter);
@@ -1047,7 +1005,7 @@ public class DrawPadView extends FrameLayout {
      * @return
      */
     public TextureLayer addTextureLayer(int texid, int width, int height,
-                                        GPUImageFilter filter) {
+                                        LanSongFilter filter) {
         if (texid != -1) {
             if (renderer != null && renderer.isRunning())
                 return renderer.addTextureLayer(texid, width, height, filter);
@@ -1226,7 +1184,7 @@ public class DrawPadView extends FrameLayout {
      * @return 切换成功, 返回true; 失败返回false
      */
     @Deprecated
-    public boolean switchFilterTo(Layer layer, GPUImageFilter filter) {
+    public boolean switchFilterTo(Layer layer, LanSongFilter filter) {
         if (renderer != null) {
             return renderer.switchFilter(layer, filter);
         }
@@ -1249,7 +1207,7 @@ public class DrawPadView extends FrameLayout {
      */
     @Deprecated
     public boolean switchFilterList(Layer layer,
-                                    ArrayList<GPUImageFilter> filters) {
+                                    ArrayList<LanSongFilter> filters) {
         if (renderer != null) {
             return renderer.switchFilterList(layer, filters);
         }

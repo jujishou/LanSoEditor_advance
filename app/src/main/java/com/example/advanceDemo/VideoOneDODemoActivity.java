@@ -24,9 +24,10 @@ import android.widget.Toast;
 import com.example.advanceDemo.view.RangeSeekBar;
 import com.example.advanceDemo.view.RangeSeekBar.OnRangeSeekBarChangeListener;
 import com.lansoeditor.advanceDemo.R;
+import com.lansosdk.LanSongFilter.LanSongFilter;
 import com.lansosdk.videoeditor.CopyFileFromAssets;
 import com.lansosdk.videoeditor.FilterLibrary;
-import com.lansosdk.videoeditor.FilterLibrary.OnGpuImageFilterChosenListener;
+import com.lansosdk.videoeditor.FilterLibrary.OnLanSongFilterChosenListener;
 import com.lansosdk.videoeditor.MediaInfo;
 import com.lansosdk.videoeditor.LanSongFileUtil;
 import com.lansosdk.videoeditor.VideoOneDo;
@@ -36,7 +37,6 @@ import com.lansosdk.videoeditor.onVideoOneDoProgressListener;
 import java.sql.Date;
 import java.text.SimpleDateFormat;
 
-import jp.co.cyberagent.lansongsdk.gpuimage.GPUImageFilter;
 
 /**
  * 视频常见功能演示.
@@ -61,7 +61,7 @@ public class VideoOneDODemoActivity extends Activity implements
 
     // --------------各个参数.
     private long startTimeUs, cutDurationUs;
-    private GPUImageFilter mFilter = null;
+    private LanSongFilter mFilter = null;
     private float scaleFactor = 1.0f, compressFactor = 1.0f;
 
     private boolean isRunning = false;
@@ -314,11 +314,10 @@ public class VideoOneDODemoActivity extends Activity implements
      * 选择滤镜效果,
      */
     private void selectFilter() {
-        FilterLibrary.showDialog(this, new OnGpuImageFilterChosenListener() {
+        FilterLibrary.showDialog(this, new OnLanSongFilterChosenListener() {
 
             @Override
-            public void onGpuImageFilterChosenListener(
-                    final GPUImageFilter filter, String name) {
+            public void onLanSongFilterChosenListener(LanSongFilter filter, String name) {
                 if (filter != null) {
                     mFilter = filter;
                 }

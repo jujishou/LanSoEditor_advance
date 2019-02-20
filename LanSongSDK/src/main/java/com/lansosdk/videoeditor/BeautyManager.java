@@ -10,15 +10,15 @@ import com.lansosdk.box.LSLog;
 
 import java.util.ArrayList;
 
-import jp.co.cyberagent.lansongsdk.gpuimage.GPUImageFilter;
-import jp.co.cyberagent.lansongsdk.gpuimage.GPUImageLookupFilter;
-import jp.co.cyberagent.lansongsdk.gpuimage.LanSongBeautyTuneFilter;
-import jp.co.cyberagent.lansongsdk.gpuimage.LanSongBeautyWhiteFilter;
+import com.lansosdk.LanSongFilter.LanSongFilter;
+import com.lansosdk.LanSongFilter.LanSongLookupFilter;
+import com.lansosdk.LanSongFilter.LanSongBeautyTuneFilter;
+import com.lansosdk.LanSongFilter.LanSongBeautyWhiteFilter;
 
 public class BeautyManager {
     private static final String TAG = LSLog.TAG;
     private boolean isTuneBeauting;
-    private GPUImageLookupFilter mlookupFilter;
+    private LanSongLookupFilter mlookupFilter;
     private LanSongBeautyTuneFilter beautyTuneFilter;
     private LanSongBeautyWhiteFilter beautyWhiteFilter;
 
@@ -38,7 +38,7 @@ public class BeautyManager {
             isTuneBeauting = true;
 
 
-            ArrayList<GPUImageFilter> filters = new ArrayList<GPUImageFilter>();
+            ArrayList<LanSongFilter> filters = new ArrayList<LanSongFilter>();
 
 //			boolean isR9s=false;
 //			if(Build.MODEL!=null){
@@ -60,7 +60,7 @@ public class BeautyManager {
 
             String bmpStr = CopyFileFromAssets.copyAssets(mContext, "lansongbeauty.png");
             if (bmpStr != null) {
-                mlookupFilter = new GPUImageLookupFilter(0.22f);
+                mlookupFilter = new LanSongLookupFilter(0.22f);
                 Bitmap bmp = BitmapFactory.decodeFile(bmpStr);
                 mlookupFilter.setBitmap(bmp);
                 filters.add(mlookupFilter);
@@ -147,7 +147,7 @@ public class BeautyManager {
         return beautyTuneFilter;
     }
 
-    public GPUImageLookupFilter getLookupFilter() {
+    public LanSongLookupFilter getLookupFilter() {
         return mlookupFilter;
     }
 }

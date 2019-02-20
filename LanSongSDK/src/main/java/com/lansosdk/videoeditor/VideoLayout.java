@@ -18,9 +18,10 @@ import java.util.Locale;
  *
  * ffmpeg -i p1080.jpg -i d2.mp4 -filter_complex "overlay=0:0;[0:a][1:a]amix=inputs=2" dd12.mp4
  *
+ * 每个输入视频的路径,都可以是一张图片.图片支持png, jpg, tif格式.
+ *
  * 杭州蓝松科技有限公司
  * www.lansongtech.com
- *
  */
 public class VideoLayout extends VideoEditor {
 
@@ -35,21 +36,26 @@ public class VideoLayout extends VideoEditor {
     /**
      * 两个视频合并;
      * <p>
-     * 原理是(一下所有多个视频类似):  设置一个输出视频画面的宽度和高度, 认为是一个区域, 然后把一个一个的输入视频完整的放到这个区域里; 区域的X,Y坐标是一个一个的像素点;
+     * 原理是(一下所有多个视频类似):
+     *
+     * 设置一个输出视频画面的宽度和高度, 认为是一个区域, 然后把一个一个的输入视频完整的放到这个区域里; 区域的X,Y坐标是一个一个的像素点;
      * 比如设置宽度是1280, 宽度是720的一个区域; 则第一个视频A的宽高是640x360,开始坐标是0,0,则放到区域的左上角;
      *
-     * 如果想第二个视频B放到第一个视频的下面,则B的x坐标和A视频的x坐标一致,Y坐标是A视频的高度; 如果想第二个视频和第一个视频有一定的间隔,则Y就等于A视频的高度+几个像素;
+     * 如果想第二个视频B放到第一个视频的下面,则B的x坐标和A视频的x坐标一致,Y坐标是A视频的高度;
+     * 如果想第二个视频和第一个视频有一定的间隔,则Y就等于A视频的高度+几个像素;
+     *
+     *
      * 如果想第三个视频C放到第一个视频的坐标,则C的Y坐标和A视频的Y坐标一致, x坐标是A视频的宽度; 如果中间有间隔,则x等于A视频的宽度+几个像素;
      *
      * 注意,代码里没有做 每个视频是否存在的判断, 没有做宽度和高度判断;
      *
-     * @param outW
+     * @param outW     所有视频或图片放置到的目标区域的宽高,也是输出视频的分辨率
      * @param outH
-     * @param v1          第一个视频的完整路径
-     * @param v1X         把第一个视频放到区域的哪个坐标 XY
+     * @param v1          第一个视频或图片的完整路径
+     * @param v1X         放到区域的哪个坐标 XY
      * @param v1Y
-     * @param v2          第二个视频的完整路径
-     * @param v2X         把第二个视频放到区域的哪个坐标上; xy坐标;
+     * @param v2          第二个视频或图片的完整路径
+     * @param v2X         放到区域的哪个坐标上; xy坐标;
      * @param v2Y
      * @return
      */
@@ -87,8 +93,16 @@ public class VideoLayout extends VideoEditor {
         cmdList.add(String.valueOf(duration));
 
         return  doVideoLayout(cmdList,outW,outH);
-
     }
+
+    /**
+     *
+     * @param outW   所有视频或图片放置到的目标区域的宽高,也是输出视频的分辨率
+     * @param outH
+     * @param p1   第一个视频或图片的参数
+     * @param p2   第二个视频或图片的参数.
+     * @return
+     */
     public String executeLayoutScale2Video(int outW, int outH,
                                            VideoLayoutParam p1,
                                            VideoLayoutParam p2) {
@@ -707,7 +721,9 @@ public class VideoLayout extends VideoEditor {
 
     public String doVideoLayout(List<String> cmdList, int width,int height)
     {
-        setEncodeBitRate(getSuggestBitRate(width * height));
+        if(encodeBitRate==0){
+            setEncodeBitRate(getSuggestBitRate(width * height));
+        }
         return executeAutoSwitch(cmdList);
     }
     public static int getSuggestBitRate(int wxh) {
@@ -732,9 +748,6 @@ public class VideoLayout extends VideoEditor {
         long time=System.currentTimeMillis();
 
         VideoLayout layout=new VideoLayout();
-
-
-//
         VideoLayoutParam p1= new VideoLayoutParam();
         p1.video="/sdcard/d3.mp4";
         p1.x=0;
@@ -744,7 +757,7 @@ public class VideoLayout extends VideoEditor {
 
         VideoLayoutParam p2= new VideoLayoutParam();
         p2.video="/sdcard/d2.mp4";
-        p2.x=0; //放到第一个视频的右边;
+        p2.x=0;
         p2.y=0;
         p2.scaleW=544/2;
         p2.scaleH=960/2;

@@ -11,8 +11,8 @@ import com.lansosdk.box.onDrawPadOutFrameListener;
 
 import java.util.List;
 
-import jp.co.cyberagent.lansongsdk.gpuimage.GPUImageFilter;
-import jp.co.cyberagent.lansongsdk.gpuimage.LanSongScreenBlendFilter;
+import com.lansosdk.LanSongFilter.LanSongFilter;
+import com.lansosdk.LanSongFilter.LanSongScreenBlendFilter;
 
 /**
  * 一帧操作,
@@ -117,7 +117,7 @@ public class BitmapPadExecute {
      * @return 滤镜处理后的图片.
      */
     public synchronized Bitmap getFilterBitmap(Bitmap bmp1,
-                                               GPUImageFilter filter) {
+                                               LanSongFilter filter) {
         if (bmp1 != null && bmp1.isRecycled() == false && filter != null) {
             mDrawPad.pauseRecord();
             mDrawPad.removeAllLayer();
@@ -201,9 +201,9 @@ public class BitmapPadExecute {
      * if(bendBmp.init(bmp1.getWidth()/2,bmp1.getHeight()/2)) { Bitmap
      * bmp=bendBmp.getBlendBitmap(bmp1, bmp2); TestFrames.saveBitmap(bmp);
      *
-     * bmp=bendBmp.getFilterBitmap(bmp1, new GPUImageSwirlFilter());
+     * bmp=bendBmp.getFilterBitmap(bmp1, new LanSongSwirlFilter());
      * TestFrames.saveBitmap(bmp); bmp=bendBmp.getFilterBitmap(bmp1, new
-     * GPUImageSepiaFilter()); TestFrames.saveBitmap(bmp); } bendBmp.release(); } }
+     * LanSongSepiaFilter()); TestFrames.saveBitmap(bmp); } bendBmp.release(); } }
      */
     /**
      * 给一个图片, 增加多个滤镜的方法演示. private void testFile() {
@@ -214,9 +214,9 @@ public class BitmapPadExecute {
      *           }).start(); }
      *
      *           给一张图片, 增加多个滤镜. private void testGetFilters() {
-     *           ArrayList<GPUImageFilter> filters=new
-     *           ArrayList<GPUImageFilter>(); filters.add(new
-     *           GPUImageSepiaFilter()); filters.add(new GPUImageSwirlFilter());
+     *           ArrayList<LanSongFilter> filters=new
+     *           ArrayList<LanSongFilter>(); filters.add(new
+     *           LanSongSepiaFilter()); filters.add(new LanSongSwirlFilter());
      *           filters.add(new LanSongBulgeDistortionFilter());
      *
      *           Bitmap

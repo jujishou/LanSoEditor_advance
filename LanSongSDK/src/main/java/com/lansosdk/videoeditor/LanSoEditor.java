@@ -12,28 +12,19 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 
-import jp.co.cyberagent.lansongsdk.gpuimage.LanSongBeautyAdvanceFilter;
+import com.lansosdk.LanSongFilter.LanSongBeautyAdvanceFilter;
 
 public class LanSoEditor {
 
     private static boolean isLoaded = false;
-    private static  final String jar_version="20181028_release_v1";
 
     public static void initSDK(Context context, String str) {
         loadLibraries(); // 拿出来单独加载库文件.
 
-
+        setLanSongSDK1();
 
         initSo(context, str);
         checkCPUName();
-
-        if(jar_version.equals(LanSoEditorBox.VERSION_BOX)==false)
-        {
-            LSLog.w("*********************");
-            LSLog.w("**  jar中的版本号,和module中的版本号不一致                 ");
-            LSLog.w("**  可能你没有更新你调用我们api的module(一般是app module)下libs中的lansoeditor_hx.jar**");
-            LSLog.w("*********************");
-        }
     }
 
     /**
@@ -84,7 +75,7 @@ public class LanSoEditor {
         if (isLoaded)
             return;
 
-        Log.d("lansongSDK", "load LanSongSDK native libraries......");
+        Log.d("LanSongSDK", "load LanSongSDK native libraries......");
 
         System.loadLibrary("LanSongffmpeg");
         System.loadLibrary("LanSongdisplay");
@@ -122,18 +113,20 @@ public class LanSoEditor {
 //        String str2 = "";
 //        try {
 //            FileReader fr = new FileReader(str1);
-//            BufferedReader localBufferedReader = new BufferedReader(fr, 8192);
-//            str2 = localBufferedReader.readLine();
-//            while (str2 != null) {
-//                if(str2.contains("SDM845")|| str2.contains("SDM835")){  //845的平台;
-//                    VideoEditor.isForceSoftWareEncoder=true;
-//                }
-//                str2 = localBufferedReader.readLine();
-//            }
-//            localBufferedReader.close();
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
+////            BufferedReader localBufferedReader = new BufferedReader(fr, 8192);
+////            str2 = localBufferedReader.readLine();
+////            while (str2 != null) {
+////                if(str2.contains("SDM845")|| str2.contains("SDM835")){  //845的平台;
+////                    VideoEditor.isForceSoftWareEncoder=true;
+////                }
+////                str2 = localBufferedReader.readLine();
+////            }
+////            localBufferedReader.close();
+////        } catch (IOException e) {
+////            e.printStackTrace();
+////        }
     }
 
+    ////LSTODO 特定用户使用, 发布删除;
+    private static native void setLanSongSDK1();
 }

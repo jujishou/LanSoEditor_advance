@@ -27,6 +27,25 @@ import com.example.advanceDemo.utils.DemoUtil;
 import com.example.advanceDemo.view.FilterDemoAdapter;
 import com.example.advanceDemo.view.HorizontalListView;
 import com.lansoeditor.advanceDemo.R;
+import com.lansosdk.LanSongFilter.LanSongBeautyAdvanceFilter;
+import com.lansosdk.LanSongFilter.LanSongFilter;
+import com.lansosdk.LanSongFilter.LanSongIF1977Filter;
+import com.lansosdk.LanSongFilter.LanSongIFAmaroFilter;
+import com.lansosdk.LanSongFilter.LanSongIFBrannanFilter;
+import com.lansosdk.LanSongFilter.LanSongIFEarlybirdFilter;
+import com.lansosdk.LanSongFilter.LanSongIFHefeFilter;
+import com.lansosdk.LanSongFilter.LanSongIFHudsonFilter;
+import com.lansosdk.LanSongFilter.LanSongIFInkwellFilter;
+import com.lansosdk.LanSongFilter.LanSongIFLomofiFilter;
+import com.lansosdk.LanSongFilter.LanSongIFLordKelvinFilter;
+import com.lansosdk.LanSongFilter.LanSongIFNashvilleFilter;
+import com.lansosdk.LanSongFilter.LanSongIFRiseFilter;
+import com.lansosdk.LanSongFilter.LanSongIFSierraFilter;
+import com.lansosdk.LanSongFilter.LanSongIFSutroFilter;
+import com.lansosdk.LanSongFilter.LanSongIFToasterFilter;
+import com.lansosdk.LanSongFilter.LanSongIFValenciaFilter;
+import com.lansosdk.LanSongFilter.LanSongIFWaldenFilter;
+import com.lansosdk.LanSongFilter.LanSongIFXproIIFilter;
 import com.lansosdk.box.BitmapGetFilters;
 import com.lansosdk.box.BitmapLoader;
 import com.lansosdk.box.DrawPadUpdateMode;
@@ -39,7 +58,7 @@ import com.lansosdk.videoeditor.DrawPadView;
 import com.lansosdk.videoeditor.FilterLibrary;
 import com.lansosdk.videoeditor.FilterLibrary.FilterAdjuster;
 import com.lansosdk.videoeditor.FilterLibrary.FilterType;
-import com.lansosdk.videoeditor.FilterLibrary.OnGpuImageFilterChosenListener;
+import com.lansosdk.videoeditor.FilterLibrary.OnLanSongFilterChosenListener;
 import com.lansosdk.videoeditor.FilterList;
 import com.lansosdk.videoeditor.MediaInfo;
 import com.lansosdk.videoeditor.LanSongFileUtil;
@@ -54,29 +73,6 @@ import java.io.InputStream;
 import java.nio.IntBuffer;
 import java.util.ArrayList;
 import java.util.Map;
-
-import jp.co.cyberagent.lansongsdk.gpuimage.GPUImageAddBlendFilter;
-import jp.co.cyberagent.lansongsdk.gpuimage.GPUImageFilter;
-import jp.co.cyberagent.lansongsdk.gpuimage.GPUImageSepiaFilter;
-import jp.co.cyberagent.lansongsdk.gpuimage.GPUImageTwoInputFilter;
-import jp.co.cyberagent.lansongsdk.gpuimage.IF1977Filter;
-import jp.co.cyberagent.lansongsdk.gpuimage.IFAmaroFilter;
-import jp.co.cyberagent.lansongsdk.gpuimage.IFBrannanFilter;
-import jp.co.cyberagent.lansongsdk.gpuimage.IFEarlybirdFilter;
-import jp.co.cyberagent.lansongsdk.gpuimage.IFHefeFilter;
-import jp.co.cyberagent.lansongsdk.gpuimage.IFHudsonFilter;
-import jp.co.cyberagent.lansongsdk.gpuimage.IFInkwellFilter;
-import jp.co.cyberagent.lansongsdk.gpuimage.IFLomofiFilter;
-import jp.co.cyberagent.lansongsdk.gpuimage.IFLordKelvinFilter;
-import jp.co.cyberagent.lansongsdk.gpuimage.IFNashvilleFilter;
-import jp.co.cyberagent.lansongsdk.gpuimage.IFRiseFilter;
-import jp.co.cyberagent.lansongsdk.gpuimage.IFSierraFilter;
-import jp.co.cyberagent.lansongsdk.gpuimage.IFSutroFilter;
-import jp.co.cyberagent.lansongsdk.gpuimage.IFToasterFilter;
-import jp.co.cyberagent.lansongsdk.gpuimage.IFValenciaFilter;
-import jp.co.cyberagent.lansongsdk.gpuimage.IFWaldenFilter;
-import jp.co.cyberagent.lansongsdk.gpuimage.IFXproIIFilter;
-import jp.co.cyberagent.lansongsdk.gpuimage.LanSongBeautyAdvanceFilter;
 
 /**
  * 滤镜的操作
@@ -93,7 +89,7 @@ public class Demo3LayerFilterActivity extends Activity {
     private String dstPath = null;
     private FilterDemoAdapter listAdapter;
     private HorizontalListView listFilterView;
-    private ArrayList<GPUImageFilter> filters=new ArrayList<>();
+    private ArrayList<LanSongFilter> filters=new ArrayList<>();
     private  int filterIndex=0;
 
     private FilterAdjuster mFilterAdjuster;
@@ -103,25 +99,25 @@ public class Demo3LayerFilterActivity extends Activity {
     private VideoOneDo videoOneDo;
     private void createFilters()
     {
-        filters.add(new GPUImageFilter("无"));
+        filters.add(new LanSongFilter("无"));
         filters.add(new LanSongBeautyAdvanceFilter("美颜"));
-        filters.add(new IFAmaroFilter(getApplicationContext(),"1AMARO"));
-        filters.add(new IFRiseFilter(getApplicationContext(),"2RISE"));
-        filters.add(new IFHudsonFilter(getApplicationContext(),"3HUDSON"));
-        filters.add(new IFXproIIFilter(getApplicationContext(),"4XPROII"));
-        filters.add(new IFSierraFilter(getApplicationContext(),"5SIERRA"));
-        filters.add(new IFLomofiFilter(getApplicationContext(),"6LOMOFI"));
-        filters.add(new IFEarlybirdFilter(getApplicationContext(),"7EARLYBIRD"));
-        filters.add(new IFSutroFilter(getApplicationContext(),"8SUTRO"));
-        filters.add(new IFToasterFilter(getApplicationContext(),"9TOASTER"));
-        filters.add(new IFBrannanFilter(getApplicationContext(),"10BRANNAN"));
-        filters.add(new IFInkwellFilter(getApplicationContext(),"11INKWELL"));
-        filters.add(new IFWaldenFilter(getApplicationContext(),"12WALDEN"));
-        filters.add(new IFHefeFilter(getApplicationContext(),"13HEFE"));
-        filters.add(new IFValenciaFilter(getApplicationContext(),"14VALENCIA"));
-        filters.add(new IFNashvilleFilter(getApplicationContext(),"15NASHVILLE"));
-        filters.add(new IFLordKelvinFilter(getApplicationContext(),"16LORDKELVIN"));
-        filters.add(new IF1977Filter(getApplicationContext(),"17if1977"));
+        filters.add(new LanSongIFAmaroFilter(getApplicationContext(),"1AMARO"));
+        filters.add(new LanSongIFRiseFilter(getApplicationContext(),"2RISE"));
+        filters.add(new LanSongIFHudsonFilter(getApplicationContext(),"3HUDSON"));
+        filters.add(new LanSongIFXproIIFilter(getApplicationContext(),"4XPROII"));
+        filters.add(new LanSongIFSierraFilter(getApplicationContext(),"5SIERRA"));
+        filters.add(new LanSongIFLomofiFilter(getApplicationContext(),"6LOMOFI"));
+        filters.add(new LanSongIFEarlybirdFilter(getApplicationContext(),"7EARLYBIRD"));
+        filters.add(new LanSongIFSutroFilter(getApplicationContext(),"8SUTRO"));
+        filters.add(new LanSongIFToasterFilter(getApplicationContext(),"9TOASTER"));
+        filters.add(new LanSongIFBrannanFilter(getApplicationContext(),"10BRANNAN"));
+        filters.add(new LanSongIFInkwellFilter(getApplicationContext(),"11INKWELL"));
+        filters.add(new LanSongIFWaldenFilter(getApplicationContext(),"12WALDEN"));
+        filters.add(new LanSongIFHefeFilter(getApplicationContext(),"13HEFE"));
+        filters.add(new LanSongIFValenciaFilter(getApplicationContext(),"14VALENCIA"));
+        filters.add(new LanSongIFNashvilleFilter(getApplicationContext(),"15NASHVILLE"));
+        filters.add(new LanSongIFLordKelvinFilter(getApplicationContext(),"16LORDKELVIN"));
+        filters.add(new LanSongIF1977Filter(getApplicationContext(),"17if1977"));
     }
 
     @Override
@@ -281,11 +277,10 @@ public class Demo3LayerFilterActivity extends Activity {
      * 选择滤镜效果,
      */
     private void selectFilter() {
-        FilterLibrary.showDialog(this, new OnGpuImageFilterChosenListener() {
+        FilterLibrary.showDialog(this, new OnLanSongFilterChosenListener() {
 
             @Override
-            public void onGpuImageFilterChosenListener(
-                    final GPUImageFilter filter, String name) {
+            public void onLanSongFilterChosenListener(LanSongFilter filter, String name) {
                 if (videoLayer != null) {
                     videoLayer.switchFilterTo(filter);
                     mFilterAdjuster = new FilterAdjuster(filter);

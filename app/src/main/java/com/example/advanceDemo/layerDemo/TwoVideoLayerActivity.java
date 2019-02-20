@@ -16,6 +16,7 @@ import android.widget.Toast;
 
 import com.example.advanceDemo.VideoPlayerActivity;
 import com.lansoeditor.advanceDemo.R;
+import com.lansosdk.LanSongFilter.Rotation;
 import com.lansosdk.box.TwoVideoLayer;
 import com.lansosdk.box.onDrawPadSizeChangedListener;
 import com.lansosdk.videoeditor.CopyFileFromAssets;
@@ -25,8 +26,6 @@ import com.lansosdk.videoeditor.MediaInfo;
 import com.lansosdk.videoeditor.LanSongFileUtil;
 
 import java.io.IOException;
-
-import jp.co.cyberagent.lansongsdk.gpuimage.Rotation;
 
 /**
  * 演示<双视频图层>的功能.

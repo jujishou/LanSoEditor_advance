@@ -37,6 +37,7 @@ public class MediaInfo {
     public final String filePath;
     public final String fileName; // 视频的文件名, 路径的最后一个/后的字符串.
     public final String fileSuffix; // 文件的后缀名.
+    public final long fileLength; // 文件的后缀名.
     /**
      * 视频的显示高度,即正常视频高度. 如果视频旋转了90度或270度,则这里等于实际视频的宽度!!
      */
@@ -87,7 +88,7 @@ public class MediaInfo {
      */
     public String vCodecName;
     /**
-     * 视频的 像素格式.目前暂时没有用到.
+     * 视频的 像素格式.(不能使用, 可能得到的格式和实际不同.)
      */
     public String vPixelFmt;
     /**
@@ -129,6 +130,16 @@ public class MediaInfo {
         filePath = path;
         fileName = getFileNameFromPath(path);
         fileSuffix = getFileSuffix(path);
+        if (path != null){
+            File file = new File(path);
+            if (file.exists()){
+                fileLength=file.length();
+            }else{
+                fileLength=0;
+            }
+        }else{
+            fileLength=0;
+        }
     }
 
     @Deprecated
@@ -136,6 +147,16 @@ public class MediaInfo {
         filePath = path;
         fileName = getFileNameFromPath(path);
         fileSuffix = getFileSuffix(path);
+        if (path != null){
+            File file = new File(path);
+            if (file.exists()){
+                fileLength=file.length();
+            }else{
+                fileLength=0;
+            }
+        }else{
+            fileLength=0;
+        }
     }
 
     /**
@@ -170,6 +191,7 @@ public class MediaInfo {
             ret = "文件名为空指针, null";
         } else {
             File file = new File(videoPath);
+
             if (file.exists() == false) {
                 ret = "文件不存在," + videoPath;
             } else if (file.isDirectory()) {
@@ -385,6 +407,7 @@ public class MediaInfo {
         String info = "file name:" + filePath + "\n";
         info += "fileName:" + fileName + "\n";
         info += "fileSuffix:" + fileSuffix + "\n";
+        info += "fileLength:" + fileLength + "\n";
         info += "vWidth:" + vWidth + "\n";
         info += "vHeight:" + vHeight + "\n";
         info += "vCodecWidth:" + vCodecWidth + "\n";
@@ -480,7 +503,6 @@ public class MediaInfo {
     /*
      * ****************************************************************************
      * 测试 // new Thread(new Runnable() { // // @Override // public void run() {
-     * // // TODO Auto-generated method stub // MediaInfo mif=new
      * MediaInfo("/sdcard/2x.mp4"); //这里是我们的测试视频地址, 如您测试, 则需要修改视频地址. //
      * mif.prepare(); // Log.i(TAG,"mif is:"+ mif.toString()); // mif.release();
      * // } // },"testMediaInfo#1").start(); // new Thread(new Runnable() { //

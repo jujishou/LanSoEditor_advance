@@ -14,6 +14,7 @@ import android.widget.Toast;
 
 import com.example.advanceDemo.VideoPlayerActivity;
 import com.lansoeditor.advanceDemo.R;
+import com.lansosdk.LanSongFilter.LanSongFilter;
 import com.lansosdk.box.BitmapLayer;
 import com.lansosdk.box.DrawPad;
 import com.lansosdk.box.DrawPadUpdateMode;
@@ -24,10 +25,8 @@ import com.lansosdk.videoeditor.CopyFileFromAssets;
 import com.lansosdk.videoeditor.DrawPadView;
 import com.lansosdk.videoeditor.FilterLibrary;
 import com.lansosdk.videoeditor.FilterLibrary.FilterAdjuster;
-import com.lansosdk.videoeditor.FilterLibrary.OnGpuImageFilterChosenListener;
+import com.lansosdk.videoeditor.FilterLibrary.OnLanSongFilterChosenListener;
 import com.lansosdk.videoeditor.LanSongFileUtil;
-
-import jp.co.cyberagent.lansongsdk.gpuimage.GPUImageFilter;
 
 /**
  * 单单增加一个图片在容器里, 然后把这张图片转换为视频. 您如果想在后台执行, 请使用DrawPadPictureExecute;
@@ -162,12 +161,10 @@ public class BitmapLayerFilterDemoActivity extends Activity {
     private void selectFilter() {
         if (drawPadView != null && drawPadView.isRunning()) {
             FilterLibrary.showDialog(this,
-                    new OnGpuImageFilterChosenListener() {
+                    new OnLanSongFilterChosenListener() {
 
                         @Override
-                        public void onGpuImageFilterChosenListener(
-                                final GPUImageFilter filter, String name) {
-
+                        public void onLanSongFilterChosenListener(LanSongFilter filter, String name) {
                             if (bmpLayer != null) {
                                 bmpLayer.switchFilterTo(filter);
                                 mFilterAdjuster = new FilterAdjuster(filter);

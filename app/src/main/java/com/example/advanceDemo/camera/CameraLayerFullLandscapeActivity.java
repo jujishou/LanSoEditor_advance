@@ -19,6 +19,7 @@ import android.widget.Toast;
 import com.example.advanceDemo.VideoPlayerActivity;
 import com.example.advanceDemo.view.FocusImageView;
 import com.lansoeditor.advanceDemo.R;
+import com.lansosdk.LanSongFilter.LanSongFilter;
 import com.lansosdk.box.BitmapLayer;
 import com.lansosdk.box.CameraLayer;
 import com.lansosdk.box.DrawPad;
@@ -31,11 +32,9 @@ import com.lansosdk.videoeditor.DrawPadCameraView;
 import com.lansosdk.videoeditor.DrawPadCameraView.doFousEventListener;
 import com.lansosdk.videoeditor.DrawPadCameraView.onViewAvailable;
 import com.lansosdk.videoeditor.FilterLibrary;
-import com.lansosdk.videoeditor.FilterLibrary.OnGpuImageFilterChosenListener;
+import com.lansosdk.videoeditor.FilterLibrary.OnLanSongFilterChosenListener;
 import com.lansosdk.videoeditor.LanSongUtil;
 import com.lansosdk.videoeditor.LanSongFileUtil;
-
-import jp.co.cyberagent.lansongsdk.gpuimage.GPUImageFilter;
 
 /**
  * 在部分华为手机上出现前置摄像头, 画面倒置的问题, 解决如下:
@@ -60,7 +59,7 @@ import jp.co.cyberagent.lansongsdk.gpuimage.GPUImageFilter;
 public class CameraLayerFullLandscapeActivity extends AppCompatActivity
         implements OnClickListener {
     private static final long RECORD_CAMERA_TIME = 15 * 1000 * 1000; // 定义录制的时间为20s
-    private static final String TAG = "CameraLayerFullLandscapeActivity";
+    private static final String TAG = "CameraLayerFull";
 
     private DrawPadCameraView mDrawPadCamera;
 
@@ -305,16 +304,13 @@ public class CameraLayerFullLandscapeActivity extends AppCompatActivity
     private void selectFilter() {
         if (mDrawPadCamera != null && mDrawPadCamera.isRunning()) {
             FilterLibrary.showDialog(this,
-                    new OnGpuImageFilterChosenListener() {
+                    new OnLanSongFilterChosenListener() {
 
                         @Override
-                        public void onGpuImageFilterChosenListener(
-                                final GPUImageFilter filter, String name) {
-
+                        public void onLanSongFilterChosenListener(LanSongFilter filter, String name) {
                             if (mCameraLayer != null) {
                                 mCameraLayer.switchFilterTo(filter);
                             }
-
                         }
                     });
         }

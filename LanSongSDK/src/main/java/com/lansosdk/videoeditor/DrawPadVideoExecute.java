@@ -25,7 +25,7 @@ import com.lansosdk.box.onDrawPadThreadProgressListener;
 import java.util.ArrayList;
 import java.util.List;
 
-import jp.co.cyberagent.lansongsdk.gpuimage.GPUImageFilter;
+import com.lansosdk.LanSongFilter.LanSongFilter;
 
 public class DrawPadVideoExecute {
 
@@ -49,7 +49,7 @@ public class DrawPadVideoExecute {
     }
     /**
      * 设置容器的宽高
-     *
+     * [可选,不建议使用]
      * 设置后, 视频的宽高会缩放到容器中;
      * 容器的宽高, 就是录制后的视频的宽高;
      * @param width
@@ -81,6 +81,12 @@ public class DrawPadVideoExecute {
             renderer.setStartTimeUs(timeUs);
         }
     }
+
+    /**
+     * 设置处理时长.
+     * (注意:不是结束时间点, 是一个时长)
+     * @param timeUs
+     */
     public void setDurationTimeUs(long timeUs){
         if(timeUs>0 &&renderer!=null){
             renderer.setDurationTimeUs(timeUs);
@@ -91,7 +97,7 @@ public class DrawPadVideoExecute {
      * 注意:滤镜应该是新创建的;
      * @param filter
      */
-    public void setVideoFilter(GPUImageFilter filter){
+    public void setVideoFilter(LanSongFilter filter){
         if(filter!=null &&renderer!=null){
             renderer.setVideoFilter(filter);
         }
@@ -103,7 +109,7 @@ public class DrawPadVideoExecute {
     }
     @Deprecated
     public DrawPadVideoExecute(Context ctx, String srcPath, int padwidth,
-                               int padheight, int bitrate, GPUImageFilter filter, String dstPath) {
+                               int padheight, int bitrate, LanSongFilter filter, String dstPath) {
         if (renderer == null) {
             renderer = new DrawPadVideoRunnable(ctx, srcPath, padwidth,
                     padheight, bitrate, filter, dstPath);
@@ -113,7 +119,7 @@ public class DrawPadVideoExecute {
     }
     @Deprecated
     public DrawPadVideoExecute(Context ctx, String srcPath, int padwidth,
-                               int padheight, GPUImageFilter filter, String dstPath) {
+                               int padheight, LanSongFilter filter, String dstPath) {
         if (renderer == null) {
             renderer = new DrawPadVideoRunnable(ctx, srcPath, padwidth,
                     padheight, 0, filter, dstPath);
@@ -123,7 +129,7 @@ public class DrawPadVideoExecute {
     }
     @Deprecated
     public DrawPadVideoExecute(Context ctx, String srcPath, long startTimeUs,
-                               int padwidth, int padheight, int bitrate, GPUImageFilter filter,
+                               int padwidth, int padheight, int bitrate, LanSongFilter filter,
                                String dstPath) {
         if (renderer == null) {
             renderer = new DrawPadVideoRunnable(ctx, srcPath, startTimeUs,
@@ -134,7 +140,7 @@ public class DrawPadVideoExecute {
     }
     @Deprecated
     public DrawPadVideoExecute(Context ctx, String srcPath, long startTimeUs,
-                               int padwidth, int padheight, GPUImageFilter filter, String dstPath) {
+                               int padwidth, int padheight, LanSongFilter filter, String dstPath) {
         if (renderer == null) {
             renderer = new DrawPadVideoRunnable(ctx, srcPath, startTimeUs,
                     padwidth, padheight, 0, filter, dstPath);
@@ -556,7 +562,7 @@ public class DrawPadVideoExecute {
      * @param filter 视频滤镜 ,如果不增加滤镜,则赋值为null
      * @return
      */
-    public VideoLayer addVideoLayer(String videoPath, GPUImageFilter filter) {
+    public VideoLayer addVideoLayer(String videoPath, LanSongFilter filter) {
         if (renderer != null && renderer.isRunning()) {
             return renderer.addVideoLayer2(videoPath, filter);
         } else {
@@ -716,24 +722,15 @@ public class DrawPadVideoExecute {
         }
     }
 
-    public void switchFilterTo(Layer layer, GPUImageFilter filter) {
+    @Deprecated
+    public void switchFilterTo(Layer layer, LanSongFilter filter) {
         if (renderer != null && renderer.isRunning()) {
             renderer.switchFilterTo(layer, filter);
         }
     }
 
-    /**
-     * 切换滤镜 为一个图层切换多个滤镜. 即一个滤镜处理完后的输出, 作为下一个滤镜的输入.
-     * <p>
-     * filter的列表, 是先add进去,最新渲染, 把第一个渲染的结果传递给第二个,第二个传递给第三个,以此类推.
-     * <p>
-     * 注意: 这里内部会在切换的时候, 会销毁 之前的列表中的所有滤镜对象, 然后重新增加, 故您不可以把同一个滤镜对象再次放到进来,
-     * 您如果还想使用之前的滤镜,则应该重新创建一个对象.
-     *
-     * @param layer
-     * @param filters
-     */
-    public void switchFilterList(Layer layer, ArrayList<GPUImageFilter> filters) {
+    @Deprecated
+    public void switchFilterList(Layer layer, ArrayList<LanSongFilter> filters) {
         if (renderer != null && renderer.isRunning()) {
             renderer.switchFilterList(layer, filters);
         }
@@ -785,6 +782,10 @@ public class DrawPadVideoExecute {
         }
     }
 
+    /**
+     * 设置是否检查您设置的容器大小
+     * @param check
+     */
     public void setCheckDrawPadSize(boolean check) {
         if (renderer != null && renderer.isRunning() == false) {
             renderer.setCheckDrawPadSize(check);
@@ -793,6 +794,10 @@ public class DrawPadVideoExecute {
         }
     }
 
+    /**
+     * 获取容器宽度
+     * @return
+     */
     public int getPadWidth(){
         if(renderer!=null && renderer.isRunning()){
             return renderer.getPadWidth();
@@ -800,6 +805,11 @@ public class DrawPadVideoExecute {
             return 0;
         }
     }
+
+    /**
+     * 获取容器高度
+     * @return
+     */
     public int getPadHeight(){
         if(renderer!=null && renderer.isRunning()){
             return renderer.getPadHeight();

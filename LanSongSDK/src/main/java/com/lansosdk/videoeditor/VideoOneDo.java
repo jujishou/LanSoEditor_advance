@@ -25,11 +25,11 @@ import com.lansosdk.box.onDrawPadProgressListener;
 import java.util.ArrayList;
 import java.util.List;
 
-import jp.co.cyberagent.lansongsdk.gpuimage.GPUImageFilter;
+import com.lansosdk.LanSongFilter.LanSongFilter;
 
 /**
  * 用DrawPadVideoExecute2对常见视频的封装.
- * 举例:
+ * 调用步骤:
  *
  * //第一步:创建对象,并设置各种set;
  * videoOneDo=new  VideoOneDo(getApplicationContext(), inputPath);
@@ -41,7 +41,7 @@ import jp.co.cyberagent.lansongsdk.gpuimage.GPUImageFilter;
  * videoOneDo.setOnVideoOneDoCompletedListener(完成监听, 返回处理后的结果);
  *
  * //第三步:开始
- * videoOneDo.start(); //开启另一个线程成功返回true, 失败返回false
+ * videoOneDo.start(); //开启另一个线程,成功返回true, 失败返回false
  */
 public class VideoOneDo {
 
@@ -78,7 +78,7 @@ public class VideoOneDo {
     private long startTimeUs = 0;
     private long cutDurationUs = 0;
     private int cropX, cropY, cropWidth, cropHeight;
-    private GPUImageFilter videoFilter = null;
+    private LanSongFilter videoFilter = null;
 
     private Bitmap logoBitmap = null;
     private int logoPosition = LOGO_POSITION_RIGHT_TOP;
@@ -326,7 +326,7 @@ public class VideoOneDo {
      *
      * @param filter
      */
-    public void setFilter(GPUImageFilter filter) {
+    public void setFilter(LanSongFilter filter) {
         videoFilter = filter;
     }
 
@@ -479,7 +479,11 @@ public class VideoOneDo {
         drawpadDstPath = LanSongFileUtil.createMp4FileInBox();
         drawPad = new DrawPadVideoExecute(context, inputPath, drawpadDstPath);
         drawPad.setStartTimeUs(startTimeUs);
+
+
         drawPad.setDurationTimeUs(padDurationUs);
+
+
         drawPad.setVideoFilter(videoFilter);
         if (videoBitRate > 0) {
             drawPad.setRecordBitrate(videoBitRate);
@@ -845,7 +849,7 @@ public class VideoOneDo {
      oneDo.setStartPostion(3*1000*1000);
      oneDo.setCutDuration(2*1000*1000);
 
-     GPUImageFilter filter=new IF1977Filter(getApplicationContext());
+     LanSongFilter filter=new LanSongIF1977Filter(getApplicationContext());
      oneDo.setFilter(filter);
      oneDo.setLogo(BitmapFactory.decodeResource(getResources(),R.drawable.ic_launcher),VideoOneDo.LOGO_POSITION_RIGHT_BOTTOM);
 

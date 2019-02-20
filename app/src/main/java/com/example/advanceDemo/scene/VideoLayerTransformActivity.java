@@ -21,6 +21,7 @@ import android.widget.Toast;
 
 import com.example.advanceDemo.VideoPlayerActivity;
 import com.lansoeditor.advanceDemo.R;
+import com.lansosdk.LanSongFilter.LanSongSwirlFilter;
 import com.lansosdk.box.Animation;
 import com.lansosdk.box.BitmapLayer;
 import com.lansosdk.box.CanvasLayer;
@@ -40,8 +41,6 @@ import com.lansosdk.videoeditor.MediaInfo;
 import com.lansosdk.videoeditor.LanSongFileUtil;
 
 import java.io.IOException;
-
-import jp.co.cyberagent.lansongsdk.gpuimage.GPUImageSwirlFilter;
 
 /**
  * 采用自动刷新模式 前台转场. 先播放一个视频, 然后在10秒后,插入另一个视频.并增加进入动画.
@@ -68,7 +67,7 @@ public class VideoLayerTransformActivity extends Activity {
     private Context mContext;
     private String audioPath;
     private int rectPercent = 0;  //
-    private GPUImageSwirlFilter swirlFilter = null;
+    private LanSongSwirlFilter swirlFilter = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -322,7 +321,7 @@ public class VideoLayerTransformActivity extends Activity {
                 rect /= 100f; // 转换为0--1.0
 
                 if (swirlFilter == null) {
-                    swirlFilter = new GPUImageSwirlFilter();
+                    swirlFilter = new LanSongSwirlFilter();
                     videoLayer2.switchFilterTo(swirlFilter);
                 }
                 swirlFilter.setAngle(rect);

@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import com.example.advanceDemo.VideoPlayerActivity;
 import com.lansoeditor.advanceDemo.R;
+import com.lansosdk.LanSongFilter.LanSongSwirlFilter;
 import com.lansosdk.box.Animation;
 import com.lansosdk.box.BitmapLayer;
 import com.lansosdk.box.CanvasLayer;
@@ -35,8 +36,6 @@ import com.lansosdk.videoeditor.AudioPadExecute;
 import com.lansosdk.videoeditor.CopyFileFromAssets;
 import com.lansosdk.videoeditor.MediaInfo;
 import com.lansosdk.videoeditor.LanSongFileUtil;
-
-import jp.co.cyberagent.lansongsdk.gpuimage.GPUImageSwirlFilter;
 
 /**
  * 后台执行.
@@ -61,7 +60,7 @@ public class ExecuteAllDrawpadActivity extends Activity {
     private Context mContext = null;
     private MediaInfo mInfo = null;
     private int rectFactor = 0;  //可见区域系数;
-    private GPUImageSwirlFilter swirlFilter = null;
+    private LanSongSwirlFilter swirlFilter = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -193,7 +192,7 @@ public class ExecuteAllDrawpadActivity extends Activity {
                 rect /= 100f; // 转换为0--1.0
 
                 if (swirlFilter == null) {
-                    swirlFilter = new GPUImageSwirlFilter();
+                    swirlFilter = new LanSongSwirlFilter();
                     videoLayer2.switchFilterTo(swirlFilter);
                 }
                 swirlFilter.setAngle(rect);
@@ -202,7 +201,6 @@ public class ExecuteAllDrawpadActivity extends Activity {
             }
         }
     }
-
     /**
      * 增加图片
      */

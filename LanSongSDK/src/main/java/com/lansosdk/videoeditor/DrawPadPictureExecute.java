@@ -20,7 +20,7 @@ import com.lansosdk.box.onDrawPadThreadProgressListener;
 
 import java.util.ArrayList;
 
-import jp.co.cyberagent.lansongsdk.gpuimage.GPUImageFilter;
+import com.lansosdk.LanSongFilter.LanSongFilter;
 
 public class DrawPadPictureExecute {
 
@@ -128,7 +128,7 @@ public class DrawPadPictureExecute {
         }
     }
 
-    public BitmapLayer addBitmapLayer(Bitmap bmp, GPUImageFilter filter) {
+    public BitmapLayer addBitmapLayer(Bitmap bmp, LanSongFilter filter) {
         if (renderer != null && renderer.isRunning()) {
             return renderer.addBitmapLayer(bmp, filter);
         } else {
@@ -204,7 +204,7 @@ public class DrawPadPictureExecute {
      * @param layer  为哪个图层
      * @param filter 滤镜对象, 无滤镜则可以为null
      */
-    public void switchFilterTo(Layer layer, GPUImageFilter filter) {
+    public void switchFilterTo(Layer layer, LanSongFilter filter) {
         if (renderer != null && renderer.isRunning()) {
             renderer.switchFilterTo(layer, filter);
         }
@@ -221,7 +221,7 @@ public class DrawPadPictureExecute {
      * @param layer
      * @param filters
      */
-    public void switchFilterList(Layer layer, ArrayList<GPUImageFilter> filters) {
+    public void switchFilterList(Layer layer, ArrayList<LanSongFilter> filters) {
         if (renderer != null && renderer.isRunning()) {
             renderer.switchFilterList(layer, filters);
         }

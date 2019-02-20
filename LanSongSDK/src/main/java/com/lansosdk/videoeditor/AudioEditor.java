@@ -204,7 +204,56 @@ public class AudioEditor {
             return null;
         }
     }
+    /**
+     * 把输入的音频(或含有音频视频)转为单声道,并可以设置采样率,然后wav格式输出.
+     * @param inputAudio    输入原文件的完整路径
+     * @param dstSample  要设置的采样率, 如果不变,则设置为-1;
+     * @return
+     */
+    public String  executeConvertToMonoWav(String inputAudio,int dstSample) {
+        if(LanSongFileUtil.fileExist(inputAudio)){
 
+            String dstPath=LanSongFileUtil.createWAVFileInBox();
+
+            List<String> cmdList = new ArrayList<String>();
+
+            cmdList.add("-i");
+            cmdList.add(inputAudio);
+
+            cmdList.add("-vn");
+
+            cmdList.add("-f");
+            cmdList.add("s16le");
+
+            cmdList.add("-ac");
+            cmdList.add("1");
+            cmdList.add("-acodec");
+            cmdList.add("pcm_s16le");
+
+            if(dstSample>0){
+                cmdList.add("-ar");
+                cmdList.add(String.valueOf(dstSample));
+            }
+
+            cmdList.add("-y");
+            cmdList.add(dstPath);
+
+            String[] command = new String[cmdList.size()];
+            for (int i = 0; i < cmdList.size(); i++) {
+                command[i] = (String) cmdList.get(i);
+            }
+            int ret=editor.executeVideoEditor(command);
+            if(ret==0){
+                return dstPath;
+            }else{
+                LSLog.e("executeConvertToWav 失败, 请查看打印信息");
+                return null;
+            }
+        }else{
+            LSLog.e("executeConvertToWav 执行失败, 文件不存在");
+            return null;
+        }
+    }
 
     /**
      * 把wav格式的音频转换为mp3;
@@ -416,7 +465,7 @@ public class AudioEditor {
     }
     /**
      *
-     * 两个pcm格式的音频数据,(裸数据)混合.
+     * 两个裸数据混合.
      *
      * @param srcPach1    pcm格式的主音频
      * @param samplerate  主音频采样率
@@ -617,6 +666,8 @@ public class AudioEditor {
      *
      * 输出的音频采样率是44100;
      *
+     * [如果此方法无法满足您的方法或不够灵活,请使用音频容器: AudioPadExecute来操作]
+     *
      * @param video
      * @param audio
      * @return  替换后的输出文件;
@@ -627,10 +678,11 @@ public class AudioEditor {
     /**
      * 把一个音乐合并到视频中;
      *
+     *  [如果此方法无法满足您的方法或不够灵活,请使用音频容器: AudioPadExecute来操作]
       * @param video  原视频
      * @param audio 要合并的音频
-     * @param volume1  在合并的时候, 原视频中的音频音量, 如果为0,则删除原有的视频声音;
-     * @param volume2  合并时的, 音频音量;
+     * @param volume1  在合并的时候, 原视频中的音频音量, 如果为0,则删除原有的视频声音;  范围是0--10.0f, 1.0为原音量,2.0是放大一倍.0.5是降低一倍;
+     * @param volume2  合并时的, 音频音量; 范围是0--10.0f
      * @return 合并后的返回目标视频;
      */
     public String executeVideoMergeAudio(String video, String  audio,float volume1,float volume2) {

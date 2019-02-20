@@ -29,6 +29,9 @@ public class LanSongUtil {
     public static boolean checkRecordPermission(Context ctx) {
         boolean ret1 = LanSoEditorBox.cameraIsCanUse();
         boolean ret2 = LanSoEditorBox.checkMicPermission(ctx);
+
+        Log.e("LSDelete", "checkRecordPermission: "+ret1+ ret2);
+
         return ret1 && ret2;
     }
 
@@ -52,8 +55,6 @@ public class LanSongUtil {
     }
 
     public static boolean isFullScreenRatio(int padWidth, int padHeight) {
-        Log.i("TT", "padWidth wxh is:" + padWidth + " x " + padHeight);
-
         if (padWidth > padHeight) { // 其他则是屏幕比大于16:9的屏幕
             float ratio = (float) padWidth / (float) padHeight;
             return ratio > 16f / 9f;

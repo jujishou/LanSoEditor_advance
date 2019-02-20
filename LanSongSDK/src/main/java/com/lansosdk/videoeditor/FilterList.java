@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-import jp.co.cyberagent.lansongsdk.gpuimage.GPUImageFilter;
+import com.lansosdk.LanSongFilter.LanSongFilter;
 
 public class FilterList {
     public List<String> names = new LinkedList<String>();
@@ -80,7 +80,7 @@ public class FilterList {
      * @param name
      * @return
      */
-    public synchronized GPUImageFilter getFilter(Context ctx, String name) {
+    public synchronized LanSongFilter getFilter(Context ctx, String name) {
         if (name == null) {
             return null;
         }
@@ -101,7 +101,7 @@ public class FilterList {
      * @param filter
      * @return
      */
-    public synchronized GPUImageFilter getFilter(Context ctx, FilterType filter) {
+    public synchronized LanSongFilter getFilter(Context ctx, FilterType filter) {
         return FilterLibrary.getFilterObject(ctx, filter);
     }
 
@@ -112,7 +112,7 @@ public class FilterList {
      * @param index
      * @return
      */
-    public GPUImageFilter getFilter(Context ctx, int index) {
+    public LanSongFilter getFilter(Context ctx, int index) {
         FilterType type = filters.get(index);
         return getFilter(ctx, type);
     }
@@ -123,8 +123,8 @@ public class FilterList {
      * @param ctx
      * @return
      */
-    public ArrayList<GPUImageFilter> getFilters(Context ctx) {
-        ArrayList<GPUImageFilter> retFilters = new ArrayList<GPUImageFilter>();
+    public ArrayList<LanSongFilter> getFilters(Context ctx) {
+        ArrayList<LanSongFilter> retFilters = new ArrayList<LanSongFilter>();
 
         for (FilterType item : filters) {
             retFilters.add(getFilter(ctx, item));

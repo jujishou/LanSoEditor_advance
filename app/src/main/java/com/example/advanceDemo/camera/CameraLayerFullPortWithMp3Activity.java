@@ -28,18 +28,17 @@ import com.lansosdk.videoeditor.DrawPadCameraView;
 import com.lansosdk.videoeditor.DrawPadCameraView.doFousEventListener;
 import com.lansosdk.videoeditor.DrawPadCameraView.onViewAvailable;
 import com.lansosdk.videoeditor.FilterLibrary;
-import com.lansosdk.videoeditor.FilterLibrary.OnGpuImageFilterChosenListener;
+import com.lansosdk.videoeditor.FilterLibrary.OnLanSongFilterChosenListener;
 import com.lansosdk.videoeditor.LanSongUtil;
 import com.lansosdk.videoeditor.MediaInfo;
 import com.lansosdk.videoeditor.LanSongFileUtil;
 
-import jp.co.cyberagent.lansongsdk.gpuimage.GPUImageFilter;
 
 public class CameraLayerFullPortWithMp3Activity extends Activity implements
         OnClickListener {
 
     private static final int RECORD_CAMERA_MIN = 2 * 1000 * 1000; // 定义最小2秒
-    private static final String TAG = "CameraFullRecordActivity";
+    private static final String TAG = "CameraRecordActivity";
     private DrawPadCameraView drawPadCamera;
 
     private CameraLayer mCamLayer = null;
@@ -218,11 +217,10 @@ public class CameraLayerFullPortWithMp3Activity extends Activity implements
     private void selectFilter() {
         if (drawPadCamera != null && drawPadCamera.isRunning()) {
             FilterLibrary.showDialog(this,
-                    new OnGpuImageFilterChosenListener() {
+                    new OnLanSongFilterChosenListener() {
 
                         @Override
-                        public void onGpuImageFilterChosenListener(
-                                final GPUImageFilter filter, String name) {
+                        public void onLanSongFilterChosenListener(com.lansosdk.LanSongFilter.LanSongFilter filter, String name) {
                             if (mCamLayer != null) {
                                 mCamLayer.switchFilterTo(filter);
                             }

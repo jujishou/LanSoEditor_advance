@@ -16,6 +16,10 @@ import com.example.advanceDemo.VideoPlayerActivity;
 import com.example.advanceDemo.view.CameraProgressBar;
 import com.example.advanceDemo.view.FocusImageView;
 import com.lansoeditor.advanceDemo.R;
+import com.lansosdk.LanSongFilter.LanSongIF1977Filter;
+import com.lansosdk.LanSongFilter.LanSongIFAmaroFilter;
+import com.lansosdk.LanSongFilter.LanSongIFEarlybirdFilter;
+import com.lansosdk.LanSongFilter.LanSongIFNashvilleFilter;
 import com.lansosdk.box.BitmapLayer;
 import com.lansosdk.box.CameraLayer;
 import com.lansosdk.box.DrawPad;
@@ -28,10 +32,6 @@ import com.lansosdk.videoeditor.DrawPadCameraView.onViewAvailable;
 import com.lansosdk.videoeditor.LanSongUtil;
 import com.lansosdk.videoeditor.LanSongFileUtil;
 
-import jp.co.cyberagent.lansongsdk.gpuimage.IF1977Filter;
-import jp.co.cyberagent.lansongsdk.gpuimage.IFAmaroFilter;
-import jp.co.cyberagent.lansongsdk.gpuimage.IFEarlybirdFilter;
-import jp.co.cyberagent.lansongsdk.gpuimage.IFNashvilleFilter;
 
 public class CameraSubLayerDemo1Activity extends Activity implements
         OnClickListener {
@@ -238,10 +238,10 @@ public class CameraSubLayerDemo1Activity extends Activity implements
             // //设置边框;
 
             // 增加不同的滤镜来显示效果
-            layer1.switchFilterTo(new IF1977Filter(mContext));
-            layer2.switchFilterTo(new IFAmaroFilter(mContext));
-            layer3.switchFilterTo(new IFEarlybirdFilter(mContext));
-            layer4.switchFilterTo(new IFNashvilleFilter(mContext));
+            layer1.switchFilterTo(new LanSongIF1977Filter(mContext));
+            layer2.switchFilterTo(new LanSongIFAmaroFilter(mContext));
+            layer3.switchFilterTo(new LanSongIFEarlybirdFilter(mContext));
+            layer4.switchFilterTo(new LanSongIFNashvilleFilter(mContext));
 
 
 
@@ -269,11 +269,11 @@ public class CameraSubLayerDemo1Activity extends Activity implements
         Toast.makeText(mContext, "当前演示子图层,主图层滤镜暂时屏蔽", Toast.LENGTH_SHORT)
                 .show();
         // if(mDrawPadCamera!=null && mDrawPadCamera.isRunning()){
-        // GPUImageFilterTools.showDialog(this, new
-        // OnGpuImageFilterChosenListener() {
+        // LanSongFilterTools.showDialog(this, new
+        // OnLanSongFilterChosenListener() {
         //
         // @Override
-        // public void onGpuImageFilterChosenListener(final GPUImageFilter
+        // public void OnLanSongFilterChosenListener(final LanSongFilter
         // filter) {
         // /**
         // * 通过DrawPad线程去切换 filterLayer的滤镜

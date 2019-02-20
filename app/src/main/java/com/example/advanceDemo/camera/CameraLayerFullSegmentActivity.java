@@ -18,6 +18,7 @@ import com.example.advanceDemo.VideoPlayerActivity;
 import com.example.advanceDemo.view.VideoFocusView;
 import com.example.advanceDemo.view.VideoProgressView;
 import com.lansoeditor.advanceDemo.R;
+import com.lansosdk.LanSongFilter.LanSongFilter;
 import com.lansosdk.box.AudioLine;
 import com.lansosdk.box.CameraLayer;
 import com.lansosdk.box.DrawPad;
@@ -30,7 +31,7 @@ import com.lansosdk.videoeditor.CopyFileFromAssets;
 import com.lansosdk.videoeditor.DrawPadCameraView;
 import com.lansosdk.videoeditor.DrawPadCameraView.onViewAvailable;
 import com.lansosdk.videoeditor.FilterLibrary;
-import com.lansosdk.videoeditor.FilterLibrary.OnGpuImageFilterChosenListener;
+import com.lansosdk.videoeditor.FilterLibrary.OnLanSongFilterChosenListener;
 import com.lansosdk.videoeditor.LanSongUtil;
 import com.lansosdk.videoeditor.LanSongFileUtil;
 import com.lansosdk.videoeditor.MediaInfo;
@@ -38,7 +39,6 @@ import com.lansosdk.videoeditor.VideoEditor;
 
 import java.util.ArrayList;
 
-import jp.co.cyberagent.lansongsdk.gpuimage.GPUImageFilter;
 
 public class CameraLayerFullSegmentActivity extends Activity implements
         OnClickListener {
@@ -442,11 +442,10 @@ public class CameraLayerFullSegmentActivity extends Activity implements
     private void selectFilter() {
         if (drawPadCamera != null && drawPadCamera.isRunning()) {
             FilterLibrary.showDialog(this,
-                    new OnGpuImageFilterChosenListener() {
+                    new OnLanSongFilterChosenListener() {
 
                         @Override
-                        public void onGpuImageFilterChosenListener(
-                                final GPUImageFilter filter, String name) {
+                        public void onLanSongFilterChosenListener(LanSongFilter filter, String name) {
                             /**
                              * 通过DrawPad线程去切换 filterLayer的滤镜
                              * 有些Filter是可以调节的,这里为了代码简洁,暂时没有演示,

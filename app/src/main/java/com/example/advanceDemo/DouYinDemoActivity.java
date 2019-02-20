@@ -15,6 +15,12 @@ import android.widget.Toast;
 
 import com.example.advanceDemo.utils.DemoUtil;
 import com.lansoeditor.advanceDemo.R;
+import com.lansosdk.LanSongFilter.LanSongBlurFilter;
+import com.lansosdk.LanSongFilter.LanSongColorEdgeFilter;
+import com.lansosdk.LanSongFilter.LanSongColorInvertFilter;
+import com.lansosdk.LanSongFilter.LanSongLaplacianFilter;
+import com.lansosdk.LanSongFilter.LanSongMirrorFilter;
+import com.lansosdk.LanSongFilter.LanSongToonFilter;
 import com.lansosdk.box.DrawPad;
 import com.lansosdk.box.DrawPadUpdateMode;
 import com.lansosdk.box.LSLog;
@@ -27,13 +33,6 @@ import com.lansosdk.videoeditor.DrawPadView;
 import com.lansosdk.videoeditor.LanSongMergeAV;
 import com.lansosdk.videoeditor.MediaInfo;
 import com.lansosdk.videoeditor.LanSongFileUtil;
-
-import jp.co.cyberagent.lansongsdk.gpuimage.GPUImageColorInvertFilter;
-import jp.co.cyberagent.lansongsdk.gpuimage.GPUImageLaplacianFilter;
-import jp.co.cyberagent.lansongsdk.gpuimage.GPUImageToonFilter;
-import jp.co.cyberagent.lansongsdk.gpuimage.LanSongBlurFilter;
-import jp.co.cyberagent.lansongsdk.gpuimage.LanSongColorEdgeFilter;
-import jp.co.cyberagent.lansongsdk.gpuimage.LanSongMirrorFilter;
 
 public class DouYinDemoActivity extends Activity implements OnClickListener {
     private static final String TAG = LSLog.TAG;
@@ -392,7 +391,7 @@ public class DouYinDemoActivity extends Activity implements OnClickListener {
      */
     private void videoColorInvert() {
         if (videoLayer != null) {
-            videoLayer.switchFilterTo(new GPUImageColorInvertFilter());
+            videoLayer.switchFilterTo(new LanSongColorInvertFilter());
         }
     }
 
@@ -401,7 +400,7 @@ public class DouYinDemoActivity extends Activity implements OnClickListener {
      */
     private void videoColorToon() {
         if (videoLayer != null) {
-            videoLayer.switchFilterTo(new GPUImageToonFilter());
+            videoLayer.switchFilterTo(new LanSongToonFilter());
         }
     }
 
@@ -410,7 +409,7 @@ public class DouYinDemoActivity extends Activity implements OnClickListener {
      */
     private void videoColorLaplacian() {
         if (videoLayer != null) {
-            videoLayer.switchFilterTo(new GPUImageLaplacianFilter());
+            videoLayer.switchFilterTo(new LanSongLaplacianFilter());
         }
     }
 

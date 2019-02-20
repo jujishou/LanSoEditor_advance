@@ -127,7 +127,7 @@ public class AudioPadExecute {
      * 在构造方法设置后, 会生成一个主音频的AudioSource,
      *
      * 拿到这个AudioSource,从而对音频做调节;
-     * @return
+     * @return  返回增加后音频层, 可以用来设置音量,快慢,变声等.
      */
     public AudioSource getMainSource() {
         return mainSource;
@@ -139,9 +139,13 @@ public class AudioPadExecute {
      *
      * @param srcPath
      * @param isLoop  是否循环;
-     * @return
+     * @return  返回增加后音频层, 可以用来设置音量,快慢,变声等.
      */
     public AudioSource addSubAudio(String srcPath,boolean  isLoop) {
+            if(audioPad==null){
+                LSLog.e(" AudioPadExecute addSubAudio:失败, 可能你的构造方法的传入的参数有问题,请检查.");
+                return null;
+            }
             AudioSource ret= audioPad.addSubAudio(srcPath);
             if(ret!=null){
                 ret.setLooping(isLoop);
@@ -158,10 +162,14 @@ public class AudioPadExecute {
      *
      * @param srcPath
      * @param isLoop
-     * @param valume 音频的音量;
-     * @return
+     * @param valume 音频的音量; 范围是0--10; 1.0正常;大于1.0提高音量;小于1.0降低音量;
+     * @return  返回增加后音频层, 可以用来设置音量,快慢,变声等.
      */
     public AudioSource addSubAudio(String srcPath,boolean  isLoop,float valume) {
+        if(audioPad==null){
+            LSLog.e(" AudioPadExecute addSubAudio:失败, 可能你的构造方法的传入的参数有问题,请检查.");
+            return null;
+        }
         AudioSource ret= audioPad.addSubAudio(srcPath);
         if(ret!=null){
             ret.setLooping(isLoop);
@@ -175,18 +183,17 @@ public class AudioPadExecute {
     /**
      * 增加音频容器, 从容器的什么位置开始增加,
      *
-     * 把srcPath从0位置开始的声音增加进去;
      *
      * @param srcPath
      * @param startPadUs
-     * @return
+     * @return  返回增加后音频层, 可以用来设置音量,快慢,变声等.
      */
     public AudioSource addSubAudio(String srcPath, long startPadUs) {
         if (audioPad != null) {
             return audioPad.addSubAudio(srcPath, startPadUs, 0,-1);
         } else {
-            LSLog.e("AudioPadExecute addSubAudio Error.MediaInfo  is:"+MediaInfo.checkFile(srcPath));
-            return null;
+                LSLog.e(" AudioPadExecute addSubAudio:失败, 可能你的构造方法的传入的参数有问题,请检查.");
+                return null;
         }
     }
     /**
@@ -199,7 +206,7 @@ public class AudioPadExecute {
      * @param startPadUs   从容器的什么时间开始增加.
      * @param startAudioUs 该音频的开始时间
      * @param endAudioUs   该音频的结束时间. 如果要增加到文件尾,则可以直接填入-1;
-     * @return
+     * @return  返回增加后音频层, 可以用来设置音量,快慢,变声等.
      */
     public AudioSource addSubAudio(String srcPath, long startPadUs,
                                    long startAudioUs, long endAudioUs) {
@@ -207,36 +214,10 @@ public class AudioPadExecute {
             return audioPad.addSubAudio(srcPath, startPadUs, startAudioUs,
                     endAudioUs);
         } else {
-            LSLog.e("AudioPadExecute addSubAudio Error.MediaInfo  is:"+MediaInfo.checkFile(srcPath));
+            LSLog.e(" AudioPadExecute addSubAudio:失败, 可能你的构造方法的传入的参数有问题,请检查.");
             return null;
         }
     }
-    /**
-     * 静态类, 转换为主视频/音频的参数,
-     *
-     * (主视频或音频可以用MediaInfo获取);
-     *
-     * @param path
-     * @param mainSampleRate
-     * @return
-     */
-    public static String checkAudioParam(String path,int mainSampleRate){
-        MediaInfo info=new MediaInfo(path);
-        if (info.prepare() && info.isHaveAudio()) {
-            String audio = path;
-            if (info.aSampleRate != mainSampleRate || info.aChannels != 2) {
-
-//                LSLog.w("警告:  addSubAudio参数不同, 开始转换.info.aSampleRate:"+info.aSampleRate+" padSampleRate:"+mainSampleRate
-//                        + "channels:"+ info.aChannels);
-                AudioEditor editor = new AudioEditor();
-                audio = editor.executeConvertToWav(path, mainSampleRate);
-            }
-            return audio;
-        }else{
-            return null;
-        }
-    }
-
     /**
      * 设置监听当前audioPad的处理进度.
      * <p>
