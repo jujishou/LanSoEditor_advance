@@ -322,8 +322,9 @@ public class ListMainActivity extends Activity implements OnClickListener {
             String str = LanSongFileUtil.TMP_DIR + fileName;
             if (LanSongFileUtil.fileExist(str)) {
                 Toast.makeText(mContext, "默认视频文件拷贝完成.视频样片路径:" + str, Toast.LENGTH_SHORT).show();
-                if (tvHint != null)
+                if (tvHint != null){
                     tvHint.setText(str);
+                }
             } else {
                 Toast.makeText(mContext, "抱歉! 默认视频文件拷贝失败,请联系我们:视频样片路径:" + str,
                         Toast.LENGTH_SHORT).show();
