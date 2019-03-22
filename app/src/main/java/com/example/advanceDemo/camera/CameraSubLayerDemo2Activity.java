@@ -16,8 +16,6 @@ import com.example.advanceDemo.VideoPlayerActivity;
 import com.example.advanceDemo.view.CameraProgressBar;
 import com.example.advanceDemo.view.FocusImageView;
 import com.lansoeditor.advanceDemo.R;
-import com.lansosdk.LanSongFilter.LanSongBlurFilter;
-import com.lansosdk.LanSongFilter.LanSongFilter;
 import com.lansosdk.box.CameraLayer;
 import com.lansosdk.box.DrawPad;
 import com.lansosdk.box.SubLayer;
@@ -33,6 +31,9 @@ import com.lansosdk.videoeditor.LanSongFileUtil;
 
 import java.util.ArrayList;
 
+import com.lansosdk.LanSongFilter.LanSongFilter;
+import com.lansosdk.LanSongFilter.LanSongBlurFilter;
+
 public class CameraSubLayerDemo2Activity extends Activity implements
         OnClickListener {
 
@@ -40,7 +41,7 @@ public class CameraSubLayerDemo2Activity extends Activity implements
 
     private static final int RECORD_CAMERA_MIN = 2 * 1000 * 1000; // 定义最小2秒
 
-    private static final String TAG = "CameraSubLayer";
+    private static final String TAG = "CameraSubLayer2";
 
     private DrawPadCameraView mDrawPadCamera;
 
@@ -94,7 +95,7 @@ public class CameraSubLayerDemo2Activity extends Activity implements
         LanSongUtil.hideBottomUIMenu(this);
         mContext = getApplicationContext();
 
-        if (LanSongUtil.checkRecordPermission(getBaseContext()) == false) {
+        if (!LanSongUtil.checkRecordPermission(getBaseContext())) {
             Toast.makeText(getApplicationContext(), "当前无权限,请打开权限后,重试!!!",
                     Toast.LENGTH_LONG).show();
             finish();
@@ -105,8 +106,7 @@ public class CameraSubLayerDemo2Activity extends Activity implements
 
         initView();
         mProgressBar.setMaxProgress(RECORD_CAMERA_MAX / 1000);
-        mProgressBar
-                .setOnProgressTouchListener(new CameraProgressBar.OnProgressTouchListener() {
+        mProgressBar.setOnProgressTouchListener(new CameraProgressBar.OnProgressTouchListener() {
                     @Override
                     public void onClick(CameraProgressBar progressBar) {
 
@@ -233,8 +233,10 @@ public class CameraSubLayerDemo2Activity extends Activity implements
         if (mDrawPadCamera != null && mDrawPadCamera.isRunning()) {
             FilterLibrary.showDialog(this,
                     new OnLanSongFilterChosenListener() {
+
                         @Override
-                        public void onLanSongFilterChosenListener(LanSongFilter filter, String name) {
+                        public void onLanSongFilterChosenListener(
+                                final LanSongFilter filter, String name) {
                             if (mCamLayer != null) {
                                 mCamLayer.switchFilterTo(filter);
                             }

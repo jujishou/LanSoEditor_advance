@@ -39,7 +39,6 @@ public class ListCameraRecordActivity extends Activity implements
                 this);
         findViewById(R.id.id_cameralist_sublayer1).setOnClickListener(this);
         findViewById(R.id.id_cameralist_sublayer2).setOnClickListener(this);
-
     }
 
     @Override

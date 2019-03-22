@@ -37,15 +37,7 @@
 		          
 		        <include 
 				       layout="@layout/onedo_addword_merge"/>
-		        <include 
-				       layout="@layout/onedo_lansongvideo_merge"/>
-		        <include 
-				       layout="@layout/onedo_add_head_end_merge"/>
-		        <include 
-				       layout="@layout/onedo_animation_merge"/>
-		        <include 
-				       layout="@layout/onedo_othereffect_merge"/>
-		        
+
 		        <RelativeLayout 
 	           		android:layout_width="match_parent"
 	           		android:layout_height="100dip">

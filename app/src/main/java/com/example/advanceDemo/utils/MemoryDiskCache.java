@@ -51,9 +51,6 @@ public class MemoryDiskCache {
             // 获取DiskLruCahce对象
             cacheFile = getDiskCacheDir(context.getApplicationContext(),
                     "diskImageCache");
-
-            Log.i(TAG, "cacheFile:" + cacheFile.toURI().getPath());
-
             if (cacheFile.exists()) {
                 cacheFile.delete();
             }
@@ -94,7 +91,36 @@ public class MemoryDiskCache {
             saveToDiskCache(key, bitmap);
         }
     }
-
+    public synchronized void pushBitmap(String key,Bitmap bitmap) {
+        if (sizeCount < memorySize * 0.8f) {
+            mLruCache.put(key, bitmap);
+            sizeCount += bitmap.getByteCount();
+        } else {
+            saveToDiskCache(key, bitmap);
+        }
+    }
+    public synchronized Bitmap getBitmap(String key) {
+        if (mLruCache.get(key) != null) {
+            return mLruCache.get(key);
+        } else {
+            try {
+                if (mDiskLruCache.get(key) != null) {
+                    // 从DiskLruCahce取
+                    Snapshot snapshot = mDiskLruCache.get(key);
+                    Bitmap bitmap = null;
+                    if (snapshot != null) {
+                        bitmap = BitmapFactory.decodeStream(snapshot
+                                .getInputStream(0));
+                        mLruCache.put(key, bitmap);
+                    }
+                    return bitmap;
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return null;
+    }
     /**
      * 从缓存（内存缓存，磁盘缓存）中获取Bitmap
      */

@@ -7,13 +7,11 @@ import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.media.MediaPlayer;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.PowerManager;
 import android.util.Log;
-import android.view.GestureDetector;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -22,9 +20,33 @@ import com.example.advanceDemo.VideoPlayerActivity;
 import com.example.advanceDemo.view.CameraProgressBar;
 import com.example.advanceDemo.view.FocusImageView;
 import com.lansoeditor.advanceDemo.R;
-import com.lansosdk.LanSongFilter.LanSongBeautyAdvanceFilter;
-import com.lansosdk.LanSongFilter.LanSongFilter;
 import com.lansosdk.LanSongFilter.LanSongIF1977Filter;
+import com.lansosdk.box.BitmapLayer;
+import com.lansosdk.box.CameraLayer;
+import com.lansosdk.box.DrawPad;
+import com.lansosdk.box.DrawPadCameraRunnable;
+import com.lansosdk.box.Layer;
+import com.lansosdk.box.MVLayer;
+import com.lansosdk.box.MicLine;
+import com.lansosdk.box.ViewLayer;
+import com.lansosdk.box.ViewLayerRelativeLayout;
+import com.lansosdk.box.onCameraLayerTextureIdListener;
+import com.lansosdk.box.onDrawPadErrorListener;
+import com.lansosdk.box.onDrawPadProgressListener;
+import com.lansosdk.box.onMicDataListener;
+import com.lansosdk.videoeditor.BeautyManager;
+import com.lansosdk.videoeditor.CopyFileFromAssets;
+import com.lansosdk.videoeditor.DrawPadCameraView;
+import com.lansosdk.videoeditor.DrawPadCameraView.doFousEventListener;
+import com.lansosdk.videoeditor.DrawPadCameraView.onViewAvailable;
+import com.lansosdk.videoeditor.FilterLibrary;
+import com.lansosdk.videoeditor.FilterLibrary.OnLanSongFilterChosenListener;
+import com.lansosdk.videoeditor.LanSongUtil;
+import com.lansosdk.videoeditor.LanSongFileUtil;
+
+import java.util.ArrayList;
+
+import com.lansosdk.LanSongFilter.LanSongFilter;
 import com.lansosdk.LanSongFilter.LanSongIFAmaroFilter;
 import com.lansosdk.LanSongFilter.LanSongIFBrannanFilter;
 import com.lansosdk.LanSongFilter.LanSongIFEarlybirdFilter;
@@ -41,28 +63,7 @@ import com.lansosdk.LanSongFilter.LanSongIFToasterFilter;
 import com.lansosdk.LanSongFilter.LanSongIFValenciaFilter;
 import com.lansosdk.LanSongFilter.LanSongIFWaldenFilter;
 import com.lansosdk.LanSongFilter.LanSongIFXproIIFilter;
-import com.lansosdk.box.BitmapLayer;
-import com.lansosdk.box.BitmapLoader;
-import com.lansosdk.box.CameraLayer;
-import com.lansosdk.box.DrawPad;
-import com.lansosdk.box.MVLayer;
-import com.lansosdk.box.SubLayer;
-import com.lansosdk.box.onCameraLayerTextureIdListener;
-import com.lansosdk.box.onDrawPadErrorListener;
-import com.lansosdk.box.onDrawPadProgressListener;
-import com.lansosdk.videoeditor.BeautyManager;
-import com.lansosdk.videoeditor.CopyFileFromAssets;
-import com.lansosdk.videoeditor.DrawPadCameraView;
-import com.lansosdk.videoeditor.DrawPadCameraView.doFousEventListener;
-import com.lansosdk.videoeditor.DrawPadCameraView.onViewAvailable;
-import com.lansosdk.videoeditor.FilterLibrary;
-import com.lansosdk.videoeditor.FilterLibrary.OnLanSongFilterChosenListener;
-import com.lansosdk.videoeditor.LanSongUtil;
-import com.lansosdk.videoeditor.LanSongFileUtil;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import com.lansosdk.LanSongFilter.LanSongBeautyAdvanceFilter;
 
 @SuppressLint("SdCardPath")
 public class CameraLayerFullPortActivity extends Activity implements
@@ -85,6 +86,8 @@ public class CameraLayerFullPortActivity extends Activity implements
     private Context mContext = null;
     private ImageView btnOk;
     private CameraProgressBar mProgressBar = null;
+    private ViewLayerRelativeLayout mLayerRelativeLayout;
+    private ViewLayer mViewLayer;
     private onDrawPadProgressListener drawPadProgressListener = new onDrawPadProgressListener() {
 
         @Override
@@ -97,6 +100,7 @@ public class CameraLayerFullPortActivity extends Activity implements
                 stopDrawPad();
                 playVideo();
             }
+
             if (tvTime != null) {
                 float timeF = ((float) currentTimeUs / 1000000);
                 float b = (float) (Math.round(timeF * 10)) / 10; // 保留一位小数.
@@ -121,7 +125,7 @@ public class CameraLayerFullPortActivity extends Activity implements
 
         LanSongUtil.hideBottomUIMenu(this);
         mContext = getApplicationContext();
-        if (LanSongUtil.checkRecordPermission(getBaseContext()) == false) {
+        if (!LanSongUtil.checkRecordPermission(getBaseContext())) {
             Toast.makeText(getApplicationContext(), "当前无权限,请打开权限后,重试!!!", Toast.LENGTH_LONG).show();
             finish();
         }
@@ -137,11 +141,8 @@ public class CameraLayerFullPortActivity extends Activity implements
             public void onClick(CameraProgressBar progressBar) {
 
                 if (drawPadCamera != null) {
-                    /**
-                     * 这里只是暂停和恢复录制, 可以录制多段,但不可以删除录制好的每一段,
-                     *
-                     * 如果你要分段录制,并支持回删,则可以采用SegmentStart和SegmentStop;
-                     */
+                    //这里只是暂停和恢复录制, 可以录制多段,但不可以删除录制好的每一段,
+                    // 如果你要分段录制,并支持回删,则可以采用SegmentStart和SegmentStop;
                     if (drawPadCamera.isRecording()) {
                         drawPadCamera.pauseRecord();
                     } else {
@@ -150,6 +151,8 @@ public class CameraLayerFullPortActivity extends Activity implements
                 }
             }
         });
+
+        initData();
 
         dstPath = LanSongFileUtil.newMp4PathInBox();
         initDrawPad(); // 开始录制.
@@ -167,9 +170,29 @@ public class CameraLayerFullPortActivity extends Activity implements
         startDrawPad();
     }
 
-    /**
-     * Step1: 开始运行 DrawPad 容器
-     */
+    private void initData()
+    {
+        filters.add(new LanSongFilter("无"));
+        filters.add(new LanSongBeautyAdvanceFilter("美颜"));
+        filters.add(new LanSongIFAmaroFilter(getApplicationContext(), "1AMARO"));
+        filters.add(new LanSongIFRiseFilter(getApplicationContext(), "2RISE"));
+        filters.add(new LanSongIFHudsonFilter(getApplicationContext(), "3HUDSON"));
+        filters.add(new LanSongIFXproIIFilter(getApplicationContext(), "4XPROII"));
+        filters.add(new LanSongIFSierraFilter(getApplicationContext(), "5SIERRA"));
+        filters.add(new LanSongIFLomofiFilter(getApplicationContext(), "6LOMOFI"));
+        filters.add(new LanSongIFEarlybirdFilter(getApplicationContext(), "7EARLYBIRD"));
+        filters.add(new LanSongIFSutroFilter(getApplicationContext(), "8SUTRO"));
+        filters.add(new LanSongIFToasterFilter(getApplicationContext(), "9TOASTER"));
+        filters.add(new LanSongIFBrannanFilter(getApplicationContext(), "10BRANNAN"));
+        filters.add(new LanSongIFInkwellFilter(getApplicationContext(), "11INKWELL"));
+        filters.add(new LanSongIFWaldenFilter(getApplicationContext(), "12WALDEN"));
+        filters.add(new LanSongIFHefeFilter(getApplicationContext(), "13HEFE"));
+        filters.add(new LanSongIFValenciaFilter(getApplicationContext(), "14VALENCIA"));
+        filters.add(new LanSongIFNashvilleFilter(getApplicationContext(), "15NASHVILLE"));
+        filters.add(new LanSongIFLordKelvinFilter(getApplicationContext(), "16LORDKELVIN"));
+        filters.add(new LanSongIF1977Filter(getApplicationContext(), "17if1977"));
+    }
+    //Step1:初始化 DrawPad 容器
     private void initDrawPad() {
         int padWidth = 544;
         int padHeight = 960;
@@ -219,32 +242,7 @@ public class CameraLayerFullPortActivity extends Activity implements
             cameraLayer = drawPadCamera.getCameraLayer();
             if (cameraLayer != null) {
                 drawPadCamera.startPreview();
-                cameraLayer.setOnCameraLayerTextureIdListener(new onCameraLayerTextureIdListener() {
-                    @Override
-                    public int onCamereaLayerTexture(int id, int width, int height) {
-                        return id;
-                    }
-                });
-                filters.add(new LanSongFilter("无"));
-                filters.add(new LanSongBeautyAdvanceFilter("美颜"));
-                filters.add(new LanSongIFAmaroFilter(getApplicationContext(), "1AMARO"));
-                filters.add(new LanSongIFRiseFilter(getApplicationContext(), "2RISE"));
-                filters.add(new LanSongIFHudsonFilter(getApplicationContext(), "3HUDSON"));
-                filters.add(new LanSongIFXproIIFilter(getApplicationContext(), "4XPROII"));
-                filters.add(new LanSongIFSierraFilter(getApplicationContext(), "5SIERRA"));
-                filters.add(new LanSongIFLomofiFilter(getApplicationContext(), "6LOMOFI"));
-                filters.add(new LanSongIFEarlybirdFilter(getApplicationContext(), "7EARLYBIRD"));
-                filters.add(new LanSongIFSutroFilter(getApplicationContext(), "8SUTRO"));
-                filters.add(new LanSongIFToasterFilter(getApplicationContext(), "9TOASTER"));
-                filters.add(new LanSongIFBrannanFilter(getApplicationContext(), "10BRANNAN"));
-                filters.add(new LanSongIFInkwellFilter(getApplicationContext(), "11INKWELL"));
-                filters.add(new LanSongIFWaldenFilter(getApplicationContext(), "12WALDEN"));
-                filters.add(new LanSongIFHefeFilter(getApplicationContext(), "13HEFE"));
-                filters.add(new LanSongIFValenciaFilter(getApplicationContext(), "14VALENCIA"));
-                filters.add(new LanSongIFNashvilleFilter(getApplicationContext(), "15NASHVILLE"));
-                filters.add(new LanSongIFLordKelvinFilter(getApplicationContext(), "16LORDKELVIN"));
-                filters.add(new LanSongIF1977Filter(getApplicationContext(), "17if1977"));
-                cameraLayer.setSlideFilterArray(filters);
+                cameraLayer.setSlideFilterArray(filters);  //增加滑动
             }
         } else {
             Log.i(TAG, "建立drawpad线程失败.");
@@ -314,6 +312,25 @@ public class CameraLayerFullPortActivity extends Activity implements
     }
 
     /**
+     * 增加一个UI图层: ViewLayer
+     */
+    private void addViewLayer() {
+        mLayerRelativeLayout = (ViewLayerRelativeLayout) findViewById(R.id.id_ktvdemo_viewlaylayout);
+        mLayerRelativeLayout.setVisibility(View.VISIBLE);
+
+        if (drawPadCamera != null && drawPadCamera.isRunning()) {
+            mViewLayer = drawPadCamera.addViewLayer();
+            mLayerRelativeLayout.bindViewLayer(mViewLayer);
+            mLayerRelativeLayout.invalidate();// 刷新一下.
+
+            ViewGroup.LayoutParams params = mLayerRelativeLayout.getLayoutParams();
+
+            params.height = mViewLayer.getPadHeight(); // 因为布局时, 宽度一致,这里调整高度,让他们一致.
+            mLayerRelativeLayout.setLayoutParams(params);
+        }
+    }
+
+    /**
      * 增加MV图层;
      */
     private void addMVLayer() {
@@ -329,7 +346,7 @@ public class CameraLayerFullPortActivity extends Activity implements
         mvLayer = drawPadCamera.addMVLayer(colorMVPath, maskMVPath); // <-----增加MVLayer
         /**
          * mv在播放完后, 有3种模式,消失/停留在最后一帧/循环.默认是循环.
-         * 	mvLayer.setEndMode(MVLayerENDMode.INVISIBLE);
+         * 	mvLayer.setReachEndMode(MVLayerENDMode.INVISIBLE);
          */
     }
 //    /**

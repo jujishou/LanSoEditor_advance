@@ -118,7 +118,7 @@ public class BitmapPadExecute {
      */
     public synchronized Bitmap getFilterBitmap(Bitmap bmp1,
                                                LanSongFilter filter) {
-        if (bmp1 != null && bmp1.isRecycled() == false && filter != null) {
+        if (bmp1 != null && !bmp1.isRecycled() && filter != null) {
             mDrawPad.pauseRecord();
             mDrawPad.removeAllLayer();
             // 放进去.

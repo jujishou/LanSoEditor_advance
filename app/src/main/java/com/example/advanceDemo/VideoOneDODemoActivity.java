@@ -1,5 +1,6 @@
 package com.example.advanceDemo;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -24,7 +25,6 @@ import android.widget.Toast;
 import com.example.advanceDemo.view.RangeSeekBar;
 import com.example.advanceDemo.view.RangeSeekBar.OnRangeSeekBarChangeListener;
 import com.lansoeditor.advanceDemo.R;
-import com.lansosdk.LanSongFilter.LanSongFilter;
 import com.lansosdk.videoeditor.CopyFileFromAssets;
 import com.lansosdk.videoeditor.FilterLibrary;
 import com.lansosdk.videoeditor.FilterLibrary.OnLanSongFilterChosenListener;
@@ -37,6 +37,7 @@ import com.lansosdk.videoeditor.onVideoOneDoProgressListener;
 import java.sql.Date;
 import java.text.SimpleDateFormat;
 
+import com.lansosdk.LanSongFilter.LanSongFilter;
 
 /**
  * 视频常见功能演示.
@@ -85,7 +86,7 @@ public class VideoOneDODemoActivity extends Activity implements
         videoPath = getIntent().getStringExtra("videopath");
 
         mInfo = new MediaInfo(videoPath);
-        if (mInfo.prepare() == false) {
+        if (!mInfo.prepare()) {
             Toast.makeText(mContext, "当前文件错误!", Toast.LENGTH_LONG).show();
             finish();
         }
@@ -95,6 +96,7 @@ public class VideoOneDODemoActivity extends Activity implements
     /**
      * 开始处理.
      */
+    @SuppressLint("SimpleDateFormat")
     private void startDrawPadProcess() {
         if (isRunning) {
             return;
@@ -167,8 +169,7 @@ public class VideoOneDODemoActivity extends Activity implements
 
         if (isAddWordEnable) { // 增加文字.
 
-            SimpleDateFormat formatter = new SimpleDateFormat(
-                    "yyyy年MM月dd日 HH:mm:ss ");
+            SimpleDateFormat formatter = new SimpleDateFormat( "yyyy年MM月dd日 HH:mm:ss ");
             Date curDate = new Date(System.currentTimeMillis());// 获取当前时间
             String str = formatter.format(curDate);
 
@@ -317,7 +318,8 @@ public class VideoOneDODemoActivity extends Activity implements
         FilterLibrary.showDialog(this, new OnLanSongFilterChosenListener() {
 
             @Override
-            public void onLanSongFilterChosenListener(LanSongFilter filter, String name) {
+            public void onLanSongFilterChosenListener(
+                    final LanSongFilter filter, String name) {
                 if (filter != null) {
                     mFilter = filter;
                 }

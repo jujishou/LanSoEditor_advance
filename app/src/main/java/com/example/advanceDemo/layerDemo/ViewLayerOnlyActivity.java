@@ -19,6 +19,7 @@ import com.lansosdk.box.ViewLayer;
 import com.lansosdk.box.ViewLayerRelativeLayout;
 import com.lansosdk.box.onDrawPadCompletedListener;
 import com.lansosdk.box.onDrawPadSizeChangedListener;
+import com.lansosdk.videoeditor.AudioEditor;
 import com.lansosdk.videoeditor.CopyFileFromAssets;
 import com.lansosdk.videoeditor.DrawPadView;
 import com.lansosdk.videoeditor.LanSongMergeAV;
@@ -220,11 +221,11 @@ public class ViewLayerOnlyActivity extends Activity implements IEndListener {
     private class DrawPadCompleted implements onDrawPadCompletedListener {
         @Override
         public void onCompleted(DrawPad v) {
-            if (isDestorying == false) {
+            if (!isDestorying) {
                 if (LanSongFileUtil.fileExist(editorTmpPath)) {
                     // 可以在这里利用VideoEditor.java类来增加声音等.
                     audioPath = CopyFileFromAssets.copyAssets(getApplicationContext(), "thrid50s.m4a");
-                    dstPath = LanSongMergeAV.mergeAVDirectly(audioPath, editorTmpPath, true);
+                    dstPath = AudioEditor.mergeAudioNoCheck(audioPath, editorTmpPath, true);
                     findViewById(R.id.id_viewLayer_saveplay).setVisibility(View.VISIBLE);
                 }
                 toastStop();

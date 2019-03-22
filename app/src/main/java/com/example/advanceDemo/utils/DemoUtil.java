@@ -9,7 +9,6 @@ import android.graphics.Bitmap;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.example.advanceDemo.ListMainActivity;
 import com.example.advanceDemo.VideoPlayerActivity;
 
 import java.io.BufferedOutputStream;
@@ -48,7 +47,7 @@ public class DemoUtil {
     public static void savePng(Bitmap bmp) {
         if (bmp != null) {
             File dir = new File("/sdcard/extractf/");
-            if (dir.exists() == false) {
+            if (!dir.exists()) {
                 dir.mkdirs();
             }
             try {

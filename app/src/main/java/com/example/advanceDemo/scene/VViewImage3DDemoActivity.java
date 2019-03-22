@@ -21,6 +21,7 @@ import com.lansosdk.box.VideoLayer;
 import com.lansosdk.box.ViewLayer;
 import com.lansosdk.box.ViewLayerRelativeLayout;
 import com.lansosdk.box.onDrawPadSizeChangedListener;
+import com.lansosdk.videoeditor.AudioEditor;
 import com.lansosdk.videoeditor.DrawPadView;
 import com.lansosdk.videoeditor.LanSongFileUtil;
 import com.lansosdk.videoeditor.LanSongMergeAV;
@@ -59,8 +60,8 @@ public class VViewImage3DDemoActivity extends Activity {
         setContentView(R.layout.vview_image3d_demo_layout);
 
         mVideoPath = getIntent().getStringExtra("videopath");
-        mInfo = new MediaInfo(mVideoPath, false);
-        if (mInfo.prepare() == false) {
+        mInfo = new MediaInfo(mVideoPath);
+        if (!mInfo.prepare()) {
             Toast.makeText(this, "传递过来的视频文件错误", Toast.LENGTH_SHORT).show();
             this.finish();
         }
@@ -165,7 +166,7 @@ public class VViewImage3DDemoActivity extends Activity {
             toastStop();
 
             if (LanSongFileUtil.fileExist(editTmpPath)) {
-                dstPath = LanSongMergeAV.mergeAVDirectly(mVideoPath,editTmpPath,true);
+                dstPath = AudioEditor.mergeAudioNoCheck(mVideoPath,editTmpPath,true);
                 findViewById(R.id.id_image3d_saveplay).setVisibility(View.VISIBLE);
             }
         }

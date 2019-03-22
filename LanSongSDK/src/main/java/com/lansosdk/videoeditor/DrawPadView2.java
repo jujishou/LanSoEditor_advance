@@ -127,9 +127,9 @@ public class DrawPadView2 extends FrameLayout {
         mTextureRenderView.setDispalyRatio(AR_ASPECT_FIT_PARENT);
 
         View renderUIView = mTextureRenderView.getView();
-        FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(
-                FrameLayout.LayoutParams.WRAP_CONTENT,
-                FrameLayout.LayoutParams.WRAP_CONTENT, Gravity.CENTER);
+        LayoutParams lp = new LayoutParams(
+                LayoutParams.WRAP_CONTENT,
+                LayoutParams.WRAP_CONTENT, Gravity.CENTER);
         renderUIView.setLayoutParams(lp);
         addView(renderUIView);
         mTextureRenderView.setVideoRotation(0);
@@ -594,7 +594,7 @@ public class DrawPadView2 extends FrameLayout {
                 renderer.adjustEncodeSpeed(encodeSpeed);
 
                 ret = renderer.startDrawPad();
-                if (ret == false) {
+                if (!ret) {
                     Log.e(TAG,"开启 DrawPad 失败, 或许是您之前的DrawPad没有Stop, 或者传递进去的surface对象已经被系统Destory!!,"
                             + "请检测您 的代码或参考本文件中的SurfaceCallback 这个类中的注释;\n");
                 }else {
@@ -652,7 +652,7 @@ public class DrawPadView2 extends FrameLayout {
      * @param layer
      * @param position
      */
-    public void changeLayerLayPosition(Layer layer, int position) {
+    public void changeLayerPosition(Layer layer, int position) {
         if (renderer != null) {
             renderer.changeLayerLayPosition(layer, position);
         }

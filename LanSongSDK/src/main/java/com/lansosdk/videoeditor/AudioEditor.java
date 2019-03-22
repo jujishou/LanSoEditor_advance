@@ -33,7 +33,18 @@ public class AudioEditor {
         });
     }
 
-    public static String mergeAVDirectly(String audio, String video,boolean deleteVideo) {
+    /**
+     * 注意,这个类是直接把音频和视频合并在一起;
+     *
+     * 不检查音频和视频的长度,
+     * 不检查音频是否是aac编码;
+     * 需要您在外面清楚
+     * @param audio 音频或含有音频的视频的绝对路径
+     * @param video 视频文件;
+     * @param deleteVideo 处理后是否删除这个视频;
+     * @return
+     */
+    public static String mergeAudioNoCheck(String audio, String video, boolean deleteVideo) {
         MediaInfo info=new MediaInfo(audio);
         if(info.prepare() && info.isHaveAudio()){
             String retPath=LanSongFileUtil.createMp4FileInBox();
@@ -81,7 +92,6 @@ public class AudioEditor {
 
     /**
      * LSTODO增加静音举例.
-     *
      * @param filelength
      * @param channel
      * @param sampleRate

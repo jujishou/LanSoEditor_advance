@@ -192,7 +192,7 @@ public class MediaInfo {
         } else {
             File file = new File(videoPath);
 
-            if (file.exists() == false) {
+            if (!file.exists()) {
                 ret = "文件不存在," + videoPath;
             } else if (file.isDirectory()) {
                 ret = "您设置的路径是一个文件夹," + videoPath;
@@ -458,7 +458,7 @@ public class MediaInfo {
             ret = "文件名为空指针, null";
         } else {
             File file = new File(videoPath);
-            if (file.exists() == false) {
+            if (!file.exists()) {
                 ret = "文件不存在," + videoPath;
             } else if (file.isDirectory()) {
                 ret = "您设置的路径是一个文件夹," + videoPath;

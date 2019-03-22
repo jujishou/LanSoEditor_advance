@@ -30,6 +30,7 @@ import com.lansosdk.box.TwoVideoLayer;
 import com.lansosdk.box.onDrawPadCompletedListener;
 import com.lansosdk.box.onDrawPadProgressListener;
 import com.lansosdk.box.onDrawPadThreadProgressListener;
+import com.lansosdk.videoeditor.AudioEditor;
 import com.lansosdk.videoeditor.CopyFileFromAssets;
 import com.lansosdk.videoeditor.LanSongMergeAV;
 import com.lansosdk.videoeditor.MediaInfo;
@@ -139,7 +140,7 @@ public class ExecuteTwoVideoLayerDemoActivity extends Activity {
                 isExecuting = false;
 
                 if (LanSongFileUtil.fileExist(editTmpPath)) {
-                    dstPath= LanSongMergeAV.mergeAVDirectly(videoPath, editTmpPath, true);
+                    dstPath= AudioEditor.mergeAudioNoCheck(videoPath, editTmpPath, true);
                     findViewById(R.id.id_video_edit_btn2).setEnabled(true);
                 }
 
@@ -288,7 +289,7 @@ public class ExecuteTwoVideoLayerDemoActivity extends Activity {
          */
         MVLayer layer = mDrawPad.addMVLayer(colorMVPath, maskMVPath, true);
         // mv在播放完后, 有3种模式,消失/停留在最后一帧/循环.默认是循环.
-        // layer.setEndMode(MVLayerENDMode.INVISIBLE);
+        // layer.setReachEndMode(MVLayerENDMode.INVISIBLE);
 
     }
 

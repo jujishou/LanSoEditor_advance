@@ -53,7 +53,13 @@
         </RelativeLayout>
 
         <RelativeLayout  android:id="@+id/id_aemain_videobtimap" style="@style/main_item_reletivelayout2">
-            <TextView   android:text="替换视频" style="@style/main_item_textview"/>
+        <TextView   android:text="替换视频" style="@style/main_item_textview"/>
+        <TextView  style="@style/main_item_arrow"/>
+    </RelativeLayout>
+
+
+        <RelativeLayout  android:id="@+id/id_aemain_bitmapxy" style="@style/main_item_reletivelayout2">
+            <TextView   android:text="图片坐标(开发者辅助代码)" style="@style/main_item_textview"/>
             <TextView  style="@style/main_item_arrow"/>
         </RelativeLayout>
 

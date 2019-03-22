@@ -1,38 +1,20 @@
 package com.lansosdk.videoeditor;
 
-import android.media.MediaPlayer;
 import android.util.Log;
 
 import com.lansosdk.box.LSLog;
-
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 替换视频的背景音乐。
- * 或者理解为：给一个视频增加音频。
- *
- * 如果原视频有音频，则删除原音频。
- *
- * 以视频的时长为准， 如果音频长度大于视频，则截取； 如果小于视频长度，则循环；
- * 支持MP3,wav,M4A,MP4格式的音频。
- * 合成的视频输出格式是MP4
+ * 不再使用.
+ * 此类将在2019-6-1日后删除.
  */
-
+@Deprecated
 public class LanSongMergeAV extends VideoEditor {
 
     private static final String TAG = LSLog.TAG;
     protected ArrayList<String> deleteArray = new ArrayList<String>();
-
-    /**
-     * 给视频增加音频
-     * 内部不做时长判断,不做mp3,aac判断,不做是否有音频的判断;
-     *
-     * @param audio 音频部分
-     * @param video 视频部分
-     * @param deleteVideo  增加视频后,是否要删除video这个文件;
-     * @return 返回增加后音频的视频路径, 如果失败则返回原视频
-     */
     public static String mergeAVDirectly(String audio, String video,boolean deleteVideo) {
         MediaInfo info=new MediaInfo(audio);
         if(info.prepare() && info.isHaveAudio()){

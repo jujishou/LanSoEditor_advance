@@ -20,32 +20,34 @@ public class LanSoEditor {
 
     public static void initSDK(Context context, String str) {
         loadLibraries(); // 拿出来单独加载库文件.
-
-        setLanSongSDK1();
-
         initSo(context, str);
         checkCPUName();
     }
-
-    /**
-     *
-     */
     public static void unInitSDK(){
         unInitSo();
     }
     /**
-     * 设置默认产生文件的文件夹, 默认是:/sdcard/lansongBox/ 如果您要设置, 则需要改文件夹存在. 比如可以是:
-     *
-     * @param tmpDir
+     * 设置默认产生文件的文件夹,
+     * 默认是:/sdcard/lansongBox/
+     * @param tmpDir  设置临时文件夹的完整路径
      */
     public static void setTempFileDir(String tmpDir) {
         LanSoEditorBox.setTempFileDir(tmpDir);
         LanSongFileUtil.TMP_DIR = tmpDir;
     }
+
+    /**
+     * 设置临时文件夹的路径
+     * 并设置文件名的前缀和后缀 我们默认是以当前时间年月日时分秒毫秒:yymmddhhmmss_ms为当前文件名字.
+     * 你可以给这个名字增加一个前缀和后缀.比如xiaomi5_yymmddhhmmss_ms_version54.mp4等.
+     * @param tmpDir  设置临时文件夹的完整路径
+     * @param prefix  设置文件的前缀
+     * @param subfix  设置文件的后缀.
+     */
     public static void setTempFileDir(String tmpDir,String prefix,String subfix) {
         if(tmpDir!=null && prefix!=null && subfix!=null){
 
-            if (tmpDir.endsWith("/") == false) {
+            if (!tmpDir.endsWith("/")) {
                 tmpDir += "/";
             }
 
@@ -74,40 +76,24 @@ public class LanSoEditor {
     private static synchronized void loadLibraries() {
         if (isLoaded)
             return;
-
-        Log.d("LanSongSDK", "load LanSongSDK native libraries......");
-
         System.loadLibrary("LanSongffmpeg");
         System.loadLibrary("LanSongdisplay");
         System.loadLibrary("LanSongplayer");
 
+        LSLog.d("loaded native libraries......isQiLinSoC:"+VideoEditor.isQiLinSoc());
         isLoaded = true;
     }
 
-    /**
-     * 为了统一, 这里请不要调用, 直接调用initSDK即可.
-     *
-     * @param context
-     * @param str
-     */
     private static void initSo(Context context, String str) {
         nativeInit(context, context.getAssets(), str);
         LanSoEditorBox.init();
     }
-
     private static void unInitSo() {
         nativeUninit();
     }
 
-
-
-
-    private static native void nativeInit(Context ctx, AssetManager ass,
-                                         String filename);
-
+    private static native void nativeInit(Context ctx, AssetManager ass,String filename);
     private static native void nativeUninit();
-
-
     private static void checkCPUName() {
 //        String str1 = "/proc/cpuinfo";
 //        String str2 = "";

@@ -15,7 +15,9 @@ import android.view.TextureView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.advanceDemo.utils.DemoUtil;
 import com.lansoeditor.advanceDemo.R;
+import com.lansosdk.box.LanSoEditorBox;
 import com.lansosdk.videoeditor.IRenderView;
 import com.lansosdk.videoeditor.MediaInfo;
 import com.lansosdk.videoeditor.TextureRenderView;
@@ -64,11 +66,11 @@ public class VideoPlayerActivity extends Activity {
 
         mediaInfo = new MediaInfo(videoPath);
 
-        if (mediaInfo.prepare() == false) {
+        if (!mediaInfo.prepare()) {
             showHintDialog();
             isSupport = false;
         } else {
-            Log.i(TAG, "info:" + mediaInfo.toString());
+            Log.i(TAG, "info:\n" + mediaInfo.toString());
             isSupport = true;
             textInfo += ";视频：";
             textInfo += String.valueOf(mediaInfo.getWidth());
@@ -77,6 +79,9 @@ public class VideoPlayerActivity extends Activity {
 
             textInfo += ";时长:";
             textInfo += String.valueOf(mediaInfo.vDuration);
+            textInfo+="\n";
+            textInfo+="debug:"+LanSoEditorBox.debug_AA();
+            textInfo+="\n";
         }
         tvScreen.setText(textInfo);
 
@@ -154,6 +159,7 @@ public class VideoPlayerActivity extends Activity {
             mediaPlayer.start();
         } catch (IOException e) {
             e.printStackTrace();
+            DemoUtil.showHintDialog(this,"系统的MediaPlayer无法播放此视频, 请联系我们.");
         }
     }
 

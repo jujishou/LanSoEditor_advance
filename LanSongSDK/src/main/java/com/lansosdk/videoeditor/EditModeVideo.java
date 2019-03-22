@@ -40,10 +40,6 @@ public class EditModeVideo {
     private onVideoOneDoCompletedListener monVideoOneDOCompletedListener = null;
     private onVideoOneDoErrorListener monVideoOneDoErrorListener = null;
 
-    /**
-     * @param ctx
-     * @param input
-     */
     public EditModeVideo(Context ctx, String input) {
         inputPath = input;
         this.ctx = ctx;
@@ -72,7 +68,7 @@ public class EditModeVideo {
         if (LanSongFileUtil.fileExist(editVideoPath)) {
             return editVideoPath;
         } else {
-            Log.e(TAG, "获取蓝松视频失败,因为:"
+            LSLog.e("获取蓝松视频失败,因为:"
                     + (isConvertRunning ? "正在转换中..." : "未知,请联系我们!"));
             return null;
         }
@@ -86,8 +82,7 @@ public class EditModeVideo {
      * 异步执行;
      */
     public void export() {
-        if (inputInfo.isHaveVideo() && isInputEditMode
-                && isConvertRunning == false) {
+        if (inputInfo.isHaveVideo() && isInputEditMode&& !isConvertRunning) {
             synchronized (this) {
                 isConvertRunning = true;
                 oneDo = new VideoOneDo(ctx, editVideoPath);
@@ -106,7 +101,7 @@ public class EditModeVideo {
                 });
                 oneDo.setOnVideoOneDoProgressListener(monVideoOneDoProgressListener);
                 oneDo.setOnVideoOneDoErrorListener(monVideoOneDoErrorListener);
-                if (oneDo.start() == false) {
+                if (!oneDo.start()) {
                     editVideoPath = null;
                     isConvertRunning = false;
                 }
@@ -184,7 +179,7 @@ public class EditModeVideo {
      * @return
      */
     public Bitmap getVideoFrame(long ptsUs) {
-        if (LanSongFileUtil.fileExist(editVideoPath) == false) {
+        if (!LanSongFileUtil.fileExist(editVideoPath)) {
             Log.e(TAG, "EditModeVideo 视频还没有准备好");
             return null;
         }
@@ -195,7 +190,6 @@ public class EditModeVideo {
 
         decoderRGBBuffer.position(0);
         long framePtsUs = AVDecoder.decoderFrame(decoderHandler, ptsUs, decoderRGBBuffer.array());
-        int frameCnt = 0;
         while (true) {
             if (framePtsUs >= ptsUs + 15000) {
                 Bitmap bmp = Bitmap.createBitmap(inputInfo.vWidth, inputInfo.vHeight, Bitmap.Config.ARGB_8888);

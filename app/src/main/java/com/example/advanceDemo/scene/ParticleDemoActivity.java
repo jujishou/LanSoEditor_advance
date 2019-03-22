@@ -30,7 +30,6 @@ import com.lansosdk.videoeditor.DrawPadView;
 import com.lansosdk.videoeditor.LanSongFileUtil;
 import com.lansosdk.videoeditor.LanSongMergeAV;
 import com.lansosdk.videoeditor.MediaInfo;
-import com.lansosdk.videoeditor.VideoEditor;
 import com.plattysoft.leonids.ParticleSystem;
 import com.plattysoft.leonids.modifiers.AlphaModifier;
 import com.plattysoft.leonids.modifiers.ScaleModifier;
@@ -63,7 +62,7 @@ public class ParticleDemoActivity extends Activity implements OnClickListener {
 
         mVideoPath = getIntent().getStringExtra("videopath");
         mInfo = new MediaInfo(mVideoPath);
-        if (mInfo.prepare() == false) {
+        if (!mInfo.prepare()) {
             Log.e(TAG, " video path is error.finish\n");
             finish();
         }
@@ -137,7 +136,7 @@ public class ParticleDemoActivity extends Activity implements OnClickListener {
             drawPadView.stopDrawPad();
             toastStop();
             if (LanSongFileUtil.fileExist(editTmpPath)) {
-                dstPath = LanSongMergeAV.mergeAVDirectly(mVideoPath, editTmpPath, true);
+                dstPath=AudioEditor.mergeAudioNoCheck(mVideoPath, editTmpPath, true);
                 findViewById(R.id.id_particle_saveplay).setVisibility(
                         View.VISIBLE);
             }

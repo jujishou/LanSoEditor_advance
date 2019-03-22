@@ -659,7 +659,7 @@ public class SlidingLayer extends FrameLayout {
                     float scrollX = oldScrollX + deltaX;
                     float scrollY = oldScrollY + deltaY;
 
-                    // Log.d("Layer", String.format("Layer scrollX[%f],scrollY[%f]",
+                    // Log.d("AeLayer", String.format("AeLayer scrollX[%f],scrollY[%f]",
                     // scrollX, scrollY));
                     final float leftBound, rightBound;
                     final float bottomBound, topBound;

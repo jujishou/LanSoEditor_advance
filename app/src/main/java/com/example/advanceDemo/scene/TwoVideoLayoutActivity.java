@@ -24,7 +24,6 @@ import com.lansosdk.box.onDrawPadSizeChangedListener;
 import com.lansosdk.videoeditor.AudioEditor;
 import com.lansosdk.videoeditor.CopyFileFromAssets;
 import com.lansosdk.videoeditor.DrawPadView;
-import com.lansosdk.videoeditor.LanSongMergeAV;
 import com.lansosdk.videoeditor.MediaInfo;
 import com.lansosdk.videoeditor.LanSongFileUtil;
 
@@ -77,7 +76,7 @@ public class TwoVideoLayoutActivity extends Activity {
      * 把视频1,2 都准备好.
      */
     private void startPlayVideo12() {
-        videoPath2 = CopyFileFromAssets.copyAssets(getApplicationContext(),"ping25s.mp4");
+        videoPath2 = CopyFileFromAssets.copyAssets(getApplicationContext(),"ping5s.mp4");
 
         if (mVideoPath != null && videoPath2 != null) {
             mplayer1 = new MediaPlayer();
@@ -85,6 +84,7 @@ public class TwoVideoLayoutActivity extends Activity {
             try {
                 mplayer1.setDataSource(mVideoPath);
                 mplayer2.setDataSource(videoPath2);
+                mplayer2.setVolume(0.0f,0.0f);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -126,8 +126,8 @@ public class TwoVideoLayoutActivity extends Activity {
         if (mplayerReady && mplayer2Ready) {
             mInfo = new MediaInfo(mVideoPath);
             if (mInfo.prepare()) {
-                drawPadView.setUpdateMode(DrawPadUpdateMode.ALL_VIDEO_READY, 25);
-                drawPadView.setRealEncodeEnable(640, 640, 1500*1024, (int) mInfo.vFrameRate, editTmpPath);
+                drawPadView.setUpdateMode(DrawPadUpdateMode.AUTO_FLUSH,  (int) mInfo.vFrameRate);
+                drawPadView.setRealEncodeEnable(640, 640, 1800*1024, (int) mInfo.vFrameRate, editTmpPath);
                 drawPadView.setDrawPadSize(640,640, new onDrawPadSizeChangedListener() {
                     @Override
                     public void onSizeChanged(int viewWidth,int viewHeight) {
@@ -163,16 +163,14 @@ public class TwoVideoLayoutActivity extends Activity {
             videoLayer2 = drawPadView.addVideoLayer(mplayer2.getVideoWidth(), mplayer2.getVideoHeight(), null);
             mplayer2.setSurface(new Surface(videoLayer2.getVideoTexture())); // 视频
             mplayer2.start();
-            mplayer2.setVolume(0.0f, 0.0f);
 
             drawPadView.resumeDrawPad();
 
             // 对两个视频布局一下.
             videoLayer1.setScale(0.5f, 0.5f);
-            videoLayer1.setPosition(videoLayer1.getPadWidth() / 4,videoLayer1.getPositionY());
-
+            videoLayer1.setPosition(videoLayer1.getPadWidth() / 4.0f,videoLayer1.getPositionY());
             videoLayer2.setScale(0.5f, 0.5f);
-            videoLayer2.setPosition(videoLayer2.getPadWidth() * 3 / 4,videoLayer2.getPositionY());
+            videoLayer2.setPosition(videoLayer2.getPadWidth() * 3.0f / 4.0f,videoLayer2.getPositionY());
         }
     }
 
@@ -186,9 +184,8 @@ public class TwoVideoLayoutActivity extends Activity {
                 mplayer2 = null;
             }
             Toast.makeText(getApplicationContext(), "录制已停止!!",Toast.LENGTH_SHORT).show();
-
             if (LanSongFileUtil.fileExist(editTmpPath)) {
-                dstPath = AudioEditor.mergeAVDirectly(mVideoPath, editTmpPath, true);
+                dstPath = AudioEditor.mergeAudioNoCheck(mVideoPath, editTmpPath, true);
                 playVideo.setVisibility(View.VISIBLE);
             }
         }

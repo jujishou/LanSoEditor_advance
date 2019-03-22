@@ -17,9 +17,6 @@ import com.example.advanceDemo.view.CameraProgressBar;
 import com.example.advanceDemo.view.FocusImageView;
 import com.lansoeditor.advanceDemo.R;
 import com.lansosdk.LanSongFilter.LanSongIF1977Filter;
-import com.lansosdk.LanSongFilter.LanSongIFAmaroFilter;
-import com.lansosdk.LanSongFilter.LanSongIFEarlybirdFilter;
-import com.lansosdk.LanSongFilter.LanSongIFNashvilleFilter;
 import com.lansosdk.box.BitmapLayer;
 import com.lansosdk.box.CameraLayer;
 import com.lansosdk.box.DrawPad;
@@ -32,6 +29,9 @@ import com.lansosdk.videoeditor.DrawPadCameraView.onViewAvailable;
 import com.lansosdk.videoeditor.LanSongUtil;
 import com.lansosdk.videoeditor.LanSongFileUtil;
 
+import com.lansosdk.LanSongFilter.LanSongIFAmaroFilter;
+import com.lansosdk.LanSongFilter.LanSongIFEarlybirdFilter;
+import com.lansosdk.LanSongFilter.LanSongIFNashvilleFilter;
 
 public class CameraSubLayerDemo1Activity extends Activity implements
         OnClickListener {
@@ -93,7 +93,7 @@ public class CameraSubLayerDemo1Activity extends Activity implements
         LanSongUtil.hideBottomUIMenu(this);
         mContext = getApplicationContext();
 
-        if (LanSongUtil.checkRecordPermission(getBaseContext()) == false) {
+        if (!LanSongUtil.checkRecordPermission(getBaseContext())) {
             Toast.makeText(getApplicationContext(), "当前无权限,请打开权限后,重试!!!",
                     Toast.LENGTH_LONG).show();
             finish();
@@ -273,7 +273,7 @@ public class CameraSubLayerDemo1Activity extends Activity implements
         // OnLanSongFilterChosenListener() {
         //
         // @Override
-        // public void OnLanSongFilterChosenListener(final LanSongFilter
+        // public void onLanSongFilterChosenListener(final LanSongFilter
         // filter) {
         // /**
         // * 通过DrawPad线程去切换 filterLayer的滤镜

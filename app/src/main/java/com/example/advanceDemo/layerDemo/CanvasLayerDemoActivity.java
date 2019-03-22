@@ -28,6 +28,7 @@ import com.lansosdk.box.VideoLayer;
 import com.lansosdk.box.onDrawPadProgressListener;
 import com.lansosdk.box.onDrawPadSizeChangedListener;
 import com.lansosdk.box.onDrawPadThreadProgressListener;
+import com.lansosdk.videoeditor.AudioEditor;
 import com.lansosdk.videoeditor.DrawPadView;
 import com.lansosdk.videoeditor.LanSongMergeAV;
 import com.lansosdk.videoeditor.MediaInfo;
@@ -64,7 +65,7 @@ public class CanvasLayerDemoActivity extends Activity {
         mVideoPath = getIntent().getStringExtra("videopath");
 
         mInfo = new MediaInfo(mVideoPath);
-        if (mInfo.prepare() == false) {
+        if (!mInfo.prepare()) {
             Log.e(TAG, " video path is error.finish\n");
             finish();
         }
@@ -213,7 +214,7 @@ public class CanvasLayerDemoActivity extends Activity {
             toastStop();
 
             if (LanSongFileUtil.fileExist(editTmpPath)) {
-                dstPath= LanSongMergeAV.mergeAVDirectly(mVideoPath, editTmpPath, true);
+                dstPath= AudioEditor.mergeAudioNoCheck(mVideoPath, editTmpPath, true);
                 playVideo.setVisibility(View.VISIBLE);
             } else {
                 Log.e(TAG, " player completion, but file:" + editTmpPath

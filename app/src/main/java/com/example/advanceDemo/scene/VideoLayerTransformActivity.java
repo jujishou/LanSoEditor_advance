@@ -21,7 +21,6 @@ import android.widget.Toast;
 
 import com.example.advanceDemo.VideoPlayerActivity;
 import com.lansoeditor.advanceDemo.R;
-import com.lansosdk.LanSongFilter.LanSongSwirlFilter;
 import com.lansosdk.box.Animation;
 import com.lansosdk.box.BitmapLayer;
 import com.lansosdk.box.CanvasLayer;
@@ -34,6 +33,7 @@ import com.lansosdk.box.ScaleAnimation;
 import com.lansosdk.box.VideoLayer;
 import com.lansosdk.box.onDrawPadProgressListener;
 import com.lansosdk.box.onDrawPadSizeChangedListener;
+import com.lansosdk.videoeditor.AudioEditor;
 import com.lansosdk.videoeditor.CopyFileFromAssets;
 import com.lansosdk.videoeditor.DrawPadView;
 import com.lansosdk.videoeditor.LanSongMergeAV;
@@ -41,6 +41,8 @@ import com.lansosdk.videoeditor.MediaInfo;
 import com.lansosdk.videoeditor.LanSongFileUtil;
 
 import java.io.IOException;
+
+import com.lansosdk.LanSongFilter.LanSongSwirlFilter;
 
 /**
  * 采用自动刷新模式 前台转场. 先播放一个视频, 然后在10秒后,插入另一个视频.并增加进入动画.
@@ -86,19 +88,15 @@ public class VideoLayerTransformActivity extends Activity {
 
         audioPath = CopyFileFromAssets.copyAssets(mContext, "bgMusic20s.m4a");
         new Handler().postDelayed(new Runnable() {
-
             @Override
             public void run() {
-                // TODO Auto-generated method stub
                 startPlayVideo();
             }
         }, 500);
         new Thread(new Runnable() {
-
             @Override
             public void run() {
-                videoPath2 = CopyFileFromAssets.copyAssets(
-                        getApplicationContext(), "ping25s.mp4");
+                videoPath2 = CopyFileFromAssets.copyAssets(getApplicationContext(), "ping5s.mp4");
             }
         }).start();
     }
@@ -222,8 +220,7 @@ public class VideoLayerTransformActivity extends Activity {
      * 增加图片
      */
     private void addBitmapLayer(long currentTimeUs) {
-        String bmpPath = CopyFileFromAssets.copyAssets(getApplicationContext(),
-                "girl.jpg");
+        String bmpPath = CopyFileFromAssets.copyAssets(getApplicationContext(),"girl.jpg");
         Bitmap bmp = BitmapFactory.decodeFile(bmpPath);
         bmpLayer = mDrawPad.addBitmapLayer(bmp, null);
         bmpLayer.setVisibility(Layer.INVISIBLE);
@@ -333,7 +330,7 @@ public class VideoLayerTransformActivity extends Activity {
 
     private void addOtherVideoLayer(final long currentTimeUs) {
         if (videoPath2 == null) {
-            videoPath2 = CopyFileFromAssets.copyAssets(getApplicationContext(),"ping25s.mp4");
+            videoPath2 = CopyFileFromAssets.copyAssets(getApplicationContext(),"ping5s.mp4");
         }
         mplayer2 = new MediaPlayer();
         try {
@@ -389,7 +386,7 @@ public class VideoLayerTransformActivity extends Activity {
                 if (LanSongFileUtil.fileExist(dstPath)) {
                     Intent intent = new Intent(
                             VideoLayerTransformActivity.this,VideoPlayerActivity.class);
-                    intent.putExtra("videopath", LanSongMergeAV.mergeAVDirectly(audioPath,dstPath,false));
+                    intent.putExtra("videopath", AudioEditor.mergeAudioNoCheck(audioPath,dstPath,false));
                     startActivity(intent);
                 } else {
                     Toast.makeText(VideoLayerTransformActivity.this, "目标文件不存在",

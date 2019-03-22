@@ -57,7 +57,6 @@ public class PicturesSlideDemoActivity extends Activity {
 
         drawPadView = (DrawPadView) findViewById(R.id.DrawPad_view);
 
-        // 在手机的默认路径下创建一个文件名,用来保存生成的视频文件,(在onDestroy中删除)
         dstPath = LanSongFileUtil.newMp4PathInBox();
         new Handler().postDelayed(new Runnable() {
 
@@ -134,8 +133,6 @@ public class PicturesSlideDemoActivity extends Activity {
 
             // 增加一个MV图层
             // addMVLayer();
-
-            Log.i(TAG,"----------startDrawPad");
             drawPadView.resumeDrawPad();
         }
     }
@@ -186,6 +183,7 @@ public class PicturesSlideDemoActivity extends Activity {
                 item.getPadHeight() / 2, /* 开始位置, 结束位置 */
                 item.getPadWidth() / 2,
                 item.getPadHeight() / 2);
+        move1.setVisibleWhenValid(true);
 
         // 中间停止在那里.
 
@@ -199,6 +197,8 @@ public class PicturesSlideDemoActivity extends Activity {
                 item.getPadWidth() + item.getPadWidth() / 2,
                 item.getPadHeight() / 2);
 
+
+        move2.setVisibleWhenValid(true);
         item.addAnimation(move1);
         item.addAnimation(move2);
     }
@@ -246,7 +246,7 @@ public class PicturesSlideDemoActivity extends Activity {
 
         @Override
         public void onCompleted(DrawPad v) {
-            if (isDestorying == false) {
+            if (!isDestorying) {
                 if (LanSongFileUtil.fileExist(dstPath)) {
                     findViewById(R.id.id_DrawPad_saveplay).setVisibility(
                             View.VISIBLE);

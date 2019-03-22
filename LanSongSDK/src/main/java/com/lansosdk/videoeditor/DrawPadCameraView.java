@@ -377,14 +377,6 @@ public class DrawPadCameraView extends FrameLayout {
         }
         drawpadProgressListener = listener;
     }
-    public void setOnDrawPadRecordProgressListener(onDrawPadRecordCompletedListener listener){
-        if (renderer != null) {
-            renderer.setDrawPadRecordCompletedListener(listener);
-        }
-        drawPadRecordCompletedListener=listener;
-    }
-
-
     /**
      * 方法与 onDrawPadProgressListener不同的地方在于: 即将开始一帧渲染的时候,
      *
@@ -553,11 +545,7 @@ public class DrawPadCameraView extends FrameLayout {
         boolean ret = false;
 
         if (isCameraOpened) {
-            Log.w(TAG,
-                    "DrawPad线程已经开启.,如果您是从下一个Activity返回的,请先stopDrawPad后,再次开启.");
-            return false;
-        }
-        if (LanSongUtil.checkRecordPermission(getContext()) == false) {
+            Log.w(TAG,"DrawPad线程已经开启.,如果您是从下一个Activity返回的,请先stopDrawPad后,再次开启.");
             return false;
         }
 
@@ -632,7 +620,7 @@ public class DrawPadCameraView extends FrameLayout {
                 ret = renderer.startDrawPad();
 
                 isCameraOpened = ret;
-                if (ret == false) { // 用中文注释.
+                if (!ret) { // 用中文注释.
                     Log.e(TAG,"开启 DrawPad 失败, 或许是您之前的DrawPad没有Stop, 或者传递进去的surface对象已经被系统Destory!!,"
                                     + "请检测您 的代码或直接拷贝我们的代码过去,在我们代码基础上修改参数;\n");
                 } else {
@@ -905,29 +893,11 @@ public class DrawPadCameraView extends FrameLayout {
         }
     }
 
-    public void segmentStopAsync(){
-        if(renderer!=null){
-            renderer.segmentStopAsync();
-        }
-    }
-
     public String segmentStop() {
         if (renderer != null) {
             return renderer.segmentStop();
         } else {
             return null;
-        }
-    }
-
-    /**
-     * 当采样外部音乐分段录制的时候, 是否在一段结束后, mp3只是暂停, 而不是结束. 当下一段视频开始时, MP3继续播放.
-     *
-     * @param pauseMp3 是否mp3只是暂停;
-     * @return
-     */
-    public void segmentStopAsync(boolean pauseMp3) {
-        if (renderer != null) {
-           renderer.segmentStopAsync(pauseMp3);
         }
     }
 
@@ -969,7 +939,7 @@ public class DrawPadCameraView extends FrameLayout {
      * 停止DrawPad的渲染线程. 此方法执行后, DrawPad会释放内部所有Layer对象,您外界拿到的各种图层对象将无法再使用.
      */
     public void stopDrawPad() {
-        if (isStoping.get() == false) {
+        if (!isStoping.get()) {
             isStoping.set(true);
 
             if (renderer != null) {
@@ -1303,7 +1273,7 @@ public class DrawPadCameraView extends FrameLayout {
 
     public boolean onTouchEvent(MotionEvent event) {
 
-        if (isEnableTouch == false) { // 如果禁止了touch事件,则直接返回false;
+        if (!isEnableTouch) { // 如果禁止了touch事件,则直接返回false;
             return false;
         }
         if(getCameraLayer()==null){
@@ -1374,7 +1344,7 @@ public class DrawPadCameraView extends FrameLayout {
 
                         slideFilterPercent=0;
 
-                    }else if (isZoomEvent == false) {
+                    }else if (!isZoomEvent) {
                         CameraLayer layer = getCameraLayer();
                         if (layer != null) {
                             float x = event.getX();

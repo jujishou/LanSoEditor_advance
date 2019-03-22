@@ -25,6 +25,7 @@ import com.lansosdk.box.GifLayer;
 import com.lansosdk.box.VideoLayer;
 import com.lansosdk.box.onDrawPadProgressListener;
 import com.lansosdk.box.onDrawPadSizeChangedListener;
+import com.lansosdk.videoeditor.AudioEditor;
 import com.lansosdk.videoeditor.DrawPadView;
 import com.lansosdk.videoeditor.LanSongMergeAV;
 import com.lansosdk.videoeditor.MediaInfo;
@@ -63,7 +64,7 @@ public class LayerLayoutDemoActivity extends Activity {
 
         videoPath = getIntent().getStringExtra("videopath");
         mInfo = new MediaInfo(videoPath);
-        if (mInfo.prepare() == false) {
+        if (!mInfo.prepare()) {
             Toast.makeText(this, "传递过来的视频文件错误", Toast.LENGTH_SHORT).show();
             this.finish();
         }
@@ -142,7 +143,7 @@ public class LayerLayoutDemoActivity extends Activity {
     private void startDrawPad() {
         drawPadView.pauseDrawPad();
 
-        if (drawPadView.isRunning() == false && drawPadView.startDrawPad()) {
+        if (!drawPadView.isRunning() && drawPadView.startDrawPad()) {
             BitmapLayer layer = drawPadView.addBitmapLayer(BitmapFactory
                     .decodeResource(getResources(), R.drawable.videobg));
             layer.setScaledValue(layer.getPadWidth(), layer.getPadHeight()); // 填充整个屏幕.
@@ -212,9 +213,9 @@ public class LayerLayoutDemoActivity extends Activity {
 //			 * @param h  要显示原来的高度
 //			 * @return
 //			 */
-//			int inW = (int) Layer.getInsideWidth(bmpLayer.getPadWidth() / 2,
+//			int inW = (int) AeLayer.getInsideWidth(bmpLayer.getPadWidth() / 2,
 //					allH, layW, layH);
-//			int inH = (int) Layer.getInsideHeight(
+//			int inH = (int) AeLayer.getInsideHeight(
 //					bmpLayer.getPadWidth() / 2, allH, layW, layH);
 //
 //			bmpLayer.setScaledValue(inW, inH);
@@ -236,7 +237,7 @@ public class LayerLayoutDemoActivity extends Activity {
             toastStop();
 
             if (LanSongFileUtil.fileExist(editTmpPath)) {
-                dstPath= LanSongMergeAV.mergeAVDirectly(videoPath, editTmpPath, true);
+                dstPath= AudioEditor.mergeAudioNoCheck(videoPath, editTmpPath, true);
                 playVideo.setVisibility(View.VISIBLE);
             } else {
                 Log.e(TAG, " player completion, but file:" + editTmpPath

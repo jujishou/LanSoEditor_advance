@@ -19,7 +19,6 @@ import com.example.advanceDemo.view.ImageTouchView;
 import com.example.advanceDemo.view.StickerView;
 import com.example.advanceDemo.view.TextStickerView;
 import com.lansoeditor.advanceDemo.R;
-import com.lansosdk.LanSongFilter.LanSongFilter;
 import com.lansosdk.box.BitmapLayer;
 import com.lansosdk.box.DrawPad;
 import com.lansosdk.box.DrawPadUpdateMode;
@@ -32,6 +31,8 @@ import com.lansosdk.videoeditor.DrawPadView;
 import com.lansosdk.videoeditor.FilterLibrary;
 import com.lansosdk.videoeditor.FilterLibrary.FilterAdjuster;
 import com.lansosdk.videoeditor.FilterLibrary.OnLanSongFilterChosenListener;
+
+import com.lansosdk.LanSongFilter.LanSongFilter;
 
 /**
  * 图片编辑, 编辑后, 输出一张图片.
@@ -154,7 +155,9 @@ public class BitmapEditDemoActivity extends Activity implements OnClickListener 
                     new OnLanSongFilterChosenListener() {
 
                         @Override
-                        public void onLanSongFilterChosenListener(LanSongFilter filter, String name) {
+                        public void onLanSongFilterChosenListener(
+                                final LanSongFilter filter, String name) {
+
                             if (bmpLayer != null) {
                                 bmpLayer.switchFilterTo(filter);
                                 mFilterAdjuster = new FilterAdjuster(filter);
@@ -287,7 +290,7 @@ public class BitmapEditDemoActivity extends Activity implements OnClickListener 
                 .setPositiveButton("确定", new AlertDialog.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         String input = etInput.getText().toString();
-                        if (input != null && input.equals("") == false) {
+                        if (input != null && !input.equals("")) {
                             strInputText = input;
                             textStickView.setText(strInputText);
                         }

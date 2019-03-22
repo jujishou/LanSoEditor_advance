@@ -17,7 +17,6 @@ import android.widget.Toast;
 
 import com.example.advanceDemo.VideoPlayerActivity;
 import com.lansoeditor.advanceDemo.R;
-import com.lansosdk.LanSongFilter.LanSongSwirlFilter;
 import com.lansosdk.box.Animation;
 import com.lansosdk.box.BitmapLayer;
 import com.lansosdk.box.CanvasLayer;
@@ -32,10 +31,11 @@ import com.lansosdk.box.onDrawPadCompletedListener;
 import com.lansosdk.box.onDrawPadErrorListener;
 import com.lansosdk.box.onDrawPadProgressListener;
 import com.lansosdk.videoeditor.AudioEditor;
-import com.lansosdk.videoeditor.AudioPadExecute;
 import com.lansosdk.videoeditor.CopyFileFromAssets;
 import com.lansosdk.videoeditor.MediaInfo;
 import com.lansosdk.videoeditor.LanSongFileUtil;
+
+import com.lansosdk.LanSongFilter.LanSongSwirlFilter;
 
 /**
  * 后台执行.
@@ -75,7 +75,7 @@ public class ExecuteAllDrawpadActivity extends Activity {
         initView();
 
         dstPath = LanSongFileUtil.newMp4PathInBox();
-        secondVideoPath = CopyFileFromAssets.copyAssets(getApplicationContext(), "ping25s.mp4");
+        secondVideoPath = CopyFileFromAssets.copyAssets(getApplicationContext(), "ping5s.mp4");
     }
 
     /**
@@ -201,6 +201,7 @@ public class ExecuteAllDrawpadActivity extends Activity {
             }
         }
     }
+
     /**
      * 增加图片
      */
@@ -221,7 +222,7 @@ public class ExecuteAllDrawpadActivity extends Activity {
      */
     private void addSecondVideoLayer(long currentTimeUs) {
         if (secondVideoPath == null) {
-            secondVideoPath = CopyFileFromAssets.copyAssets(getApplicationContext(), "ping25s.mp4");
+            secondVideoPath = CopyFileFromAssets.copyAssets(getApplicationContext(), "ping5s.mp4");
         }
         secondVideoAddTimeUs=currentTimeUs;
         videoLayer2 = drawPadExecute.addVideoLayer(secondVideoPath, null);
@@ -291,7 +292,7 @@ public class ExecuteAllDrawpadActivity extends Activity {
                 if (LanSongFileUtil.fileExist(dstPath)) {
                       Intent intent = new Intent(mContext, VideoPlayerActivity.class);
                     String audioPath = CopyFileFromAssets.copyAssets(mContext, "bgMusic20s.m4a");
-                    String ret = AudioEditor.mergeAVDirectly(audioPath, dstPath, true);
+                    String ret = AudioEditor.mergeAudioNoCheck(audioPath, dstPath, true);
                     intent.putExtra("videopath", ret);
                     startActivity(intent);
                 } else {

@@ -47,10 +47,10 @@ public class LanSongFileUtil {
     }
     public static String getPath() {
         File file = new File(TMP_DIR);
-        if (file.exists() == false) {
-            if(file.mkdir()==false){
+        if (!file.exists()) {
+            if(!file.mkdir()){
                 TMP_DIR=DEFAULT_DIR;
-                if (file.exists() == false) {
+                if (!file.exists()) {
                     file.mkdir();
                 }
             }
@@ -78,7 +78,7 @@ public class LanSongFileUtil {
             return 0.0f;
         } else {
             File file = new File(filePath);
-            if (file.exists() == false) {
+            if (!file.exists()) {
                 return 0.0f;
             } else {
                 long size = file.length();
@@ -114,7 +114,7 @@ public class LanSongFileUtil {
             if (!d.exists())
                 d.mkdirs();
 
-            if (dirPath.endsWith("/") == false) {
+            if (!dirPath.endsWith("/")) {
                 dirPath += "/";
             }
 
@@ -127,7 +127,7 @@ public class LanSongFileUtil {
             name += String.valueOf(second);
             name += String.valueOf(millisecond);
             name+=mTmpFileSubFix;
-            if (suffix.startsWith(".") == false) {
+            if (!suffix.startsWith(".")) {
                 name += ".";
             }
             name += suffix;
@@ -142,7 +142,7 @@ public class LanSongFileUtil {
 
             String retPath=dirPath+name;
             File file = new File(retPath);
-            if (file.exists() == false) {
+            if (!file.exists()) {
                 try {
                     file.createNewFile();
                 } catch (IOException e) {
@@ -408,7 +408,7 @@ public class LanSongFileUtil {
     public static boolean filesExist(String[] fileArray) {
 
         for (String file : fileArray) {
-            if (fileExist(file) == false)
+            if (!fileExist(file))
                 return false;
         }
         return true;
@@ -601,16 +601,13 @@ public class LanSongFileUtil {
             return bitmap;
         }
         Matrix matrix = new Matrix();
-        matrix.setRotate(degrees, bitmap.getWidth() / 2, bitmap.getHeight() / 2);
+        matrix.setRotate(degrees, bitmap.getWidth() / 2f, bitmap.getHeight() / 2f);
         Bitmap bmp = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
-        bitmap.recycle();
         return bmp;
     }
 
 
     /**
-     * LSNEW
-     *
      * @param buffer
      * @param w
      * @param h

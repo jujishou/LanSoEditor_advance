@@ -192,7 +192,6 @@ public class DrawPadConcatVideo {
      String dst="/sdcard/shanchu2.mp4";
 
      public void testFile2() {
-     tvVideoPath.setText("/sdcard/guaSha.mp4");
      try {
      LSOVideoBody body=new LSOVideoBody("/sdcard/d1.mp4");
      LSOVideoBody body2=new LSOVideoBody("/sdcard/TEST_720P_15s.mp4");

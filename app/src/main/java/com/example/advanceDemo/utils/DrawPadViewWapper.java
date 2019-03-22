@@ -5,10 +5,10 @@ import android.view.Surface;
 
 import com.lansosdk.box.LSLog;
 import com.lansosdk.box.VideoLayer;
-import com.lansosdk.box.onDrawPadSizeChangedListener;
 import com.lansosdk.videoeditor.DrawPadView;
 import com.lansosdk.videoeditor.MediaInfo;
 import com.lansosdk.videoeditor.LanSongFileUtil;
+import com.lansosdk.box.onDrawPadSizeChangedListener;
 
 import java.io.IOException;
 
@@ -68,7 +68,6 @@ public class DrawPadViewWapper {
 
             drawPadView.setRealEncodeEnable(width, height,  (int)(mediaInfo.vBitRate*1.5f),(int) mediaInfo.vFrameRate, editTmpPath);
             drawPadView.setDrawPadSize(width, height,new onDrawPadSizeChangedListener() {
-
                 @Override
                 public void onSizeChanged(int viewWidth, int viewHeight) {
                     startDrawPad();

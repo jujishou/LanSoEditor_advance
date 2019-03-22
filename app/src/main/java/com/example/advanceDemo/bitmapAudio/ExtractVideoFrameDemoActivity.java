@@ -97,14 +97,13 @@ public class ExtractVideoFrameDemoActivity extends Activity {
         isExecuting = true;
 
         mInfo = new MediaInfo(videoPath);
-        if (mInfo.prepare() == false || mInfo.isHaveVideo() == false) {
+        if (!mInfo.prepare() || !mInfo.isHaveVideo()) {
             return;
         }
         /**
          * 初始化.
          */
-        mExtractFrame = new ExtractVideoFrame(
-                ExtractVideoFrameDemoActivity.this, videoPath);
+        mExtractFrame = new ExtractVideoFrame(ExtractVideoFrameDemoActivity.this, videoPath);
         /**
          * 设置在获取图片的时候, 可以指定图片的宽高, 指定后, 视频帧画面会被缩放到指定的宽高.
          *
@@ -121,7 +120,7 @@ public class ExtractVideoFrameDemoActivity extends Activity {
         }
         //
         /**
-         * 设置提取间隔. 取bitmap的间隔, 即解码好后, 每隔几个返回一个bitmap,
+         * 设置提取间隔. 取bitmap的间隔, 即解码好后, 每隔几帧返回一个bitmap,
          * 用在需要列出视频一部分,但不需要全部的场合,比如预览缩略图.
          *
          * 如果设置时间,则从开始时间后, 查当前解码好几个图片,然后做间隔返回bitmap
@@ -133,11 +132,16 @@ public class ExtractVideoFrameDemoActivity extends Activity {
          * @param frames
          */
         // mExtractFrame.setExtractInterval(5);
+
+
+        /**
+         *  设置提取多少帧
+         */
+        mExtractFrame.setExtractSomeFrame(30);
         /**
          * 设置处理完成监听.
          */
-        mExtractFrame
-                .setOnExtractCompletedListener(new onExtractVideoFrameCompletedListener() {
+        mExtractFrame.setOnExtractCompletedListener(new onExtractVideoFrameCompletedListener() {
 
                     @Override
                     public void onCompleted(ExtractVideoFrame v) {
@@ -165,8 +169,7 @@ public class ExtractVideoFrameDemoActivity extends Activity {
         /**
          * 设置处理进度监听.
          */
-        mExtractFrame
-                .setOnExtractProgressListener(new onExtractVideoFrameProgressListener() {
+        mExtractFrame.setOnExtractProgressListener(new onExtractVideoFrameProgressListener() {
 
                     /**
                      * 当前帧的画面回调,, ptsUS:当前帧的时间戳,单位微秒. 拿到图片后,建议放到ArrayList中,

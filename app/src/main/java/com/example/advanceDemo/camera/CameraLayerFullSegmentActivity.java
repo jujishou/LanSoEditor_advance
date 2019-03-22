@@ -1,5 +1,6 @@
 package com.example.advanceDemo.camera;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -18,7 +19,6 @@ import com.example.advanceDemo.VideoPlayerActivity;
 import com.example.advanceDemo.view.VideoFocusView;
 import com.example.advanceDemo.view.VideoProgressView;
 import com.lansoeditor.advanceDemo.R;
-import com.lansosdk.LanSongFilter.LanSongFilter;
 import com.lansosdk.box.AudioLine;
 import com.lansosdk.box.CameraLayer;
 import com.lansosdk.box.DrawPad;
@@ -39,6 +39,7 @@ import com.lansosdk.videoeditor.VideoEditor;
 
 import java.util.ArrayList;
 
+import com.lansosdk.LanSongFilter.LanSongFilter;
 
 public class CameraLayerFullSegmentActivity extends Activity implements
         OnClickListener {
@@ -83,10 +84,9 @@ public class CameraLayerFullSegmentActivity extends Activity implements
 
             if (totalTime < MIN_RECORD_TIME) {
                 okBtn.setVisibility(View.INVISIBLE);
-            } else if (totalTime >= MIN_RECORD_TIME
-                    && totalTime < MAX_RECORD_TIME) {
+            } else if (totalTime < MAX_RECORD_TIME) {
                 okBtn.setVisibility(View.VISIBLE);
-            } else if (totalTime >= MAX_RECORD_TIME) {
+            } else {
                 stopDrawPad();
             }
 
@@ -99,6 +99,7 @@ public class CameraLayerFullSegmentActivity extends Activity implements
     private float beautyLevel = 0.0f;
     private volatile boolean isDeleteState = false;
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -107,7 +108,7 @@ public class CameraLayerFullSegmentActivity extends Activity implements
 
         setContentView(R.layout.cameralayer_fullsegment_layout);
 
-        if (LanSongUtil.checkRecordPermission(getBaseContext()) == false) {
+        if (!LanSongUtil.checkRecordPermission(getBaseContext())) {
             Toast.makeText(getApplicationContext(), "请打开权限后,重试!!!",
                     Toast.LENGTH_LONG).show();
             finish();
@@ -185,13 +186,6 @@ public class CameraLayerFullSegmentActivity extends Activity implements
         drawPadCamera.setCameraParam(false, null);
         // 设置处理进度监听.
         drawPadCamera.setOnDrawPadProgressListener(drawPadProgressListener);
-
-        drawPadCamera.setOnDrawPadRecordProgressListener(new onDrawPadRecordCompletedListener() {
-            @Override
-            public void onRecordCompleted(DrawPad v, String path) {
-                segmentArray.add(path);
-            }
-        });
         drawPadCamera.setOnViewAvailable(new onViewAvailable() {
 
             @Override
@@ -205,14 +199,14 @@ public class CameraLayerFullSegmentActivity extends Activity implements
      * 开始运行 Drawpad线程.
      */
     private void startDrawPad() {
-        if (drawPadCamera.setupDrawpad()) {
+        if (!drawPadCamera.isRunning() && drawPadCamera.setupDrawpad()) {
             mCameraLayer = drawPadCamera.getCameraLayer();
             drawPadCamera.startPreview();
         }
     }
 
     /**
-     * 结束录制, 并开始另一个Activity 去预览录制好的画面.
+     * 结束录制,预览
      */
     private void stopDrawPad() {
         // 如果是屏幕比例大于16:9,则需要重新设置编码参数, 从而画面不变形
@@ -225,12 +219,14 @@ public class CameraLayerFullSegmentActivity extends Activity implements
              * 如果正在录制,则把最后一段增加进来.
              */
             if (drawPadCamera.isRecording()) {
-               drawPadCamera.segmentStopAsync();
+               String path=drawPadCamera.segmentStop();
+               segmentArray.add(path);
             }
             String musicPath = null;
             if (isRecordMp3) {
                 musicPath = drawPadCamera.getRecordMusicPath();
             }
+
             /**
              * 停止 容器.
              */
@@ -240,38 +236,33 @@ public class CameraLayerFullSegmentActivity extends Activity implements
 
             /**
              * 开始拼接
+             * //LSTODO 这里增加进度转圈.因为用户可能点击两次
              */
             if (segmentArray.size() > 0) {
-                VideoEditor editor = new VideoEditor();
-                String[] segments = new String[segmentArray.size()];
-                for (int i = 0; i < segmentArray.size(); i++) {
-                    segments[i] = (String) segmentArray.get(i);
+                if(segmentArray.size()==1){
+                    dstPath=segmentArray.get(0);
+                }else{
+                    VideoEditor editor = new VideoEditor();
+                    if (musicPath != null) { // 录制的是MP3;
+                        String tmpVideo =editor.executeConcatMP4(segmentArray);
+                        //如果视频变速了,但音频没有变速,则合成后的音频将变短.
+                        dstPath=editor.executeVideoMergeAudio(tmpVideo, musicPath);
+                        LanSongFileUtil.deleteFile(tmpVideo);
+                    } else {
+                        dstPath=editor.executeConcatMP4(segmentArray);
+                    }
                 }
-                // 把多段拼接起来
-                if (musicPath != null) { // 录制的是MP3;
-                    String tmpVideo = LanSongFileUtil.createMp4FileInBox();
-                    // editor.executeConcatMP4(segments, tmpVideo);
-                    VideoConcat concat = new VideoConcat();
-                    concat.concatVideo(segmentArray, tmpVideo);
 
-                    //如果视频变速了,但音频没有变速,则合成后的音频将变短.
-                    dstPath=editor.executeVideoMergeAudio(tmpVideo, musicPath);
-                    LanSongFileUtil.deleteFile(tmpVideo);
+                if (LanSongFileUtil.fileExist(dstPath)) {
+                    Intent intent = new Intent(CameraLayerFullSegmentActivity.this,VideoPlayerActivity.class);
+                    intent.putExtra("videopath", dstPath);
+                    startActivity(intent);
                 } else {
-                    VideoConcat concat = new VideoConcat();
-                    concat.concatVideo(segmentArray, dstPath);
+                    Toast.makeText(CameraLayerFullSegmentActivity.this, "目标文件不存在",Toast.LENGTH_SHORT).show();
+                    startDrawPad();  //重新开始
                 }
-            }
-            /**
-             * 开始播放.
-             */
-            if (LanSongFileUtil.fileExist(dstPath)) {
-                Intent intent = new Intent(CameraLayerFullSegmentActivity.this,VideoPlayerActivity.class);
-                intent.putExtra("videopath", dstPath);
-                startActivity(intent);
-            } else {
-                Toast.makeText(CameraLayerFullSegmentActivity.this, "目标文件不存在",
-                        Toast.LENGTH_SHORT).show();
+            }else{
+                Toast.makeText(CameraLayerFullSegmentActivity.this, "没有录制视频",Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -280,12 +271,11 @@ public class CameraLayerFullSegmentActivity extends Activity implements
      * 开始录制一段视频.
      */
     private void segmentStart() {
-        if (drawPadCamera.isRecording() == false) {
+        if (!drawPadCamera.isRecording()) {
             if (!isRecordMp3) {
                 drawPadCamera.setRecordMic(true); // 如果不是录制音乐,则认为是录制外音.
             } else if (mAudioLine == null) { // 只在第一次
-                String music = CopyFileFromAssets.copyAssets(
-                        getApplicationContext(), "c_li_c_li_2m8s.mp3");
+                String music = CopyFileFromAssets.copyAssets(getApplicationContext(), "c_li_c_li_2m8s.mp3");
                 mAudioLine = drawPadCamera.setRecordExtraMp3(music, true);
             }
             drawPadCamera.segmentStart();
@@ -298,7 +288,8 @@ public class CameraLayerFullSegmentActivity extends Activity implements
      */
     private void segmentStop() {
         if (drawPadCamera.isRecording()) {
-            drawPadCamera.segmentStopAsync(true);
+            String path=drawPadCamera.segmentStop();
+            segmentArray.add(path);
             progressView.setCurrentState(VideoProgressView.State.PAUSE);
             int timeMS = (int) (currentSegDuration / 1000); // 转换为毫秒.
             progressView.putTimeList(timeMS);
@@ -383,8 +374,7 @@ public class CameraLayerFullSegmentActivity extends Activity implements
                     deleteSegment();
 
                     progressView.setCurrentState(VideoProgressView.State.DELETE);
-                    cancelBtn
-                            .setBackgroundResource(R.drawable.video_record_backspace);
+                    cancelBtn.setBackgroundResource(R.drawable.video_record_backspace);
                 } else {
                     isDeleteState = true;
                     progressView.setCurrentState(VideoProgressView.State.BACKSPACE);
@@ -445,7 +435,8 @@ public class CameraLayerFullSegmentActivity extends Activity implements
                     new OnLanSongFilterChosenListener() {
 
                         @Override
-                        public void onLanSongFilterChosenListener(LanSongFilter filter, String name) {
+                        public void onLanSongFilterChosenListener(
+                                final LanSongFilter filter, String name) {
                             /**
                              * 通过DrawPad线程去切换 filterLayer的滤镜
                              * 有些Filter是可以调节的,这里为了代码简洁,暂时没有演示,

@@ -62,7 +62,6 @@ public class ConvertToEditModeDialog {
                     if (progressDialog != null) {
                         progressDialog.setMessage("convertEditMode:正在转换为编辑模式..." + percent + "%");
                     }
-
                 }
             });
             execute2.setDrawPadCompletedListener(new onDrawPadCompletedListener() {
@@ -79,7 +78,7 @@ public class ConvertToEditModeDialog {
     }
 
     public void start() {
-        if (isRunning == false) {
+        if (!isRunning) {
             if (execute2.startDrawPad()) {
                 showProgressDialog();
             }

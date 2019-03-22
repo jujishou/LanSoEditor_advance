@@ -23,6 +23,7 @@ import com.lansosdk.box.VideoLayer;
 import com.lansosdk.box.onDrawPadProgressListener;
 import com.lansosdk.box.onDrawPadSizeChangedListener;
 import com.lansosdk.box.onLayerAvailableListener;
+import com.lansosdk.videoeditor.AudioEditor;
 import com.lansosdk.videoeditor.CopyFileFromAssets;
 import com.lansosdk.videoeditor.DrawPadView;
 import com.lansosdk.videoeditor.DrawPadView.onViewAvailable;
@@ -57,7 +58,7 @@ public class MVLayerDemoActivity extends Activity {
         mVideoPath = getIntent().getStringExtra("videopath");
         mDrawPadView = (DrawPadView) findViewById(R.id.id_mvlayer_padview);
         mInfo = new MediaInfo(mVideoPath);
-        if (mInfo.prepare() == false) {
+        if (!mInfo.prepare()) {
             Log.e(TAG, "视频源文件错误!");
             this.finish();
         }
@@ -218,7 +219,7 @@ public class MVLayerDemoActivity extends Activity {
 //            float scaleH = mvLayer.getPadHeight() / (float) mvLayer.getLayerHeight();
 //            mvLayer.setScale(scaleW, scaleH);
             // 可以设置当前的MV是否要录制到
-            // mvLayer.setVisibility(Layer.VISIBLE_ONLY_PREVIEW);
+            // mvLayer.setVisibility(AeLayer.VISIBLE_ONLY_PREVIEW);
             // 可以增加mv在播放结束后的三种模式, 停留在最后一帧/循环/消失/
             mvLayer.setEndMode(MVLayerENDMode.LOOP);
         }
@@ -233,7 +234,7 @@ public class MVLayerDemoActivity extends Activity {
             mDrawPadView.stopDrawPad();
             toastStop();
             if (LanSongFileUtil.fileExist(editTmpPath)) {
-                dstPath= LanSongMergeAV.mergeAVDirectly(mVideoPath, editTmpPath,true);
+                dstPath= AudioEditor.mergeAudioNoCheck(mVideoPath, editTmpPath,true);
                 findViewById(R.id.id_mvlayer_saveplay).setVisibility(View.VISIBLE);
             } else {
                 Log.e(TAG, " player completion, but file:" + editTmpPath

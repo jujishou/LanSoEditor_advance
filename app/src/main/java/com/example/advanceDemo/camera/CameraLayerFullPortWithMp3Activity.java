@@ -33,12 +33,13 @@ import com.lansosdk.videoeditor.LanSongUtil;
 import com.lansosdk.videoeditor.MediaInfo;
 import com.lansosdk.videoeditor.LanSongFileUtil;
 
+import com.lansosdk.LanSongFilter.LanSongFilter;
 
 public class CameraLayerFullPortWithMp3Activity extends Activity implements
         OnClickListener {
 
     private static final int RECORD_CAMERA_MIN = 2 * 1000 * 1000; // 定义最小2秒
-    private static final String TAG = "CameraRecordActivity";
+    private static final String TAG = "CameraRecord";
     private DrawPadCameraView drawPadCamera;
 
     private CameraLayer mCamLayer = null;
@@ -82,7 +83,7 @@ public class CameraLayerFullPortWithMp3Activity extends Activity implements
         LanSongUtil.hideBottomUIMenu(this);
         mContext = getApplicationContext();
 
-        if (LanSongUtil.checkRecordPermission(getBaseContext()) == false) {
+        if (!LanSongUtil.checkRecordPermission(getBaseContext())) {
             Toast.makeText(getApplicationContext(), "当前无权限,请打开权限后,重试!!!",
                     Toast.LENGTH_LONG).show();
             finish();
@@ -127,8 +128,7 @@ public class CameraLayerFullPortWithMp3Activity extends Activity implements
         super.onResume();
         if (mWakeLock == null) {
             PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
-            mWakeLock = pm.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK,
-                    TAG);
+            mWakeLock = pm.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK,TAG);
             mWakeLock.acquire();
         }
         startDrawPad();
@@ -220,7 +220,8 @@ public class CameraLayerFullPortWithMp3Activity extends Activity implements
                     new OnLanSongFilterChosenListener() {
 
                         @Override
-                        public void onLanSongFilterChosenListener(com.lansosdk.LanSongFilter.LanSongFilter filter, String name) {
+                        public void onLanSongFilterChosenListener(
+                                final LanSongFilter filter, String name) {
                             if (mCamLayer != null) {
                                 mCamLayer.switchFilterTo(filter);
                             }

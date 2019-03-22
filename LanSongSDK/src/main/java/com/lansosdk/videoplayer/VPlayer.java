@@ -352,10 +352,20 @@ public class VPlayer {
             mSeekWhenPrepared = msec;
         }
     }
+
+    /**
+     * 如果视频旋转90或270度,这里等于高度;
+     * @return
+     */
     public int getVideoWidth()
     {
     	return mMediaPlayer!=null? mMediaPlayer.getVideoWidth():0;
     }
+
+    /**
+     * 如果视频旋转90或270度,这里等于宽度.;
+     * @return
+     */
     public int getVideoHeight()
     {
     	return mMediaPlayer!=null? mMediaPlayer.getVideoHeight():0;

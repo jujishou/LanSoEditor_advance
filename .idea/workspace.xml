@@ -1,34 +1,364 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="AndroidLayouts">
+    <shared>
+      <config />
+    </shared>
+  </component>
   <component name="AndroidLogFilters">
     <option name="TOOL_WINDOW_CONFIGURED_FILTER" value="Show only selected application" />
   </component>
   <component name="ChangeListManager">
     <list default="true" id="6e43cb9d-3742-4576-8c65-cb82e34d0875" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/cache.properties" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/cache.properties" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/outputFiles.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/outputFiles.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/caches/build_file_checksums.ser" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/caches/build_file_checksums.ser" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__android_arch_core_runtime_1_1_0.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__android_arch_lifecycle_livedata_core_1_1_0.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__android_arch_lifecycle_runtime_1_1_0.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__android_arch_lifecycle_viewmodel_1_1_0.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__com_android_support_animated_vector_drawable_27_1_1.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__com_android_support_appcompat_v7_27_1_1.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__com_android_support_support_compat_27_1_1.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__com_android_support_support_core_ui_27_1_1.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__com_android_support_support_core_utils_27_1_1.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__com_android_support_support_fragment_27_1_1.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__com_android_support_support_vector_drawable_27_1_1.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__com_github_warkiz_widget_indicatorseekbar_1_2_9.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/caches/gradle_models.ser" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/caches/gradle_models.ser" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/LanSongSDK/LanSongSDK.iml" beforeDir="false" afterPath="$PROJECT_DIR$/LanSongSDK/LanSongSDK.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LanSongSDK/libs/lansongeditor_hx.jar" beforeDir="false" afterPath="$PROJECT_DIR$/LanSongSDK/libs/lansongeditor_hx.jar" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LanSongSDK/src/main/java/com/lansosdk/videoeditor/AVDecoder.java" beforeDir="false" afterPath="$PROJECT_DIR$/LanSongSDK/src/main/java/com/lansosdk/videoeditor/AVDecoder.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LanSongSDK/src/main/java/com/lansosdk/videoeditor/AudioEditor.java" beforeDir="false" afterPath="$PROJECT_DIR$/LanSongSDK/src/main/java/com/lansosdk/videoeditor/AudioEditor.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LanSongSDK/src/main/java/com/lansosdk/videoeditor/AudioPadExecute.java" beforeDir="false" afterPath="$PROJECT_DIR$/LanSongSDK/src/main/java/com/lansosdk/videoeditor/AudioPadExecute.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LanSongSDK/src/main/java/com/lansosdk/videoeditor/BitmapPadExecute.java" beforeDir="false" afterPath="$PROJECT_DIR$/LanSongSDK/src/main/java/com/lansosdk/videoeditor/BitmapPadExecute.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LanSongSDK/src/main/java/com/lansosdk/videoeditor/DrawPadCameraView.java" beforeDir="false" afterPath="$PROJECT_DIR$/LanSongSDK/src/main/java/com/lansosdk/videoeditor/DrawPadCameraView.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LanSongSDK/src/main/java/com/lansosdk/videoeditor/DrawPadConcatVideo.java" beforeDir="false" afterPath="$PROJECT_DIR$/LanSongSDK/src/main/java/com/lansosdk/videoeditor/DrawPadConcatVideo.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LanSongSDK/src/main/java/com/lansosdk/videoeditor/DrawPadPictureExecute.java" beforeDir="false" afterPath="$PROJECT_DIR$/LanSongSDK/src/main/java/com/lansosdk/videoeditor/DrawPadPictureExecute.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LanSongSDK/src/main/java/com/lansosdk/videoeditor/DrawPadVideoExecute.java" beforeDir="false" afterPath="$PROJECT_DIR$/LanSongSDK/src/main/java/com/lansosdk/videoeditor/DrawPadVideoExecute.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LanSongSDK/src/main/java/com/lansosdk/videoeditor/DrawPadView.java" beforeDir="false" afterPath="$PROJECT_DIR$/LanSongSDK/src/main/java/com/lansosdk/videoeditor/DrawPadView.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LanSongSDK/src/main/java/com/lansosdk/videoeditor/DrawPadView2.java" beforeDir="false" afterPath="$PROJECT_DIR$/LanSongSDK/src/main/java/com/lansosdk/videoeditor/DrawPadView2.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LanSongSDK/src/main/java/com/lansosdk/videoeditor/EditModeVideo.java" beforeDir="false" afterPath="$PROJECT_DIR$/LanSongSDK/src/main/java/com/lansosdk/videoeditor/EditModeVideo.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LanSongSDK/src/main/java/com/lansosdk/videoeditor/LanSoEditor.java" beforeDir="false" afterPath="$PROJECT_DIR$/LanSongSDK/src/main/java/com/lansosdk/videoeditor/LanSoEditor.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LanSongSDK/src/main/java/com/lansosdk/videoeditor/LanSongFileUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/LanSongSDK/src/main/java/com/lansosdk/videoeditor/LanSongFileUtil.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LanSongSDK/src/main/java/com/lansosdk/videoeditor/LanSongMergeAV.java" beforeDir="false" afterPath="$PROJECT_DIR$/LanSongSDK/src/main/java/com/lansosdk/videoeditor/LanSongMergeAV.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LanSongSDK/src/main/java/com/lansosdk/videoeditor/LanSongUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/LanSongSDK/src/main/java/com/lansosdk/videoeditor/LanSongUtil.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LanSongSDK/src/main/java/com/lansosdk/videoeditor/MediaInfo.java" beforeDir="false" afterPath="$PROJECT_DIR$/LanSongSDK/src/main/java/com/lansosdk/videoeditor/MediaInfo.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LanSongSDK/src/main/java/com/lansosdk/videoeditor/VideoEditor.java" beforeDir="false" afterPath="$PROJECT_DIR$/LanSongSDK/src/main/java/com/lansosdk/videoeditor/VideoEditor.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LanSongSDK/src/main/java/com/lansosdk/videoeditor/VideoOneDo.java" beforeDir="false" afterPath="$PROJECT_DIR$/LanSongSDK/src/main/java/com/lansosdk/videoeditor/VideoOneDo.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LanSongSDK/src/main/java/com/lansosdk/videoplayer/VPlayer.java" beforeDir="false" afterPath="$PROJECT_DIR$/LanSongSDK/src/main/java/com/lansosdk/videoplayer/VPlayer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LanSongSDK/src/main/jniLibs/armeabi-v7a/libLanSongdisplay.so" beforeDir="false" afterPath="$PROJECT_DIR$/LanSongSDK/src/main/jniLibs/armeabi-v7a/libLanSongdisplay.so" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LanSongSDK/src/main/jniLibs/armeabi-v7a/libLanSongffmpeg.so" beforeDir="false" afterPath="$PROJECT_DIR$/LanSongSDK/src/main/jniLibs/armeabi-v7a/libLanSongffmpeg.so" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LanSongSDK/src/main/jniLibs/armeabi-v7a/libLanSongplayer.so" beforeDir="false" afterPath="$PROJECT_DIR$/LanSongSDK/src/main/jniLibs/armeabi-v7a/libLanSongplayer.so" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/app.iml" beforeDir="false" afterPath="$PROJECT_DIR$/app/app.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/DemoApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/DemoApplication.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/DouYinDemoActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/DouYinDemoActivity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/ListBitmapAudioActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/ListBitmapAudioActivity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/ListCameraRecordActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/ListCameraRecordActivity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/ListLayerDemoActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/ListLayerDemoActivity.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/ListMainActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/ListMainActivity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/ListSceneDemoActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/ListSceneDemoActivity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/TestPlayNextActivity.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/VideoOneDODemoActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/VideoOneDODemoActivity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/VideoPlayerActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/VideoPlayerActivity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/aeDemo/PlayerAEDemoActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/aeDemo/PlayerAEDemoActivity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/bitmapAudio/BitmapEditDemoActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/bitmapAudio/BitmapEditDemoActivity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/bitmapAudio/BitmapLayerFilterDemoActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/bitmapAudio/BitmapLayerFilterDemoActivity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/bitmapAudio/DisplayFramesActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/bitmapAudio/DisplayFramesActivity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/bitmapAudio/ExtractVideoFrameDemoActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/bitmapAudio/ExtractVideoFrameDemoActivity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/camera/CameraLayerFullLandscapeActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/camera/CameraLayerFullLandscapeActivity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/camera/CameraLayerFullPortActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/camera/CameraLayerFullPortActivity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/camera/CameraLayerFullPortWithMp3Activity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/camera/CameraLayerFullPortWithMp3Activity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/camera/CameraLayerFullSegmentActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/camera/CameraLayerFullSegmentActivity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/camera/CameraLayerKTVDemoActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/camera/CameraLayerKTVDemoActivity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/camera/CameraSubLayerDemo1Activity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/camera/CameraSubLayerDemo1Activity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/camera/CameraSubLayerDemo2Activity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/camera/CameraSubLayerDemo2Activity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/layerDemo/BitmapLayerMarkActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/layerDemo/BitmapLayerMarkActivity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/layerDemo/CanvasLayerDemoActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/layerDemo/CanvasLayerDemoActivity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/layerDemo/Demo1LayerMothedActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/layerDemo/Demo1LayerMothedActivity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/layerDemo/Demo2LayerMothedActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/layerDemo/Demo2LayerMothedActivity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/layerDemo/Demo3LayerFilterActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/layerDemo/Demo3LayerFilterActivity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/layerDemo/ExecuteCanvasLayerActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/layerDemo/ExecuteCanvasLayerActivity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/layerDemo/ExecuteTwoVideoLayerDemoActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/layerDemo/ExecuteTwoVideoLayerDemoActivity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/layerDemo/ExecuteVideoLayerActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/layerDemo/ExecuteVideoLayerActivity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/layerDemo/MVLayerDemoActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/layerDemo/MVLayerDemoActivity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/layerDemo/TwoVideoLayerActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/layerDemo/TwoVideoLayerActivity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/layerDemo/VideoSpeedDemoActivity.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/layerDemo/ViewLayerDemoActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/layerDemo/ViewLayerDemoActivity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/layerDemo/ViewLayerOnlyActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/layerDemo/ViewLayerOnlyActivity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/scene/ExecuteAllDrawpadActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/scene/ExecuteAllDrawpadActivity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/scene/ExecuteBitmapLayerActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/scene/ExecuteBitmapLayerActivity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/scene/GameVideoDemoActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/scene/GameVideoDemoActivity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/scene/LayerLayoutDemoActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/scene/LayerLayoutDemoActivity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/scene/MoreLayHeadSeekActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/scene/MoreLayHeadSeekActivity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/scene/ParticleDemoActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/scene/ParticleDemoActivity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/scene/PicturesSlideDemoActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/scene/PicturesSlideDemoActivity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/scene/TwoVideoLayoutActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/scene/TwoVideoLayoutActivity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/scene/VViewImage3DDemoActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/scene/VViewImage3DDemoActivity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/scene/VideoLayerAutoUpdateActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/scene/VideoLayerAutoUpdateActivity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/scene/VideoLayerTransformActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/scene/VideoLayerTransformActivity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/scene/VideoSeekActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/scene/VideoSeekActivity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/utils/BitmapLruCache.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/utils/BitmapLruCache.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/utils/ConvertToEditModeDialog.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/utils/ConvertToEditModeDialog.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/utils/DemoUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/utils/DemoUtil.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/utils/DiskLruCache.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/utils/DiskLruCache.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/utils/DrawPadViewWapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/utils/DrawPadViewWapper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/utils/FileExplorerActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/utils/FileExplorerActivity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/utils/FileExplorerAdapter.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/utils/FileExplorerAdapter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/utils/LSProgressDialog.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/utils/LanSoSdkCrashHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/utils/LanSoSdkCrashHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/utils/MemoryDiskCache.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/utils/MemoryDiskCache.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/utils/StartActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/utils/StartActivity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/utils/VHeaderConcat.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/utils/YUVLayerDemoData.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/utils/YUVLayerDemoData.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/utils/onDrawPadViewSetupedListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/utils/onDrawPadViewSetupedListener.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/view/BitmapCache.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/view/BitmapCache.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/view/BitmapUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/view/BitmapUtils.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/view/CameraProgressBar.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/view/CameraProgressBar.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/view/FaceView.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/view/FaceView.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/view/FilterDemoAdapter.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/view/FilterDemoAdapter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/view/FocusImageView.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/view/FocusImageView.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/view/HorizontalListView.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/view/HorizontalListView.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/view/ImageTouchView.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/view/ImageTouchView.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/view/LanSongLoveText.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/view/LanSongLoveText.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/view/MarkArrowView.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/view/MarkArrowView.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/view/PaintConstants.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/view/PaintConstants.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/view/RangeSeekBar.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/view/RangeSeekBar.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/view/RectUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/view/RectUtil.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/view/ShowHeart.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/view/ShowHeart.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/view/SlidingLayer.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/view/SlidingLayer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/view/StereoView.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/view/StereoView.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/view/StickerItem.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/view/StickerItem.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/view/StickerView.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/view/StickerView.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/view/TextStickerView.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/view/TextStickerView.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/view/ThumbnailView.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/view/ThumbnailView.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/view/VideoFocusView.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/view/VideoFocusView.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/view/VideoPreviewView.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/view/VideoPreviewView.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/view/VideoProgressView.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/view/VideoProgressView.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/anim/fade.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/anim/fade.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/anim/focusview_show.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/anim/focusview_show.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/anim/hold.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/anim/hold.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/anim/hyperspace_in.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/anim/hyperspace_in.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/anim/hyperspace_out.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/anim/hyperspace_out.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/anim/push_left_in.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/anim/push_left_in.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/anim/push_left_out.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/anim/push_left_out.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/anim/push_up_in.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/anim/push_up_in.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/anim/push_up_out.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/anim/push_up_out.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/anim/slide_left_out.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/anim/slide_left_out.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/anim/slide_right_in.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/anim/slide_right_in.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/anim/slide_right_out.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/anim/slide_right_out.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/anim/slide_top_to_bottom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/anim/slide_top_to_bottom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/anim/translate_rotate.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/anim/translate_rotate.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/anim/wave_scale.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/anim/wave_scale.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/anim/zoom_enter.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/anim/zoom_enter.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/anim/zoom_exit.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/anim/zoom_exit.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable-hdpi/arrow_red.png" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/drawable-hdpi/arrow_red.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable-hdpi/checkbox_off.png" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/drawable-hdpi/checkbox_off.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable-hdpi/checkbox_on.png" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/drawable-hdpi/checkbox_on.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable-hdpi/confeti2.png" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/drawable-hdpi/confeti2.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable-hdpi/confeti3.png" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/drawable-hdpi/confeti3.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable-hdpi/dust.png" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/drawable-hdpi/dust.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable-hdpi/er0.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable-hdpi/er1.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable-hdpi/er2.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable-hdpi/er4.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable-hdpi/heart.png" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/drawable-hdpi/heart.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable-hdpi/ic_launcher.png" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/drawable-hdpi/ic_launcher.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable-hdpi/ic_menu_archive.png" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/drawable-hdpi/ic_menu_archive.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable-hdpi/ic_menu_back.png" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/drawable-hdpi/ic_menu_back.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable-hdpi/ic_menu_block.png" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/drawable-hdpi/ic_menu_block.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable-hdpi/ic_menu_gallery.png" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/drawable-hdpi/ic_menu_gallery.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable-hdpi/mask.png" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/drawable-hdpi/mask.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable-hdpi/mianju2.png" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/drawable-hdpi/mianju2.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable-hdpi/play2.png" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/drawable-hdpi/play2.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable-hdpi/range_seek_bar_bg_l.png" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/drawable-hdpi/range_seek_bar_bg_l.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable-hdpi/range_seek_bar_bg_m.png" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/drawable-hdpi/range_seek_bar_bg_m.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable-hdpi/range_seek_bar_bg_r.png" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/drawable-hdpi/range_seek_bar_bg_r.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable-hdpi/range_seek_bar_imb.png" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/drawable-hdpi/range_seek_bar_imb.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable-hdpi/range_seek_bar_imb_pressed.png" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/drawable-hdpi/range_seek_bar_imb_pressed.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable-hdpi/range_seek_bar_progress.png" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/drawable-hdpi/range_seek_bar_progress.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable-hdpi/right_arrow.png" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/drawable-hdpi/right_arrow.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable-hdpi/star_pink.png" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/drawable-hdpi/star_pink.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable-hdpi/stick2.png" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/drawable-hdpi/stick2.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable-hdpi/stick3.png" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/drawable-hdpi/stick3.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable-hdpi/stick4.png" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/drawable-hdpi/stick4.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable-hdpi/stick5.png" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/drawable-hdpi/stick5.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable-hdpi/sticker_delete.png" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/drawable-hdpi/sticker_delete.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable-hdpi/sticker_normal.png" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/drawable-hdpi/sticker_normal.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable-hdpi/sticker_pressed.png" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/drawable-hdpi/sticker_pressed.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable-hdpi/sticker_rotate.png" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/drawable-hdpi/sticker_rotate.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable-hdpi/switch_off.png" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/drawable-hdpi/switch_off.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable-hdpi/switch_on.png" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/drawable-hdpi/switch_on.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable-hdpi/xiaolian.png" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/drawable-hdpi/xiaolian.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable-mdpi/ic_launcher.png" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/drawable-mdpi/ic_launcher.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable-mdpi/page.png" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/drawable-mdpi/page.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable-mdpi/page_now.png" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/drawable-mdpi/page_now.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable-xhdpi/camera_choice.png" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/drawable-xhdpi/camera_choice.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable-xhdpi/camera_close.png" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/drawable-xhdpi/camera_close.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable-xhdpi/close_bn.png" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/drawable-xhdpi/close_bn.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable-xhdpi/ic_launcher.png" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/drawable-xhdpi/ic_launcher.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable-xhdpi/video_record_backspace.png" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/drawable-xhdpi/video_record_backspace.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable-xhdpi/video_record_delete.png" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/drawable-xhdpi/video_record_delete.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable-xhdpi/video_record_image_focus.png" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/drawable-xhdpi/video_record_image_focus.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable-xhdpi/video_record_light_off_normal.png" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/drawable-xhdpi/video_record_light_off_normal.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable-xhdpi/video_record_ok.png" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/drawable-xhdpi/video_record_ok.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable-xhdpi/video_record_start_btn.png" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/drawable-xhdpi/video_record_start_btn.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable-xhdpi/video_record_start_btn_pressed.png" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/drawable-xhdpi/video_record_start_btn_pressed.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable-xhdpi/video_record_switch_camera.png" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/drawable-xhdpi/video_record_switch_camera.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable-xxhdpi/a1.png" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/drawable-xxhdpi/a1.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable-xxhdpi/a2.png" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/drawable-xxhdpi/a2.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable-xxhdpi/a3.png" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/drawable-xxhdpi/a3.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable-xxhdpi/a4.png" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/drawable-xxhdpi/a4.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable-xxhdpi/a5.png" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/drawable-xxhdpi/a5.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable-xxhdpi/a6.png" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/drawable-xxhdpi/a6.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable-xxhdpi/a7.png" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/drawable-xxhdpi/a7.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable-xxhdpi/a8.png" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/drawable-xxhdpi/a8.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable-xxhdpi/face_find_rect.9.png" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/drawable-xxhdpi/face_find_rect.9.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable-xxhdpi/focus_focused.9.png" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/drawable-xxhdpi/focus_focused.9.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable-xxhdpi/g06.gif" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/drawable-xxhdpi/g06.gif" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable-xxhdpi/g07.gif" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/drawable-xxhdpi/g07.gif" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable-xxhdpi/ic_launcher.png" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/drawable-xxhdpi/ic_launcher.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable-xxhdpi/lansong_hint_bg.png" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/drawable-xxhdpi/lansong_hint_bg.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable-xxhdpi/pad_bg.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/drawable-xxhdpi/pad_bg.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable-xxhdpi/pic1.png" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/drawable-xxhdpi/pic1.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable-xxhdpi/pic2.png" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/drawable-xxhdpi/pic2.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable-xxhdpi/pic3.png" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/drawable-xxhdpi/pic3.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable-xxhdpi/pic4.png" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/drawable-xxhdpi/pic4.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable-xxhdpi/pic5.png" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/drawable-xxhdpi/pic5.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable-xxhdpi/tt.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/drawable-xxhdpi/tt.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable-xxhdpi/tt3.png" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/drawable-xxhdpi/tt3.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable-xxhdpi/videobg.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/drawable-xxhdpi/videobg.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable/animated_confetti.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/animated_confetti.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable/bg_info.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/bg_info.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable/button_btn_bg.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/button_btn_bg.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable/button_onlypress_bg.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/button_onlypress_bg.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable/checkbox_selector.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/checkbox_selector.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable/circel_button_bg.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/circel_button_bg.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable/circle_btn_bg_blue.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/circle_btn_bg_blue.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable/circle_button_blue_bg.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/circle_button_blue_bg.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable/circle_ckx_red_bg.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/circle_ckx_red_bg.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable/corners_bg.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/corners_bg.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable/corners_btn_blue_bg.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/corners_btn_blue_bg.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable/corners_btn_bluelightsky_bg.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/corners_btn_bluelightsky_bg.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable/corners_btn_device_item_bg.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/corners_btn_device_item_bg.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable/corners_btn_orange_bg.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/corners_btn_orange_bg.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable/corners_colormain_btn_bg.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/corners_colormain_btn_bg.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable/function_item_btn_bg.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/function_item_btn_bg.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable/mainlist_item_btn_bg.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/mainlist_item_btn_bg.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable/p10.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/p10.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable/p11.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/p11.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable/p12.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/p12.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable/p14.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/p14.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable/radio_text_color.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/radio_text_color.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable/rdobtn_select_bg.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/rdobtn_select_bg.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable/rect_bg.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/rect_bg.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable/rect_button_bg.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/rect_button_bg.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable/start_btn_bg.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/start_btn_bg.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable/video_record_start_btn_selector.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/video_record_start_btn_selector.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_main.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_main.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_test.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_test.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/ae_activity_main.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/ae_activity_main.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/ae_play_aedemofile_layout.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/ae_play_aedemofile_layout.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/ae_recordfile_hint_layout.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/ae_recordfile_hint_layout.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/bitmap2bitmap_layout.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/bitmap2bitmap_layout.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/bitmaplayer_filter_layout.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/bitmaplayer_filter_layout.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/bitmaplayer_tuao_layout.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/bitmaplayer_tuao_layout.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/camera_demo_list_layout.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/camera_demo_list_layout.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/camera_full_record_layout.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/camera_full_record_layout.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/camera_fullport_mp3_layout.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/camera_fullport_mp3_layout.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/camera_sublayerdemo2_layout.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/camera_sublayerdemo2_layout.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/camera_sublayerdemo_layout.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/camera_sublayerdemo_layout.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/cameralayer_demo_layout.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/cameralayer_demo_layout.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/cameralayer_demo_layout2.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/cameralayer_demo_layout2.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/cameralayer_fullscreen_demo_layout.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/cameralayer_fullscreen_demo_layout.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/cameralayer_fullsegment_layout.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/cameralayer_fullsegment_layout.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/cameralayer_ktv_demo_layout.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/cameralayer_ktv_demo_layout.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/cameramasklayer_demo_layout.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/cameramasklayer_demo_layout.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/canvaslayer_demo_layout.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/canvaslayer_demo_layout.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/canvaslayer_demo_layout2.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/canvaslayer_demo_layout2.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/demo2_layer_layout.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/demo2_layer_layout.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/demo_layout.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/demo_layout.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/drawpad_common_layout.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/drawpad_common_layout.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/drawpad_layout.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/drawpad_layout.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/drawpad_touch_layout.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/drawpad_touch_layout.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/execute_edit_demo_layout.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/execute_edit_demo_layout.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/extract_video_frame_layout.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/extract_video_frame_layout.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/file_explore_item.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/file_explore_item.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/file_explore_layout.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/file_explore_layout.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/filter_item.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/filter_item.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/filter_layer_demo_layout.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/filter_layer_demo_layout.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/filter_player_layout.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/filter_player_layout.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/frame_grid_item.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/frame_grid_item.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/game_video_demo_layout.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/game_video_demo_layout.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/get_frames_list_layout.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/get_frames_list_layout.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/list_cool_demo_layout.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/list_facedetected_demo_layout.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/list_facedetected_demo_layout.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/list_layers_demo_layout.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/list_layers_demo_layout.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/list_scene_demo_layout.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/list_scene_demo_layout.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/lottie_demo1_layout.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/mediainfo_layout.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/mediainfo_layout.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/merge_cameabeauty_control.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/merge_cameabeauty_control.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/mvlayer_demo_layout.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/mvlayer_demo_layout.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/onedo_add_head_end_merge.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/onedo_addword_merge.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/onedo_addword_merge.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/onedo_animation_merge.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/onedo_compress_merge.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/onedo_compress_merge.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/onedo_crop_merge.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/onedo_crop_merge.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/onedo_cutduration_merge.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/onedo_cutduration_merge.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/onedo_filter_merge.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/onedo_filter_merge.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/onedo_lansongvideo_merge.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/onedo_logo_merge.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/onedo_logo_merge.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/onedo_music_merge.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/onedo_music_merge.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/onedo_othereffect_merge.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/onedo_scale_merge.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/onedo_scale_merge.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/outbody_demo_layout.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/outbody_demo_layout.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/particel_demo_layout.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/particel_demo_layout.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/picture_set_layout.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/picture_set_layout.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/player_layout.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/player_layout.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/segment_record_full_layout.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/segment_record_full_layout.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/show_one_bitmap_layout.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/show_one_bitmap_layout.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/start_activity2_layout.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/start_activity2_layout.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/test_activity.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/test_aeexample_item.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/test_camera_full_record_layout.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/test_cmd_item.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/test_cmd_layout.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/test_fragment.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/test_fragment_drawpad.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/test_function_layout.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/test_layplayer_layout.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/test_playnext.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/test_recycleview.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/test_videoview_layout.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/test_widget.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/texturelayer_demo_layout.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/texturelayer_demo_layout.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/title.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/title.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/twovideolayer_demo_layout.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/twovideolayer_demo_layout.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/video_all_frame_grid.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/video_all_frame_grid.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/video_effect_layout.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/video_effect_layout.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/video_one_do_process_layout.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/video_one_do_process_layout.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/video_record_activity.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/video_record_activity.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/video_scale_layout.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/video_scale_layout.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/video_seek_thumb_topview.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/video_seek_thumb_topview.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/videolay_transform_layout.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/videolay_transform_layout.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/videolayer_autoupdate_demo_layout.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/videolayer_autoupdate_demo_layout.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/videopicture_layout.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/videopicture_layout.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/videoplay_seek_layout.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/videoplay_seek_layout.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/view1.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/view1.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/view2.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/view2.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/view3.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/view3.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/view4.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/view4.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/view5.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/view5.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/view6.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/view6.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/view7.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/view7.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/view8.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/view8.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/viewpager.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/viewpager.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/viewpen_preview_layout.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/viewpen_preview_layout.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/viewpen_preview_layout2.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/viewpen_preview_layout2.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/vview_drawimage_demo_layout.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/vview_drawimage_demo_layout.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/vview_image3d_demo_layout.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/vview_image3d_demo_layout.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/mipmap-xhdpi/video_thumbnail.png" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/mipmap-xhdpi/video_thumbnail.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/values-v11/styles.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/values-v11/styles.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/values-v14/styles.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/values-v14/styles.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/values-w820dp/dimens.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/values-w820dp/dimens.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/values/attrs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/values/attrs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/values/colors.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/values/colors.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/values/dimens.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/values/dimens.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/values/strings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/values/strings.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/values/styles.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/values/styles.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gradle/wrapper/gradle-wrapper.properties" beforeDir="false" afterPath="$PROJECT_DIR$/gradle/wrapper/gradle-wrapper.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/local.properties" beforeDir="false" afterPath="$PROJECT_DIR$/local.properties" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -47,44 +377,103 @@
     <session id="-2025667069">
       <usages-collector id="statistics.lifecycle.project">
         <counts>
-          <entry key="project.closed" value="1" />
+          <entry key="project.closed" value="4" />
           <entry key="project.open.time.0" value="1" />
-          <entry key="project.opened" value="1" />
+          <entry key="project.open.time.1" value="1" />
+          <entry key="project.open.time.4" value="2" />
+          <entry key="project.opened" value="4" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.open">
         <counts>
-          <entry key="java" value="1" />
+          <entry key="class" value="2" />
+          <entry key="gradle" value="2" />
+          <entry key="java" value="8" />
+          <entry key="xml" value="2" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.open">
         <counts>
-          <entry key="JAVA" value="1" />
+          <entry key="CLASS" value="2" />
+          <entry key="Groovy" value="2" />
+          <entry key="JAVA" value="8" />
+          <entry key="XML" value="2" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
-          <entry key="java" value="3" />
+          <entry key="java" value="8" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="JAVA" value="3" />
+          <entry key="JAVA" value="8" />
         </counts>
       </usages-collector>
     </session>
   </component>
   <component name="FileEditorManager">
-    <leaf>
-      <file pinned="false" current-in-tab="true">
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/ListMainActivity.java">
           <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="924">
+              <caret line="78" column="13" selection-start-line="78" selection-start-column="13" selection-end-line="78" selection-end-column="13" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/src/main/AndroidManifest.xml">
+          <provider editor-type-id="android-manifest" />
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="4312">
+              <caret line="196" column="50" selection-start-line="196" selection-start-column="50" selection-end-line="196" selection-end-column="50" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/camera/CameraHePaiActivity.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="110">
+              <caret line="43" selection-start-line="43" selection-end-line="43" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/camera/CameraVideoRecordActivity.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="175">
+              <caret line="102" column="51" selection-start-line="102" selection-start-column="51" selection-end-line="102" selection-end-column="51" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/ListBitmapAudioActivity.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="506">
+              <caret line="32" column="43" selection-start-line="32" selection-start-column="43" selection-end-line="32" selection-end-column="43" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="jar://$PROJECT_DIR$/LanSongSDK/libs/lansongeditor_hx.jar!/com/lansosdk/box/a.class">
+          <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="154">
-              <caret line="78" column="43" lean-forward="true" selection-start-line="78" selection-start-column="43" selection-end-line="78" selection-end-column="43" />
-              <folding>
-                <element signature="e#2351#2352#0" expanded="true" />
-                <element signature="e#2383#2384#0" expanded="true" />
-              </folding>
+              <caret line="10" selection-start-line="10" selection-end-line="10" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/settings.gradle">
+          <provider selected="true" editor-type-id="text-editor">
+            <state>
+              <caret column="19" selection-start-column="19" selection-end-column="19" />
             </state>
           </provider>
         </entry>
@@ -98,13 +487,14 @@
     <option name="CHANGED_PATHS">
       <list>
         <option value="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/ListMainActivity.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/ListBitmapAudioActivity.java" />
       </list>
     </option>
   </component>
-  <component name="ProjectFrameBounds" extendedState="6">
+  <component name="ProjectFrameBounds">
     <option name="y" value="23" />
-    <option name="width" value="1440" />
-    <option name="height" value="808" />
+    <option name="width" value="1920" />
+    <option name="height" value="990" />
   </component>
   <component name="ProjectView">
     <navigator currentView="ProjectPane" proportions="" version="1">
@@ -112,9 +502,63 @@
     </navigator>
     <panes>
       <pane id="PackagesPane" />
-      <pane id="ProjectPane" />
-      <pane id="Scope" />
+      <pane id="ProjectPane">
+        <subPane>
+          <expand>
+            <path>
+              <item name="LanSoEditor_advance" type="b2602c69:ProjectViewProjectNode" />
+              <item name="LanSoEditor_advance" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
+            </path>
+            <path>
+              <item name="LanSoEditor_advance" type="b2602c69:ProjectViewProjectNode" />
+              <item name="LanSoEditor_advance" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
+              <item name="app" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
+            </path>
+            <path>
+              <item name="LanSoEditor_advance" type="b2602c69:ProjectViewProjectNode" />
+              <item name="LanSoEditor_advance" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
+              <item name="app" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="LanSoEditor_advance" type="b2602c69:ProjectViewProjectNode" />
+              <item name="LanSoEditor_advance" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
+              <item name="app" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="LanSoEditor_advance" type="b2602c69:ProjectViewProjectNode" />
+              <item name="LanSoEditor_advance" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
+              <item name="LanSongSDK" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
+            </path>
+            <path>
+              <item name="LanSoEditor_advance" type="b2602c69:ProjectViewProjectNode" />
+              <item name="LanSoEditor_advance" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
+              <item name="LanSongSDK" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
+              <item name="libs" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="LanSoEditor_advance" type="b2602c69:ProjectViewProjectNode" />
+              <item name="LanSoEditor_advance" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
+              <item name="LanSongSDK" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
+              <item name="libs" type="462c0819:PsiDirectoryNode" />
+              <item name="lansongeditor_hx.jar" type="ab9368bb:PsiFileNode" />
+            </path>
+            <path>
+              <item name="LanSoEditor_advance" type="b2602c69:ProjectViewProjectNode" />
+              <item name="LanSoEditor_advance" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
+              <item name="LanSongSDK" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
+              <item name="libs" type="462c0819:PsiDirectoryNode" />
+              <item name="lansongeditor_hx.jar" type="ab9368bb:PsiFileNode" />
+              <item name="lansosdk" type="462c0819:PsiDirectoryNode" />
+            </path>
+          </expand>
+          <select />
+        </subPane>
+      </pane>
       <pane id="AndroidView" />
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -210,31 +654,30 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="23" width="1440" height="808" extended-state="6" />
-    <editor active="true" />
+    <frame x="0" y="23" width="1920" height="990" extended-state="0" />
     <layout>
-      <window_info content_ui="combo" id="Project" visible="true" weight="0.21459228" />
-      <window_info id="Structure" side_tool="true" />
-      <window_info id="Build Variants" side_tool="true" />
-      <window_info id="Image Layers" />
-      <window_info id="Designer" />
-      <window_info id="Capture Tool" />
-      <window_info id="Favorites" side_tool="true" />
       <window_info id="Captures" order="0" side_tool="true" weight="0.25" />
-      <window_info anchor="bottom" id="Run" />
-      <window_info active="true" anchor="bottom" id="Logcat" visible="true" weight="0.52380955" />
-      <window_info anchor="bottom" id="Version Control" weight="0.32900432" />
-      <window_info anchor="bottom" id="TODO" />
-      <window_info anchor="bottom" id="Android Profiler" />
-      <window_info anchor="bottom" id="Debug" />
-      <window_info anchor="bottom" id="Terminal" weight="0.32900432" />
-      <window_info anchor="bottom" id="Event Log" side_tool="true" />
-      <window_info anchor="bottom" id="Build" weight="0.3968254" />
-      <window_info anchor="right" id="Device File Explorer" side_tool="true" />
-      <window_info anchor="right" id="Capture Analysis" />
-      <window_info anchor="right" id="Gradle" />
-      <window_info anchor="right" id="Theme Preview" />
-      <window_info anchor="right" id="Palette&#9;" />
+      <window_info active="true" content_ui="combo" id="Project" order="1" visible="true" weight="0.21458998" />
+      <window_info id="Structure" order="2" side_tool="true" />
+      <window_info id="Favorites" order="3" side_tool="true" />
+      <window_info id="Build Variants" order="4" side_tool="true" />
+      <window_info id="Image Layers" order="5" />
+      <window_info id="Designer" order="6" />
+      <window_info id="Capture Tool" order="7" />
+      <window_info anchor="bottom" id="Run" order="0" />
+      <window_info anchor="bottom" id="Logcat" order="1" weight="0.52342856" />
+      <window_info anchor="bottom" id="TODO" order="2" />
+      <window_info anchor="bottom" id="Debug" order="3" />
+      <window_info anchor="bottom" id="Terminal" order="4" weight="0.32900432" />
+      <window_info anchor="bottom" id="Event Log" order="5" side_tool="true" />
+      <window_info anchor="bottom" id="Version Control" order="6" weight="0.32900432" />
+      <window_info anchor="bottom" id="Build" order="7" visible="true" weight="0.39657143" />
+      <window_info anchor="bottom" id="Android Profiler" order="8" show_stripe_button="false" />
+      <window_info anchor="right" id="Device File Explorer" order="0" side_tool="true" />
+      <window_info anchor="right" id="Capture Analysis" order="1" />
+      <window_info anchor="right" id="Gradle" order="2" />
+      <window_info anchor="right" id="Theme Preview" order="3" />
+      <window_info anchor="right" id="Palette&#9;" order="4" />
     </layout>
   </component>
   <component name="VcsContentAnnotationSettings">
@@ -243,12 +686,51 @@
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/ListMainActivity.java">
       <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="924">
+          <caret line="78" column="13" selection-start-line="78" selection-start-column="13" selection-end-line="78" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/AndroidManifest.xml">
+      <provider editor-type-id="android-manifest" />
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="4312">
+          <caret line="196" column="50" selection-start-line="196" selection-start-column="50" selection-end-line="196" selection-end-column="50" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/camera/CameraHePaiActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="110">
+          <caret line="43" selection-start-line="43" selection-end-line="43" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/ListBitmapAudioActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="506">
+          <caret line="32" column="43" selection-start-line="32" selection-start-column="43" selection-end-line="32" selection-end-column="43" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$PROJECT_DIR$/LanSongSDK/libs/lansongeditor_hx.jar!/com/lansosdk/box/a.class">
+      <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="154">
-          <caret line="78" column="43" lean-forward="true" selection-start-line="78" selection-start-column="43" selection-end-line="78" selection-end-column="43" />
-          <folding>
-            <element signature="e#2351#2352#0" expanded="true" />
-            <element signature="e#2383#2384#0" expanded="true" />
-          </folding>
+          <caret line="10" selection-start-line="10" selection-end-line="10" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/settings.gradle">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <caret column="19" selection-start-column="19" selection-end-column="19" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/advanceDemo/camera/CameraVideoRecordActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="175">
+          <caret line="102" column="51" selection-start-line="102" selection-start-column="51" selection-end-line="102" selection-end-column="51" />
         </state>
       </provider>
     </entry>

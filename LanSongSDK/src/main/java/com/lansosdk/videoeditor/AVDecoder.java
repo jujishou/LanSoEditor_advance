@@ -163,7 +163,7 @@ public class AVDecoder {
 
     Log.i(TAG,"RGBA时间戳是:---->开始");
     index=0;
-    while (AVDecoder.decoderIsEnd(decoderHandler) == false) {
+    while (!AVDecoder.decoderIsEnd(decoderHandler)) {
     mGLRgbBuffer.position(0);
     long time=AVDecoder.decoderFrame(decoderHandler, -1, mGLRgbBuffer.array());
     Log.i(TAG,"RGBA时间戳是:---->"+time);

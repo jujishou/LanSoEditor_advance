@@ -16,9 +16,9 @@ import android.widget.Toast;
 
 import com.example.advanceDemo.VideoPlayerActivity;
 import com.lansoeditor.advanceDemo.R;
-import com.lansosdk.LanSongFilter.Rotation;
 import com.lansosdk.box.TwoVideoLayer;
 import com.lansosdk.box.onDrawPadSizeChangedListener;
+import com.lansosdk.videoeditor.AudioEditor;
 import com.lansosdk.videoeditor.CopyFileFromAssets;
 import com.lansosdk.videoeditor.DrawPadView;
 import com.lansosdk.videoeditor.LanSongMergeAV;
@@ -26,6 +26,8 @@ import com.lansosdk.videoeditor.MediaInfo;
 import com.lansosdk.videoeditor.LanSongFileUtil;
 
 import java.io.IOException;
+
+import com.lansosdk.LanSongFilter.Rotation;
 
 /**
  * 演示<双视频图层>的功能.
@@ -57,7 +59,7 @@ public class TwoVideoLayerActivity extends Activity {
 
         mDrawPadView = (DrawPadView) findViewById(R.id.id_twovideolayer_view);
         mInfo = new MediaInfo(mVideoPath);
-        if (mInfo.prepare() == false) {
+        if (!mInfo.prepare()) {
             Toast.makeText(TwoVideoLayerActivity.this, "视频源文件错误!",
                     Toast.LENGTH_SHORT).show();
             this.finish();
@@ -215,27 +217,6 @@ public class TwoVideoLayerActivity extends Activity {
     }
 
     /**
-     * 或者您可以切换为另一个效果视频,
-     */
-    private void changeMp2() {
-        if (mplayer2 != null) {
-            mplayer2.stop();
-            mplayer2.release();
-            mplayer2 = null;
-        }
-        mplayer2 = new MediaPlayer();
-        try {
-            mplayer2.setDataSource("/sdcard/mask.mp4");
-            mplayer2.prepare();
-
-            mplayer2.setSurface(new Surface(twoVideoLayer.getVideoTexture2()));
-            mplayer2.start();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    /**
      * Step3: stop DrawPad
      */
     private void stopDrawPad() {
@@ -248,10 +229,8 @@ public class TwoVideoLayerActivity extends Activity {
             // 增加音频
             if (LanSongFileUtil.fileExist(editTmpPath)) {
 
-                dstPath= LanSongMergeAV.mergeAVDirectly(mVideoPath, editTmpPath, true);
+                dstPath= AudioEditor.mergeAudioNoCheck(mVideoPath, editTmpPath, true);
                 playVideo.setVisibility(View.VISIBLE);
-
-
             } else {
                 Log.e(TAG, " player completion, but file:" + editTmpPath
                         + " is not exist!!!");

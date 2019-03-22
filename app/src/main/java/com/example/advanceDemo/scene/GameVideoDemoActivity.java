@@ -43,19 +43,12 @@ public class GameVideoDemoActivity extends Activity implements OnClickListener {
 
         srcVideoPath = getIntent().getStringExtra("videopath");
         mediaInfo = new MediaInfo(srcVideoPath);
-        if (mediaInfo.prepare() == false) {
+        if (!mediaInfo.prepare()) {
             Log.e(TAG, " video path is error.finish\n");
             finish();
         }
         drawPadView = (DrawPadView2) findViewById(R.id.id_gamevideo_drawpadview);
         initView();
-
-//        new Handler().postDelayed(new Runnable() {
-//            @Override
-//            public void run() {
-//                startPlayVideo();
-//            }
-//        },300);
 
     }
     @Override

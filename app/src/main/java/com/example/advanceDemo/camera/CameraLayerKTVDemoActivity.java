@@ -106,7 +106,7 @@ public class CameraLayerKTVDemoActivity extends Activity implements
 
         setContentView(R.layout.cameralayer_ktv_demo_layout);
 
-        if (LanSongUtil.checkRecordPermission(getBaseContext()) == false) {
+        if (!LanSongUtil.checkRecordPermission(getBaseContext())) {
             Toast.makeText(getApplicationContext(), "请打开权限后,重试!!!",
                     Toast.LENGTH_LONG).show();
             finish();

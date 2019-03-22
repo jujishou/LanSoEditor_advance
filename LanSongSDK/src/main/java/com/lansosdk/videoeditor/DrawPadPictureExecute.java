@@ -74,7 +74,7 @@ public class DrawPadPictureExecute {
      * @param dis
      */
     public void setDisableEncode(boolean dis) {
-        if (renderer != null && renderer.isRunning() == false) {
+        if (renderer != null && !renderer.isRunning()) {
             renderer.setDisableEncode(dis);
         }
     }
@@ -87,10 +87,10 @@ public class DrawPadPictureExecute {
 
     public boolean startDrawPad() {
         boolean ret = false;
-        if (renderer != null && renderer.isRunning() == false) {
+        if (renderer != null && !renderer.isRunning()) {
             ret = renderer.startDrawPad();
         }
-        if (ret == false) {
+        if (!ret) {
             Log.e(TAG, "开启DrawPad 后台执行失败");
         }
         return ret;
@@ -98,7 +98,7 @@ public class DrawPadPictureExecute {
 
     public boolean startDrawPad(boolean pause) {
 
-        if (renderer != null && renderer.isRunning() == false) {
+        if (renderer != null && !renderer.isRunning()) {
             return renderer.startDrawPad(pause);
         } else {
             return false;

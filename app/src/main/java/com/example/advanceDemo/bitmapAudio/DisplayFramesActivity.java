@@ -27,7 +27,7 @@ public class DisplayFramesActivity extends Activity {
     public static final int FRAME_TYPE_25 = 1;
     public static final int FRAME_TYPE_60 = 2;
     public static final int FRAME_TYPE_ALL = 3;
-    private static final String TAG = "DisplayAllFramesActivity";
+    private static final String TAG = "DisplayAllFrame";
     String videoPath = null;
     int videoDuration;
     boolean isRuned = false;
@@ -78,7 +78,7 @@ public class DisplayFramesActivity extends Activity {
             return;
 
         mInfo = new MediaInfo(videoPath);
-        if (mInfo.prepare() == false || mInfo.isHaveVideo() == false) {
+        if (!mInfo.prepare() || !mInfo.isHaveVideo()) {
             return;
         }
         isExecuting = true;
@@ -121,8 +121,7 @@ public class DisplayFramesActivity extends Activity {
         /**
          * 设置处理完成监听.
          */
-        mExtractFrame
-                .setOnExtractCompletedListener(new onExtractVideoFrameCompletedListener() {
+        mExtractFrame.setOnExtractCompletedListener(new onExtractVideoFrameCompletedListener() {
 
                     @Override
                     public void onCompleted(ExtractVideoFrame v) {
@@ -132,8 +131,7 @@ public class DisplayFramesActivity extends Activity {
         /**
          * 设置处理进度监听.
          */
-        mExtractFrame
-                .setOnExtractProgressListener(new onExtractVideoFrameProgressListener() {
+        mExtractFrame.setOnExtractProgressListener(new onExtractVideoFrameProgressListener() {
 
                     /**
                      * 当前帧的画面回调,, ptsUS:当前帧的时间戳,单位微秒.

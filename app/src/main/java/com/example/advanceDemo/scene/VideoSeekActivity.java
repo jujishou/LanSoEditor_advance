@@ -184,7 +184,7 @@ public class VideoSeekActivity extends Activity {
             public void onStopTrackingTouch(IndicatorSeekBar seekBar) {
                 if(mediaPlayer!=null){
                     mediaPlayer.setVolume(1.0f, 1.0f);
-                    if(seekTimeMs>=0&& ckxseekplayer.isChecked()==false){
+                    if(seekTimeMs>=0&& !ckxseekplayer.isChecked()){
                         mediaPlayer.seekTo(seekTimeMs);
                         seekTimeMs=-1;
                     }

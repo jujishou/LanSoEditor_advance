@@ -547,7 +547,7 @@ public class DrawPadView extends FrameLayout {
                 renderer.adjustEncodeSpeed(encodeSpeed);
 
                 ret = renderer.startDrawPad();
-                if (ret == false) {
+                if (!ret) {
                     Log.e(TAG,
                             "开启 DrawPad 失败, 或许是您之前的DrawPad没有Stop, 或者传递进去的surface对象已经被系统Destory!!,"
                                     + "请检测您 的代码或参考本文件中的SurfaceCallback 这个类中的注释;\n");
@@ -858,12 +858,11 @@ public class DrawPadView extends FrameLayout {
      * @param layer
      * @param position
      */
-    public void changeLayerLayPosition(Layer layer, int position) {
+    public void changeLayerPosition(Layer layer, int position) {
         if (renderer != null) {
             renderer.changeLayerLayPosition(layer, position);
         }
     }
-
     /**
      * 交换两个图层的位置.
      *
@@ -1174,46 +1173,6 @@ public class DrawPadView extends FrameLayout {
             renderer.removeAllLayer();
         }
     }
-
-    /**
-     * [不再使用,请使用每个图层的switchFilterTo方法] 为已经创建好的图层对象切换滤镜效果 注意: 这里内部会在切换的时候, 会销毁
-     * 之前的滤镜对象, 然后重新增加, 故您不可以把同一个滤镜对象再次放到进来, 您如果还想使用之前的滤镜,则应该重新创建一个对象.
-     *
-     * @param layer  已经创建好的Layer对象
-     * @param filter 要切换到的滤镜对象.
-     * @return 切换成功, 返回true; 失败返回false
-     */
-    @Deprecated
-    public boolean switchFilterTo(Layer layer, LanSongFilter filter) {
-        if (renderer != null) {
-            return renderer.switchFilter(layer, filter);
-        }
-        return false;
-    }
-
-    /**
-     * [不再使用,请使用每个图层的switchFilterList方法]
-     * <p>
-     * 为一个图层切换多个滤镜. 即一个滤镜处理完后的输出, 作为下一个滤镜的输入.
-     * <p>
-     * filter的列表, 是先add进去,最新渲染, 把第一个渲染的结果传递给第二个,第二个传递给第三个,以此类推.
-     * <p>
-     * 注意: 这里内部会在切换的时候, 会销毁 之前的列表中的所有滤镜对象, 然后重新增加, 故您不可以把同一个滤镜对象再次放到进来,
-     * 您如果还想使用之前的滤镜,则应该重新创建一个对象.
-     *
-     * @param layer   图层对象,
-     * @param filters 滤镜数组; 如果设置为null,则不增加滤镜.
-     * @return
-     */
-    @Deprecated
-    public boolean switchFilterList(Layer layer,
-                                    ArrayList<LanSongFilter> filters) {
-        if (renderer != null) {
-            return renderer.switchFilterList(layer, filters);
-        }
-        return false;
-    }
-
     /**
      * 是否在开始运行DrawPad的时候,检查您设置的码率和分辨率是否正常.
      * <p>
@@ -1263,7 +1222,7 @@ public class DrawPadView extends FrameLayout {
             // drawPadHeight=0;
             // drawPadWidth=0;
 
-            stopDrawPad(); // 可以在这里增加以下. 这样当Texture销毁的时候, 停止DrawPad
+            stopDrawPad(); //当Texture销毁的时候, 停止DrawPad
 
 
             return false;

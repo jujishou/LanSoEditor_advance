@@ -19,7 +19,6 @@ import android.widget.Toast;
 import com.example.advanceDemo.VideoPlayerActivity;
 import com.example.advanceDemo.view.FocusImageView;
 import com.lansoeditor.advanceDemo.R;
-import com.lansosdk.LanSongFilter.LanSongFilter;
 import com.lansosdk.box.BitmapLayer;
 import com.lansosdk.box.CameraLayer;
 import com.lansosdk.box.DrawPad;
@@ -35,6 +34,8 @@ import com.lansosdk.videoeditor.FilterLibrary;
 import com.lansosdk.videoeditor.FilterLibrary.OnLanSongFilterChosenListener;
 import com.lansosdk.videoeditor.LanSongUtil;
 import com.lansosdk.videoeditor.LanSongFileUtil;
+
+import com.lansosdk.LanSongFilter.LanSongFilter;
 
 /**
  * 在部分华为手机上出现前置摄像头, 画面倒置的问题, 解决如下:
@@ -59,7 +60,7 @@ import com.lansosdk.videoeditor.LanSongFileUtil;
 public class CameraLayerFullLandscapeActivity extends AppCompatActivity
         implements OnClickListener {
     private static final long RECORD_CAMERA_TIME = 15 * 1000 * 1000; // 定义录制的时间为20s
-    private static final String TAG = "CameraLayerFull";
+    private static final String TAG = "CameraLayerFullLandscapeActivity";
 
     private DrawPadCameraView mDrawPadCamera;
 
@@ -123,7 +124,7 @@ public class CameraLayerFullLandscapeActivity extends AppCompatActivity
 
         setContentView(R.layout.cameralayer_fullscreen_demo_layout);
 
-        if (LanSongUtil.checkRecordPermission(getBaseContext()) == false) {
+        if (!LanSongUtil.checkRecordPermission(getBaseContext())) {
             Toast.makeText(getApplicationContext(), "请打开权限后,重试!!!",
                     Toast.LENGTH_LONG).show();
             finish();
@@ -307,10 +308,13 @@ public class CameraLayerFullLandscapeActivity extends AppCompatActivity
                     new OnLanSongFilterChosenListener() {
 
                         @Override
-                        public void onLanSongFilterChosenListener(LanSongFilter filter, String name) {
+                        public void onLanSongFilterChosenListener(
+                                final LanSongFilter filter, String name) {
+
                             if (mCameraLayer != null) {
                                 mCameraLayer.switchFilterTo(filter);
                             }
+
                         }
                     });
         }

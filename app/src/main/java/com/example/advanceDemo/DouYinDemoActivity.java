@@ -1,55 +1,53 @@
 package com.example.advanceDemo;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
 import android.media.MediaPlayer.OnPreparedListener;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.view.Surface;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.example.advanceDemo.utils.DemoUtil;
+import com.example.advanceDemo.utils.LSOProgressDialog;
 import com.lansoeditor.advanceDemo.R;
-import com.lansosdk.LanSongFilter.LanSongBlurFilter;
-import com.lansosdk.LanSongFilter.LanSongColorEdgeFilter;
-import com.lansosdk.LanSongFilter.LanSongColorInvertFilter;
-import com.lansosdk.LanSongFilter.LanSongLaplacianFilter;
-import com.lansosdk.LanSongFilter.LanSongMirrorFilter;
-import com.lansosdk.LanSongFilter.LanSongToonFilter;
 import com.lansosdk.box.DrawPad;
 import com.lansosdk.box.DrawPadUpdateMode;
-import com.lansosdk.box.LSLog;
 import com.lansosdk.box.Layer;
 import com.lansosdk.box.SubLayer;
 import com.lansosdk.box.VideoLayer;
+import com.lansosdk.box.onDrawPadCompletedListener;
+import com.lansosdk.box.onDrawPadProgressListener;
 import com.lansosdk.box.onDrawPadSizeChangedListener;
 import com.lansosdk.box.onDrawPadThreadProgressListener;
+import com.lansosdk.videoeditor.DrawPadVideoExecute;
 import com.lansosdk.videoeditor.DrawPadView;
-import com.lansosdk.videoeditor.LanSongMergeAV;
 import com.lansosdk.videoeditor.MediaInfo;
 import com.lansosdk.videoeditor.LanSongFileUtil;
 
+import com.lansosdk.LanSongFilter.LanSongColorInvertFilter;
+import com.lansosdk.LanSongFilter.LanSongLaplacianFilter;
+import com.lansosdk.LanSongFilter.LanSongToonFilter;
+import com.lansosdk.LanSongFilter.LanSongBlurFilter;
+import com.lansosdk.LanSongFilter.LanSongColorEdgeFilter;
+import com.lansosdk.LanSongFilter.LanSongMirrorFilter;
+
 public class DouYinDemoActivity extends Activity implements OnClickListener {
-    private static final String TAG = LSLog.TAG;
     private static final int ONESCALE_FRAMES = 6;
     private static final int SCALE_STATUS_NONE = 0;
     private static final int SCALE_STATUS_ADD = 1;
     private static final int SCALE_STATUS_DEL = 2;  //减去;
     private static final int OUTBODY_FRAMES = 15;
-    int testCnt = 0;
-    boolean isPaused = false;
     private String videoPath;
     private DrawPadView drawPadView;
-    private MediaPlayer mplayer = null;
+    private MediaPlayer mediaplayer = null;
     private VideoLayer videoLayer = null;
-    private String editTmpPath = null;
     private String dstPath = null;
-    private LinearLayout playVideo;
     private MediaInfo mInfo = null;
     private int colorEdgeCnt = 0;
     private int colorScaleStatus = SCALE_STATUS_NONE;
@@ -69,7 +67,7 @@ public class DouYinDemoActivity extends Activity implements OnClickListener {
         videoPath = getIntent().getStringExtra("videopath");
 
         mInfo = new MediaInfo(videoPath);
-        if (mInfo.prepare() == false) {
+        if (!mInfo.prepare()) {
             Toast.makeText(this, "传递过来的视频文件错误", Toast.LENGTH_SHORT).show();
             this.finish();
         }
@@ -78,7 +76,6 @@ public class DouYinDemoActivity extends Activity implements OnClickListener {
         initView();
 
         // 在手机的默认路径下创建一个文件名,用来保存生成的视频文件,(在onDestroy中删除)
-        editTmpPath = LanSongFileUtil.newMp4PathInBox();
         dstPath = LanSongFileUtil.newMp4PathInBox();
 
         new Handler().postDelayed(new Runnable() {
@@ -91,25 +88,25 @@ public class DouYinDemoActivity extends Activity implements OnClickListener {
 
     private void startPlayVideo() {
         if (videoPath != null) {
-            mplayer = new MediaPlayer();
+            mediaplayer = new MediaPlayer();
             try {
-                mplayer.setDataSource(videoPath);
-                mplayer.setOnPreparedListener(new OnPreparedListener() {
+                mediaplayer.setDataSource(videoPath);
+                mediaplayer.setOnPreparedListener(new OnPreparedListener() {
 
                     @Override
                     public void onPrepared(MediaPlayer mp) {
                         initDrawPad(mp.getVideoWidth(), mp.getVideoHeight());
                     }
                 });
-                mplayer.setOnCompletionListener(new OnCompletionListener() {
+                mediaplayer.setOnCompletionListener(new OnCompletionListener() {
 
                     @Override
                     public void onCompletion(MediaPlayer mp) {
                         stopDrawPad();
                     }
                 });
-                mplayer.setLooping(true);
-                mplayer.prepareAsync();
+                mediaplayer.setLooping(true);
+                mediaplayer.prepareAsync();
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -123,12 +120,7 @@ public class DouYinDemoActivity extends Activity implements OnClickListener {
      * 第一步: init DrawPad 初始化
      */
     private void initDrawPad(int w, int h) {
-        int padWidth = w;
-        int padHeight = h;
-        /**
-         * 设置当前DrawPad的宽度和高度,并把宽度自动缩放到父view的宽度,然后等比例调整高度.
-         */
-        drawPadView.setDrawPadSize(padWidth, padHeight, new onDrawPadSizeChangedListener() {
+        drawPadView.setDrawPadSize(w,h, new onDrawPadSizeChangedListener() {
             @Override
             public void onSizeChanged(int viewWidth, int viewHeight) {
                 startDrawPad();
@@ -151,11 +143,11 @@ public class DouYinDemoActivity extends Activity implements OnClickListener {
     private void startDrawPad() {
         drawPadView.pauseDrawPad();
 
-        if (drawPadView.isRunning() == false && drawPadView.startDrawPad()) {
-            videoLayer = drawPadView.addVideoLayer(mplayer.getVideoWidth(), mplayer.getVideoHeight(), null);
+        if (!drawPadView.isRunning() && drawPadView.startDrawPad()) {
+            videoLayer = drawPadView.addVideoLayer(mediaplayer.getVideoWidth(), mediaplayer.getVideoHeight(), null);
             if (videoLayer != null) {
-                mplayer.setSurface(new Surface(videoLayer.getVideoTexture()));
-                mplayer.start();
+                mediaplayer.setSurface(new Surface(videoLayer.getVideoTexture()));
+                mediaplayer.start();
             }
             drawPadView.resumeDrawPad();
         }
@@ -169,13 +161,6 @@ public class DouYinDemoActivity extends Activity implements OnClickListener {
 
             drawPadView.stopDrawPad();
             DemoUtil.showToast(getApplicationContext(), "录制已停止!!");
-
-            if (LanSongFileUtil.fileExist(editTmpPath)) {
-                dstPath=LanSongMergeAV.mergeAVDirectly(videoPath, editTmpPath,true);
-                playVideo.setVisibility(View.VISIBLE);
-            } else {
-                Log.e(TAG, " player completion, but file not exist" + editTmpPath);
-            }
         }
     }
 
@@ -215,6 +200,9 @@ public class DouYinDemoActivity extends Activity implements OnClickListener {
                 break;
             case R.id.id_videoeffect_fudiao:
                 videoColorLaplacian();
+                break;
+            case R.id.id_videoeffect_export:
+                export();
                 break;
             default:
                 break;
@@ -302,7 +290,6 @@ public class DouYinDemoActivity extends Activity implements OnClickListener {
      */
     private void videoCuoWei() {
         if (videoLayer != null) {
-
 
             SubLayer layer = videoLayer.addSubLayer();
             layer.setPosition(videoLayer.getPositionX() - 20, videoLayer.getPositionY());
@@ -419,7 +406,7 @@ public class DouYinDemoActivity extends Activity implements OnClickListener {
     private void videoNOEffect() {
         if (videoLayer != null) {
             videoLayer.setScale(1.0f);
-            videoLayer.setPosition(videoLayer.getPadWidth() / 2, videoLayer.getPadHeight() / 2);
+            videoLayer.setPosition(videoLayer.getPadWidth()/2.0f, videoLayer.getPadHeight()/2.0f);
             videoLayer.removeAllSubLayer();
             videoLayer.switchFilterTo(null);
         }
@@ -428,10 +415,10 @@ public class DouYinDemoActivity extends Activity implements OnClickListener {
     @Override
     protected void onPause() {
         super.onPause();
-        if (mplayer != null) {
-            mplayer.stop();
-            mplayer.release();
-            mplayer = null;
+        if (mediaplayer != null) {
+            mediaplayer.stop();
+            mediaplayer.release();
+            mediaplayer = null;
         }
         if (drawPadView != null) {
             drawPadView.stopDrawPad();
@@ -442,7 +429,6 @@ public class DouYinDemoActivity extends Activity implements OnClickListener {
     protected void onDestroy() {
         super.onDestroy();
         LanSongFileUtil.deleteFile(dstPath);
-        LanSongFileUtil.deleteFile(editTmpPath);
     }
 
     private void initView() {
@@ -456,5 +442,86 @@ public class DouYinDemoActivity extends Activity implements OnClickListener {
         findViewById(R.id.id_videoeffect_invert).setOnClickListener(this);
         findViewById(R.id.id_videoeffect_toon).setOnClickListener(this);
         findViewById(R.id.id_videoeffect_fudiao).setOnClickListener(this);
+
+        findViewById(R.id.id_videoeffect_export).setOnClickListener(this);
+
+    }
+
+    //-----------------------------------------------后台执行(导出)举例.
+    DrawPadVideoExecute execute;
+    boolean isOutBody;
+    private String exportPath;
+
+    LSOProgressDialog progressDialog=new LSOProgressDialog();
+    /**
+     * 导出灵魂出窍
+     */
+    private void exportOutBody(){
+        exportPath=LanSongFileUtil.createMp4FileInBox();
+        execute=new DrawPadVideoExecute(getApplicationContext(),videoPath,exportPath);
+        execute.setDrawPadThreadProgressListener(new onDrawPadThreadProgressListener() {
+            @Override
+            public void onThreadProgress(DrawPad v, long currentTimeUs) {
+                videoOutBody();
+                if(currentTimeUs>3*1000*1000 && !isOutBody) {
+                    outBody = videoLayer.addSubLayer();
+                }
+            }
+        });
+        execute.setDrawPadCompletedListener(new onDrawPadCompletedListener() {
+            @Override
+            public void onCompleted(DrawPad v) {
+                DemoUtil.startPlayDstVideo(DouYinDemoActivity.this,exportPath);
+            }
+        });
+        if(execute.startDrawPad()){
+            videoLayer=execute.getMainVideoLayer();
+        }
+    }
+
+    /**
+     * 导出镜像的例子
+     */
+    private void export() {
+        if(drawPadView.isRunning()){
+            drawPadView.stopDrawPad();
+        }
+        if(mediaplayer!=null && mediaplayer.isPlaying()){
+            mediaplayer.stop();
+        }
+        new AlertDialog.Builder(this).setTitle("提示").setMessage("当前以画面镜像为演示导出代码")
+                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        exportMirror();
+                    }
+                }).show();
+    }
+    private void exportMirror(){
+        progressDialog.show(this);
+        exportPath=LanSongFileUtil.createMp4FileInBox();
+        execute=new DrawPadVideoExecute(getApplicationContext(),videoPath,exportPath);
+        execute.setDrawPadProgressListener(new onDrawPadProgressListener() {
+            @Override
+            public void onProgress(DrawPad v, long currentTimeUs) {
+                long durationUs=(long)execute.mediaInfo.vDuration*1000*1000L;
+                int percent=(int)(currentTimeUs*100/(long)durationUs);
+                progressDialog.setProgress(percent);
+            }
+        });
+        execute.setDrawPadCompletedListener(new onDrawPadCompletedListener() {
+            @Override
+            public void onCompleted(DrawPad v) {
+                progressDialog.release();
+                DemoUtil.startPlayDstVideo(DouYinDemoActivity.this,exportPath);
+            }
+        });
+        execute.pauseRecord();
+        if(execute.startDrawPad()){
+            videoLayer=execute.getMainVideoLayer();
+            videoLayer.switchFilterTo(new LanSongMirrorFilter());
+            execute.resumeRecord();
+        }
     }
 }

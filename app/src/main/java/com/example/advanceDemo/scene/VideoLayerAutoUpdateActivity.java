@@ -203,7 +203,7 @@ public class VideoLayerAutoUpdateActivity extends Activity {
 
                     @Override
                     public void onClick(View v) {
-                        if (mplayer != null && mplayer.isPlaying() == false) {
+                        if (mplayer != null && !mplayer.isPlaying()) {
                             mplayer.start();
                         }
                     }

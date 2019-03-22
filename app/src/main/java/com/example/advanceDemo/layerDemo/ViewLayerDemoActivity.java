@@ -34,6 +34,7 @@ import com.lansosdk.box.ViewLayer;
 import com.lansosdk.box.ViewLayerRelativeLayout;
 import com.lansosdk.box.onDrawPadProgressListener;
 import com.lansosdk.box.onDrawPadSizeChangedListener;
+import com.lansosdk.videoeditor.AudioEditor;
 import com.lansosdk.videoeditor.DrawPadView;
 import com.lansosdk.videoeditor.LanSongMergeAV;
 import com.lansosdk.videoeditor.MediaInfo;
@@ -68,7 +69,7 @@ public class ViewLayerDemoActivity extends Activity implements OnClickListener {
 
         mVideoPath = getIntent().getStringExtra("videopath");
         mInfo = new MediaInfo(mVideoPath);
-        if (mInfo.prepare() == false) {
+        if (!mInfo.prepare()) {
             Log.e(TAG, " video path is error.finish\n");
             finish();
         }
@@ -178,7 +179,7 @@ public class ViewLayerDemoActivity extends Activity implements OnClickListener {
             drawPadView.stopDrawPad();
             toastStop();
             if (LanSongFileUtil.fileExist(editTmpPath)) {
-                dstPath = LanSongMergeAV.mergeAVDirectly(mVideoPath, editTmpPath, true);
+                dstPath = AudioEditor.mergeAudioNoCheck(mVideoPath, editTmpPath, true);
                 findViewById(R.id.id_vview_realtime_saveplay).setVisibility(
                         View.VISIBLE);
             }
@@ -203,7 +204,7 @@ public class ViewLayerDemoActivity extends Activity implements OnClickListener {
             // 这里调整高度,让他们一致.
             viewLayerRelativeLayout.setLayoutParams(params);
 
-            // mViewLayer.switchFilterTo(new GPUImageSepiaFilter());
+            // mViewLayer.switchFilterTo(new LanSongSepiaFilter());
 
             // UI图层的移动缩放旋转.
             // mViewLayer.setScale(0.5f);
@@ -347,7 +348,7 @@ public class ViewLayerDemoActivity extends Activity implements OnClickListener {
                 .setPositiveButton("确定", new AlertDialog.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         String input = etInput.getText().toString();
-                        if (input != null && input.equals("") == false) {
+                        if (input != null && !input.equals("")) {
                             strInputText = input;
                             textStickView.setText(strInputText);
                         }

@@ -5,7 +5,10 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
+import android.view.MotionEvent;
 import android.view.Surface;
+import android.view.View;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 
@@ -13,8 +16,10 @@ import com.example.advanceDemo.utils.DemoUtil;
 import com.example.advanceDemo.utils.YUVLayerDemoData;
 import com.lansoeditor.advanceDemo.R;
 import com.lansosdk.box.BitmapLayer;
+import com.lansosdk.box.CameraLayer;
 import com.lansosdk.box.DataLayer;
 import com.lansosdk.box.DrawPad;
+import com.lansosdk.box.Layer;
 import com.lansosdk.box.VideoLayer;
 import com.lansosdk.box.YUVLayer;
 import com.lansosdk.box.onDrawPadSizeChangedListener;
@@ -31,8 +36,7 @@ import java.io.InputStream;
  * 缓慢缩放呈现照片播放效果;旋转呈现欢快的炫酷效果等等.
  */
 
-public class Demo1LayerMothedActivity extends Activity implements
-        OnSeekBarChangeListener {
+public class Demo1LayerMothedActivity extends Activity implements OnSeekBarChangeListener {
     private static final String TAG = "Demo1LayerActivity";
     private String videoPath;
     private DrawPadView drawPadView;
@@ -58,7 +62,6 @@ public class Demo1LayerMothedActivity extends Activity implements
             }
         }, 100);
     }
-
     private void startPlayVideo() {
         vPlayer= new VPlayer(this);
         vPlayer.setVideoPath(videoPath);
@@ -88,7 +91,7 @@ public class Demo1LayerMothedActivity extends Activity implements
     }
     private void startDrawPad() {
         drawPadView.pauseDrawPad();
-        if (drawPadView.isRunning() == false && drawPadView.startDrawPad()) {
+        if (!drawPadView.isRunning() && drawPadView.startDrawPad()) {
 
             videoLayer = drawPadView.addVideoLayer(vPlayer.getVideoWidth(), vPlayer.getVideoHeight(), null);
             if (videoLayer != null) {
@@ -96,7 +99,7 @@ public class Demo1LayerMothedActivity extends Activity implements
                 vPlayer.start();
             }
 
-            addDataLayer();
+            addBitmapLayer();
             drawPadView.resumeDrawPad();
         }
     }
@@ -146,7 +149,7 @@ public class Demo1LayerMothedActivity extends Activity implements
     @Override
     public void onProgressChanged(SeekBar seekBar, int progress,
                                   boolean fromUser) {
-        if (fromUser == false) {
+        if (!fromUser) {
             return;
         }
         switch (seekBar.getId()) {

@@ -8,7 +8,10 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 
-import com.example.advanceDemo.layerDemo.VideoSpeedDemoActivity;
+import com.example.advanceDemo.scene.VideoH2VActivity;
+import com.example.advanceDemo.scene.VideoV2HActivity;
+import com.example.advanceDemo.scene.VideoConcatActivity;
+import com.example.advanceDemo.scene.VideoSpeedDemoActivity;
 import com.example.advanceDemo.scene.ExecuteAllDrawpadActivity;
 import com.example.advanceDemo.scene.ExecuteBitmapLayerActivity;
 import com.example.advanceDemo.scene.LayerLayoutDemoActivity;
@@ -46,13 +49,15 @@ public class ListSceneDemoActivity extends Activity implements OnClickListener {
 
         findViewById(R.id.id_screne_videoseek).setOnClickListener(this);
         findViewById(R.id.id_screne_video2_layout).setOnClickListener(this);
-
-
         //新增;
         findViewById(R.id.id_mainlist_lizi).setOnClickListener(this);
         findViewById(R.id.id_mainlist_3d).setOnClickListener(this);
         findViewById(R.id.id_mainlist_morelay).setOnClickListener(this);
 
+
+        findViewById(R.id.id_screne_h2v).setOnClickListener(this);
+        findViewById(R.id.id_screne_v2h).setOnClickListener(this);
+        findViewById(R.id.id_screne_concat).setOnClickListener(this);
     }
 
     @Override
@@ -92,6 +97,16 @@ public class ListSceneDemoActivity extends Activity implements OnClickListener {
 
             case  R.id.id_mainlist_morelay:
                 startDemoActivity(MoreLayHeadSeekActivity.class);
+                break;
+
+            case  R.id.id_screne_h2v:
+                startDemoActivity(VideoH2VActivity.class);
+                break;
+            case  R.id.id_screne_v2h:
+                startDemoActivity(VideoV2HActivity.class);
+                break;
+            case  R.id.id_screne_concat:
+                startDemoActivity(VideoConcatActivity.class);
                 break;
             case R.id.id_screne_videoreverse:
                 showHintDialog("此功能演示在合作后提供");

@@ -1,18 +1,14 @@
 package com.example.advanceDemo.layerDemo;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
 import android.media.MediaPlayer.OnPreparedListener;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.view.Surface;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -27,9 +23,29 @@ import com.example.advanceDemo.utils.DemoUtil;
 import com.example.advanceDemo.view.FilterDemoAdapter;
 import com.example.advanceDemo.view.HorizontalListView;
 import com.lansoeditor.advanceDemo.R;
-import com.lansosdk.LanSongFilter.LanSongBeautyAdvanceFilter;
-import com.lansosdk.LanSongFilter.LanSongFilter;
+import com.lansosdk.LanSongFilter.LanSongDeleteLogoFilter;
 import com.lansosdk.LanSongFilter.LanSongIF1977Filter;
+import com.lansosdk.box.BitmapGetFilters;
+import com.lansosdk.box.DrawPadUpdateMode;
+import com.lansosdk.box.VideoLayer;
+import com.lansosdk.box.onDrawPadSizeChangedListener;
+import com.lansosdk.box.onGetFiltersOutFrameListener;
+import com.lansosdk.videoeditor.AVDecoder;
+import com.lansosdk.videoeditor.DrawPadView;
+import com.lansosdk.videoeditor.FilterLibrary;
+import com.lansosdk.videoeditor.FilterLibrary.FilterAdjuster;
+import com.lansosdk.videoeditor.FilterLibrary.OnLanSongFilterChosenListener;
+import com.lansosdk.videoeditor.MediaInfo;
+import com.lansosdk.videoeditor.LanSongFileUtil;
+import com.lansosdk.videoeditor.VideoOneDo;
+import com.lansosdk.videoeditor.onVideoOneDoCompletedListener;
+import com.lansosdk.videoeditor.onVideoOneDoProgressListener;
+
+import java.io.IOException;
+import java.nio.IntBuffer;
+import java.util.ArrayList;
+
+import com.lansosdk.LanSongFilter.LanSongFilter;
 import com.lansosdk.LanSongFilter.LanSongIFAmaroFilter;
 import com.lansosdk.LanSongFilter.LanSongIFBrannanFilter;
 import com.lansosdk.LanSongFilter.LanSongIFEarlybirdFilter;
@@ -46,33 +62,7 @@ import com.lansosdk.LanSongFilter.LanSongIFToasterFilter;
 import com.lansosdk.LanSongFilter.LanSongIFValenciaFilter;
 import com.lansosdk.LanSongFilter.LanSongIFWaldenFilter;
 import com.lansosdk.LanSongFilter.LanSongIFXproIIFilter;
-import com.lansosdk.box.BitmapGetFilters;
-import com.lansosdk.box.BitmapLoader;
-import com.lansosdk.box.DrawPadUpdateMode;
-import com.lansosdk.box.SubLayer;
-import com.lansosdk.box.VideoLayer;
-import com.lansosdk.box.onDrawPadSizeChangedListener;
-import com.lansosdk.box.onGetFiltersOutFrameListener;
-import com.lansosdk.videoeditor.AVDecoder;
-import com.lansosdk.videoeditor.DrawPadView;
-import com.lansosdk.videoeditor.FilterLibrary;
-import com.lansosdk.videoeditor.FilterLibrary.FilterAdjuster;
-import com.lansosdk.videoeditor.FilterLibrary.FilterType;
-import com.lansosdk.videoeditor.FilterLibrary.OnLanSongFilterChosenListener;
-import com.lansosdk.videoeditor.FilterList;
-import com.lansosdk.videoeditor.MediaInfo;
-import com.lansosdk.videoeditor.LanSongFileUtil;
-import com.lansosdk.videoeditor.VideoOneDo;
-import com.lansosdk.videoeditor.onVideoOneDoCompletedListener;
-import com.lansosdk.videoeditor.onVideoOneDoProgressListener;
-
-import junit.framework.Test;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.IntBuffer;
-import java.util.ArrayList;
-import java.util.Map;
+import com.lansosdk.LanSongFilter.LanSongBeautyAdvanceFilter;
 
 /**
  * 滤镜的操作
@@ -280,7 +270,8 @@ public class Demo3LayerFilterActivity extends Activity {
         FilterLibrary.showDialog(this, new OnLanSongFilterChosenListener() {
 
             @Override
-            public void onLanSongFilterChosenListener(LanSongFilter filter, String name) {
+            public void onLanSongFilterChosenListener(
+                    final LanSongFilter filter, String name) {
                 if (videoLayer != null) {
                     videoLayer.switchFilterTo(filter);
                     mFilterAdjuster = new FilterAdjuster(filter);

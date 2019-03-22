@@ -6,9 +6,8 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -19,15 +18,11 @@ import android.widget.Toast;
 
 import com.anthonycr.grant.PermissionsManager;
 import com.anthonycr.grant.PermissionsResultAction;
-//import com.example.advanceDemo.aeDemo.AEListActivity;
 import com.example.advanceDemo.aeDemo.AERecordFileHintActivity;
 import com.example.advanceDemo.scene.GameVideoDemoActivity;
 import com.example.advanceDemo.utils.ConvertToEditModeDialog;
 import com.example.advanceDemo.utils.DemoUtil;
 import com.example.advanceDemo.utils.FileExplorerActivity;
-import com.lansosdk.box.AudioSource;
-import com.lansosdk.videoeditor.AudioPadExecute;
-import com.lansosdk.videoeditor.CopyFileFromAssets;
 import com.lansoeditor.advanceDemo.R;
 import com.lansosdk.box.LanSoEditorBox;
 import com.lansosdk.videoeditor.EditModeVideo;
@@ -38,6 +33,8 @@ import com.lansosdk.videoeditor.VideoEditor;
 
 import java.io.File;
 import java.util.Calendar;
+
+import static com.lansosdk.videoeditor.CopyFileFromAssets.copyAssets;
 
 public class ListMainActivity extends Activity implements OnClickListener {
 
@@ -81,12 +78,12 @@ public class ListMainActivity extends Activity implements OnClickListener {
 
     @Override
     public void onClick(View v) {
-        if (isPermissionOk == false) {
+        if (!isPermissionOk) {
             testPermission();
         }
 
         if (isPermissionOk) {
-            if (checkPath() == false)
+            if (!checkPath())
                 return;
             switch (v.getId()) {
                 case R.id.id_mainlist_camerarecord:
@@ -121,6 +118,7 @@ public class ListMainActivity extends Activity implements OnClickListener {
             }
         }
     }
+
     // -----------------------------
     private void initView() {
         tvVideoPath = (TextView) findViewById(R.id.id_main_tvvideo);
@@ -133,8 +131,6 @@ public class ListMainActivity extends Activity implements OnClickListener {
         findViewById(R.id.id_mainlist_bitmaps).setOnClickListener(this);
         findViewById(R.id.id_mainlist_videoplay).setOnClickListener(this);
         findViewById(R.id.id_mainlist_gamevideo).setOnClickListener(this);
-
-
 
 
         //---------------------
@@ -164,7 +160,7 @@ public class ListMainActivity extends Activity implements OnClickListener {
         int lyear = VideoEditor.getLimitYear();
         int lmonth = VideoEditor.getLimitMonth();
 
-        Log.i(TAG, "current year is:" + year + " month is:" + month+ " limit year:" + lyear + " limit month:" + lmonth);
+        Log.i(TAG, "current year is:" + year + " month is:" + month + " limit year:" + lyear + " limit month:" + lmonth);
 
         String timeHint = getResources().getString(R.string.sdk_limit);
         String version = VideoEditor.getSDKVersion() + ";\n BOX:" + LanSoEditorBox.VERSION_BOX;
@@ -181,13 +177,12 @@ public class ListMainActivity extends Activity implements OnClickListener {
             return false;
         } else {
             String path = tvVideoPath.getText().toString();
-            if ((new File(path)).exists() == false) {
+            if (!(new File(path)).exists()) {
                 Toast.makeText(ListMainActivity.this, "文件不存在", Toast.LENGTH_SHORT).show();
                 return false;
             } else {
                 MediaInfo info = new MediaInfo(path);
                 boolean ret = info.prepare();
-                Log.i(TAG, "info:" + info.toString() + " is EditModeVideo:" + EditModeVideo.checkEditModeVideo(path));
                 return ret;
             }
         }
@@ -215,7 +210,7 @@ public class ListMainActivity extends Activity implements OnClickListener {
     }
 
     private void checkConvertDialog(final String file) {
-        if (EditModeVideo.checkEditModeVideo(file) == false) {
+        if (!EditModeVideo.checkEditModeVideo(file)) {
             new AlertDialog.Builder(ListMainActivity.this)
                     .setTitle("提示")
                     .setMessage("是否转换为 编辑模式!")
@@ -276,12 +271,12 @@ public class ListMainActivity extends Activity implements OnClickListener {
                 });
     }
 
-    public class CopyDefaultVideoAsyncTask extends
-            AsyncTask<Object, Object, Boolean> {
+    private class CopyDefaultVideoAsyncTask extends AsyncTask<Object, Object, Boolean> {
         private ProgressDialog mProgressDialog;
         private Context mContext = null;
         private TextView tvHint;
         private String fileName;
+
         /**
          * @param ctx
          * @param tvhint 拷贝后, 把拷贝到的目标完整路径显示到这个TextView上.
@@ -305,8 +300,8 @@ public class ListMainActivity extends Activity implements OnClickListener {
 
         @Override
         protected synchronized Boolean doInBackground(Object... params) {
-            if (LanSongFileUtil.fileExist(fileName) == false) {
-                CopyFileFromAssets.copyAssets(mContext, fileName);
+            if (!LanSongFileUtil.fileExist(fileName)) {
+                copyAssets(mContext, fileName);
             }
             return null;
         }
@@ -318,16 +313,13 @@ public class ListMainActivity extends Activity implements OnClickListener {
                 mProgressDialog.cancel();
                 mProgressDialog = null;
             }
-
             String str = LanSongFileUtil.TMP_DIR + fileName;
             if (LanSongFileUtil.fileExist(str)) {
                 Toast.makeText(mContext, "默认视频文件拷贝完成.视频样片路径:" + str, Toast.LENGTH_SHORT).show();
-                if (tvHint != null){
+                if (tvHint != null)
                     tvHint.setText(str);
-                }
             } else {
-                Toast.makeText(mContext, "抱歉! 默认视频文件拷贝失败,请联系我们:视频样片路径:" + str,
-                        Toast.LENGTH_SHORT).show();
+                Toast.makeText(mContext, "抱歉! 默认视频文件拷贝失败,请联系我们:视频样片路径:" + str,Toast.LENGTH_SHORT).show();
             }
         }
     }

@@ -7,8 +7,8 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.util.Log;
 
+import com.lansosdk.box.AudioLayer;
 import com.lansosdk.box.AudioPad;
-import com.lansosdk.box.AudioSource;
 import com.lansosdk.box.BitmapLayer;
 import com.lansosdk.box.CanvasLayer;
 import com.lansosdk.box.CanvasRunnable;
@@ -115,7 +115,7 @@ public class VideoOneDo {
 //        this.inputPath = videoPath;
 //        context = ctx;
 //        mediaInfo = new MediaInfo(inputPath);
-//        if (mediaInfo.prepare() == false) {
+//        if (!mediaInfo.prepare()) {
 //            throw  new FileNotFoundException(" input path is not found.mediaInfo is:"+mediaInfo.toString());
 //        }
 //    }
@@ -124,7 +124,7 @@ public class VideoOneDo {
         this.inputPath = videoPath;
         context = ctx;
         mediaInfo = new MediaInfo(inputPath);
-        if (mediaInfo.prepare() == false) {
+        if (!mediaInfo.prepare()) {
             LSLog.w("视频输入错误, 信息是:"+ mediaInfo.toString());
             mediaInfo =null;
         }
@@ -213,12 +213,12 @@ public class VideoOneDo {
      * @param bitrate
      */
     public void setBitrate(int bitrate) {
-        if (bitrate > 0 && isEditModeVideo == false) {
+        if (bitrate > 0 && !isEditModeVideo) {
             videoBitRate = bitrate;
         }
     }
     public void setBitrate(int bitrate,boolean check) {
-        if (bitrate > 0 && isEditModeVideo == false) {
+        if (bitrate > 0 && !isEditModeVideo) {
             videoBitRate = bitrate;
             isCheckBitrate=check;
         }
@@ -455,7 +455,7 @@ public class VideoOneDo {
         if (isExecuting && mediaInfo ==null)
             return false;
 
-        if (mediaInfo.isHaveAudio() == false) {
+        if (!mediaInfo.isHaveAudio()) {
             isMixBgMusic = false;// 没有音频则不混合.
         }
 
@@ -590,7 +590,7 @@ public class VideoOneDo {
     }
 
     protected void completeDrawPad() {
-        if (isExecuting == false) {
+        if (!isExecuting) {
             return;
         }
         MediaInfo info = new MediaInfo(drawpadDstPath);
@@ -720,7 +720,7 @@ public class VideoOneDo {
             /**
              * 第一步: 增加一个音频;
              */
-            AudioSource source = null;
+            AudioLayer source = null;
             if (bgMusicEndUs > bgMusicStartUs && bgMusicStartUs > 0) {
                 source = drawPad.addSubAudio(bgMusicPath,0,bgMusicStartUs,bgMusicEndUs - bgMusicStartUs);
             } else {
@@ -735,7 +735,7 @@ public class VideoOneDo {
             /**
              * 第二步:是否保留原有的声音;
              */
-            AudioSource source1 = drawPad.getMainAudioSource();
+            AudioLayer source1 = drawPad.getMainAudioLayer();
             if (source1 != null) {
                 if(isMixBgMusic){
                     source1.setVolume(inputVideoVolume);
@@ -760,7 +760,7 @@ public class VideoOneDo {
                 && textAdd == null
                 && timeStretchArray == null && timeFreezeArray == null
                 && timeRepeatArray == null
-                && isEditModeVideo == false) {
+                && !isEditModeVideo) {
             return true;
         } else {
             return false;
@@ -774,18 +774,18 @@ public class VideoOneDo {
 
         if (bgMusicInfo != null) {
 
-            audioPad = new AudioPadExecute(context, inputPath, isMixBgMusic == false);
+            audioPad = new AudioPadExecute(context, inputPath, !isMixBgMusic);
             if (inputVideoVolume != 1.0f) {
                 audioPad.getMainSource().setVolume(inputVideoVolume);
             }
             /**
              * 增加另一个音频;
              */
-            AudioSource subsource = null;
+            AudioLayer subsource = null;
             if (bgMusicEndUs > bgMusicStartUs && bgMusicStartUs > 0) {
-                subsource = audioPad.addSubAudio(bgMusicPath,0,bgMusicStartUs,bgMusicEndUs - bgMusicStartUs);
+                subsource = audioPad.addAudioLayer(bgMusicPath,0,bgMusicStartUs,bgMusicEndUs - bgMusicStartUs);
             } else {
-                subsource = audioPad.addSubAudio(bgMusicPath, true);
+                subsource = audioPad.addAudioLayer(bgMusicPath, true);
             }
             subsource.setVolume(bgMusicVolume);
             subsource.setLooping(true);

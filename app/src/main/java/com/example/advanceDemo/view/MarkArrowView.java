@@ -62,7 +62,7 @@ public class MarkArrowView extends DrawPadView {
                 // Log.i("test","ACTION_UP:"+event.getX()+" Y:"+event.getY());
                 // 当抬起时, 删除这个Layer
                 // if(bitmap!=null){
-                // bitmap.setVisibility(Layer.INVISIBLE);
+                // bitmap.setVisibility(AeLayer.INVISIBLE);
                 // removeLayer(bitmap);
                 // }
                 break;

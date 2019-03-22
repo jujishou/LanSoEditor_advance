@@ -42,8 +42,6 @@ import java.io.IOException;
  */
 public class MoreLayHeadSeekActivity extends Activity {
     private static final String TAG = "MoreLayHeadSeekActivity";
-
-
     int videoWidth, videoHeight;
     private String mVideoPath;
     private String videoPath2;
@@ -62,10 +60,7 @@ public class MoreLayHeadSeekActivity extends Activity {
     private SeekBar skbTime;
     private long totalTimeUs;
     private Thread copyThread;
-
     private final static long BITMAP_DURATION = 3 * 1000 * 1000;
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -79,7 +74,7 @@ public class MoreLayHeadSeekActivity extends Activity {
         dstPath = LanSongFileUtil.newMp4PathInBox();
 
         firstInfo = new MediaInfo(mVideoPath);
-        if (firstInfo.prepare() == false) {
+        if (!firstInfo.prepare()) {
             finish();
         }
     }
@@ -154,7 +149,6 @@ public class MoreLayHeadSeekActivity extends Activity {
 
                 @Override
                 public void onPrepared(MediaPlayer mp) {
-
                     videoLayer1 = drawPadView.addVideoLayer(mplayer.getVideoWidth(), mplayer.getVideoHeight(),null);
                     videoLayer1.setVisibility(Layer.INVISIBLE);
                     mplayer.setSurface(new Surface(videoLayer1.getVideoTexture())); // 视频
@@ -211,7 +205,7 @@ public class MoreLayHeadSeekActivity extends Activity {
     private void playVideo1(long currentTimeUs) {
         // 在视频1的范围内.
         if (currentTimeUs >= 0 && currentTimeUs < (bmpLayerStartTime)) {
-            if (mplayer != null && mplayer.isPlaying() == false) {
+            if (mplayer != null && !mplayer.isPlaying()) {
                 videoLayer1.setVisibility(Layer.VISIBLE);
                 if (videoLayer2 != null)
                     videoLayer2.setVisibility(Layer.INVISIBLE);
@@ -241,7 +235,7 @@ public class MoreLayHeadSeekActivity extends Activity {
 
         // 在视频2的范围内.
         if (currentTimeUs > start && currentTimeUs < end) {
-            if (mplayer2 != null && mplayer2.isPlaying() == false) {
+            if (mplayer2 != null && !mplayer2.isPlaying()) {
                 videoLayer1.setVisibility(Layer.INVISIBLE);
                 bmpLayer.setVisibility(Layer.INVISIBLE);
                 videoLayer2.setVisibility(Layer.VISIBLE);
@@ -318,7 +312,6 @@ public class MoreLayHeadSeekActivity extends Activity {
         videoLayer2.setVisibility(Layer.INVISIBLE);
 
         drawPadView.resetDrawPadRunTime(currentTimeUs);
-
         if (currentTimeUs >= 0 && currentTimeUs < (bmpLayerStartTime)) {  //第一个视频的范围
             videoLayer1.setVisibility(Layer.VISIBLE);
             mplayer.seekTo(currentTimeUs / 1000);
@@ -346,7 +339,7 @@ public class MoreLayHeadSeekActivity extends Activity {
 
             @Override
             public void run() {
-                videoPath2 = CopyFileFromAssets.copyAssets(getApplicationContext(), "ping25s.mp4");
+                videoPath2 = CopyFileFromAssets.copyAssets(getApplicationContext(), "ping5s.mp4");
                 copyThread = null;
             }
         });
